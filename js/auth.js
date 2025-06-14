@@ -1,162 +1,176 @@
-// DOM Elements
-const loginForm = document.getElementById('loginForm');
-const loginSection = document.getElementById('loginSection');
-const dashboardSection = document.getElementById('dashboardSection');
-const errorMessage = document.getElementById('errorMessage');
+// Firebase Authentication Module
 
-// Initialize Firebase Auth State Observer
-auth.onAuthStateChanged((user) => {
-    console.log('Auth state changed:', user ? 'User logged in' : 'No user');
-    if (user) {
-        handleSuccessfulLogin(user);
-    } else {
-        showLoginForm();
-    }
-});
+// Initialize Firebase Auth
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Login Form Submit Handler
-loginForm.addEventListener('submit', async (e) => {
+// Handle login form submission
+async function handleLogin(e) {
     e.preventDefault();
     clearError();
     showLoading();
 
-    const userId = document.getElementById('userId').value;
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
     try {
-        console.log('Attempting login for user ID:', userId);
+        // Sign in user
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
         
-        // First, get user data from Firestore using userId
-        const userSnapshot = await db.collection('users')
-            .where('userId', '==', userId)
-            .limit(1)
-            .get();
-
-        if (userSnapshot.empty) {
-            throw new Error('User ID not found. Please check your User ID and try again.');
+        // Get user data from Firestore
+        const userDoc = await db.collection('users').doc(userCredential.user.uid).get();
+        
+        if (!userDoc.exists) {
+            throw new Error('User data not found');
         }
 
-        const userData = userSnapshot.docs[0].data();
-        console.log('User found:', userData.role);
+        const userData = userDoc.data();
+        
+        // Store user data in session
+        sessionStorage.setItem('userData', JSON.stringify({
+            userId: userCredential.user.uid,
+            email: userCredential.user.email,
+            role: userData.role,
+            fullName: userData.fullName,
+            department: userData.department,
+            section: userData.section
+        }));
 
-        // Attempt to sign in with email and password
-        try {
-            const email = `${userId}@cms.edu`;
-            console.log('Attempting authentication with email:', email);
-            
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            console.log('Authentication successful');
-            
-            // Update last login timestamp
-            await db.collection('users').doc(userCredential.user.uid).update({
-                lastLogin: new Date().toISOString()
-            });
+        // Route to appropriate dashboard based on role
+        await handleSuccessfulLogin(userData);
 
-            // Store user role in session storage
-            sessionStorage.setItem('userRole', userData.role);
-            sessionStorage.setItem('userData', JSON.stringify(userData));
-
-            handleSuccessfulLogin(userCredential.user);
-        } catch (authError) {
-            console.error('Authentication error:', authError);
-            if (authError.code === 'auth/wrong-password') {
-                showError('Incorrect password. The default password is "eduvision"');
-            } else if (authError.code === 'auth/user-not-found') {
-                showError('User not found. Please check your User ID.');
-            } else {
-                showError('Login failed: ' + authError.message);
-            }
-        }
     } catch (error) {
         console.error('Login error:', error);
         showError(error.message);
     } finally {
         hideLoading();
     }
-});
+}
 
-// Handle successful login
-async function handleSuccessfulLogin(user) {
-    try {
-        console.log('Handling successful login for:', user.email);
-        
-        // Get user data
-        const userDoc = await db.collection('users').doc(user.uid).get();
-        const userData = userDoc.data();
-
-        if (!userData) {
-            console.error('No user data found in Firestore');
-            showError('User data not found. Please contact administrator.');
-            auth.signOut();
-            return;
-        }
-
-        console.log('User role:', userData.role);
-
-        // Hide login form and show appropriate dashboard
-        loginSection.classList.add('hidden');
-        dashboardSection.classList.remove('hidden');
-
-        // Show appropriate dashboard based on role
-        switch(userData.role) {
-            case 'admin':
-                loadAdminDashboard();
-                break;
-            case 'faculty':
-                loadFacultyDashboard();
-                break;
-            case 'student':
-                loadStudentDashboard();
-                break;
-            default:
-                console.error('Unknown user role:', userData.role);
-                showError('Invalid user role. Please contact administrator.');
-                auth.signOut();
-        }
-    } catch (error) {
-        console.error('Error in handleSuccessfulLogin:', error);
-        showError('Error loading dashboard: ' + error.message);
+// Handle successful login and routing
+async function handleSuccessfulLogin(userData) {
+    switch (userData.role) {
+        case 'student':
+            window.location.href = 'student.html';
+            break;
+        case 'faculty':
+            window.location.href = 'faculty.html';
+            break;
+        case 'hod':
+            window.location.href = 'hod.html';
+            break;
+        case 'admin':
+            window.location.href = 'admin.html';
+            break;
+        default:
+            throw new Error('Invalid user role');
     }
+}
+
+// Handle logout
+function handleLogout() {
+    auth.signOut()
+        .then(() => {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        })
+        .catch(error => {
+            console.error('Logout error:', error);
+            showError('Error logging out');
+        });
+}
+
+// Check authentication state
+function checkAuth() {
+    auth.onAuthStateChanged(async user => {
+        if (user) {
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (!userDoc.exists) {
+                    auth.signOut();
+                    return;
+                }
+
+                const userData = userDoc.data();
+                const currentPage = window.location.pathname.split('/').pop();
+
+                // Redirect if user is on wrong page
+                const rolePages = {
+                    'student.html': ['student'],
+                    'faculty.html': ['faculty'],
+                    'hod.html': ['hod'],
+                    'admin.html': ['admin'],
+                    'index.html': []
+                };
+
+                const allowedRoles = rolePages[currentPage] || [];
+                if (!allowedRoles.includes(userData.role)) {
+                    handleSuccessfulLogin(userData);
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                auth.signOut();
+            }
+        } else if (window.location.pathname.split('/').pop() !== 'index.html') {
+            window.location.href = 'index.html';
+        }
+    });
 }
 
 // Show login form
 function showLoginForm() {
-    console.log('Showing login form');
-    dashboardSection.classList.add('hidden');
-    loginSection.classList.remove('hidden');
-    loginForm.reset();
-    clearError();
+    const authSection = document.querySelector('.auth-section');
+    if (!authSection) return;
+
+    authSection.innerHTML = `
+        <h2>Login to CMS</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+            <button type="submit">Login</button>
+        </form>
+    `;
+
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
 }
 
 // Error handling functions
 function showError(message) {
-    console.error('Error:', message);
-    errorMessage.textContent = message;
-    errorMessage.classList.remove('hidden');
+    const errorElement = document.getElementById('errorMessage');
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.add('show');
+    }
 }
 
 function clearError() {
-    errorMessage.textContent = '';
-    errorMessage.classList.add('hidden');
+    const errorElement = document.getElementById('errorMessage');
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
 }
 
-// Loading spinner functions
+// Loading state functions
 function showLoading() {
-    document.getElementById('loadingSpinner').classList.remove('hidden');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) loadingSpinner.classList.remove('hidden');
 }
 
 function hideLoading() {
-    document.getElementById('loadingSpinner').classList.add('hidden');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) loadingSpinner.classList.add('hidden');
 }
 
-// Logout handler
-document.getElementById('logoutBtn')?.addEventListener('click', () => {
-    auth.signOut().then(() => {
-        console.log('User signed out');
-        sessionStorage.clear();
-        showLoginForm();
-    }).catch((error) => {
-        console.error('Error signing out:', error);
-        showError('Error signing out: ' + error.message);
-    });
+// Initialize auth module
+document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
+    showLoginForm();
 });
