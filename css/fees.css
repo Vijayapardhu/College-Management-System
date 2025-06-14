@@ -1,0 +1,231 @@
+/* Fee Management Styles */
+
+.fee-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.fee-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.summary-card h3 {
+    margin: 0 0 1rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.summary-card .amount {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.summary-card.total-fee .amount {
+    color: #2196f3;
+}
+
+.summary-card.paid-fee .amount {
+    color: #4caf50;
+}
+
+.summary-card.due-fee .amount {
+    color: #f44336;
+}
+
+.fee-details {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.fee-details h3 {
+    margin: 0 0 1.5rem;
+    color: var(--text-color);
+}
+
+.fee-table-container {
+    overflow-x: auto;
+}
+
+.fee-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fee-table th,
+.fee-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.fee-table th {
+    background: var(--secondary-color);
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.fee-table tr:hover {
+    background: #f8f9fa;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-badge.paid {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.status-badge.overdue {
+    background: #ffebee;
+    color: #f44336;
+}
+
+.payment-history {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.payment-history h3 {
+    margin: 0 0 1.5rem;
+    color: var(--text-color);
+}
+
+.payment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.payment-item:last-child {
+    border-bottom: none;
+}
+
+.payment-info h4 {
+    margin: 0 0 0.25rem;
+    color: var(--text-color);
+}
+
+.payment-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.payment-amount {
+    font-weight: 600;
+    color: #4caf50;
+}
+
+.no-payments {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.no-payments i {
+    font-size: 3rem;
+    color: var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.template-link {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.template-link a {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.template-link i {
+    margin-right: 0.5rem;
+}
+
+/* Form Styles */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--primary-color);
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.icon-button:hover {
+    background: var(--secondary-color);
+}
+
+.icon-button.danger {
+    color: #f44336;
+}
+
+.icon-button.danger:hover {
+    background: #ffebee;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .fee-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .fee-table th,
+    .fee-table td {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .fee-actions {
+        flex-direction: column;
+    }
+
+    .fee-actions button {
+        width: 100%;
+    }
+} 

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - College Management System</title>
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QR Code library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/faculty.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="assets/logo.png" alt="CMS Logo" onerror="this.src='https://via.placeholder.com/150x50'">
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="material-icons">dashboard</i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">qr_code_2</i>
+                            Attendance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">assignment</i>
+                            Tests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">people</i>
+                            Students
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">upload_file</i>
+                            Materials
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">analytics</i>
+                            Reports
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <h1 class="page-title">Faculty Dashboard</h1>
+                <div class="user-menu">
+                    <div class="user-avatar">F</div>
+                    <button id="logoutBtn">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-grid">
+                <!-- Performance Chart -->
+                <div class="dashboard-card performance-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Class Performance</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- QR Code Generator -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Quick Attendance</h2>
+                    </div>
+                    <div class="qr-generator">
+                        <button id="generateQRBtn" class="primary-button">
+                            <i class="material-icons">qr_code</i>
+                            Generate QR Code
+                        </button>
+                        <div id="qrCode" class="qr-code"></div>
+                        <div class="qr-info">
+                            <p>QR Code will expire in</p>
+                            <div id="qrTimer" class="qr-timer">5:00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Test Creator -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Create Test</h2>
+                    </div>
+                    <div id="testCreator"></div>
+                </div>
+
+                <!-- Material Upload -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Upload Materials</h2>
+                    </div>
+                    <div id="uploadSection"></div>
+                </div>
+            </div>
+
+            <!-- Class List -->
+            <div class="class-list">
+                <!-- Class cards will be dynamically added here -->
+            </div>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/faculty/facultyDashboard.js"></script>
+    <script src="js/attendance.js"></script>
+    <script src="js/marks.js"></script>
+    <script src="js/materials.js"></script>
+</body>
+</html> 

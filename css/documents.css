@@ -1,0 +1,192 @@
+/* Document Management Styles */
+
+.document-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.document-header h2 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.document-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.document-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary-color);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.document-icon i {
+    font-size: 28px;
+    color: var(--primary-color);
+}
+
+.document-info h4 {
+    margin: 0 0 0.5rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.document-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.document-meta {
+    margin-top: 0.5rem;
+    color: #888 !important;
+    font-size: 0.85rem !important;
+}
+
+.document-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.document-actions .primary-button,
+.document-actions .danger-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.document-actions i {
+    margin-right: 0.5rem;
+    font-size: 18px;
+}
+
+.no-documents {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 12px;
+    color: #666;
+}
+
+.no-documents i {
+    font-size: 48px;
+    color: var(--border-color);
+    margin-bottom: 1rem;
+}
+
+/* Upload Form */
+.upload-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 1.5rem 0;
+}
+
+.upload-zone:hover,
+.upload-zone.dragover {
+    border-color: var(--primary-color);
+    background: var(--secondary-color);
+}
+
+.upload-zone i {
+    font-size: 48px;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.upload-zone p {
+    margin: 0;
+    color: #666;
+}
+
+.upload-progress {
+    background: var(--secondary-color);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin: 1rem 0;
+    color: var(--primary-color);
+}
+
+/* Document Types */
+.document-icon i.badge {
+    color: #2196f3;
+}
+
+.document-icon i.assessment {
+    color: #4caf50;
+}
+
+.document-icon i.workspace_premium {
+    color: #f57c00;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .document-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .document-header button {
+        width: 100%;
+    }
+
+    .documents-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .document-actions {
+        flex-direction: column;
+    }
+
+    .document-actions .primary-button,
+    .document-actions .danger-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .document-card {
+        padding: 1rem;
+    }
+
+    .upload-zone {
+        padding: 1.5rem;
+    }
+
+    .upload-zone i {
+        font-size: 36px;
+    }
+} 

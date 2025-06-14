@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Management System</title>
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QR Code library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="assets/logo.png" alt="CMS Logo" onerror="this.src='https://via.placeholder.com/150x50'">
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="material-icons">dashboard</i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">how_to_reg</i>
+                            Attendance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">grade</i>
+                            Marks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">schedule</i>
+                            Classes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">library_books</i>
+                            Study Materials
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="material-icons">notifications</i>
+                            Announcements
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <h1 class="page-title">Student Dashboard</h1>
+                <div class="user-menu">
+                    <div class="user-avatar">S</div>
+                    <button id="logoutBtn">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-grid">
+                <!-- Attendance Widget -->
+                <div class="dashboard-card attendance-widget">
+                    <div class="card-header">
+                        <h2 class="card-title">Attendance Overview</h2>
+                    </div>
+                    <div class="attendance-chart">
+                        <canvas id="attendanceDonut"></canvas>
+                    </div>
+                    <div class="attendance-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="overallAttendance">75%</div>
+                            <div class="stat-label">Overall</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="monthlyAttendance">80%</div>
+                            <div class="stat-label">This Month</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="weeklyAttendance">90%</div>
+                            <div class="stat-label">This Week</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Classes -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Upcoming Classes</h2>
+                    </div>
+                    <div class="class-list" id="upcomingClasses">
+                        <!-- Classes will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Recent Marks -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Marks</h2>
+                    </div>
+                    <div class="marks-chart">
+                        <canvas id="marksChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Announcements -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Announcements</h2>
+                    </div>
+                    <div class="announcement-list" id="recentAnnouncements">
+                        <!-- Announcements will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/attendance.js"></script>
+    <script src="js/marks.js"></script>
+    <script src="js/materials.js"></script>
+    <script src="js/notices.js"></script>
+</body>
+</html>
