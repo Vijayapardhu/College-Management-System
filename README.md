@@ -77,5 +77,5 @@ Existing portals like **ECAP** have drawbacks:
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/<your-username>/College-Management-System.git
+   git clone https://github.com/Vijayapardhu/College-Management-System.git
    cd College-Management-System
