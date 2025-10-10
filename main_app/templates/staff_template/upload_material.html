@@ -1,0 +1,118 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upload Study Material</h3>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                <input type="text" name="title" class="form-control" placeholder="E.g., Introduction to Python" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" rows="3" placeholder="Brief description..."></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Material Type *</label>
+                                        <select name="material_type" class="form-control" required>
+                                            <option value="">-- Select Type --</option>
+                                            <option value="document">Document (PDF, PPT, DOC)</option>
+                                            <option value="link">Reference Link / Website</option>
+                                            <option value="video">Video / YouTube</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Subject *</label>
+                                        <select name="subject" class="form-control" required>
+                                            <option value="">-- Select Subject --</option>
+                                            {% for subject in subjects %}
+                                            <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Course *</label>
+                                <select name="course" class="form-control" required>
+                                    <option value="">-- Select Course --</option>
+                                    {% for course in courses %}
+                                    <option value="{{ course.id }}">{{ course.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group file-upload-group" style="display:none;">
+                                <label>Upload File *</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="file" id="materialFile">
+                                    <label class="custom-file-label" for="materialFile">Choose file...</label>
+                                </div>
+                                <small class="form-text text-muted">Supported: PDF, PPT, PPTX, DOC, DOCX (Max 10MB)</small>
+                            </div>
+
+                            <div class="form-group url-input-group" style="display:none;">
+                                <label>URL *</label>
+                                <input type="url" name="url" class="form-control" placeholder="https://example.com or https://youtube.com/watch?v=...">
+                                <small class="form-text text-muted">For reference links or YouTube videos</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tags (comma-separated)</label>
+                                <input type="text" name="tags" class="form-control" placeholder="e.g., python, programming, basics">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Upload Material
+                            </button>
+                            <a href="{% url 'staff_view_materials' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $('select[name="material_type"]').change(function() {
+        const type = $(this).val();
+        $('.file-upload-group').hide();
+        $('.url-input-group').hide();
+        
+        if (type === 'document') {
+            $('.file-upload-group').show();
+            $('input[name="file"]').prop('required', true);
+            $('input[name="url"]').prop('required', false);
+        } else if (type === 'link' || type === 'video') {
+            $('.url-input-group').show();
+            $('input[name="url"]').prop('required', true);
+            $('input[name="file"]').prop('required', false);
+        }
+    });
+</script>
+{% endblock custom_js %}
+
+

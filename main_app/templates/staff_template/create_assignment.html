@@ -1,0 +1,121 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-tasks"></i> Create New Assignment</h3>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="title">Assignment Title *</label>
+                                <input type="text" name="title" id="title" class="form-control" 
+                                       placeholder="E.g., Chapter 5 Homework" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description/Instructions *</label>
+                                <textarea name="description" id="description" class="form-control" rows="5" 
+                                          placeholder="Detailed instructions for students..." required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="subject">Subject *</label>
+                                        <select name="subject" id="subject" class="form-control" required>
+                                            <option value="">-- Select Subject --</option>
+                                            {% for subject in subjects %}
+                                            <option value="{{ subject.id }}" data-course="{{ subject.course.id }}">{{ subject.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="course">Course *</label>
+                                        <select name="course" id="course" class="form-control" required>
+                                            <option value="">-- Select Course --</option>
+                                            {% for course in courses %}
+                                            <option value="{{ course.id }}">{{ course.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="due_date">Due Date & Time *</label>
+                                        <input type="datetime-local" name="due_date" id="due_date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="max_marks">Maximum Marks *</label>
+                                        <input type="number" name="max_marks" id="max_marks" class="form-control" 
+                                               value="100" min="1" max="1000" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="attachment">Question File (Optional)</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="attachment" name="attachment">
+                                    <label class="custom-file-label" for="attachment">Choose file...</label>
+                                </div>
+                                <small class="form-text text-muted">Upload PDF/DOC with questions (Max 10MB)</small>
+                            </div>
+
+                            <div class="alert alert-success">
+                                <h5><i class="icon fas fa-info-circle"></i> Assignment will be visible to:</h5>
+                                <p class="mb-0">All students enrolled in the selected course.</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Create Assignment
+                            </button>
+                            <a href="{% url 'staff_view_assignments' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    // Auto-select course based on subject
+    $('#subject').change(function() {
+        const courseId = $(this).find(':selected').data('course');
+        if (courseId) {
+            $('#course').val(courseId);
+        }
+    });
+
+    // File input
+    $('.custom-file-input').on('change', function() {
+        const fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').html(fileName);
+    });
+
+    // Set minimum date to today
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('due_date').min = now.toISOString().slice(0,16);
+</script>
+{% endblock custom_js %}

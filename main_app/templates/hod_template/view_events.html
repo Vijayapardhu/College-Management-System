@@ -1,0 +1,109 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Event Management</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'admin_create_event' %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-calendar-plus"></i> Create Event
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Date & Time</th>
+                                        <th>Venue</th>
+                                        <th>Created By</th>
+                                        <th>Status</th>
+                                        <th>Participants</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for event in events %}
+                                    <tr>
+                                        <td>{{ event.title }}</td>
+                                        <td>{{ event.event_date|date:"M d, Y h:i A" }}</td>
+                                        <td>{{ event.venue }}</td>
+                                        <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
+                                        <td>
+                                            {% if event.status == 'approved' %}
+                                                <span class="badge badge-success">Approved</span>
+                                            {% elif event.status == 'pending' %}
+                                                <span class="badge badge-warning">Pending</span>
+                                            {% elif event.status == 'rejected' %}
+                                                <span class="badge badge-danger">Rejected</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">{{ event.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ event.participant_count }}{% if event.max_participants > 0 %} / {{ event.max_participants }}{% endif %}</td>
+                                        <td>
+                                            {% if event.status == 'pending' %}
+                                                <button class="btn btn-success btn-sm approve-event" data-event-id="{{ event.id }}" data-action="approve">
+                                                    <i class="fas fa-check"></i> Approve
+                                                </button>
+                                                <button class="btn btn-danger btn-sm approve-event" data-event-id="{{ event.id }}" data-action="reject">
+                                                    <i class="fas fa-times"></i> Reject
+                                                </button>
+                                            {% else %}
+                                                <span class="text-muted">{{ event.status|title }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">No events found</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $('.approve-event').click(function() {
+        const eventId = $(this).data('event-id');
+        const action = $(this).data('action');
+        const message = action === 'approve' ? 'Approve this event?' : 'Reject this event?';
+        
+        if (!confirm(message)) return;
+        
+        $.ajax({
+            url: '{% url "admin_approve_event" %}',
+            method: 'POST',
+            data: {
+                event_id: eventId,
+                action: action
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    location.reload();
+                } else {
+                    alert('Failed to ' + action + ' event');
+                }
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}
+
+

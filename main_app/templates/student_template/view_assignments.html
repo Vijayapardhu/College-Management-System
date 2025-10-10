@@ -1,0 +1,149 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Summary Cards -->
+                <div class="row mb-3">
+                    <div class="col-md-3 col-6">
+                        <div class="info-box bg-info">
+                            <span class="info-box-icon"><i class="fas fa-tasks"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Assignments</span>
+                                <span class="info-box-number">{{ assignment_data|length }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="info-box bg-success">
+                            <span class="info-box-icon"><i class="fas fa-check"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Submitted</span>
+                                <span class="info-box-number">
+                                    {% widthratio assignment_data|length|add:0 1 1 as total %}
+                                    {{ assignment_data|length|add:"-3"|default:"0" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="info-box bg-warning">
+                            <span class="info-box-icon"><i class="fas fa-clock"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Pending</span>
+                                <span class="info-box-number">3</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="info-box bg-danger">
+                            <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Overdue</span>
+                                <span class="info-box-number">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assignments List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Assignments</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if assignment_data %}
+                        {% for data in assignment_data %}
+                        <div class="assignment-card {% if data.is_overdue %}overdue{% elif data.submission %}submitted{% endif %} mb-3">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5>
+                                        {{ data.assignment.title }}
+                                        {% if data.is_overdue %}
+                                        <span class="badge badge-danger">Overdue</span>
+                                        {% elif data.submission %}
+                                            {% if data.submission.status == 'graded' %}
+                                            <span class="badge badge-success">Graded</span>
+                                            {% elif data.submission.status == 'late' %}
+                                            <span class="badge badge-warning">Late Submission</span>
+                                            {% else %}
+                                            <span class="badge badge-info">Submitted</span>
+                                            {% endif %}
+                                        {% else %}
+                                        <span class="badge badge-secondary">Not Submitted</span>
+                                        {% endif %}
+                                    </h5>
+                                    <p class="mb-1">{{ data.assignment.description|truncatewords:30 }}</p>
+                                    <p class="text-muted mb-0">
+                                        <small>
+                                            <i class="fas fa-book"></i> {{ data.assignment.subject.name }} | 
+                                            <i class="fas fa-user"></i> {{ data.assignment.staff.admin.first_name }} {{ data.assignment.staff.admin.last_name }} |
+                                            <i class="fas fa-trophy"></i> {{ data.assignment.max_marks }} marks
+                                        </small>
+                                    </p>
+                                    <p class="assignment-deadline mb-0" data-due-date="{{ data.assignment.due_date|date:'c' }}">
+                                        <i class="far fa-clock"></i> 
+                                        <strong>Due:</strong> {{ data.assignment.due_date|date:"M d, Y h:i A" }}
+                                    </p>
+                                    
+                                    {% if data.submission %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check-circle"></i> Submitted: {{ data.submission.submitted_at|date:"M d, Y h:i A" }}
+                                        </small>
+                                        {% if data.submission.marks_obtained %}
+                                        <div class="mt-1">
+                                            <strong>Score:</strong> 
+                                            <span class="badge badge-{% if data.submission.marks_obtained >= data.assignment.max_marks|multiply:0.75 %}success{% elif data.submission.marks_obtained >= data.assignment.max_marks|multiply:0.5 %}warning{% else %}danger{% endif %}">
+                                                {{ data.submission.marks_obtained }} / {{ data.assignment.max_marks }}
+                                            </span>
+                                        </div>
+                                        {% endif %}
+                                        {% if data.submission.feedback %}
+                                        <div class="mt-2 p-2 bg-light rounded">
+                                            <strong>Feedback:</strong>
+                                            <p class="mb-0">{{ data.submission.feedback }}</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    {% if data.assignment.attachment %}
+                                    <a href="{{ data.assignment.attachment.url }}" class="btn btn-outline-primary btn-block mb-2" download>
+                                        <i class="fas fa-download"></i> Download Question
+                                    </a>
+                                    {% endif %}
+                                    
+                                    {% if not data.is_overdue or data.submission %}
+                                    <a href="{% url 'student_submit_assignment' data.assignment.id %}" 
+                                       class="btn btn-{% if data.submission %}warning{% else %}success{% endif %} btn-block">
+                                        <i class="fas fa-upload"></i> {% if data.submission %}Resubmit{% else %}Submit Assignment{% endif %}
+                                    </a>
+                                    {% else %}
+                                    <button class="btn btn-secondary btn-block" disabled>
+                                        <i class="fas fa-ban"></i> Submission Closed
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-clipboard-list fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No Assignments Yet</h4>
+                            <p>Your faculty will post assignments here. Check back soon!</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,173 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <h5 class="mb-3"><i class="fas fa-info-circle"></i> Basic Information</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Room Number *</label>
+                                {{ form.room_number }}
+                                <small class="form-text text-muted">e.g., 301, LAB-A, AUD-1</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Room Name</label>
+                                {{ form.room_name }}
+                                <small class="form-text text-muted">Optional descriptive name</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Room Type *</label>
+                                {{ form.room_type }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Building</label>
+                                {{ form.building }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Floor *</label>
+                                {{ form.floor }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Capacity *</label>
+                                {{ form.capacity }}
+                                <small class="form-text text-muted">Maximum students</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Department</label>
+                        {{ form.department }}
+                        <small class="form-text text-muted">Optional - assign to specific department</small>
+                    </div>
+                    
+                    <hr>
+                    <h5 class="mb-3"><i class="fas fa-cog"></i> Facilities & Amenities</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.has_projector }}
+                                <label class="custom-control-label" for="id_has_projector">
+                                    <i class="fas fa-video"></i> Projector
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.has_ac }}
+                                <label class="custom-control-label" for="id_has_ac">
+                                    <i class="fas fa-snowflake"></i> Air Conditioning
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.has_wifi }}
+                                <label class="custom-control-label" for="id_has_wifi">
+                                    <i class="fas fa-wifi"></i> WiFi
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.has_audio_system }}
+                                <label class="custom-control-label" for="id_has_audio_system">
+                                    <i class="fas fa-volume-up"></i> Audio System
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.has_whiteboard }}
+                                <label class="custom-control-label" for="id_has_whiteboard">
+                                    <i class="fas fa-chalkboard"></i> Whiteboard
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.has_computers }}
+                                <label class="custom-control-label" for="id_has_computers">
+                                    <i class="fas fa-desktop"></i> Computers
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Number of Computers</label>
+                                {{ form.computer_count }}
+                                <small class="form-text text-muted">For labs only</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    <h5 class="mb-3"><i class="fas fa-toggle-on"></i> Availability Status</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.is_available }}
+                                <label class="custom-control-label" for="id_is_available">
+                                    Available for Booking
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.is_under_maintenance }}
+                                <label class="custom-control-label" for="id_is_under_maintenance">
+                                    Currently Under Maintenance
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <label>Remarks</label>
+                        {{ form.remarks }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Add Classroom
+                    </button>
+                    <a href="{% url 'manage_classrooms' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

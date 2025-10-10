@@ -1,0 +1,74 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-danger">
+                <h3 class="card-title"><i class="fas fa-calendar-alt"></i> Examination Schedule</h3>
+            </div>
+            <div class="card-body">
+                {% if schedules %}
+                    {% for exam_data in schedules %}
+                    <div class="card mb-3">
+                        <div class="card-header bg-dark">
+                            <h5 class="mb-0">
+                                {{ exam_data.exam.name }} ({{ exam_data.exam.get_exam_type_display }})
+                                <span class="float-right">
+                                    <a href="{% url 'student_download_admit_card' exam_data.exam.id %}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-id-card"></i> Download Admit Card
+                                    </a>
+                                </span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>Duration:</strong> {{ exam_data.exam.start_date|date:"d M Y" }} - {{ exam_data.exam.end_date|date:"d M Y" }}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong>Semester:</strong> {{ exam_data.exam.semester }}
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Room</th>
+                                            <th>Max Marks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for schedule in exam_data.schedules %}
+                                        <tr>
+                                            <td><strong>{{ schedule.subject.name }}</strong></td>
+                                            <td>{{ schedule.exam_date|date:"d M Y (D)" }}</td>
+                                            <td>{{ schedule.start_time|time:"h:i A" }} - {{ schedule.end_time|time:"h:i A" }}</td>
+                                            <td><span class="badge badge-secondary">{{ schedule.room_number }}</span></td>
+                                            <td class="text-center">{{ schedule.max_marks }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> No exam schedules available for your current semester.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

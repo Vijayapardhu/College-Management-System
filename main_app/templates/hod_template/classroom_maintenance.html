@@ -1,0 +1,157 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-tools"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'report_maintenance' %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-exclamation-triangle"></i> Report Issue
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if maintenance_records %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="maintenanceTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Room</th>
+                                <th>Issue Type</th>
+                                <th>Description</th>
+                                <th>Reported By</th>
+                                <th>Reported Date</th>
+                                <th>Status</th>
+                                <th>Cost</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in maintenance_records %}
+                            <tr>
+                                <td><strong>{{ record.classroom.room_number }}</strong></td>
+                                <td>
+                                    <span class="badge badge-{% if record.issue_type == 'electrical' %}danger{% elif record.issue_type == 'furniture' %}warning{% else %}info{% endif %}">
+                                        {{ record.get_issue_type_display }}
+                                    </span>
+                                </td>
+                                <td>{{ record.issue_description|truncatewords:15 }}</td>
+                                <td>{{ record.reported_by.admin.first_name|default:"System" }}</td>
+                                <td>{{ record.reported_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if record.status == 'completed' %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Completed</span>
+                                    {% elif record.status == 'in_progress' %}
+                                    <span class="badge badge-primary"><i class="fas fa-spinner"></i> In Progress</span>
+                                    {% elif record.status == 'pending_parts' %}
+                                    <span class="badge badge-warning"><i class="fas fa-clock"></i> Pending Parts</span>
+                                    {% else %}
+                                    <span class="badge badge-danger"><i class="fas fa-exclamation-circle"></i> Reported</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if record.actual_cost %}
+                                    <span class="text-success">₹{{ record.actual_cost }}</span>
+                                    {% elif record.estimated_cost %}
+                                    <span class="text-warning">~₹{{ record.estimated_cost }}</span>
+                                    {% else %}
+                                    <span class="text-muted">TBD</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#maintenanceModal{{ record.id }}">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Maintenance Details Modal -->
+                            <div class="modal fade" id="maintenanceModal{{ record.id }}">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-warning">
+                                            <h4 class="modal-title">Maintenance Record - {{ record.classroom.room_number }}</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6>Issue Information</h6>
+                                                    <p><strong>Room:</strong> {{ record.classroom.room_number }}</p>
+                                                    <p><strong>Issue Type:</strong> {{ record.get_issue_type_display }}</p>
+                                                    <p><strong>Reported Date:</strong> {{ record.reported_date|date:"Y-m-d" }}</p>
+                                                    <p><strong>Reported By:</strong> {{ record.reported_by.admin.first_name }}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>Status & Cost</h6>
+                                                    <p><strong>Current Status:</strong> {{ record.get_status_display }}</p>
+                                                    <p><strong>Assigned To:</strong> {{ record.assigned_to|default:"Not Assigned" }}</p>
+                                                    <p><strong>Estimated Cost:</strong> ₹{{ record.estimated_cost|default:"0" }}</p>
+                                                    <p><strong>Actual Cost:</strong> ₹{{ record.actual_cost|default:"-" }}</p>
+                                                    {% if record.completion_date %}
+                                                    <p><strong>Completed On:</strong> {{ record.completion_date|date:"Y-m-d" }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <h6>Description</h6>
+                                            <p>{{ record.issue_description }}</p>
+                                            {% if record.remarks %}
+                                            <hr>
+                                            <h6>Remarks</h6>
+                                            <p>{{ record.remarks }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            {% if record.status != 'completed' %}
+                                            <button type="button" class="btn btn-success" onclick="markCompleted({{ record.id }})">
+                                                <i class="fas fa-check"></i> Mark as Completed
+                                            </button>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Maintenance Issues</h5>
+                    <p class="mb-0">All classrooms are in good condition!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#maintenanceTable').DataTable({
+        "order": [[4, "desc"]],
+        "pageLength": 25
+    });
+});
+
+function markCompleted(recordId) {
+    if (confirm('Mark this maintenance issue as completed?')) {
+        // AJAX call to mark as completed
+        $.post('{% url "mark_maintenance_completed" %}', {
+            record_id: recordId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }, function(response) {
+            location.reload();
+        });
+    }
+}
+</script>
+{% endblock content %}
+
+

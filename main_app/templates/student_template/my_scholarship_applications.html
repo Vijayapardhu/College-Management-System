@@ -1,0 +1,63 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-file-alt"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'student_apply_scholarship' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Apply for Scholarship
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if applications %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Scholarship Name</th>
+                                <th>Amount</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td><strong>{{ app.scholarship.name }}</strong></td>
+                                <td class="text-success"><strong>₹{{ app.scholarship.amount }}</strong></td>
+                                <td>{{ app.applied_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if app.status == 'approved' %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Approved</span>
+                                    {% elif app.status == 'rejected' %}
+                                    <span class="badge badge-danger"><i class="fas fa-times-circle"></i> Rejected</span>
+                                    {% elif app.status == 'disbursed' %}
+                                    <span class="badge badge-primary"><i class="fas fa-money-bill-wave"></i> Disbursed</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-clock"></i> Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ app.remarks|default:"-" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Applications Yet</h5>
+                    <p class="mb-0">You haven't applied for any scholarships. <a href="{% url 'student_apply_scholarship' %}">Apply now</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

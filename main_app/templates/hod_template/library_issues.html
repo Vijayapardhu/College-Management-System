@@ -1,0 +1,95 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-book-reader"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'issue_library_book' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Issue New Book
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if issues %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="issuesTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Fine</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for issue in issues %}
+                            <tr>
+                                <td>
+                                    <strong>{{ issue.student.admin.first_name }} {{ issue.student.admin.last_name }}</strong>
+                                    <br><small class="text-muted">{{ issue.student.roll_number }}</small>
+                                </td>
+                                <td>{{ issue.book.title }}</td>
+                                <td>{{ issue.issue_date|date:"Y-m-d" }}</td>
+                                <td>{{ issue.due_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if issue.return_date %}
+                                    {{ issue.return_date|date:"Y-m-d" }}
+                                    {% else %}
+                                    <span class="badge badge-warning">Not Returned</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if issue.fine_amount %}
+                                    <span class="text-danger"><strong>₹{{ issue.fine_amount }}</strong></span>
+                                    {% else %}
+                                    <span class="text-muted">₹0</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if issue.is_returned %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Returned</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-clock"></i> Issued</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if not issue.is_returned %}
+                                    <a href="{% url 'return_library_book' issue.id %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-undo"></i> Return
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Book Issues</h5>
+                    <p class="mb-0">No books have been issued yet. <a href="{% url 'issue_library_book' %}">Issue your first book</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#issuesTable').DataTable({
+        "order": [[2, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}

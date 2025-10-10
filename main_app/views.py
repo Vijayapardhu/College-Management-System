@@ -5,9 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from .EmailBackend import EmailBackend
-from .models import Attendance, Session, Subject
+from .models import Attendance, Session, Subject, Student, Staff
 
 # Create your views here.
 
@@ -18,7 +19,7 @@ def login_page(request):
             return redirect(reverse("admin_home"))
         elif request.user.user_type == '2':
             return redirect(reverse("staff_home"))
-        else:
+        elif request.user.user_type == '3':
             return redirect(reverse("student_home"))
     return render(request, 'main_app/login.html')
 
@@ -27,19 +28,46 @@ def doLogin(request, **kwargs):
     if request.method != 'POST':
         return HttpResponse("<h4>Denied</h4>")
     else:
-       
-        #Authenticate
-        user = EmailBackend.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
+        username_or_id = request.POST.get('email')  # Can be email, roll number, or employee ID
+        password = request.POST.get('password')
+        
+        # Try to find user by email first
+        user = EmailBackend.authenticate(request, username=username_or_id, password=password)
+        
+        # If not found by email, try by ID
+        if user is None:
+            try:
+                # Try student roll number or admission number
+                student = Student.objects.filter(
+                    Q(roll_number=username_or_id) | Q(admission_number=username_or_id)
+                ).first()
+                
+                if student:
+                    user = EmailBackend.authenticate(request, username=student.admin.email, password=password)
+                
+                # Try staff employee ID
+                if user is None:
+                    staff = Staff.objects.filter(employee_id=username_or_id).first()
+                    if staff:
+                        user = EmailBackend.authenticate(request, username=staff.admin.email, password=password)
+                        
+            except Exception as e:
+                pass
+        
         if user != None:
             login(request, user)
             if user.user_type == '1':
                 return redirect(reverse("admin_home"))
             elif user.user_type == '2':
                 return redirect(reverse("staff_home"))
+            elif user.user_type == '3':
+                return redirect(reverse("student_home"))
+            elif user.user_type == '4':
+                return redirect(reverse("management_home"))
             else:
                 return redirect(reverse("student_home"))
         else:
-            messages.error(request, "Invalid details")
+            messages.error(request, "Invalid Email/ID or Password")
             return redirect("/")
 
 

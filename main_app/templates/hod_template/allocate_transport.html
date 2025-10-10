@@ -1,0 +1,68 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Student *</label>
+                                {{ form.student }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Route *</label>
+                                {{ form.transport }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Pickup Point *</label>
+                                {{ form.pickup_point }}
+                                <small class="form-text text-muted">Nearest pickup point on the route</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Allocation Date *</label>
+                                {{ form.allocation_date }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Transport Information:</h6>
+                        <ul class="mb-0">
+                            <li>Verify student doesn't already have transport allocated</li>
+                            <li>Check route capacity before allocation</li>
+                            <li>Fee will be added to student's fee structure</li>
+                            <li>Student can view bus details in their portal</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-check"></i> Allocate Transport
+                    </button>
+                    <a href="{% url 'transport_allocations' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

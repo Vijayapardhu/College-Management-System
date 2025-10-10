@@ -1,0 +1,131 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-dark">
+                <h3 class="card-title"><i class="fas fa-user-shield"></i> HOD/Admin User Management</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_admin' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-user-plus"></i> Add New Admin
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if admins %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="adminsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>Address</th>
+                                <th>Joined Date</th>
+                                <th>Last Login</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>
+                                    <strong>{{ admin.admin.first_name }} {{ admin.admin.last_name }}</strong>
+                                    {% if admin.admin == request.user %}
+                                    <span class="badge badge-success">You</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ admin.admin.email }}</td>
+                                <td>
+                                    {% if admin.admin.gender == 'M' %}
+                                        <i class="fas fa-male text-primary"></i> Male
+                                    {% else %}
+                                        <i class="fas fa-female text-danger"></i> Female
+                                    {% endif %}
+                                </td>
+                                <td><small>{{ admin.admin.address|truncatewords:5 }}</small></td>
+                                <td>{{ admin.admin.date_joined|date:"d M Y" }}</td>
+                                <td>
+                                    {% if admin.admin.last_login %}
+                                        {{ admin.admin.last_login|date:"d M Y, h:i A" }}
+                                    {% else %}
+                                        <span class="text-muted">Never</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if admin.admin.is_active %}
+                                        <span class="badge badge-success">Active</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_admin' admin.id %}" class="btn btn-sm btn-warning" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% if admin.admin != request.user %}
+                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete({{ admin.id }}, '{{ admin.admin.first_name }} {{ admin.admin.last_name }}')" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No admin users found. Click "Add New Admin" to create one.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete admin user <strong id="deleteName"></strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone!</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#adminsTable').DataTable({
+        "order": [[4, "desc"]],
+        "pageLength": 25
+    });
+});
+
+function confirmDelete(adminId, adminName) {
+    $('#deleteName').text(adminName);
+    $('#deleteForm').attr('action', '/admin/delete-admin/' + adminId + '/');
+    $('#deleteModal').modal('show');
+}
+</script>
+{% endblock content %}
+

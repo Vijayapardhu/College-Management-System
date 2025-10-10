@@ -1,0 +1,32 @@
+{%extends 'main_app/base.html' %}
+{%load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{%block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Send Message</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="icon fas fa-info-circle"></i>
+                            This template is ready for customization.
+                            <br><small>File: {{request.path}}</small>
+                        </div>
+                        
+                        <p class="text-muted">Add your content here...</p>
+                        
+                        <a href="{%url 'admin_messages' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{%endblock content %}

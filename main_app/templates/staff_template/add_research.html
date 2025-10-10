@@ -1,0 +1,133 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                {{ form.title }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Publication Type *</label>
+                                {{ form.publication_type }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Authors *</label>
+                        {{ form.authors }}
+                        <small class="form-text text-muted">Comma-separated list (e.g., John Doe, Jane Smith)</small>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Publication Name *</label>
+                                {{ form.publication_name }}
+                                <small class="form-text text-muted">Journal/Conference name</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Publisher</label>
+                                {{ form.publisher }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Publication Date *</label>
+                                {{ form.publication_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Volume</label>
+                                {{ form.volume }}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Issue</label>
+                                {{ form.issue }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Page Numbers</label>
+                                {{ form.page_numbers }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>DOI</label>
+                                {{ form.doi }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>ISBN/ISSN</label>
+                                {{ form.isbn_issn }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Abstract</label>
+                        {{ form.abstract }}
+                    </div>
+                    <div class="form-group">
+                        <label>Keywords</label>
+                        {{ form.keywords }}
+                        <small class="form-text text-muted">Comma-separated keywords</small>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Citation Count</label>
+                                {{ form.citation_count }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Impact Factor</label>
+                                {{ form.impact_factor }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-3">
+                        {{ form.is_peer_reviewed }}
+                        <label class="custom-control-label" for="id_is_peer_reviewed">
+                            Peer Reviewed Publication
+                        </label>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Add Publication
+                    </button>
+                    <a href="{% url 'staff_my_research' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

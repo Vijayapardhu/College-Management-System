@@ -1,0 +1,98 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-paper-plane"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h5><i class="fas fa-exclamation-triangle"></i> Confirm Result Publication</h5>
+                    <p class="mb-0">Once published, students will be able to view their results. This action cannot be undone.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3 class="card-title">Result Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Student:</strong> {{ result.student.admin.first_name }} {{ result.student.admin.last_name }}</p>
+                                <p><strong>Roll Number:</strong> {{ result.student.roll_number }}</p>
+                                <p><strong>Course:</strong> {{ result.student.course.name }}</p>
+                                <p><strong>Semester:</strong> {{ result.semester }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>SGPA:</strong> <span class="text-primary"><h4>{{ result.sgpa }}</h4></span></p>
+                                <p><strong>CGPA:</strong> <span class="text-success"><h4>{{ result.cgpa }}</h4></span></p>
+                                <p><strong>Percentage:</strong> {{ result.percentage }}%</p>
+                                <p><strong>Backlogs:</strong> 
+                                    {% if result.has_backlogs %}
+                                    <span class="badge badge-danger">{{ result.number_of_backlogs }}</span>
+                                    {% else %}
+                                    <span class="badge badge-success">None</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        {% if result.subject_results.all %}
+                        <hr>
+                        <h6>Subject-wise Results:</h6>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Internal</th>
+                                    <th>External</th>
+                                    <th>Total</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject_result in result.subject_results.all %}
+                                <tr>
+                                    <td>{{ subject_result.subject.name }}</td>
+                                    <td>{{ subject_result.internal_marks }}</td>
+                                    <td>{{ subject_result.external_marks }}</td>
+                                    <td>{{ subject_result.internal_marks|add:subject_result.external_marks }} / {{ subject_result.max_marks }}</td>
+                                    <td><span class="badge badge-info">{{ subject_result.grade }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="confirmPublish" name="confirm" required>
+                                <label class="custom-control-label" for="confirmPublish">
+                                    I confirm that all results are verified and ready to be published
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane"></i> Publish Result
+                            </button>
+                            <a href="{% url 'manage_results' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

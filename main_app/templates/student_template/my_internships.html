@@ -1,0 +1,83 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-briefcase"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'student_add_internship' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Add Internship
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if internships %}
+                <div class="row">
+                    {% for internship in internships %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 {% if internship.status == 'completed' %}border-success{% elif internship.status == 'ongoing' %}border-primary{% elif internship.status == 'cancelled' %}border-danger{% else %}border-warning{% endif %}">
+                            <div class="card-header {% if internship.status == 'completed' %}bg-success{% elif internship.status == 'ongoing' %}bg-primary{% elif internship.status == 'cancelled' %}bg-danger{% else %}bg-warning{% endif %}">
+                                <h5 class="card-title mb-0">
+                                    {{ internship.company_name }}
+                                    <span class="badge badge-light float-right">{{ internship.get_status_display }}</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong><i class="fas fa-user-tie"></i> Role:</strong> {{ internship.role }}</p>
+                                <p><strong><i class="fas fa-briefcase"></i> Type:</strong> {{ internship.get_internship_type_display }}</p>
+                                <p><strong><i class="fas fa-calendar-alt"></i> Duration:</strong> {{ internship.start_date|date:"Y-m-d" }} to {{ internship.end_date|date:"Y-m-d" }} ({{ internship.duration_months }} months)</p>
+                                {% if internship.stipend %}
+                                <p><strong><i class="fas fa-rupee-sign"></i> Stipend:</strong> ₹{{ internship.stipend }}</p>
+                                {% endif %}
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ internship.location }}</p>
+                                {% if internship.supervisor_name %}
+                                <p><strong><i class="fas fa-user"></i> Supervisor:</strong> {{ internship.supervisor_name }}</p>
+                                {% endif %}
+                                {% if internship.description %}
+                                <p class="text-muted"><small>{{ internship.description|truncatewords:20 }}</small></p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    {% if internship.offer_letter %}
+                                    <div class="col-6">
+                                        <a href="{{ internship.offer_letter.url }}" class="btn btn-info btn-sm btn-block" download>
+                                            <i class="fas fa-file-pdf"></i> Offer Letter
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    {% if internship.completion_certificate %}
+                                    <div class="col-6">
+                                        <a href="{{ internship.completion_certificate.url }}" class="btn btn-success btn-sm btn-block" download>
+                                            <i class="fas fa-certificate"></i> Certificate
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if internship.approved_by %}
+                                <small class="text-muted">Approved by: {{ internship.approved_by.admin.first_name }}</small>
+                                {% else %}
+                                <small class="text-warning">Pending Approval</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Internships Added Yet</h5>
+                    <p class="mb-0">Start building your professional experience! <a href="{% url 'student_add_internship' %}">Add your first internship</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

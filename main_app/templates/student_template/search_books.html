@@ -1,0 +1,148 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-search"></i> Library Book Search</h3>
+            </div>
+            <div class="card-body">
+                <!-- Search Form -->
+                <form method="GET" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search by title, author, or ISBN" value="{{ search_query }}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="category" class="form-control">
+                                <option value="">All Categories</option>
+                                <option value="textbook" {% if selected_category == 'textbook' %}selected{% endif %}>Text Book</option>
+                                <option value="reference" {% if selected_category == 'reference' %}selected{% endif %}>Reference Book</option>
+                                <option value="journal" {% if selected_category == 'journal' %}selected{% endif %}>Journal</option>
+                                <option value="magazine" {% if selected_category == 'magazine' %}selected{% endif %}>Magazine</option>
+                                <option value="ebook" {% if selected_category == 'ebook' %}selected{% endif %}>E-Book</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="subject" class="form-control">
+                                <option value="">All Subjects</option>
+                                {% for subject in subjects %}
+                                <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ subject.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{% url 'student_search_books' %}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-redo"></i> Reset
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Books Grid -->
+                {% if books %}
+                <div class="row">
+                    {% for book in books %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        {% if book.cover_image %}
+                                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-fluid">
+                                        {% else %}
+                                        <div class="bg-secondary text-white p-4 text-center">
+                                            <i class="fas fa-book fa-3x"></i>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-8">
+                                        <h6 class="card-title">{{ book.title|truncatewords:8 }}</h6>
+                                        <p class="card-text small text-muted">
+                                            <i class="fas fa-user"></i> {{ book.author }}<br>
+                                            <i class="fas fa-building"></i> {{ book.publisher }}<br>
+                                            <i class="fas fa-calendar"></i> {{ book.published_year }}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-2">
+                                
+                                <div class="row small">
+                                    <div class="col-6">
+                                        <span class="badge badge-primary">{{ book.get_category_display }}</span>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        {% if book.is_available %}
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-check"></i> Available ({{ book.available_copies }})
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-danger">
+                                                <i class="fas fa-times"></i> Not Available
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                {% if book.isbn %}
+                                <div class="mt-2 small">
+                                    <strong>ISBN:</strong> {{ book.isbn }}
+                                </div>
+                                {% endif %}
+                                
+                                {% if book.subject %}
+                                <div class="small">
+                                    <strong>Subject:</strong> {{ book.subject.name }}
+                                </div>
+                                {% endif %}
+                                
+                                {% if book.shelf_number %}
+                                <div class="small">
+                                    <strong>Shelf:</strong> {{ book.shelf_number }}
+                                </div>
+                                {% endif %}
+                                
+                                {% if book.description %}
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-link p-0" data-toggle="collapse" data-target="#desc{{ book.id }}">
+                                        <i class="fas fa-info-circle"></i> View Description
+                                    </button>
+                                    <div class="collapse" id="desc{{ book.id }}">
+                                        <p class="small mt-2">{{ book.description }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> To borrow books, visit the library or contact the librarian.
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-search"></i> No books found matching your criteria. Try different search terms.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

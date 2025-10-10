@@ -1,0 +1,134 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-edit"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_name">Department Name *</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.name.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_code">Department Code</label>
+                                {{ form.code }}
+                                {% if form.code.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.code.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <small class="form-text text-muted">e.g., CSE, ECE, MECH</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_hod">Head of Department (HOD)</label>
+                                {{ form.hod }}
+                                {% if form.hod.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.hod.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Select the HOD for this department</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id_contact_email">Contact Email</label>
+                                {{ form.contact_email }}
+                                {% if form.contact_email.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.contact_email.errors %}
+                                    <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_contact_number">Contact Number</label>
+                        {{ form.contact_number }}
+                        {% if form.contact_number.errors %}
+                        <div class="text-danger">
+                            {% for error in form.contact_number.errors %}
+                            <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6><i class="fas fa-info-circle"></i> Department Information:</h6>
+                        <ul class="mb-0">
+                            <li>Department name is required</li>
+                            <li>Code should be unique (e.g., CSE for Computer Science)</li>
+                            <li>You can assign or update the HOD</li>
+                            <li>Contact details help students reach the department</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-warning btn-lg">
+                        <i class="fas fa-save"></i> Update Department
+                    </button>
+                    <a href="{% url 'manage_departments' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Departments
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Current Department Info -->
+        <div class="card mt-3">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-info-circle"></i> Current Department Details</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Department Name:</strong> {{ department.name }}</p>
+                        <p><strong>Department Code:</strong> {{ department.code|default:"Not Set" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Current HOD:</strong> 
+                            {% if department.hod %}
+                            {{ department.hod.admin.first_name }} {{ department.hod.admin.last_name }}
+                            {% else %}
+                            <span class="text-muted">Not Assigned</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Contact:</strong> {{ department.contact_email|default:"Not Set" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

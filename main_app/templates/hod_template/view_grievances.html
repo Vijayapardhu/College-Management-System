@@ -1,0 +1,260 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-exclamation-circle"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if grievances %}
+                <ul class="nav nav-tabs" id="grievanceTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#pending">
+                            Pending <span class="badge badge-warning">{{ grievances|length }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#assigned">Assigned</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#resolved">Resolved</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#all">All</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3">
+                    <!-- Pending Tab -->
+                    <div class="tab-pane fade show active" id="pending">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for grievance in grievances %}
+                                    {% if grievance.status == 'pending' %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</strong>
+                                            <br><small class="text-muted">{{ grievance.student.roll_number }}</small>
+                                        </td>
+                                        <td><span class="badge badge-info">{{ grievance.get_grievance_type_display }}</span></td>
+                                        <td>{{ grievance.description|truncatewords:15 }}</td>
+                                        <td>{{ grievance.created_at|date:"Y-m-d H:i" }}</td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#grievanceModal{{ grievance.id }}">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#assignModal{{ grievance.id }}">
+                                                <i class="fas fa-user-plus"></i> Assign
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Assigned Tab -->
+                    <div class="tab-pane fade" id="assigned">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Assigned To</th>
+                                    <th>Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grievance in grievances %}
+                                {% if grievance.status == 'assigned' %}
+                                <tr>
+                                    <td>{{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</td>
+                                    <td>{{ grievance.get_grievance_type_display }}</td>
+                                    <td>
+                                        {% if grievance.assigned_to %}
+                                        {{ grievance.assigned_to.admin.first_name }}
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ grievance.created_at|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#grievanceModal{{ grievance.id }}">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Resolved Tab -->
+                    <div class="tab-pane fade" id="resolved">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Resolved By</th>
+                                    <th>Resolved Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grievance in grievances %}
+                                {% if grievance.status == 'resolved' %}
+                                <tr>
+                                    <td>{{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</td>
+                                    <td>{{ grievance.get_grievance_type_display }}</td>
+                                    <td>
+                                        {% if grievance.resolved_by %}
+                                        {{ grievance.resolved_by.admin.first_name }}
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ grievance.resolved_at|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#grievanceModal{{ grievance.id }}">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- All Tab -->
+                    <div class="tab-pane fade" id="all">
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grievance in grievances %}
+                                <tr>
+                                    <td>{{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</td>
+                                    <td>{{ grievance.get_grievance_type_display }}</td>
+                                    <td>
+                                        {% if grievance.status == 'resolved' %}
+                                        <span class="badge badge-success">Resolved</span>
+                                        {% elif grievance.status == 'assigned' %}
+                                        <span class="badge badge-info">Assigned</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ grievance.created_at|date:"Y-m-d" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Modals for each grievance -->
+                {% for grievance in grievances %}
+                <!-- Details Modal -->
+                <div class="modal fade" id="grievanceModal{{ grievance.id }}">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info">
+                                <h4 class="modal-title">Grievance Details</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Student:</strong> {{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }} ({{ grievance.student.roll_number }})</p>
+                                <p><strong>Type:</strong> {{ grievance.get_grievance_type_display }}</p>
+                                <p><strong>Status:</strong> {{ grievance.get_status_display }}</p>
+                                <p><strong>Submitted:</strong> {{ grievance.created_at|date:"Y-m-d H:i" }}</p>
+                                <hr>
+                                <h6>Description</h6>
+                                <p>{{ grievance.description }}</p>
+                                {% if grievance.assigned_to %}
+                                <p><strong>Assigned To:</strong> {{ grievance.assigned_to.admin.first_name }}</p>
+                                {% endif %}
+                                {% if grievance.resolution %}
+                                <hr>
+                                <h6>Resolution</h6>
+                                <p>{{ grievance.resolution }}</p>
+                                <p><strong>Resolved By:</strong> {{ grievance.resolved_by.admin.first_name }}</p>
+                                <p><strong>Resolved At:</strong> {{ grievance.resolved_at }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Assign Modal -->
+                {% if grievance.status == 'pending' %}
+                <div class="modal fade" id="assignModal{{ grievance.id }}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning">
+                                <h4 class="modal-title">Assign Grievance</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <form method="post" action="{% url 'assign_grievance' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="grievance_id" value="{{ grievance.id }}">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Assign to Staff Member</label>
+                                        <select name="staff_id" class="form-control" required>
+                                            <option value="">-- Select Staff --</option>
+                                            {% for staff in all_staff %}
+                                            <option value="{{ staff.id }}">{{ staff.admin.first_name }} {{ staff.admin.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-warning">Assign</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Grievances</h5>
+                    <p class="mb-0">No grievances have been submitted. Excellent!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

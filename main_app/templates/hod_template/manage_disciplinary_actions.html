@@ -1,0 +1,147 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-danger">
+                <h3 class="card-title"><i class="fas fa-gavel"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_disciplinary_action' %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-plus"></i> Record New Action
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if actions %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="disciplinaryTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Incident Date</th>
+                                <th>Severity</th>
+                                <th>Action Taken</th>
+                                <th>Fine</th>
+                                <th>Reported By</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for action in actions %}
+                            <tr>
+                                <td>
+                                    <strong>{{ action.student.admin.first_name }} {{ action.student.admin.last_name }}</strong>
+                                    <br><small class="text-muted">{{ action.student.roll_number }}</small>
+                                </td>
+                                <td>{{ action.incident_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if action.severity == 'severe' %}
+                                    <span class="badge badge-danger">{{ action.get_severity_display }}</span>
+                                    {% elif action.severity == 'major' %}
+                                    <span class="badge badge-warning">{{ action.get_severity_display }}</span>
+                                    {% elif action.severity == 'moderate' %}
+                                    <span class="badge badge-info">{{ action.get_severity_display }}</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{ action.get_severity_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-dark">{{ action.get_action_taken_display }}</span>
+                                </td>
+                                <td>
+                                    {% if action.fine_amount %}
+                                    <strong class="text-danger">₹{{ action.fine_amount }}</strong>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ action.reported_by.admin.first_name|default:"System" }}</td>
+                                <td>
+                                    {% if action.is_resolved %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Resolved</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-clock"></i> Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#actionModal{{ action.id }}">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Details Modal -->
+                            <div class="modal fade" id="actionModal{{ action.id }}">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h4 class="modal-title">Disciplinary Action Details</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6>Student Information</h6>
+                                                    <p><strong>Name:</strong> {{ action.student.admin.first_name }} {{ action.student.admin.last_name }}</p>
+                                                    <p><strong>Roll Number:</strong> {{ action.student.roll_number }}</p>
+                                                    <p><strong>Course:</strong> {{ action.student.course.name }}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>Incident Details</h6>
+                                                    <p><strong>Date:</strong> {{ action.incident_date|date:"Y-m-d" }}</p>
+                                                    <p><strong>Severity:</strong> {{ action.get_severity_display }}</p>
+                                                    <p><strong>Reported By:</strong> {{ action.reported_by.admin.first_name }}</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <h6>Incident Description</h6>
+                                            <p>{{ action.incident_description }}</p>
+                                            <hr>
+                                            <h6>Action Taken</h6>
+                                            <p><strong>Type:</strong> {{ action.get_action_taken_display }}</p>
+                                            <p><strong>Description:</strong> {{ action.action_description }}</p>
+                                            {% if action.fine_amount %}
+                                            <p><strong>Fine Amount:</strong> ₹{{ action.fine_amount }}</p>
+                                            {% endif %}
+                                            {% if action.suspension_from %}
+                                            <p><strong>Suspension Period:</strong> {{ action.suspension_from|date:"Y-m-d" }} to {{ action.suspension_to|date:"Y-m-d" }}</p>
+                                            {% endif %}
+                                            {% if action.action_by %}
+                                            <p><strong>Action By:</strong> {{ action.action_by.admin.first_name }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Disciplinary Actions</h5>
+                    <p class="mb-0">No disciplinary actions have been recorded. This is a good sign!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#disciplinaryTable').DataTable({
+        "order": [[1, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+

@@ -1,0 +1,96 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card border-danger">
+            <div class="card-header bg-danger">
+                <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-info-circle"></i> Reporting Maintenance Issue:</h6>
+                        <p class="mb-0">Fill in the details of the issue. The classroom will be marked as "Under Maintenance" until resolved.</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Classroom *</label>
+                                {{ form.classroom }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Issue Type *</label>
+                                {{ form.issue_type }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Issue Description *</label>
+                        {{ form.issue_description }}
+                        <small class="form-text text-muted">Provide detailed description of the problem</small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Estimated Cost (₹)</label>
+                                {{ form.estimated_cost }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Assign To (Maintenance Staff)</label>
+                                {{ form.assigned_to }}
+                                <small class="form-text text-muted">Name of person assigned to fix</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Additional Remarks</label>
+                        {{ form.remarks }}
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-tools"></i> Issue Types:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Electrical:</strong> Lights, fans, switches, power issues</li>
+                                    <li><strong>Furniture:</strong> Desks, chairs, boards damage</li>
+                                    <li><strong>Cleaning:</strong> Deep cleaning, sanitation needed</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><strong>Equipment:</strong> Projector, AC, audio system issues</li>
+                                    <li><strong>Structural:</strong> Walls, ceiling, flooring damage</li>
+                                    <li><strong>Other:</strong> Any other maintenance need</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-exclamation-triangle"></i> Report Maintenance Issue
+                    </button>
+                    <a href="{% url 'classroom_maintenance' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Maintenance
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

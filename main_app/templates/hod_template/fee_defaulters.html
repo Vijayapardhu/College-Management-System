@@ -1,0 +1,71 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-danger">
+                <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if defaulters %}
+                <div class="alert alert-warning">
+                    <h5><i class="fas fa-info-circle"></i> Fee Defaulters Summary:</h5>
+                    <p class="mb-0"><strong>Total Defaulters:</strong> {{ defaulters.count }} students with pending dues</p>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="defaultersTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th>Total Fee</th>
+                                <th>Paid</th>
+                                <th>Pending</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in defaulters %}
+                            <tr>
+                                <td><strong>{{ student.roll_number }}</strong></td>
+                                <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
+                                <td>{{ student.course.name }}</td>
+                                <td>{{ student.current_semester|default:"N/A" }}</td>
+                                <td class="text-primary"><strong>₹{{ student.total_fee|default:"0" }}</strong></td>
+                                <td class="text-success">₹{{ student.paid_amount|default:"0" }}</td>
+                                <td class="text-danger"><strong>₹{{ student.pending_amount|default:"0" }}</strong></td>
+                                <td>
+                                    <small>{{ student.admin.email }}</small><br>
+                                    <small>{{ student.mobile_number|default:"-" }}</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Fee Defaulters</h5>
+                    <p class="mb-0">All students have paid their fees on time. Excellent!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#defaultersTable').DataTable({
+        "order": [[6, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}

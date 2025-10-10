@@ -1,0 +1,100 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-eye"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Student Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong> {{ application.student.admin.first_name }} {{ application.student.admin.last_name }}</p>
+                                <p><strong>Roll Number:</strong> {{ application.student.roll_number }}</p>
+                                <p><strong>Course:</strong> {{ application.student.course.name }}</p>
+                                <p><strong>Email:</strong> {{ application.student.admin.email }}</p>
+                                <p><strong>Current Semester:</strong> {{ application.student.current_semester|default:"N/A" }}</p>
+                                <p><strong>CGPA:</strong> {{ application.student.current_cgpa|default:"N/A" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card card-warning">
+                            <div class="card-header">
+                                <h3 class="card-title">Scholarship Details</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Scholarship:</strong> {{ application.scholarship.name }}</p>
+                                <p><strong>Type:</strong> {{ application.scholarship.get_scholarship_type_display }}</p>
+                                <p><strong>Amount:</strong> <span class="text-success"><strong>₹{{ application.scholarship.amount }}</strong></span></p>
+                                <p><strong>Minimum CGPA:</strong> {{ application.scholarship.minimum_cgpa|default:"N/A" }}</p>
+                                <p><strong>Applied Date:</strong> {{ application.applied_date|date:"Y-m-d" }}</p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge badge-warning">{{ application.get_status_display }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header bg-light">
+                        <h3 class="card-title">Application Details</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if application.reason %}
+                        <p><strong>Reason/Justification:</strong></p>
+                        <p>{{ application.reason }}</p>
+                        {% endif %}
+                        {% if application.documents %}
+                        <p><a href="{{ application.documents.url }}" class="btn btn-primary" download>
+                            <i class="fas fa-download"></i> Download Supporting Documents
+                        </a></p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title">Review & Decision</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Decision *</label>
+                                <select name="decision" class="form-control" required>
+                                    <option value="">-- Select Decision --</option>
+                                    <option value="approve">Approve</option>
+                                    <option value="reject">Reject</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="3" placeholder="Add any comments or reasons..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Submit Decision
+                            </button>
+                            <a href="{% url 'scholarship_applications' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Applications
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

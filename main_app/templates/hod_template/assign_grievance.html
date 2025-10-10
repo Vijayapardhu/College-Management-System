@@ -1,0 +1,89 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-user-plus"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Grievance Details</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Student:</strong> {{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</p>
+                                <p><strong>Roll Number:</strong> {{ grievance.student.roll_number }}</p>
+                                <p><strong>Type:</strong> <span class="badge badge-info">{{ grievance.get_grievance_type_display }}</span></p>
+                                <p><strong>Submitted:</strong> {{ grievance.submitted_at|date:"Y-m-d H:i" }}</p>
+                                <p><strong>Status:</strong> <span class="badge badge-warning">{{ grievance.get_status_display }}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Description</h3>
+                            </div>
+                            <div class="card-body">
+                                <p>{{ grievance.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header bg-success">
+                            <h3 class="card-title">Assign to Staff Member</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Select Staff Member *</label>
+                                <select name="staff_id" class="form-control" required>
+                                    <option value="">-- Select Staff to Handle This Grievance --</option>
+                                    {% for staff in all_staff %}
+                                    <option value="{{ staff.id }}">
+                                        {{ staff.admin.first_name }} {{ staff.admin.last_name }}
+                                        {% if staff.designation %} - {{ staff.designation }}{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select name="priority" class="form-control">
+                                    <option value="normal">Normal</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Instructions to Staff</label>
+                                <textarea name="instructions" class="form-control" rows="3" placeholder="Any specific instructions for handling this grievance..."></textarea>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Assign Grievance
+                            </button>
+                            <a href="{% url 'view_grievances' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

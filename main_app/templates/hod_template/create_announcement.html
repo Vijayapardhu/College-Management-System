@@ -1,0 +1,146 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-bullhorn"></i> Post New Announcement</h3>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="title">Announcement Title *</label>
+                                <input type="text" name="title" id="title" class="form-control" 
+                                       placeholder="E.g., Exam Schedule Released" required maxlength="200">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea name="message" id="message" class="form-control" rows="6" 
+                                          placeholder="Type your announcement here..." required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="priority">Priority Level *</label>
+                                        <select name="priority" id="priority" class="form-control" required>
+                                            <option value="low">Low - General information</option>
+                                            <option value="medium" selected>Medium - Important update</option>
+                                            <option value="high">High - Urgent notice</option>
+                                            <option value="urgent">Urgent - Critical alert</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="target_audience">Target Audience *</label>
+                                        <select name="target_audience" id="target_audience" class="form-control" required>
+                                            <option value="all">Everyone (All Users)</option>
+                                            <option value="students">Students Only</option>
+                                            <option value="staff">Staff/Faculty Only</option>
+                                            <option value="course">Specific Course</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group course-select" style="display:none;">
+                                <label for="course">Select Course *</label>
+                                <select name="course" id="course" class="form-control">
+                                    <option value="">-- Select Course --</option>
+                                    {% for course in courses %}
+                                    <option value="{{ course.id }}">{{ course.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expires_at">Expiry Date (Optional)</label>
+                                <input type="datetime-local" name="expires_at" id="expires_at" class="form-control">
+                                <small class="form-text text-muted">Leave empty for permanent announcement</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="attachment">Attachment (Optional)</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="attachment" name="attachment">
+                                    <label class="custom-file-label" for="attachment">Choose file...</label>
+                                </div>
+                                <small class="form-text text-muted">PDF, DOC, Image files supported (Max 5MB)</small>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <h5><i class="icon fas fa-info-circle"></i> Preview</h5>
+                                <div id="preview">
+                                    <strong id="preview-title">Title will appear here</strong>
+                                    <p id="preview-message" class="text-muted">Message preview...</p>
+                                    <span class="badge badge-secondary" id="preview-priority">Medium Priority</span>
+                                    <span class="badge badge-info" id="preview-audience">Everyone</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-bullhorn"></i> Post Announcement
+                            </button>
+                            <a href="{% url 'admin_view_announcements' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    // Show/hide course selector
+    $('#target_audience').change(function() {
+        if ($(this).val() === 'course') {
+            $('.course-select').show();
+            $('#course').prop('required', true);
+        } else {
+            $('.course-select').hide();
+            $('#course').prop('required', false);
+        }
+    });
+
+    // Live preview
+    $('#title').on('input', function() {
+        $('#preview-title').text($(this).val() || 'Title will appear here');
+    });
+
+    $('#message').on('input', function() {
+        $('#preview-message').text($(this).val() || 'Message preview...');
+    });
+
+    $('#priority').change(function() {
+        const priority = $(this).val();
+        $('#preview-priority')
+            .text(priority.charAt(0).toUpperCase() + priority.slice(1) + ' Priority')
+            .removeClass('badge-secondary badge-warning badge-danger')
+            .addClass(priority === 'urgent' ? 'badge-danger' : priority === 'high' ? 'badge-warning' : 'badge-secondary');
+    });
+
+    $('#target_audience').change(function() {
+        const audience = $(this).find('option:selected').text();
+        $('#preview-audience').text(audience);
+    });
+
+    // File input
+    $('.custom-file-input').on('change', function() {
+        const fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').html(fileName);
+    });
+</script>
+{% endblock custom_js %}

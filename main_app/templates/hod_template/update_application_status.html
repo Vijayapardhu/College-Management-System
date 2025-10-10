@@ -1,0 +1,114 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-edit"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Student Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong> {{ application.student.admin.first_name }} {{ application.student.admin.last_name }}</p>
+                                <p><strong>Roll Number:</strong> {{ application.student.roll_number }}</p>
+                                <p><strong>Course:</strong> {{ application.student.course.name }}</p>
+                                <p><strong>CGPA:</strong> {{ application.student.current_cgpa|default:"N/A" }}</p>
+                                <p><strong>Email:</strong> {{ application.student.admin.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">Placement Drive Details</h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Company:</strong> {{ application.drive.company.name }}</p>
+                                <p><strong>Role:</strong> {{ application.drive.job_role }}</p>
+                                <p><strong>Package:</strong> ₹{{ application.drive.salary_package }} LPA</p>
+                                <p><strong>Drive Date:</strong> {{ application.drive.drive_date|date:"Y-m-d" }}</p>
+                                <p><strong>Applied On:</strong> {{ application.applied_date|date:"Y-m-d" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if application.resume %}
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <a href="{{ application.resume.url }}" class="btn btn-primary" download>
+                            <i class="fas fa-download"></i> Download Resume
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h3 class="card-title">Update Application Status</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Status *</label>
+                                <select name="status" class="form-control" required>
+                                    <option value="">-- Select Status --</option>
+                                    <option value="applied" {% if application.status == 'applied' %}selected{% endif %}>Applied</option>
+                                    <option value="shortlisted" {% if application.status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                                    <option value="selected" {% if application.status == 'selected' %}selected{% endif %}>Selected</option>
+                                    <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="3">{{ application.remarks }}</textarea>
+                            </div>
+                            
+                            <div class="form-group" id="packageDiv" style="display:none;">
+                                <label>Offered Package (LPA)</label>
+                                <input type="number" name="offered_package" class="form-control" step="0.01" value="{{ application.offered_package }}">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Update Status
+                            </button>
+                            <a href="{% url 'view_placement_applications' application.drive.id %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Applications
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('select[name="status"]').change(function() {
+        if ($(this).val() == 'selected') {
+            $('#packageDiv').show();
+        } else {
+            $('#packageDiv').hide();
+        }
+    });
+    
+    // Trigger on load
+    if ($('select[name="status"]').val() == 'selected') {
+        $('#packageDiv').show();
+    }
+});
+</script>
+{% endblock content %}

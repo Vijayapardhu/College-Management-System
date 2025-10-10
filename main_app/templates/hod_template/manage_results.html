@@ -1,0 +1,105 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-chart-bar"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_semester_result' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Add Semester Result
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Filter Options -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <select class="form-control" id="courseFilter">
+                            <option value="">All Courses</option>
+                            {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="semesterFilter">
+                            <option value="">All Semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                    </div>
+                </div>
+                
+                {% if results %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="resultsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Roll Number</th>
+                                <th>Course</th>
+                                <th>Semester</th>
+                                <th>SGPA</th>
+                                <th>CGPA</th>
+                                <th>Percentage</th>
+                                <th>Backlogs</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.student.admin.first_name }} {{ result.student.admin.last_name }}</td>
+                                <td>{{ result.student.roll_number }}</td>
+                                <td>{{ result.student.course.name }}</td>
+                                <td>Sem {{ result.semester }}</td>
+                                <td><strong>{{ result.sgpa }}</strong></td>
+                                <td><strong>{{ result.cgpa }}</strong></td>
+                                <td>{{ result.percentage }}%</td>
+                                <td>
+                                    {% if result.has_backlogs %}
+                                    <span class="badge badge-danger">{{ result.number_of_backlogs }}</span>
+                                    {% else %}
+                                    <span class="badge badge-success">0</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'publish_result' result.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Publish
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Results Available</h5>
+                    <p class="mb-0">No semester results have been added yet. <a href="{% url 'add_semester_result' %}">Add semester results</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#resultsTable').DataTable({
+        "order": [[3, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}

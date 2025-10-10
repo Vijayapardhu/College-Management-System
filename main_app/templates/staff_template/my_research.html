@@ -1,0 +1,87 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-flask"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'staff_add_research' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Add Publication
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if publications %}
+                {% for pub in publications %}
+                <div class="card mb-3">
+                    <div class="card-header {% if pub.publication_type == 'journal' %}bg-primary{% elif pub.publication_type == 'conference' %}bg-info{% elif pub.publication_type == 'book' %}bg-success{% else %}bg-warning{% endif %}">
+                        <h5 class="card-title mb-0">
+                            {{ pub.title }}
+                            <span class="badge badge-light float-right">{{ pub.get_publication_type_display }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Authors:</strong> {{ pub.authors }}</p>
+                        <p><strong>Published In:</strong> {{ pub.publication_name }}</p>
+                        {% if pub.publisher %}
+                        <p><strong>Publisher:</strong> {{ pub.publisher }}</p>
+                        {% endif %}
+                        <p><strong>Date:</strong> {{ pub.publication_date|date:"Y-m-d" }}</p>
+                        {% if pub.doi %}
+                        <p><strong>DOI:</strong> {{ pub.doi }}</p>
+                        {% endif %}
+                        {% if pub.isbn_issn %}
+                        <p><strong>ISBN/ISSN:</strong> {{ pub.isbn_issn }}</p>
+                        {% endif %}
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <div class="info-box bg-light">
+                                    <span class="info-box-icon"><i class="fas fa-quote-right"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Citations</span>
+                                        <span class="info-box-number">{{ pub.citation_count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if pub.impact_factor %}
+                            <div class="col-md-4">
+                                <div class="info-box bg-light">
+                                    <span class="info-box-icon"><i class="fas fa-chart-line"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Impact Factor</span>
+                                        <span class="info-box-number">{{ pub.impact_factor }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-4">
+                                {% if pub.is_peer_reviewed %}
+                                <span class="badge badge-success p-2"><i class="fas fa-check-circle"></i> Peer Reviewed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if pub.pdf_file %}
+                        <a href="{{ pub.pdf_file.url }}" class="btn btn-primary mt-2" download>
+                            <i class="fas fa-file-pdf"></i> Download PDF
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Publications Yet</h5>
+                    <p class="mb-0">You haven't added any research publications. <a href="{% url 'staff_add_research' %}">Add your first publication</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

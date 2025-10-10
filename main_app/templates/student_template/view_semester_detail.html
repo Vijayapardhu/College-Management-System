@@ -1,0 +1,157 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title">
+                    <i class="fas fa-file-alt"></i> Detailed Marksheet - Semester {{ semester_result.semester }}
+                </h3>
+                <div class="card-tools">
+                    <button class="btn btn-light btn-sm" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Student Info -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong>Student Name:</strong> {{ student.admin.first_name }} {{ student.admin.last_name }}</p>
+                        <p><strong>Roll Number:</strong> {{ student.roll_number|default:"N/A" }}</p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <p><strong>Course:</strong> {{ student.course.name }}</p>
+                        <p><strong>Session:</strong> {{ semester_result.session }}</p>
+                    </div>
+                </div>
+                
+                <!-- Overall Performance -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="info-box bg-info">
+                            <span class="info-box-icon"><i class="fas fa-graduation-cap"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">SGPA</span>
+                                <span class="info-box-number">{{ semester_result.sgpa|default:"N/A" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-success">
+                            <span class="info-box-icon"><i class="fas fa-chart-line"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">CGPA</span>
+                                <span class="info-box-number">{{ semester_result.cgpa|default:"N/A" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-warning">
+                            <span class="info-box-icon"><i class="fas fa-percent"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Percentage</span>
+                                <span class="info-box-number">{{ semester_result.percentage|default:"N/A" }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box {% if semester_result.has_backlogs %}bg-danger{% else %}bg-success{% endif %}">
+                            <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Backlogs</span>
+                                <span class="info-box-number">{{ semester_result.number_of_backlogs }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subject-wise Results -->
+                <h5 class="mb-3">Subject-wise Performance</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Subject</th>
+                                <th>Credits</th>
+                                <th>Internal</th>
+                                <th>External</th>
+                                <th>Total</th>
+                                <th>Max Marks</th>
+                                <th>Grade</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject_result in subject_results %}
+                            <tr {% if not subject_result.is_pass %}class="table-danger"{% endif %}>
+                                <td><strong>{{ subject_result.subject.name }}</strong></td>
+                                <td class="text-center">{{ subject_result.credits }}</td>
+                                <td class="text-center">{{ subject_result.internal_marks }}</td>
+                                <td class="text-center">{{ subject_result.external_marks }}</td>
+                                <td class="text-center"><strong>{{ subject_result.total_marks }}</strong></td>
+                                <td class="text-center">{{ subject_result.max_marks }}</td>
+                                <td class="text-center">
+                                    <span class="badge {% if subject_result.grade == 'O' %}badge-success{% elif subject_result.grade == 'F' %}badge-danger{% else %}badge-primary{% endif %}">
+                                        {{ subject_result.grade }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    {% if subject_result.is_pass %}
+                                        <span class="badge badge-success">PASS</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">FAIL</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="font-weight-bold bg-light">
+                            <tr>
+                                <td colspan="2">TOTAL</td>
+                                <td colspan="2" class="text-center">{{ semester_result.credits_earned }} / {{ semester_result.total_credits }} Credits</td>
+                                <td class="text-center">{{ semester_result.marks_obtained }}</td>
+                                <td class="text-center">{{ semester_result.total_marks }}</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                {% if semester_result.remarks %}
+                <div class="alert alert-warning mt-3">
+                    <strong>Remarks:</strong> {{ semester_result.remarks }}
+                </div>
+                {% endif %}
+                
+                <div class="text-muted small text-center mt-4">
+                    Published on: {{ semester_result.published_date|date:"d M Y" }}
+                </div>
+            </div>
+            <div class="card-footer no-print">
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Marksheet
+                </button>
+                <a href="{% url 'student_view_semester_results' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Results
+                </a>
+            </div>
+        </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+@media print {
+    .no-print, .main-sidebar, .main-header, .content-header {
+        display: none !important;
+    }
+}
+</style>
+{% endblock content %}
+
+

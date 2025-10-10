@@ -1,0 +1,74 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-file-upload"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Subject *</label>
+                                <select name="subject_id" class="form-control" required>
+                                    <option value="">-- Select Subject --</option>
+                                    {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }} ({{ subject.course.name }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Exam Type *</label>
+                                <select name="exam_type" class="form-control" required>
+                                    <option value="">-- Select Type --</option>
+                                    <option value="mid">Mid-Term Exam</option>
+                                    <option value="end">End-Term Exam</option>
+                                    <option value="internal">Internal Assessment</option>
+                                    <option value="supplementary">Supplementary Exam</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Answer Key Title *</label>
+                        <input type="text" name="title" class="form-control" required placeholder="e.g., Mid-Term Answer Key 2024-25">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Answer Key (PDF) *</label>
+                        <input type="file" name="answer_key" class="form-control" accept=".pdf" required>
+                        <small class="form-text text-muted">Only PDF files. Max size: 10MB</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-lightbulb"></i> Answer Key Guidelines:</h6>
+                        <ul class="mb-0">
+                            <li>Include detailed solutions for all questions</li>
+                            <li>Show step-by-step working for numerical problems</li>
+                            <li>Provide explanation for theoretical answers</li>
+                            <li>Mention marking scheme distribution</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-upload"></i> Upload Answer Key
+                    </button>
+                    <a href="{% url 'staff_home' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

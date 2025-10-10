@@ -1,0 +1,86 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-bullhorn"></i> Announcements</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if announcements %}
+                        {% for announcement in announcements %}
+                        <div class="card mb-3 
+                            {% if announcement.priority == 'urgent' %}border-danger
+                            {% elif announcement.priority == 'high' %}border-warning
+                            {% elif announcement.priority == 'medium' %}border-info
+                            {% else %}border-secondary{% endif %}">
+                            <div class="card-header 
+                                {% if announcement.priority == 'urgent' %}bg-danger text-white
+                                {% elif announcement.priority == 'high' %}bg-warning
+                                {% elif announcement.priority == 'medium' %}bg-info text-white
+                                {% else %}bg-light{% endif %}">
+                                <h5 class="card-title mb-0">
+                                    {% if announcement.priority == 'urgent' %}
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {% elif announcement.priority == 'high' %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    {% elif announcement.priority == 'medium' %}
+                                    <i class="fas fa-info-circle"></i>
+                                    {% else %}
+                                    <i class="fas fa-bell"></i>
+                                    {% endif %}
+                                    {{ announcement.title }}
+                                </h5>
+                                <small>
+                                    Posted by {{ announcement.posted_by.first_name }} {{ announcement.posted_by.last_name }} 
+                                    • {{ announcement.created_at|timesince }} ago
+                                </small>
+                            </div>
+                            <div class="card-body">
+                                <p>{{ announcement.message|linebreaks }}</p>
+                                
+                                {% if announcement.attachment %}
+                                <div class="mt-2">
+                                    <a href="{{ announcement.attachment.url }}" class="btn btn-sm btn-primary" download>
+                                        <i class="fas fa-paperclip"></i> Download Attachment
+                                    </a>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="mt-2">
+                                    {% if announcement.target_audience == 'all' %}
+                                    <span class="badge badge-primary"><i class="fas fa-globe"></i> Everyone</span>
+                                    {% elif announcement.target_audience == 'students' %}
+                                    <span class="badge badge-info"><i class="fas fa-user-graduate"></i> Students</span>
+                                    {% elif announcement.target_audience == 'course' %}
+                                    <span class="badge badge-success"><i class="fas fa-graduation-cap"></i> {{ announcement.course.name }}</span>
+                                    {% endif %}
+                                    
+                                    {% if announcement.expires_at %}
+                                    <span class="badge badge-warning">
+                                        <i class="far fa-clock"></i> Expires: {{ announcement.expires_at|date:"M d, Y" }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-bullhorn fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No Announcements</h4>
+                            <p>Important announcements and updates will appear here.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

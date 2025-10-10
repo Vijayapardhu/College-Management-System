@@ -1,0 +1,210 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Advanced Reports{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-dark">
+                <h3 class="card-title"><i class="fas fa-chart-pie"></i> Advanced Reports & Analytics</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Academic Performance Report -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Academic Performance</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Generate comprehensive academic reports</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Department-wise performance</li>
+                                    <li><i class="fas fa-check text-success"></i> Subject-wise analysis</li>
+                                    <li><i class="fas fa-check text-success"></i> Topper lists</li>
+                                    <li><i class="fas fa-check text-success"></i> Backlog statistics</li>
+                                </ul>
+                                <form method="post" action="{% url 'generate_academic_report' %}">
+                                    {% csrf_token %}
+                                    <select name="report_type" class="form-control mb-2" required>
+                                        <option value="semester">Semester-wise</option>
+                                        <option value="department">Department-wise</option>
+                                        <option value="course">Course-wise</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        <i class="fas fa-download"></i> Generate PDF
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Report -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Attendance Analytics</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Detailed attendance analysis</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Defaulter lists (&lt;75%)</li>
+                                    <li><i class="fas fa-check text-success"></i> Subject-wise attendance</li>
+                                    <li><i class="fas fa-check text-success"></i> Trends & graphs</li>
+                                    <li><i class="fas fa-check text-success"></i> Monthly summary</li>
+                                </ul>
+                                <form method="post" action="{% url 'generate_attendance_report' %}">
+                                    {% csrf_token %}
+                                    <select name="month" class="form-control mb-2" required>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-success btn-block">
+                                        <i class="fas fa-download"></i> Generate Report
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Placement Report -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Placement Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Complete placement analytics</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Placement percentage</li>
+                                    <li><i class="fas fa-check text-success"></i> Package distribution</li>
+                                    <li><i class="fas fa-check text-success"></i> Company-wise offers</li>
+                                    <li><i class="fas fa-check text-success"></i> Department comparison</li>
+                                </ul>
+                                <form method="post" action="{% url 'generate_placement_report' %}">
+                                    {% csrf_token %}
+                                    <select name="academic_year" class="form-control mb-2" required>
+                                        <option value="2024-25">2024-25</option>
+                                        <option value="2023-24">2023-24</option>
+                                        <option value="2022-23">2022-23</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-info btn-block">
+                                        <i class="fas fa-chart-bar"></i> View Analytics
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- Financial Report -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card card-warning">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Financial Reports</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Fee collection & financial analysis</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Total collection</li>
+                                    <li><i class="fas fa-check text-success"></i> Pending dues</li>
+                                    <li><i class="fas fa-check text-success"></i> Department-wise breakdown</li>
+                                    <li><i class="fas fa-check text-success"></i> Payment mode analysis</li>
+                                </ul>
+                                <form method="post" action="{% url 'generate_financial_report' %}">
+                                    {% csrf_token %}
+                                    <select name="period" class="form-control mb-2" required>
+                                        <option value="monthly">This Month</option>
+                                        <option value="quarterly">This Quarter</option>
+                                        <option value="yearly">This Year</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-warning btn-block">
+                                        <i class="fas fa-rupee-sign"></i> Generate Report
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Library Report -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Library Analytics</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Library usage & statistics</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Most issued books</li>
+                                    <li><i class="fas fa-check text-success"></i> Student reading habits</li>
+                                    <li><i class="fas fa-check text-success"></i> Overdue books</li>
+                                    <li><i class="fas fa-check text-success"></i> Fine collection</li>
+                                </ul>
+                                <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='{% url 'library_analytics' %}'">
+                                    <i class="fas fa-book"></i> View Analytics
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Student Progress Report -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card card-danger">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Student Progress Card</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Individual student comprehensive report</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success"></i> Academic performance</li>
+                                    <li><i class="fas fa-check text-success"></i> Attendance record</li>
+                                    <li><i class="fas fa-check text-success"></i> Disciplinary record</li>
+                                    <li><i class="fas fa-check text-success"></i> Activities & achievements</li>
+                                </ul>
+                                <form method="post" action="{% url 'generate_student_progress_card' %}">
+                                    {% csrf_token %}
+                                    <select name="student_id" class="form-control mb-2" required>
+                                        <option value="">-- Select Student --</option>
+                                        {% for student in students %}
+                                        <option value="{{ student.id }}">{{ student.admin.first_name }} ({{ student.roll_number }})</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-danger btn-block">
+                                        <i class="fas fa-file-pdf"></i> Generate Card
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('select[name="target_audience"]').change(function() {
+        if ($(this).val() == 'specific_course') {
+            $('#courseSelect').show();
+        } else {
+            $('#courseSelect').hide();
+        }
+    });
+});
+</script>
+{% endblock content %}
+
+

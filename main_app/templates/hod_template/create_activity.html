@@ -1,0 +1,103 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Activity Name *</label>
+                                {{ form.name }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Activity Type *</label>
+                                {{ form.activity_type }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description *</label>
+                        {{ form.description }}
+                        <small class="form-text text-muted">Provide details about the activity</small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Start Date *</label>
+                                {{ form.start_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>End Date *</label>
+                                {{ form.end_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Registration Deadline *</label>
+                                {{ form.registration_deadline }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Venue *</label>
+                                {{ form.venue }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Coordinator *</label>
+                                {{ form.coordinator }}
+                                <small class="form-text text-muted">Select a staff member to coordinate</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Maximum Participants *</label>
+                        {{ form.max_participants }}
+                        <small class="form-text text-muted">Maximum number of students who can register</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-lightbulb"></i> Activity Examples:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Sports:</strong> Cricket Tournament, Football Match, Athletics Meet</li>
+                            <li><strong>Cultural:</strong> Annual Day, Freshers Party, Cultural Fest</li>
+                            <li><strong>Technical:</strong> Hackathon, Project Expo, Tech Symposium</li>
+                            <li><strong>Social Service:</strong> Blood Donation Camp, Tree Plantation, Community Service</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Create Activity
+                    </button>
+                    <a href="{% url 'manage_sports_activities' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

@@ -1,0 +1,82 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-user-graduate"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if alumni %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="alumniTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Batch</th>
+                                <th>CGPA</th>
+                                <th>Current Company</th>
+                                <th>Designation</th>
+                                <th>Package</th>
+                                <th>Mentor</th>
+                                <th>Recruiter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alum in alumni %}
+                            <tr>
+                                <td><strong>{{ alum.student.admin.first_name }} {{ alum.student.admin.last_name }}</strong></td>
+                                <td>{{ alum.passout_year }}</td>
+                                <td>{{ alum.final_cgpa }}</td>
+                                <td>{{ alum.current_company|default:"Not Updated" }}</td>
+                                <td>{{ alum.current_designation|default:"-" }}</td>
+                                <td>
+                                    {% if alum.current_salary_package %}
+                                    ₹{{ alum.current_salary_package }} LPA
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if alum.is_willing_to_mentor %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Yes</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">No</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if alum.is_recruiter %}
+                                    <span class="badge badge-primary"><i class="fas fa-check"></i> Yes</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No alumni records available.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#alumniTable').DataTable({
+        "order": [[1, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+
+

@@ -1,0 +1,119 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Proctor Management</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'assign_proctor_to_student' %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-user-plus"></i> Assign Students to Proctor
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5>Active Proctors ({{ proctors.count }})</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Proctor Name</th>
+                                        <th>Email</th>
+                                        <th>Course</th>
+                                        <th>Assigned Students</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for proctor in proctors %}
+                                    <tr>
+                                        <td>{{ proctor.admin.first_name }} {{ proctor.admin.last_name }}</td>
+                                        <td>{{ proctor.admin.email }}</td>
+                                        <td>{{ proctor.course.name }}</td>
+                                        <td>{{ proctor.mentee_students.filter.count }}</td>
+                                        <td>
+                                            <a href="{% url 'edit_staff' proctor.id %}" class="btn btn-info btn-sm">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No proctors assigned yet</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr>
+
+                        <h5 class="mt-4">Current Assignments ({{ assignments.count }})</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Proctor</th>
+                                        <th>Student</th>
+                                        <th>Course</th>
+                                        <th>Assigned Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for assignment in assignments %}
+                                    <tr>
+                                        <td>{{ assignment.staff.admin.first_name }} {{ assignment.staff.admin.last_name }}</td>
+                                        <td>{{ assignment.student.admin.first_name }} {{ assignment.student.admin.last_name }}</td>
+                                        <td>{{ assignment.student.course.name }}</td>
+                                        <td>{{ assignment.assigned_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm remove-assignment" data-assignment-id="{{ assignment.id }}">
+                                                <i class="fas fa-times"></i> Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No student assignments yet</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $('.remove-assignment').click(function() {
+        if (!confirm('Remove this proctor assignment?')) return;
+        
+        const assignmentId = $(this).data('assignment-id');
+        $.ajax({
+            url: '{% url "remove_proctor_assignment" %}',
+            method: 'POST',
+            data: { assignment_id: assignmentId },
+            success: function(response) {
+                if (response.status === 'success') {
+                    location.reload();
+                } else {
+                    alert('Failed to remove assignment');
+                }
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}
+
+

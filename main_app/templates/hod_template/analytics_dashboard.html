@@ -1,0 +1,282 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-pie"></i> Comprehensive Analytics Dashboard</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Student Analytics -->
+        <h4 class="mb-3"><i class="fas fa-user-graduate"></i> Student Analytics</h4>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ total_students }}</h3>
+                        <p>Total Students</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ active_students }}</h3>
+                        <p>Active Students</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ graduated_students }}</h3>
+                        <p>Graduated</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>{{ course_stats|length }}</h3>
+                        <p>Courses Offered</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Financial Analytics -->
+        <h4 class="mb-3 mt-4"><i class="fas fa-money-bill-wave"></i> Financial Analytics</h4>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-rupee-sign"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Fee Collected</span>
+                        <span class="info-box-number">₹{{ total_fee_collected|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="info-box bg-warning">
+                    <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Pending Fee Payments</span>
+                        <span class="info-box-number">{{ pending_fees }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-award"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Scholarships Approved</span>
+                        <span class="info-box-number">{{ approved_scholarships }} / {{ scholarship_apps }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Placement Analytics -->
+        <h4 class="mb-3 mt-4"><i class="fas fa-briefcase"></i> Placement Analytics</h4>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-primary">
+                    <span class="info-box-icon"><i class="fas fa-building"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Companies</span>
+                        <span class="info-box-number">{{ total_companies }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-calendar-check"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Active Drives</span>
+                        <span class="info-box-number">{{ active_drives }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-warning">
+                    <span class="info-box-icon"><i class="fas fa-file-alt"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Applications</span>
+                        <span class="info-box-number">{{ total_applications }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-trophy"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Students Placed</span>
+                        <span class="info-box-number">{{ selected_students }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Facility Analytics -->
+        <h4 class="mb-3 mt-4"><i class="fas fa-building"></i> Facility Analytics</h4>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h5 class="mb-0">Hostel</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress mb-2" style="height: 25px;">
+                            <div class="progress-bar bg-success" style="width: {% if total_hostel_rooms > 0 %}{% widthratio occupied_hostel_rooms total_hostel_rooms 100 %}{% else %}0{% endif %}%">
+                                {{ occupied_hostel_rooms }} / {{ total_hostel_rooms }}
+                            </div>
+                        </div>
+                        <small>Rooms Occupied</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h5 class="mb-0">Transport</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress mb-2" style="height: 25px;">
+                            <div class="progress-bar bg-primary" style="width: {% if total_transport_seats > 0 %}{% widthratio occupied_transport_seats total_transport_seats 100 %}{% else %}0{% endif %}%">
+                                {{ occupied_transport_seats }} / {{ total_transport_seats }}
+                            </div>
+                        </div>
+                        <small>Seats Occupied</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h5 class="mb-0">Library</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <h3>{{ total_books }}</h3>
+                        <small>Total Books</small>
+                        <hr class="my-2">
+                        <p class="mb-0"><strong>{{ active_issues }}</strong> Active Issues</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0">Scholarships</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <h3>{{ active_scholarships }}</h3>
+                        <small>Active Programs</small>
+                        <hr class="my-2">
+                        <p class="mb-0"><strong>{{ scholarship_apps }}</strong> Applications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Category-wise Distribution -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Students by Category</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Students by Course</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="courseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+// Category Chart
+var categoryCtx = document.getElementById('categoryChart').getContext('2d');
+var categoryChart = new Chart(categoryCtx, {
+    type: 'pie',
+    data: {
+        labels: [{% for stat in category_stats %}'{{ stat.caste_category|upper }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            data: [{% for stat in category_stats %}{{ stat.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundColor: ['#4CAF50', '#2196F3', '#FF9800', '#F44336', '#9C27B0']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// Course Chart
+var courseCtx = document.getElementById('courseChart').getContext('2d');
+var courseChart = new Chart(courseCtx, {
+    type: 'bar',
+    data: {
+        labels: [{% for stat in course_stats %}'{{ stat.course__name }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Number of Students',
+            data: [{% for stat in course_stats %}{{ stat.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundColor: '#4CAF50'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock content %}
+
+

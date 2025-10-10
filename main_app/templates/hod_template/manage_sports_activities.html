@@ -1,0 +1,121 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-trophy"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'create_activity' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create New Activity
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if activities %}
+                <div class="row">
+                    {% for activity in activities %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 {% if activity.activity_type == 'sports' %}border-primary{% elif activity.activity_type == 'cultural' %}border-info{% elif activity.activity_type == 'technical' %}border-warning{% else %}border-success{% endif %}">
+                            <div class="card-header {% if activity.activity_type == 'sports' %}bg-primary{% elif activity.activity_type == 'cultural' %}bg-info{% elif activity.activity_type == 'technical' %}bg-warning{% else %}bg-success{% endif %}">
+                                <h5 class="card-title mb-0">
+                                    {{ activity.name }}
+                                    {% if activity.is_active %}
+                                    <span class="badge badge-light float-right"><i class="fas fa-check-circle"></i> Active</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary float-right"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    {% endif %}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong><i class="fas fa-tag"></i> Type:</strong> <span class="badge badge-info">{{ activity.get_activity_type_display }}</span></p>
+                                <p><strong><i class="fas fa-calendar-alt"></i> Dates:</strong> {{ activity.start_date|date:"Y-m-d" }} to {{ activity.end_date|date:"Y-m-d" }}</p>
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Venue:</strong> {{ activity.venue }}</p>
+                                <p><strong><i class="fas fa-user-tie"></i> Coordinator:</strong> {{ activity.coordinator.admin.first_name }} {{ activity.coordinator.admin.last_name }}</p>
+                                <p><strong><i class="fas fa-users"></i> Max Participants:</strong> {{ activity.max_participants }}</p>
+                                <p><strong><i class="fas fa-clock"></i> Registration Deadline:</strong> {{ activity.registration_deadline|date:"Y-m-d" }}</p>
+                                <p><strong><i class="fas fa-user-check"></i> Registered:</strong> {{ activity.participants.count }} students</p>
+                                {% if activity.description %}
+                                <hr>
+                                <p class="text-muted"><small>{{ activity.description|truncatewords:30 }}</small></p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#activityModal{{ activity.id }}">
+                                    <i class="fas fa-users"></i> View Participants
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Participants Modal -->
+                    <div class="modal fade" id="activityModal{{ activity.id }}">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-info">
+                                    <h4 class="modal-title">{{ activity.name }} - Participants</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if activity.participants.all %}
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Roll Number</th>
+                                                <th>Achievement</th>
+                                                <th>Certificate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for participant in activity.participants.all %}
+                                            <tr>
+                                                <td>{{ participant.student.admin.first_name }} {{ participant.student.admin.last_name }}</td>
+                                                <td>{{ participant.student.roll_number }}</td>
+                                                <td>
+                                                    {% if participant.achievement_level == 'winner' %}
+                                                    <span class="badge badge-success">1st Place</span>
+                                                    {% elif participant.achievement_level == 'runner_up' %}
+                                                    <span class="badge badge-info">2nd Place</span>
+                                                    {% elif participant.achievement_level == 'third' %}
+                                                    <span class="badge badge-warning">3rd Place</span>
+                                                    {% else %}
+                                                    <span class="badge badge-secondary">Participated</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if participant.certificate_issued %}
+                                                    <span class="badge badge-success"><i class="fas fa-check"></i> Issued</span>
+                                                    {% else %}
+                                                    <span class="badge badge-warning">Pending</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% else %}
+                                    <div class="alert alert-info">No participants yet.</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Activities Found</h5>
+                    <p class="mb-0">No sports or cultural activities have been created yet. <a href="{% url 'create_activity' %}">Create your first activity</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

@@ -1,0 +1,86 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-id-card"></i> Generate Admit Cards</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-primary">
+                            <h5 class="mb-2">{{ exam.name }}</h5>
+                            <p class="mb-0">
+                                <strong>Type:</strong> {{ exam.get_exam_type_display }} | 
+                                <strong>Session:</strong> {{ exam.session }} | 
+                                <strong>Semester:</strong> {{ exam.semester }}
+                            </p>
+                        </div>
+                        
+                        <div class="row text-center mb-4">
+                            <div class="col-md-4">
+                                <div class="info-box bg-info">
+                                    <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Students</span>
+                                        <span class="info-box-number">{{ total_students }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-box bg-success">
+                                    <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Already Generated</span>
+                                        <span class="info-box-number">{{ existing_cards }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-box bg-warning">
+                                    <span class="info-box-icon"><i class="fas fa-plus-circle"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">To Generate</span>
+                                        <span class="info-box-number">{{ to_generate }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if to_generate > 0 %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Confirm Generation:</strong> 
+                            This will generate {{ to_generate }} new admit cards for all eligible students.
+                        </div>
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-lg btn-success" onclick="return confirm('Generate {{ to_generate }} admit cards?')">
+                                    <i class="fas fa-id-card"></i> Generate {{ to_generate }} Admit Card{{ to_generate|pluralize }}
+                                </button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> All admit cards have already been generated for this exam!
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'manage_exams' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Exams
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

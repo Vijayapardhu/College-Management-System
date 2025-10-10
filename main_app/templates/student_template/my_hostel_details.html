@@ -1,0 +1,123 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-hotel"></i> My Hostel Details</h3>
+            </div>
+            <div class="card-body">
+                {% if allocation %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card border-success mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">
+                                    <i class="fas fa-hotel"></i> {{ allocation.hostel.name }}
+                                    <span class="badge badge-light float-right">Room {{ allocation.room_number }}</span>
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-success mb-3">Hostel Information</h5>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th width="40%">Hostel Name:</th>
+                                                <td><strong>{{ allocation.hostel.name }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Hostel Type:</th>
+                                                <td>
+                                                    <span class="badge badge-{% if allocation.hostel.hostel_type == 'boys' %}primary{% else %}danger{% endif %}">
+                                                        {{ allocation.hostel.get_hostel_type_display }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Room Number:</th>
+                                                <td><strong class="text-success">{{ allocation.room_number }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Allocated On:</th>
+                                                <td>{{ allocation.allocated_date|date:"d M Y" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Rent per Semester:</th>
+                                                <td><strong>₹{{ allocation.rent_per_semester }}</strong></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <h5 class="text-success mb-3">Warden Information</h5>
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <p class="mb-2">
+                                                    <i class="fas fa-user"></i> <strong>Warden:</strong> {{ allocation.hostel.warden_name }}
+                                                </p>
+                                                <p class="mb-2">
+                                                    <i class="fas fa-phone"></i> <strong>Contact:</strong> {{ allocation.hostel.warden_contact }}
+                                                </p>
+                                                <p class="mb-0">
+                                                    <i class="fas fa-map-marker-alt"></i> <strong>Address:</strong><br>
+                                                    {{ allocation.hostel.address }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-3">
+                                            <h6>Occupancy Status:</h6>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar bg-info" role="progressbar" 
+                                                     style="width: {% widthratio allocation.hostel.occupied_rooms allocation.hostel.total_rooms 100 %}%">
+                                                    {{ allocation.hostel.occupied_rooms }} / {{ allocation.hostel.total_rooms }} Rooms
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="text-info mb-3">Hostel Rules & Regulations</h5>
+                                        <div class="alert alert-warning">
+                                            <ul class="mb-0">
+                                                <li>Maintain cleanliness in your room and common areas</li>
+                                                <li>Be in the hostel by 9:00 PM on weekdays and 10:00 PM on weekends</li>
+                                                <li>Visitors must register at the reception desk</li>
+                                                <li>No smoking or consumption of alcohol within hostel premises</li>
+                                                <li>Report any maintenance issues to the warden immediately</li>
+                                                <li>Keep noise levels low, especially during study hours (7-10 PM)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-phone"></i> <strong>Emergency Contact:</strong> 
+                                    For any hostel-related emergencies, contact Warden at {{ allocation.hostel.warden_contact }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> You are not allocated to any hostel.
+                    <hr>
+                    <p class="mb-0">If you have requested hostel accommodation, please wait for allocation. Contact the hostel office for more information.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

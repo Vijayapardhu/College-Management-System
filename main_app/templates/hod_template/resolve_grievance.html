@@ -1,0 +1,71 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-check-circle"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="card card-info mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Grievance Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Student:</strong> {{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</p>
+                                <p><strong>Roll Number:</strong> {{ grievance.student.roll_number }}</p>
+                                <p><strong>Type:</strong> {{ grievance.get_grievance_type_display }}</p>
+                                <p><strong>Submitted:</strong> {{ grievance.submitted_at|date:"Y-m-d H:i" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Description:</strong></p>
+                                <p>{{ grievance.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header bg-success">
+                            <h3 class="card-title">Resolution</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Resolution Details *</label>
+                                <textarea name="resolution" class="form-control" rows="5" required placeholder="Describe how the grievance was resolved...">{{ grievance.resolution }}</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Action Taken *</label>
+                                <textarea name="action_taken" class="form-control" rows="3" required placeholder="What specific actions were taken..."></textarea>
+                            </div>
+                            
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="confirmResolve" name="mark_resolved" required>
+                                <label class="custom-control-label" for="confirmResolve">
+                                    Mark this grievance as resolved
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check-circle"></i> Submit Resolution
+                            </button>
+                            <a href="{% url 'view_grievances' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Grievances
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,101 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-envelope"></i> Messages</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'send_message' %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> New Message
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="messageTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="inbox-tab" data-toggle="tab" href="#inbox">
+                                    <i class="fas fa-inbox"></i> Inbox
+                                    {% if unread_count > 0 %}
+                                    <span class="badge badge-danger">{{ unread_count }}</span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="sent-tab" data-toggle="tab" href="#sent">
+                                    <i class="fas fa-paper-plane"></i> Sent
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content mt-3">
+                            <!-- Inbox -->
+                            <div class="tab-pane fade show active" id="inbox" role="tabpanel">
+                                {% if inbox %}
+                                <div class="list-group">
+                                    {% for message in inbox %}
+                                    <a href="{% url 'view_message' message.id %}" 
+                                       class="list-group-item list-group-item-action message-list-item {% if not message.is_read %}unread{% endif %}"
+                                       data-message-id="{{ message.id }}">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">
+                                                {% if not message.is_read %}<i class="fas fa-circle text-primary" style="font-size:8px;"></i>{% endif %}
+                                                {{ message.sender.first_name }} {{ message.sender.last_name }}
+                                            </h5>
+                                            <small class="message-time">{{ message.created_at|timesince }} ago</small>
+                                        </div>
+                                        <p class="mb-1 message-subject"><strong>{{ message.subject }}</strong></p>
+                                        <small class="text-muted">{{ message.message|truncatewords:15 }}</small>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <div class="text-center py-5">
+                                    <i class="far fa-envelope-open fa-4x text-muted mb-3"></i>
+                                    <h4 class="text-muted">No Messages</h4>
+                                    <p>Your inbox is empty. Messages from faculty and proctors will appear here.</p>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Sent -->
+                            <div class="tab-pane fade" id="sent" role="tabpanel">
+                                {% if sent %}
+                                <div class="list-group">
+                                    {% for message in sent %}
+                                    <a href="{% url 'view_message' message.id %}" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">
+                                                <i class="fas fa-arrow-right text-success"></i> To: {{ message.receiver.first_name }} {{ message.receiver.last_name }}
+                                            </h5>
+                                            <small>{{ message.created_at|timesince }} ago</small>
+                                        </div>
+                                        <p class="mb-1"><strong>{{ message.subject }}</strong></p>
+                                        <small class="text-muted">{{ message.message|truncatewords:15 }}</small>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <div class="text-center py-5">
+                                    <i class="far fa-paper-plane fa-4x text-muted mb-3"></i>
+                                    <h4 class="text-muted">No Sent Messages</h4>
+                                    <p>Messages you send will appear here.</p>
+                                    <a href="{% url 'send_message' %}" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Send Your First Message
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

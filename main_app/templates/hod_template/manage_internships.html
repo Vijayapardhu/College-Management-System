@@ -1,0 +1,142 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-briefcase"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if internships %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="internshipTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th>Type</th>
+                                <th>Duration</th>
+                                <th>Stipend</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for internship in internships %}
+                            <tr>
+                                <td>
+                                    <strong>{{ internship.student.admin.first_name }} {{ internship.student.admin.last_name }}</strong>
+                                    <br><small class="text-muted">{{ internship.student.roll_number }}</small>
+                                </td>
+                                <td>{{ internship.company_name }}</td>
+                                <td>{{ internship.role }}</td>
+                                <td><span class="badge badge-info">{{ internship.get_internship_type_display }}</span></td>
+                                <td>
+                                    {{ internship.start_date|date:"Y-m-d" }} to {{ internship.end_date|date:"Y-m-d" }}
+                                    <br><small class="text-muted">{{ internship.duration_months }} months</small>
+                                </td>
+                                <td>
+                                    {% if internship.stipend %}
+                                    ₹{{ internship.stipend }}
+                                    {% else %}
+                                    <span class="text-muted">Unpaid</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if internship.status == 'completed' %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Completed</span>
+                                    {% elif internship.status == 'ongoing' %}
+                                    <span class="badge badge-primary"><i class="fas fa-spinner"></i> Ongoing</span>
+                                    {% elif internship.status == 'cancelled' %}
+                                    <span class="badge badge-danger"><i class="fas fa-times-circle"></i> Cancelled</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-clock"></i> Applied</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#internModal{{ internship.id }}">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    {% if internship.status == 'applied' %}
+                                    <form method="post" action="{% url 'approve_internship' internship.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">
+                                            <i class="fas fa-check"></i> Approve
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            
+                            <!-- Details Modal -->
+                            <div class="modal fade" id="internModal{{ internship.id }}">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-info">
+                                            <h4 class="modal-title">Internship Details</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p><strong>Student:</strong> {{ internship.student.admin.first_name }} {{ internship.student.admin.last_name }}</p>
+                                                    <p><strong>Roll Number:</strong> {{ internship.student.roll_number }}</p>
+                                                    <p><strong>Course:</strong> {{ internship.student.course.name }}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p><strong>Company:</strong> {{ internship.company_name }}</p>
+                                                    <p><strong>Role:</strong> {{ internship.role }}</p>
+                                                    <p><strong>Location:</strong> {{ internship.location }}</p>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <p><strong>Description:</strong> {{ internship.description|default:"Not provided" }}</p>
+                                            {% if internship.supervisor_name %}
+                                            <p><strong>Supervisor:</strong> {{ internship.supervisor_name }} ({{ internship.supervisor_contact }})</p>
+                                            {% endif %}
+                                            {% if internship.offer_letter %}
+                                            <p><a href="{{ internship.offer_letter.url }}" class="btn btn-sm btn-primary" download><i class="fas fa-download"></i> Download Offer Letter</a></p>
+                                            {% endif %}
+                                            {% if internship.completion_certificate %}
+                                            <p><a href="{{ internship.completion_certificate.url }}" class="btn btn-sm btn-success" download><i class="fas fa-download"></i> Download Certificate</a></p>
+                                            {% endif %}
+                                            {% if internship.approved_by %}
+                                            <p class="text-success"><i class="fas fa-check-circle"></i> Approved by: {{ internship.approved_by.admin.first_name }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Internships Found</h5>
+                    <p class="mb-0">No students have added internship details yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#internshipTable').DataTable({
+        "order": [[0, "asc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+
+

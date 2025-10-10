@@ -1,0 +1,207 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Statistics Cards -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ total_rooms }}</h3>
+                        <p>Total Classrooms</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ available_rooms }}</h3>
+                        <p>Available Rooms</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ labs }}</h3>
+                        <p>Computer Labs</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ classrooms|length }}</h3>
+                        <p>Under Maintenance</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-door-open"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_classroom' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Add Classroom
+                    </a>
+                    <a href="{% url 'classroom_schedule' %}" class="btn btn-info btn-sm">
+                        <i class="fas fa-calendar"></i> View Schedule
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if classrooms %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="classroomTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Building</th>
+                                <th>Floor</th>
+                                <th>Capacity</th>
+                                <th>Department</th>
+                                <th>Facilities</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for classroom in classrooms %}
+                            <tr>
+                                <td><strong>{{ classroom.room_number }}</strong></td>
+                                <td>{{ classroom.room_name|default:"-" }}</td>
+                                <td>
+                                    {% if classroom.room_type == 'lab' %}
+                                    <span class="badge badge-warning">{{ classroom.get_room_type_display }}</span>
+                                    {% elif classroom.room_type == 'auditorium' %}
+                                    <span class="badge badge-danger">{{ classroom.get_room_type_display }}</span>
+                                    {% else %}
+                                    <span class="badge badge-info">{{ classroom.get_room_type_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ classroom.building|default:"-" }}</td>
+                                <td>{{ classroom.floor }}</td>
+                                <td>
+                                    <span class="badge badge-secondary">{{ classroom.capacity }} students</span>
+                                </td>
+                                <td>{{ classroom.department.name|default:"General" }}</td>
+                                <td>
+                                    {% if classroom.has_projector %}<i class="fas fa-video text-success" title="Projector"></i>{% endif %}
+                                    {% if classroom.has_ac %}<i class="fas fa-snowflake text-info" title="AC"></i>{% endif %}
+                                    {% if classroom.has_wifi %}<i class="fas fa-wifi text-primary" title="WiFi"></i>{% endif %}
+                                    {% if classroom.has_audio_system %}<i class="fas fa-volume-up text-warning" title="Audio"></i>{% endif %}
+                                    {% if classroom.has_computers %}<i class="fas fa-desktop text-danger" title="{{ classroom.computer_count }} PCs"></i>{% endif %}
+                                </td>
+                                <td>
+                                    {% if classroom.is_under_maintenance %}
+                                    <span class="badge badge-danger"><i class="fas fa-tools"></i> Maintenance</span>
+                                    {% elif classroom.is_available %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Available</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">Occupied</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#classroomModal{{ classroom.id }}">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Classroom Details Modal -->
+                            <div class="modal fade" id="classroomModal{{ classroom.id }}">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary">
+                                            <h4 class="modal-title">{{ classroom.room_number }} - Details</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6>Basic Information</h6>
+                                                    <p><strong>Room Number:</strong> {{ classroom.room_number }}</p>
+                                                    <p><strong>Name:</strong> {{ classroom.room_name|default:"N/A" }}</p>
+                                                    <p><strong>Type:</strong> {{ classroom.get_room_type_display }}</p>
+                                                    <p><strong>Building:</strong> {{ classroom.building|default:"N/A" }}</p>
+                                                    <p><strong>Floor:</strong> {{ classroom.floor }}</p>
+                                                    <p><strong>Capacity:</strong> {{ classroom.capacity }} students</p>
+                                                    <p><strong>Department:</strong> {{ classroom.department.name|default:"General" }}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6>Facilities Available</h6>
+                                                    <p>
+                                                        {% if classroom.has_projector %}<span class="badge badge-success">Projector</span>{% endif %}
+                                                        {% if classroom.has_ac %}<span class="badge badge-info">AC</span>{% endif %}
+                                                        {% if classroom.has_wifi %}<span class="badge badge-primary">WiFi</span>{% endif %}
+                                                        {% if classroom.has_audio_system %}<span class="badge badge-warning">Audio System</span>{% endif %}
+                                                        {% if classroom.has_whiteboard %}<span class="badge badge-secondary">Whiteboard</span>{% endif %}
+                                                        {% if classroom.has_computers %}<span class="badge badge-danger">{{ classroom.computer_count }} Computers</span>{% endif %}
+                                                    </p>
+                                                    <h6 class="mt-3">Status</h6>
+                                                    <p>
+                                                        {% if classroom.is_under_maintenance %}
+                                                        <span class="badge badge-danger">Under Maintenance</span>
+                                                        {% elif classroom.is_available %}
+                                                        <span class="badge badge-success">Available</span>
+                                                        {% else %}
+                                                        <span class="badge badge-warning">Occupied</span>
+                                                        {% endif %}
+                                                    </p>
+                                                    {% if classroom.remarks %}
+                                                    <h6 class="mt-3">Remarks</h6>
+                                                    <p>{{ classroom.remarks }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Classrooms Found</h5>
+                    <p class="mb-0">No classrooms have been added yet. <a href="{% url 'add_classroom' %}">Add your first classroom</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#classroomTable').DataTable({
+        "order": [[0, "asc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+
+

@@ -1,0 +1,139 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-file-invoice"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if applications %}
+                <ul class="nav nav-tabs" id="appTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#pending">Pending</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#approved">Approved</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#rejected">Rejected</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#all">All</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="pending">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Scholarship</th>
+                                    <th>Amount</th>
+                                    <th>Applied Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                {% if app.status == 'pending' %}
+                                <tr>
+                                    <td>{{ app.student.admin.first_name }} {{ app.student.admin.last_name }}<br><small>{{ app.student.roll_number }}</small></td>
+                                    <td>{{ app.scholarship.name }}</td>
+                                    <td class="text-success"><strong>₹{{ app.scholarship.amount }}</strong></td>
+                                    <td>{{ app.applied_date|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <a href="{% url 'review_scholarship_application' app.id %}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i> Review
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="approved">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Scholarship</th>
+                                    <th>Amount</th>
+                                    <th>Approved Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                {% if app.status == 'approved' %}
+                                <tr>
+                                    <td>{{ app.student.admin.first_name }}</td>
+                                    <td>{{ app.scholarship.name }}</td>
+                                    <td>₹{{ app.scholarship.amount }}</td>
+                                    <td>{{ app.approved_date|date:"Y-m-d" }}</td>
+                                    <td>
+                                        {% if app.status != 'disbursed' %}
+                                        <a href="{% url 'disburse_scholarship' app.id %}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-money-bill-wave"></i> Disburse
+                                        </a>
+                                        {% else %}
+                                        <span class="badge badge-primary">Disbursed</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="all">
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Scholarship</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr>
+                                    <td>{{ app.student.admin.first_name }}</td>
+                                    <td>{{ app.scholarship.name }}</td>
+                                    <td>
+                                        {% if app.status == 'approved' %}
+                                        <span class="badge badge-success">Approved</span>
+                                        {% elif app.status == 'rejected' %}
+                                        <span class="badge badge-danger">Rejected</span>
+                                        {% elif app.status == 'disbursed' %}
+                                        <span class="badge badge-primary">Disbursed</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ app.applied_date|date:"Y-m-d" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Applications</h5>
+                    <p class="mb-0">No scholarship applications yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,107 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-user-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Student *</label>
+                                {{ form.student }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Position *</label>
+                                {{ form.position }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Session *</label>
+                                {{ form.session }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Department</label>
+                                {{ form.department }}
+                                <small class="form-text text-muted">Optional - for department representatives</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Election Date *</label>
+                                {{ form.election_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Term Start *</label>
+                                {{ form.term_start }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Term End *</label>
+                                {{ form.term_end }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Manifesto</label>
+                        {{ form.manifesto }}
+                        <small class="form-text text-muted">Student's election manifesto or goals</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Achievements</label>
+                        {{ form.achievements }}
+                        <small class="form-text text-muted">Notable achievements during the term</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Council Positions:</h6>
+                        <ul class="mb-0">
+                            <li><strong>President:</strong> Head of student council</li>
+                            <li><strong>Vice President:</strong> Second-in-command</li>
+                            <li><strong>Secretary:</strong> Manages meetings and records</li>
+                            <li><strong>Treasurer:</strong> Manages council finances</li>
+                            <li><strong>Cultural Secretary:</strong> Organizes cultural events</li>
+                            <li><strong>Sports Secretary:</strong> Organizes sports activities</li>
+                            <li><strong>Technical Secretary:</strong> Manages technical events</li>
+                            <li><strong>Member:</strong> General council member</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus"></i> Add to Council
+                    </button>
+                    <a href="{% url 'manage_student_council' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

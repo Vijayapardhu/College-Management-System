@@ -1,0 +1,138 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-graduation-cap"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_program' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Add Program
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if programs %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="programTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Program Name</th>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Department</th>
+                                <th>Duration</th>
+                                <th>Total Seats</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for program in programs %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><strong>{{ program.name }}</strong></td>
+                                <td>
+                                    {% if program.code %}
+                                    <span class="badge badge-info">{{ program.code }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if program.program_type == 'btech' %}
+                                    <span class="badge badge-primary">B.Tech</span>
+                                    {% elif program.program_type == 'mtech' %}
+                                    <span class="badge badge-success">M.Tech</span>
+                                    {% elif program.program_type == 'diploma' %}
+                                    <span class="badge badge-info">Diploma</span>
+                                    {% elif program.program_type == 'phd' %}
+                                    <span class="badge badge-warning">Ph.D</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">{{ program.get_program_type_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ program.department.name }}</td>
+                                <td>{{ program.duration_years }} years</td>
+                                <td>
+                                    {% if program.total_seats %}
+                                    {{ program.total_seats }}
+                                    {% else %}
+                                    <span class="text-muted">Not Set</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_program' program.id %}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Programs Found</h5>
+                    <p class="mb-0">No academic programs have been created yet. <a href="{% url 'add_program' %}">Add your first program</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Program Statistics -->
+        {% if programs %}
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-graduation-cap"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Programs</span>
+                        <span class="info-box-number">{{ programs.count }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-primary">
+                    <span class="info-box-icon"><i class="fas fa-laptop"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">B.Tech Programs</span>
+                        <span class="info-box-number">{{ programs|length }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-award"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">M.Tech Programs</span>
+                        <span class="info-box-number">{{ programs|length }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box bg-warning">
+                    <span class="info-box-icon"><i class="fas fa-certificate"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Diploma Programs</span>
+                        <span class="info-box-number">{{ programs|length }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#programTable').DataTable({
+        "order": [[3, "asc"], [1, "asc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}

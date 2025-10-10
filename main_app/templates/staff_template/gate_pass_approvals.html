@@ -1,0 +1,68 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-id-card"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if gate_passes %}
+                <div class="row">
+                    {% for pass in gate_passes %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-warning">
+                            <div class="card-header bg-warning">
+                                <h5 class="card-title mb-0">
+                                    {{ pass.student.admin.first_name }} {{ pass.student.admin.last_name }}
+                                    <span class="badge badge-light float-right">{{ pass.get_pass_type_display }}</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Roll Number:</strong> {{ pass.student.roll_number }}</p>
+                                <p><strong>Course:</strong> {{ pass.student.course.name }}</p>
+                                <hr>
+                                <p><strong>Reason:</strong> {{ pass.reason }}</p>
+                                <p><strong>Destination:</strong> {{ pass.destination }}</p>
+                                <p><strong>From:</strong> {{ pass.from_date|date:"Y-m-d H:i" }}</p>
+                                <p><strong>To:</strong> {{ pass.to_date|date:"Y-m-d H:i" }}</p>
+                                <p><strong>Parent Contact:</strong> {{ pass.parent_contact }}</p>
+                                {% if pass.parent_consent %}
+                                <p><span class="badge badge-success"><i class="fas fa-check"></i> Parent Consent Given</span></p>
+                                {% else %}
+                                <p><span class="badge badge-warning"><i class="fas fa-exclamation"></i> No Parent Consent</span></p>
+                                {% endif %}
+                                <p><small class="text-muted">Requested: {{ pass.created_at|date:"Y-m-d H:i" }}</small></p>
+                            </div>
+                            <div class="card-footer">
+                                <form method="post" class="d-inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="pass_id" value="{{ pass.id }}">
+                                    <button type="submit" name="action" value="approve" class="btn btn-success">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Pending Requests</h5>
+                    <p class="mb-0">All gate pass requests have been processed!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

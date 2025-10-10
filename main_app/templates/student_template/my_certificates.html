@@ -1,0 +1,67 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-certificate"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'student_request_certificate' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Request Certificate
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if certificates %}
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Certificate Number</th>
+                                <th>Type</th>
+                                <th>Title</th>
+                                <th>Issued Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cert in certificates %}
+                            <tr>
+                                <td>{{ cert.certificate_number }}</td>
+                                <td>{{ cert.get_certificate_type_display }}</td>
+                                <td>{{ cert.title }}</td>
+                                <td>{{ cert.issued_date }}</td>
+                                <td>
+                                    {% if cert.is_verified %}
+                                    <span class="badge badge-success">Verified</span>
+                                    {% else %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if cert.certificate_file %}
+                                    <a href="{{ cert.certificate_file.url }}" class="btn btn-sm btn-info" download>
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No certificates yet. 
+                    <a href="{% url 'student_request_certificate' %}">Request one now</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

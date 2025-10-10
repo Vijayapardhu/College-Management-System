@@ -1,0 +1,93 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assign Students to Proctor</h3>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Select Staff Member (Proctor)</label>
+                                <select name="staff_id" class="form-control" required>
+                                    <option value="">-- Select Staff --</option>
+                                    {% for staff in all_staff %}
+                                    <option value="{{ staff.id }}">
+                                        {{ staff.admin.first_name }} {{ staff.admin.last_name }} - {{ staff.course.name }}
+                                        {% if staff.is_proctor %} (Already Proctor){% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Select Course (to filter students)</label>
+                                <select id="courseFilter" class="form-control">
+                                    <option value="">-- All Courses --</option>
+                                    {% for course in courses %}
+                                    <option value="{{ course.id }}">{{ course.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Select Students to Assign</label>
+                                <div class="border p-3" style="max-height: 400px; overflow-y: auto;">
+                                    {% for student in all_students %}
+                                    <div class="form-check student-item" data-course="{{ student.course.id }}">
+                                        <input class="form-check-input" type="checkbox" name="student_ids" value="{{ student.id }}" id="student{{ student.id }}">
+                                        <label class="form-check-label" for="student{{ student.id }}">
+                                            {{ student.admin.first_name }} {{ student.admin.last_name }} - {{ student.course.name }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <small class="form-text text-muted">
+                                    <input type="checkbox" id="selectAll"> Select All Visible
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Assign Students
+                            </button>
+                            <a href="{% url 'manage_proctors' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    // Filter students by course
+    $('#courseFilter').change(function() {
+        const courseId = $(this).val();
+        if (courseId) {
+            $('.student-item').hide();
+            $('.student-item[data-course="' + courseId + '"]').show();
+        } else {
+            $('.student-item').show();
+        }
+    });
+
+    // Select all visible
+    $('#selectAll').change(function() {
+        $('.student-item:visible input[type="checkbox"]').prop('checked', this.checked);
+    });
+</script>
+{% endblock custom_js %}
+
+

@@ -1,0 +1,50 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-laptop-code"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if exams %}
+                <div class="row">
+                    {% for exam in exams %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-header bg-primary">
+                                <h5 class="card-title mb-0">{{ exam.title }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Subject:</strong> {{ exam.subject.name }}</p>
+                                <p><strong>Duration:</strong> {{ exam.duration_minutes }} minutes</p>
+                                <p><strong>Total Marks:</strong> {{ exam.total_marks }}</p>
+                                <p><strong>Start:</strong> {{ exam.start_datetime|date:"Y-m-d H:i" }}</p>
+                                <p><strong>End:</strong> {{ exam.end_datetime|date:"Y-m-d H:i" }}</p>
+                                {% if exam.instructions %}
+                                <hr>
+                                <p><small>{{ exam.instructions }}</small></p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-success btn-block">
+                                    <i class="fas fa-play"></i> Start Exam
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No exams available at the moment. Check back later!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

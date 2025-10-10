@@ -1,0 +1,74 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-trophy"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'student_my_activities' %}" class="btn btn-info btn-sm">
+                        <i class="fas fa-list"></i> My Participations
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if activities %}
+                <div class="row">
+                    {% for activity in activities %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 {% if activity.id in registered_ids %}border-success{% endif %}">
+                            <div class="card-header {% if activity.activity_type == 'sports' %}bg-primary{% elif activity.activity_type == 'cultural' %}bg-info{% elif activity.activity_type == 'technical' %}bg-warning{% else %}bg-success{% endif %}">
+                                <h5 class="card-title mb-0">
+                                    {{ activity.name }}
+                                    {% if activity.id in registered_ids %}
+                                    <span class="badge badge-success float-right"><i class="fas fa-check"></i> Registered</span>
+                                    {% endif %}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong><i class="fas fa-tag"></i> Type:</strong> {{ activity.get_activity_type_display }}</p>
+                                <p><strong><i class="fas fa-calendar-alt"></i> Dates:</strong> {{ activity.start_date|date:"Y-m-d" }} to {{ activity.end_date|date:"Y-m-d" }}</p>
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Venue:</strong> {{ activity.venue }}</p>
+                                <p><strong><i class="fas fa-user-tie"></i> Coordinator:</strong> {{ activity.coordinator.admin.first_name }}</p>
+                                <p><strong><i class="fas fa-users"></i> Max Participants:</strong> {{ activity.max_participants }}</p>
+                                <p><strong><i class="fas fa-clock"></i> Registration Deadline:</strong> {{ activity.registration_deadline|date:"Y-m-d" }}</p>
+                                {% if activity.description %}
+                                <hr>
+                                <p class="text-muted"><small>{{ activity.description }}</small></p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                {% if activity.id in registered_ids %}
+                                <button class="btn btn-success btn-block" disabled>
+                                    <i class="fas fa-check-circle"></i> Already Registered
+                                </button>
+                                {% else %}
+                                <form method="post" class="d-inline-block w-100">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="activity_id" value="{{ activity.id }}">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        <i class="fas fa-user-plus"></i> Register Now
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Activities Available</h5>
+                    <p class="mb-0">No sports or cultural activities are currently open for registration. Check back later!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

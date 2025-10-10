@@ -1,0 +1,175 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        
+        <!-- Welcome Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-cogs"></i> Management Dashboard</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4>Welcome, {{ management.admin.first_name }} {{ management.admin.last_name }}</h4>
+                        <p class="text-muted">{{ management.designation }} - {{ management.department }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Facility Statistics -->
+        <h5 class="mb-3"><i class="fas fa-building"></i> Facility Management</h5>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ total_hostels }}</h3>
+                        <p>Hostels</p>
+                        <small>{{ occupied_rooms }} / {{ total_rooms }} Rooms Occupied</small>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                    <a href="{% url 'management_hostels' %}" class="small-box-footer">
+                        Manage Hostels <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>{{ total_buses }}</h3>
+                        <p>Transport Routes</p>
+                        <small>{{ occupied_seats }} / {{ total_seats }} Seats Occupied</small>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-bus"></i>
+                    </div>
+                    <a href="{% url 'management_transport' %}" class="small-box-footer">
+                        Manage Transport <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ total_books }}</h3>
+                        <p>Library Books</p>
+                        <small>{{ active_issues }} Active Issues | {{ overdue_books }} Overdue</small>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <a href="{% url 'management_library' %}" class="small-box-footer">
+                        Manage Library <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ pending_grievances }}</h3>
+                        <p>Pending Grievances</p>
+                        <small>Requires Attention</small>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <a href="{% url 'management_grievances' %}" class="small-box-footer">
+                        View Grievances <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Financial Statistics -->
+        <h5 class="mb-3 mt-4"><i class="fas fa-money-bill-wave"></i> Financial Management</h5>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-rupee-sign"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Fee Collected</span>
+                        <span class="info-box-number">₹{{ total_collected|floatformat:2 }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-warning">
+                    <span class="info-box-icon"><i class="fas fa-exclamation-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Fee Defaulters</span>
+                        <span class="info-box-number">{{ defaulters_count }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-award"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Active Scholarships</span>
+                        <span class="info-box-number">{{ active_scholarships }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="info-box bg-primary">
+                    <span class="info-box-icon"><i class="fas fa-file-invoice"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Pending Scholarship Apps</span>
+                        <span class="info-box-number">{{ pending_applications }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark">
+                        <h3 class="card-title"><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a href="{% url 'management_add_transport' %}" class="btn btn-primary btn-block">
+                                    <i class="fas fa-bus"></i> Add Transport Route
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'management_add_hostel' %}" class="btn btn-success btn-block">
+                                    <i class="fas fa-hotel"></i> Add Hostel
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'management_add_library_book' %}" class="btn btn-info btn-block">
+                                    <i class="fas fa-book"></i> Add Library Book
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url 'management_record_fee_payment' %}" class="btn btn-warning btn-block">
+                                    <i class="fas fa-money-bill"></i> Record Payment
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock content %}
+
+

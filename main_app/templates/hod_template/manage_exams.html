@@ -1,0 +1,88 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-clipboard-list"></i> Examination Management</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_exam' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create New Exam
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if exams %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="examsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Exam Name</th>
+                                <th>Type</th>
+                                <th>Session</th>
+                                <th>Semester</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exam in exams %}
+                            <tr>
+                                <td><strong>{{ exam.name }}</strong></td>
+                                <td>
+                                    <span class="badge badge-info">{{ exam.get_exam_type_display }}</span>
+                                </td>
+                                <td>{{ exam.session }}</td>
+                                <td class="text-center">{{ exam.semester }}</td>
+                                <td>
+                                    <small>
+                                        {{ exam.start_date|date:"d M Y" }} - {{ exam.end_date|date:"d M Y" }}
+                                    </small>
+                                </td>
+                                <td>
+                                    {% if exam.is_published %}
+                                        <span class="badge badge-success">Published</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Draft</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'manage_exam_schedule' exam.id %}" class="btn btn-sm btn-info" title="Manage Schedule">
+                                            <i class="fas fa-calendar"></i> Schedule
+                                        </a>
+                                        <a href="{% url 'generate_admit_cards' exam.id %}" class="btn btn-sm btn-success" title="Generate Admit Cards">
+                                            <i class="fas fa-id-card"></i> Admit Cards
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No exams found. Click "Create New Exam" to add one.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#examsTable').DataTable({
+        "order": [[4, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+
+

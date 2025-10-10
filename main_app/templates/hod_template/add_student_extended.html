@@ -1,0 +1,609 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Add New Student - Comprehensive Form{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-user-graduate"></i> Student Admission Form</h3>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" id="studentAdmissionForm">
+                {% csrf_token %}
+                <div class="card-body">
+                    
+                    <!-- Tab Navigation -->
+                    <ul class="nav nav-tabs" id="studentFormTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic" role="tab">
+                                <i class="fas fa-user"></i> Basic Info
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab">
+                                <i class="fas fa-graduation-cap"></i> Academic
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="entrance-tab" data-toggle="tab" href="#entrance" role="tab">
+                                <i class="fas fa-clipboard-check"></i> Entrance Exam
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="family-tab" data-toggle="tab" href="#family" role="tab">
+                                <i class="fas fa-users"></i> Family
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab">
+                                <i class="fas fa-file-upload"></i> Documents
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="other-tab" data-toggle="tab" href="#other" role="tab">
+                                <i class="fas fa-ellipsis-h"></i> Other Info
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content mt-3" id="studentFormTabContent">
+                        
+                        <!-- BASIC INFO TAB -->
+                        <div class="tab-pane fade show active" id="basic" role="tabpanel">
+                            <h5 class="mb-3">Personal Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>First Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="first_name" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Last Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="last_name" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Gender <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="gender" required>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                        <option value="O">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Date of Birth <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" name="date_of_birth" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Blood Group</label>
+                                    <select class="form-control" name="blood_group">
+                                        <option value="">Select</option>
+                                        <option>A+</option>
+                                        <option>A-</option>
+                                        <option>B+</option>
+                                        <option>B-</option>
+                                        <option>O+</option>
+                                        <option>O-</option>
+                                        <option>AB+</option>
+                                        <option>AB-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Nationality</label>
+                                    <input type="text" class="form-control" name="nationality" value="Indian">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Religion</label>
+                                    <input type="text" class="form-control" name="religion">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Mobile Number <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" name="mobile_number" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Alternate Mobile</label>
+                                    <input type="tel" class="form-control" name="alternate_mobile" pattern="[0-9]{10}">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Aadhaar Number</label>
+                                    <input type="text" class="form-control" name="aadhaar_number" pattern="[0-9]{12}" maxlength="12">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Address Information</h5>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Permanent Address <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="permanent_address" rows="2" required></textarea>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>City <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="permanent_city" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>State <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="permanent_state" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Pincode <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="permanent_pincode" pattern="[0-9]{6}" required>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="sameAddress">
+                                        <label class="custom-control-label" for="sameAddress">Current Address same as Permanent</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12" id="currentAddressSection">
+                                    <label>Current Address</label>
+                                    <textarea class="form-control" name="current_address" rows="2"></textarea>
+                                </div>
+                                <div class="form-group col-md-4" id="currentCitySection">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" name="current_city">
+                                </div>
+                                <div class="form-group col-md-4" id="currentStateSection">
+                                    <label>State</label>
+                                    <input type="text" class="form-control" name="current_state">
+                                </div>
+                                <div class="form-group col-md-4" id="currentPincodeSection">
+                                    <label>Pincode</label>
+                                    <input type="text" class="form-control" name="current_pincode" pattern="[0-9]{6}">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Admission Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Course Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="course_type" required>
+                                        <option value="diploma">Diploma</option>
+                                        <option value="btech" selected>B.Tech</option>
+                                        <option value="mtech">M.Tech</option>
+                                        <option value="phd">Ph.D</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Program/Branch <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="course" required>
+                                        <option value="">Select Course</option>
+                                        {% for course in courses %}
+                                        <option value="{{ course.id }}">{{ course.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Session <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="session" required>
+                                        <option value="">Select Session</option>
+                                        {% for session in sessions %}
+                                        <option value="{{ session.id }}">{{ session }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Admission Year <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="admission_year" value="2024" min="2000" max="2099" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Roll Number</label>
+                                    <input type="text" class="form-control" name="roll_number">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Admission Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="admission_number" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Current Semester</label>
+                                    <input type="number" class="form-control" name="current_semester" value="1" min="1" max="10">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Category <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="caste_category" required>
+                                        <option value="general">General</option>
+                                        <option value="obc">OBC</option>
+                                        <option value="sc">SC</option>
+                                        <option value="st">ST</option>
+                                        <option value="ews">EWS</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Annual Family Income</label>
+                                    <input type="number" class="form-control" name="annual_family_income" step="0.01">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Income Certificate Number</label>
+                                    <input type="text" class="form-control" name="income_certificate_number">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="is_disabled" name="is_disabled">
+                                        <label class="custom-control-label" for="is_disabled">Person with Disability (PWD)</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" id="disabilityPercentageSection" style="display:none;">
+                                    <label>Disability Percentage</label>
+                                    <input type="number" class="form-control" name="disability_percentage" step="0.01" min="0" max="100">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ACADEMIC BACKGROUND TAB -->
+                        <div class="tab-pane fade" id="academic" role="tabpanel">
+                            <h5 class="mb-3">10th Standard Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Board <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="tenth_board" placeholder="e.g., CBSE, State Board" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>School Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="tenth_school" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Passing Year <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="tenth_year" min="2000" max="2099" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Total Marks</label>
+                                    <input type="number" class="form-control" name="tenth_marks_total" step="0.01">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Marks Obtained</label>
+                                    <input type="number" class="form-control" name="tenth_marks_obtained" step="0.01">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Percentage</label>
+                                    <input type="number" class="form-control" name="tenth_percentage" step="0.01" max="100">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>CGPA</label>
+                                    <input type="number" class="form-control" name="tenth_cgpa" step="0.01" max="10">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">12th Standard / Intermediate Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Board</label>
+                                    <input type="text" class="form-control" name="twelfth_board" placeholder="e.g., CBSE, State Board">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>School Name</label>
+                                    <input type="text" class="form-control" name="twelfth_school">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Passing Year</label>
+                                    <input type="number" class="form-control" name="twelfth_year" min="2000" max="2099">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Total Marks</label>
+                                    <input type="number" class="form-control" name="twelfth_marks_total" step="0.01">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Marks Obtained</label>
+                                    <input type="number" class="form-control" name="twelfth_marks_obtained" step="0.01">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Percentage</label>
+                                    <input type="number" class="form-control" name="twelfth_percentage" step="0.01" max="100">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>CGPA</label>
+                                    <input type="number" class="form-control" name="twelfth_cgpa" step="0.01" max="10">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Diploma Details (For Lateral Entry)</h5>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Diploma College</label>
+                                    <input type="text" class="form-control" name="diploma_college">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Branch</label>
+                                    <input type="text" class="form-control" name="diploma_branch">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Passing Year</label>
+                                    <input type="number" class="form-control" name="diploma_year" min="2000" max="2099">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Percentage</label>
+                                    <input type="number" class="form-control" name="diploma_percentage" step="0.01" max="100">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>CGPA</label>
+                                    <input type="number" class="form-control" name="diploma_cgpa" step="0.01" max="10">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ENTRANCE EXAM TAB -->
+                        <div class="tab-pane fade" id="entrance" role="tabpanel">
+                            <h5 class="mb-3">Entrance Examination Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Entrance Exam Name</label>
+                                    <input type="text" class="form-control" name="entrance_exam_name" placeholder="e.g., JEE Main, EAMCET, GATE">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Exam Year</label>
+                                    <input type="number" class="form-control" name="entrance_exam_year" min="2000" max="2099">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Overall Rank</label>
+                                    <input type="number" class="form-control" name="entrance_exam_rank">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Category Rank</label>
+                                    <input type="number" class="form-control" name="entrance_category_rank">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Score/Percentile</label>
+                                    <input type="number" class="form-control" name="entrance_exam_score" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- FAMILY DETAILS TAB -->
+                        <div class="tab-pane fade" id="family" role="tabpanel">
+                            <h5 class="mb-3">Father's Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Father's Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="father_name" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Occupation</label>
+                                    <input type="text" class="form-control" name="father_occupation">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Mobile Number</label>
+                                    <input type="tel" class="form-control" name="father_mobile" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Mother's Details</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Mother's Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="mother_name" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Occupation</label>
+                                    <input type="text" class="form-control" name="mother_occupation">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Mobile Number</label>
+                                    <input type="tel" class="form-control" name="mother_mobile" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Guardian Details (If Applicable)</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Guardian's Name</label>
+                                    <input type="text" class="form-control" name="guardian_name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Relation</label>
+                                    <input type="text" class="form-control" name="guardian_relation">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Mobile Number</label>
+                                    <input type="tel" class="form-control" name="guardian_mobile" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Emergency Contact</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Contact Person Name</label>
+                                    <input type="text" class="form-control" name="emergency_contact_name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Relation</label>
+                                    <input type="text" class="form-control" name="emergency_contact_relation">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Mobile Number</label>
+                                    <input type="tel" class="form-control" name="emergency_contact_mobile" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DOCUMENTS TAB -->
+                        <div class="tab-pane fade" id="documents" role="tabpanel">
+                            <h5 class="mb-3">Upload Documents (PDF/Image, Max 2MB each)</h5>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Passport Size Photo</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="photo" accept="image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Student Signature</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="signature" accept="image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>10th Certificate <span class="text-danger">*</span></label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="tenth_certificate" accept=".pdf,image/*" required>
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>12th Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="twelfth_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Diploma Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="diploma_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Transfer Certificate (TC)</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="transfer_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Migration Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="migration_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Character/Conduct Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="character_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Caste Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="caste_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Income Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="income_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Disability Certificate</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="disability_certificate" accept=".pdf,image/*">
+                                        <label class="custom-file-label">Choose file...</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- OTHER INFO TAB -->
+                        <div class="tab-pane fade" id="other" role="tabpanel">
+                            <h5 class="mb-3">Additional Information</h5>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="hostel_required" name="hostel_required">
+                                        <label class="custom-control-label" for="hostel_required">Hostel Accommodation Required</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="transport_required" name="transport_required">
+                                        <label class="custom-control-label" for="transport_required">Transport Facility Required</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="scholarship_applied" name="scholarship_applied">
+                                        <label class="custom-control-label" for="scholarship_applied">Scholarship Applied</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" id="scholarshipNameSection" style="display:none;">
+                                    <label>Scholarship Name</label>
+                                    <input type="text" class="form-control" name="scholarship_name">
+                                </div>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Bank Details (For Scholarship/Refund)</h5>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label>Bank Name</label>
+                                    <input type="text" class="form-control" name="bank_name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Account Number</label>
+                                    <input type="text" class="form-control" name="bank_account_number">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>IFSC Code</label>
+                                    <input type="text" class="form-control" name="bank_ifsc_code" pattern="[A-Z]{4}0[A-Z0-9]{6}">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label>Remarks / Special Instructions</label>
+                                    <textarea class="form-control" name="remarks" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Submit Admission Form
+                    </button>
+                    <a href="{% url 'manage_student' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+// Copy permanent address to current address
+document.getElementById('sameAddress').addEventListener('change', function() {
+    if (this.checked) {
+        document.querySelector('[name="current_address"]').value = document.querySelector('[name="permanent_address"]').value;
+        document.querySelector('[name="current_city"]').value = document.querySelector('[name="permanent_city"]').value;
+        document.querySelector('[name="current_state"]').value = document.querySelector('[name="permanent_state"]').value;
+        document.querySelector('[name="current_pincode"]').value = document.querySelector('[name="permanent_pincode"]').value;
+    }
+});
+
+// Show disability percentage field
+document.getElementById('is_disabled').addEventListener('change', function() {
+    document.getElementById('disabilityPercentageSection').style.display = this.checked ? 'block' : 'none';
+});
+
+// Show scholarship name field
+document.getElementById('scholarship_applied').addEventListener('change', function() {
+    document.getElementById('scholarshipNameSection').style.display = this.checked ? 'block' : 'none';
+});
+
+// Update file input labels
+document.querySelectorAll('.custom-file-input').forEach(function(input) {
+    input.addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+});
+
+// Form validation
+document.getElementById('studentAdmissionForm').addEventListener('submit', function(e) {
+    // Add any custom validation here
+});
+</script>
+{% endblock content %}
+
+

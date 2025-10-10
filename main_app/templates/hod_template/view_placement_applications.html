@@ -1,0 +1,152 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-users"></i> Applications for {{ drive.company.name }}</h3>
+            </div>
+            <div class="card-body">
+                <!-- Drive Details -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            <strong>Job Title:</strong> {{ drive.job_title }} | 
+                            <strong>Package:</strong> ₹{{ drive.salary_package }} LPA | 
+                            <strong>Type:</strong> {{ drive.get_drive_type_display }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ total_apps }}</h3>
+                                <p>Total Applications</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ registered }}</h3>
+                                <p>Registered</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="small-box bg-primary">
+                            <div class="inner">
+                                <h3>{{ shortlisted }}</h3>
+                                <p>Shortlisted</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ selected }}</h3>
+                                <p>Selected</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Applications Table -->
+                {% if applications %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="applicationsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>CGPA</th>
+                                <th>Applied On</th>
+                                <th>Resume</th>
+                                <th>Status</th>
+                                <th>Scores</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                            <tr>
+                                <td>
+                                    <strong>{{ app.student.admin.first_name }} {{ app.student.admin.last_name }}</strong><br>
+                                    <small class="text-muted">{{ app.student.roll_number|default:"N/A" }}</small>
+                                </td>
+                                <td>{{ app.student.course.name }}</td>
+                                <td class="text-center">
+                                    {% with latest=app.student.semester_results.order_by|slice:"-1"|first %}
+                                        {{ latest.cgpa|default:"N/A" }}
+                                    {% endwith %}
+                                </td>
+                                <td>{{ app.applied_at|date:"d M Y" }}</td>
+                                <td>
+                                    <a href="{{ app.resume.url }}" target="_blank" class="btn btn-sm btn-info">
+                                        <i class="fas fa-file-pdf"></i> View
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge badge-{{ app.status|default:'secondary' }}">
+                                        {{ app.get_status_display }}
+                                    </span>
+                                </td>
+                                <td class="small">
+                                    {% if app.aptitude_score %}A: {{ app.aptitude_score }} {% endif %}
+                                    {% if app.technical_score %}T: {{ app.technical_score }} {% endif %}
+                                    {% if app.hr_score %}H: {{ app.hr_score }}{% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'update_application_status' app.id %}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Update
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> No applications received yet.
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'manage_placement_drives' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Drives
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#applicationsTable').DataTable({
+        "order": [[3, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+
+

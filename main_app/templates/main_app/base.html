@@ -5,9 +5,13 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Student Management System</title>
+    <title>EduVision</title>
     <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#007bff">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css'%} ">
     <!-- Ionicons -->
@@ -29,12 +33,18 @@
     <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.css'%} ">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Mobile Responsive CSS -->
+    <link rel="stylesheet" href="{% static 'css/mobile-responsive.css'%} ">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" href="{% static 'dist/img/AdminLTELogo.png' %}">
     {% block custom_css %}
 
     {% endblock custom_css %}
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
     <div class="wrapper">
 
         <!-- Navbar -->
@@ -42,12 +52,71 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button" aria-label="Toggle navigation">
+                        <i class="fas fa-bars"></i>
+                    </a>
                 </li>
-
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link">{{ page_title }}</a>
+                </li>
             </ul>
 
-
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Messages Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="{% url 'view_messages' %}" title="Messages">
+                        <i class="far fa-envelope"></i>
+                        <span class="badge badge-danger navbar-badge" id="unread-count" style="display: none;">0</span>
+                    </a>
+                </li>
+                
+                <!-- Notifications Dropdown -->
+                <li class="nav-item dropdown">
+                    {% if request.user.user_type == '2' %}
+                        <a class="nav-link" href="{% url 'staff_view_notification' %}" title="Notifications">
+                            <i class="far fa-bell"></i>
+                        </a>
+                    {% elif request.user.user_type == '3' %}
+                        <a class="nav-link" href="{% url 'student_view_notification' %}" title="Notifications">
+                            <i class="far fa-bell"></i>
+                        </a>
+                    {% endif %}
+                </li>
+                
+                <!-- User dropdown -->
+                <li class="nav-item dropdown d-none d-md-block">
+                    <a class="nav-link" data-toggle="dropdown" href="#" title="Profile">
+                        <i class="far fa-user"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        {% if request.user.user_type == '1' %}
+                            <a href="{% url 'admin_view_profile' %}" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> Profile
+                            </a>
+                        {% elif request.user.user_type == '2' %}
+                            <a href="{% url 'staff_view_profile' %}" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> Profile
+                            </a>
+                        {% elif request.user.user_type == '3' %}
+                            <a href="{% url 'student_view_profile' %}" class="dropdown-item">
+                                <i class="fas fa-user mr-2"></i> Profile
+                            </a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'user_logout' %}" class="dropdown-item" onclick="return confirm('Logout?')">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Fullscreen toggle -->
+                <li class="nav-item d-none d-md-block">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button" title="Fullscreen">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -90,12 +159,18 @@
                 {% for message in messages  %}
     
                 {% if message.tags == 'success' %}
-                <div class="alert alert-success">
-                    {{message}}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="icon fas fa-check-circle"></i> {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 {% else %}
-                <div class="alert alert-danger">
-                    {{message}}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="icon fas fa-exclamation-triangle"></i> {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 {% endif %}
     
@@ -148,9 +223,23 @@
     <script src="{% static 'dist/js/pages/dashboard.js'%} "></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{% static 'dist/js/demo.js'%} "></script>
+    <!-- Mobile Enhancements -->
+    <script src="{% static 'js/mobile-enhancements.js'%} "></script>
     {% block custom_js %}
 
     {% endblock custom_js %}
+    
+    <!-- CSRF Token for AJAX requests -->
+    <script>
+        // Set up CSRF token for all AJAX requests
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

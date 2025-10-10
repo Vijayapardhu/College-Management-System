@@ -1,0 +1,67 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-laptop-code"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'staff_create_online_exam' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Create New Exam
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if exams %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Title</th>
+                                <th>Subject</th>
+                                <th>Duration</th>
+                                <th>Marks</th>
+                                <th>Start Date</th>
+                                <th>Status</th>
+                                <th>Attempts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exam in exams %}
+                            <tr>
+                                <td><strong>{{ exam.title }}</strong></td>
+                                <td>{{ exam.subject.name }}</td>
+                                <td>{{ exam.duration_minutes }} min</td>
+                                <td>{{ exam.total_marks }}</td>
+                                <td>{{ exam.start_datetime|date:"Y-m-d H:i" }}</td>
+                                <td>
+                                    {% if exam.is_published %}
+                                    <span class="badge badge-success">Published</span>
+                                    {% else %}
+                                    <span class="badge badge-warning">Draft</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">{{ exam.attempts.count }} students</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Online Exams Created</h5>
+                    <p class="mb-0">You haven't created any online exams yet. <a href="{% url 'staff_create_online_exam' %}">Create your first exam</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

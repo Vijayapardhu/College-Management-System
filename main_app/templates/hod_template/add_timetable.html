@@ -1,0 +1,110 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Course *</label>
+                                {{ form.course }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Subject *</label>
+                                {{ form.subject }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Faculty *</label>
+                                {{ form.staff }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Session *</label>
+                                {{ form.session }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Day of Week *</label>
+                                {{ form.day_of_week }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Period Number *</label>
+                                {{ form.period_number }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Room Number</label>
+                                {{ form.room_number }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Start Time *</label>
+                                {{ form.start_time }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>End Time *</label>
+                                {{ form.end_time }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-clock"></i> Standard Timetable Slots:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-0"><strong>Period 1:</strong> 09:00 - 09:50</p>
+                                <p class="mb-0"><strong>Period 2:</strong> 10:00 - 10:50</p>
+                                <p class="mb-0"><strong>Period 3:</strong> 11:00 - 11:50</p>
+                                <p class="mb-0"><strong>Period 4:</strong> 12:00 - 12:50</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-0"><strong>Period 5:</strong> 14:00 - 14:50</p>
+                                <p class="mb-0"><strong>Period 6:</strong> 15:00 - 15:50</p>
+                                <p class="mb-0"><strong>Period 7:</strong> 16:00 - 16:50</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Add Timetable Entry
+                    </button>
+                    <a href="{% url 'manage_timetable' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

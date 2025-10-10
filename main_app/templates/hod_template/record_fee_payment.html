@@ -1,0 +1,93 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-cash-register"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Student *</label>
+                                {{ form.student }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Fee Structure *</label>
+                                {{ form.fee_structure }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Amount Paid (₹) *</label>
+                                {{ form.amount_paid }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Payment Date *</label>
+                                {{ form.payment_date }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Payment Mode *</label>
+                                {{ form.payment_mode }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Transaction ID</label>
+                                {{ form.transaction_id }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Receipt Number *</label>
+                        {{ form.receipt_number }}
+                        <small class="form-text text-muted">Auto-generated unique receipt number</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        {{ form.remarks }}
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Payment Information:</h6>
+                        <ul class="mb-0">
+                            <li>Ensure correct student is selected</li>
+                            <li>Verify amount before submitting</li>
+                            <li>Receipt will be auto-generated for student download</li>
+                            <li>Transaction ID is required for online payments</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Record Payment
+                    </button>
+                    <a href="{% url 'view_fee_payments' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,97 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-chart-line"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Select Subject</label>
+                            <select class="form-control" id="subjectFilter" onchange="filterBySubject(this.value)">
+                                <option value="">All My Subjects</option>
+                                {% for subject in subjects %}
+                                <option value="{{ subject.id }}">{{ subject.name }} ({{ subject.course.name }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if results %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="resultsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student</th>
+                                <th>Roll Number</th>
+                                <th>Subject</th>
+                                <th>Internal</th>
+                                <th>External</th>
+                                <th>Total</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr data-subject="{{ result.subject.id }}">
+                                <td>{{ result.student.admin.first_name }} {{ result.student.admin.last_name }}</td>
+                                <td>{{ result.student.roll_number }}</td>
+                                <td>{{ result.subject.name }}</td>
+                                <td>{{ result.internal_marks|default:"-" }}</td>
+                                <td>{{ result.external_marks|default:"-" }}</td>
+                                <td><strong>{{ result.total_marks|default:"-" }}</strong></td>
+                                <td>
+                                    <span class="badge badge-{% if result.grade == 'A+' or result.grade == 'A' %}success{% elif result.grade == 'F' %}danger{% else %}info{% endif %}">
+                                        {{ result.grade|default:"-" }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if result.is_passed %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Pass</span>
+                                    {% else %}
+                                    <span class="badge badge-danger"><i class="fas fa-times"></i> Fail</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Results Available</h5>
+                    <p class="mb-0">No results have been entered for your subjects yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function filterBySubject(subjectId) {
+    var table = $('#resultsTable').DataTable();
+    if (subjectId === '') {
+        table.column(2).search('').draw();
+    } else {
+        var subjectName = $('select#subjectFilter option:selected').text().split(' (')[0];
+        table.column(2).search(subjectName).draw();
+    }
+}
+
+$(document).ready(function() {
+    $('#resultsTable').DataTable({
+        "pageLength": 25,
+        "order": [[0, "asc"]]
+    });
+});
+</script>
+{% endblock content %}

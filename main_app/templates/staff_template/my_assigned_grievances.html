@@ -1,0 +1,95 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if grievances %}
+                <ul class="nav nav-tabs" id="myGrievanceTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#assigned">Assigned to Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#resolved">Resolved by Me</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="assigned">
+                        <div class="row">
+                            {% for grievance in grievances %}
+                            {% if grievance.status != 'resolved' %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-warning">
+                                    <div class="card-header bg-warning">
+                                        <h5 class="card-title mb-0">
+                                            {{ grievance.get_grievance_type_display }}
+                                            <span class="badge badge-light float-right">{{ grievance.get_status_display }}</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Student:</strong> {{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</p>
+                                        <p><strong>Roll Number:</strong> {{ grievance.student.roll_number }}</p>
+                                        <p><strong>Submitted:</strong> {{ grievance.submitted_at|date:"Y-m-d H:i" }}</p>
+                                        <hr>
+                                        <p><strong>Description:</strong></p>
+                                        <p>{{ grievance.description|truncatewords:30 }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'staff_resolve_grievance' grievance.id %}" class="btn btn-success btn-block">
+                                            <i class="fas fa-check-circle"></i> Resolve Grievance
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="resolved">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Resolved Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grievance in grievances %}
+                                {% if grievance.status == 'resolved' %}
+                                <tr>
+                                    <td>{{ grievance.student.admin.first_name }} {{ grievance.student.admin.last_name }}</td>
+                                    <td>{{ grievance.get_grievance_type_display }}</td>
+                                    <td>{{ grievance.resolved_at|date:"Y-m-d" }}</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#grievanceModal{{ grievance.id }}">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Assigned Grievances</h5>
+                    <p class="mb-0">You have no grievances assigned to you at the moment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

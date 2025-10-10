@@ -1,0 +1,67 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-file-alt"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle"></i> How to Request a Certificate:</h5>
+                        <ol class="mb-0">
+                            <li>Select the certificate type you need</li>
+                            <li>Provide a reason for the certificate</li>
+                            <li>Submit your request</li>
+                            <li>Wait for admin approval</li>
+                            <li>Download your certificate once approved</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Certificate Type *</label>
+                        <select name="certificate_type" class="form-control" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="course_completion">Course Completion</option>
+                            <option value="provisional">Provisional Certificate</option>
+                            <option value="character">Character Certificate</option>
+                            <option value="bonafide">Bonafide Certificate</option>
+                            <option value="transfer">Transfer Certificate</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Reason for Request *</label>
+                        <textarea name="reason" class="form-control" rows="4" required placeholder="Please provide the reason why you need this certificate..."></textarea>
+                    </div>
+                    
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6><strong>Your Details:</strong></h6>
+                            <p class="mb-1"><strong>Name:</strong> {{ student.admin.first_name }} {{ student.admin.last_name }}</p>
+                            <p class="mb-1"><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+                            <p class="mb-1"><strong>Course:</strong> {{ student.course.name }}</p>
+                            <p class="mb-0"><strong>Email:</strong> {{ student.admin.email }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> Submit Request
+                    </button>
+                    <a href="{% url 'student_my_certificates' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to My Certificates
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

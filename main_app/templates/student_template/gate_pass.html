@@ -1,0 +1,100 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-id-card"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Gate Pass Instructions:</h6>
+                        <ul class="mb-0">
+                            <li>Select the type of outing</li>
+                            <li>Provide reason and destination</li>
+                            <li>Add parent contact for verification</li>
+                            <li>Wait for approval from staff/HOD</li>
+                            <li>Show approved pass at gate</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Pass Type *</label>
+                        {{ form.pass_type }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Reason *</label>
+                        {{ form.reason }}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>From Date & Time *</label>
+                                {{ form.from_date }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>To Date & Time *</label>
+                                {{ form.to_date }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Destination *</label>
+                        {{ form.destination }}
+                        <small class="form-text text-muted">Where are you going?</small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Parent/Guardian Contact *</label>
+                                {{ form.parent_contact }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Parent Consent</label>
+                                <div class="custom-control custom-checkbox mt-2">
+                                    {{ form.parent_consent }}
+                                    <label class="custom-control-label" for="id_parent_consent">
+                                        I have my parent's permission
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6><strong>Your Details:</strong></h6>
+                            <p class="mb-1"><strong>Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+                            <p class="mb-1"><strong>Roll Number:</strong> {{ request.user.student.roll_number }}</p>
+                            <p class="mb-0"><strong>Course:</strong> {{ request.user.student.course.name }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-warning btn-lg">
+                        <i class="fas fa-paper-plane"></i> Submit Gate Pass Request
+                    </button>
+                    <a href="{% url 'student_my_gate_passes' %}" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> My Gate Passes
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

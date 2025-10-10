@@ -1,0 +1,219 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}My Complete Profile{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Profile Sidebar -->
+            <div class="col-md-3">
+                <div class="card card-primary card-outline">
+                    <div class="card-body box-profile">
+                        <div class="text-center">
+                            {% if request.user.profile_pic %}
+                            <img class="profile-user-img img-fluid img-circle" src="{{ request.user.profile_pic.url }}" alt="Profile">
+                            {% else %}
+                            <img class="profile-user-img img-fluid img-circle" src="{% static 'dist/img/user.png' %}" alt="Profile">
+                            {% endif %}
+                        </div>
+                        <h3 class="profile-username text-center">{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+                        <p class="text-muted text-center">{{ student.roll_number }}</p>
+                        
+                        <ul class="list-group list-group-unbordered mb-3">
+                            <li class="list-group-item">
+                                <b>CGPA</b> <span class="float-right badge badge-success">{{ student.current_cgpa|default:"N/A" }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Attendance</b> <span class="float-right badge badge-info">{{ attendance_percentage }}%</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Semester</b> <span class="float-right">{{ student.current_semester|default:"N/A" }}</span>
+                            </li>
+                        </ul>
+                        
+                        <a href="{% url 'student_edit_profile' %}" class="btn btn-primary btn-block"><i class="fas fa-edit"></i> Edit Profile</a>
+                    </div>
+                </div>
+                
+                <!-- Progress Bars -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Academic Progress</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Course Completion</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" style="width: {{ course_completion }}%">{{ course_completion }}%</div>
+                        </div>
+                        
+                        <p>Assignments Completed</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-info" style="width: {{ assignment_completion }}%">{{ assignment_completion }}%</div>
+                        </div>
+                        
+                        <p>Profile Completion</p>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: {{ profile_completion }}%">{{ profile_completion }}%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Profile Content -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item"><a class="nav-link active" href="#personal" data-toggle="tab">Personal Info</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#academic" data-toggle="tab">Academic</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#achievements" data-toggle="tab">Achievements</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#documents" data-toggle="tab">Documents</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <!-- Personal Info Tab -->
+                            <div class="active tab-pane" id="personal">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Date of Birth:</strong> {{ student.date_of_birth|date:"Y-m-d"|default:"-" }}</p>
+                                        <p><strong>Gender:</strong> {{ student.admin.get_gender_display }}</p>
+                                        <p><strong>Blood Group:</strong> {{ student.blood_group|default:"-" }}</p>
+                                        <p><strong>Email:</strong> {{ student.admin.email }}</p>
+                                        <p><strong>Mobile:</strong> {{ student.mobile_number|default:"-" }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Father's Name:</strong> {{ student.father_name|default:"-" }}</p>
+                                        <p><strong>Mother's Name:</strong> {{ student.mother_name|default:"-" }}</p>
+                                        <p><strong>Guardian Contact:</strong> {{ student.guardian_mobile|default:"-" }}</p>
+                                        <p><strong>Address:</strong> {{ student.admin.address }}</p>
+                                        <p><strong>City:</strong> {{ student.city|default:"-" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Academic Tab -->
+                            <div class="tab-pane" id="academic">
+                                <p><strong>Course:</strong> {{ student.course.name }}</p>
+                                <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+                                <p><strong>Admission Number:</strong> {{ student.admission_number|default:"-" }}</p>
+                                <p><strong>Admission Year:</strong> {{ student.admission_year|default:"-" }}</p>
+                                <p><strong>Current Semester:</strong> {{ student.current_semester|default:"-" }}</p>
+                                <p><strong>Current CGPA:</strong> {{ student.current_cgpa|default:"-" }}</p>
+                                <hr>
+                                <h6>Previous Education</h6>
+                                <p><strong>10th Marks:</strong> {{ student.marks_10th|default:"-" }}%</p>
+                                <p><strong>12th Marks:</strong> {{ student.marks_12th|default:"-" }}%</p>
+                            </div>
+                            
+                            <!-- Achievements Tab -->
+                            <div class="tab-pane" id="achievements">
+                                <h6>Certificates</h6>
+                                {% if certificates %}
+                                <div class="list-group mb-3">
+                                    {% for cert in certificates %}
+                                    <div class="list-group-item">
+                                        <i class="fas fa-certificate text-success"></i>
+                                        <strong>{{ cert.title }}</strong>
+                                        <small class="float-right text-muted">{{ cert.issued_date|date:"Y-m-d" }}</small>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <p class="text-muted">No certificates yet</p>
+                                {% endif %}
+                                
+                                <h6 class="mt-3">Sports & Cultural</h6>
+                                {% if activities %}
+                                <div class="list-group">
+                                    {% for activity in activities %}
+                                    <div class="list-group-item">
+                                        <i class="fas fa-trophy text-warning"></i>
+                                        <strong>{{ activity.activity.name }}</strong>
+                                        <span class="badge badge-success float-right">{{ activity.get_achievement_level_display }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <p class="text-muted">No activity participations yet</p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Documents Tab -->
+                            <div class="tab-pane" id="documents">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Document Type</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>10th Marksheet</td>
+                                                <td>
+                                                    {% if student.tenth_marksheet %}
+                                                    <span class="badge badge-success">Uploaded</span>
+                                                    {% else %}
+                                                    <span class="badge badge-danger">Missing</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if student.tenth_marksheet %}
+                                                    <a href="{{ student.tenth_marksheet.url }}" class="btn btn-sm btn-info" download>
+                                                        <i class="fas fa-download"></i> Download
+                                                    </a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>12th Marksheet</td>
+                                                <td>
+                                                    {% if student.twelfth_marksheet %}
+                                                    <span class="badge badge-success">Uploaded</span>
+                                                    {% else %}
+                                                    <span class="badge badge-danger">Missing</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if student.twelfth_marksheet %}
+                                                    <a href="{{ student.twelfth_marksheet.url }}" class="btn btn-sm btn-info" download>
+                                                        <i class="fas fa-download"></i> Download
+                                                    </a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Aadhar Card</td>
+                                                <td>
+                                                    {% if student.aadhar_card %}
+                                                    <span class="badge badge-success">Uploaded</span>
+                                                    {% else %}
+                                                    <span class="badge badge-danger">Missing</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if student.aadhar_card %}
+                                                    <a href="{{ student.aadhar_card.url }}" class="btn btn-sm btn-info" download>
+                                                        <i class="fas fa-download"></i> Download
+                                                    </a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

@@ -1,0 +1,81 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-book"></i> My Uploaded Materials</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'staff_upload_material' %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-plus"></i> Upload New Material
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if materials %}
+                        <div class="row">
+                            {% for material in materials %}
+                            <div class="col-md-4">
+                                <div class="card card-outline {% if material.material_type == 'document' %}card-primary{% elif material.material_type == 'video' %}card-danger{% else %}card-success{% endif %}">
+                                    <div class="card-header">
+                                        <h5 class="card-title">
+                                            {% if material.material_type == 'document' %}
+                                            <i class="fas fa-file-pdf"></i>
+                                            {% elif material.material_type == 'video' %}
+                                            <i class="fab fa-youtube"></i>
+                                            {% else %}
+                                            <i class="fas fa-link"></i>
+                                            {% endif %}
+                                            {{ material.title|truncatewords:4 }}
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-2"><small>{{ material.description|truncatewords:15 }}</small></p>
+                                        <p class="mb-1">
+                                            <span class="badge badge-info">{{ material.subject.name }}</span>
+                                            <span class="badge badge-secondary">{{ material.course.name }}</span>
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-download"></i> {{ material.download_count }} downloads<br>
+                                            <i class="fas fa-star text-warning"></i> {{ material.average_rating|floatformat:1 }} rating
+                                        </p>
+                                        <p class="mb-0"><small class="text-muted">Uploaded {{ material.created_at|timesince }} ago</small></p>
+                                    </div>
+                                    <div class="card-footer">
+                                        {% if material.material_type == 'document' and material.file %}
+                                        <a href="{{ material.file.url }}" class="btn btn-sm btn-primary" download>
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                        {% elif material.url %}
+                                        <a href="{{ material.url }}" target="_blank" class="btn btn-sm btn-success">
+                                            <i class="fas fa-external-link-alt"></i> Open
+                                        </a>
+                                        {% endif %}
+                                        <span class="float-right text-muted"><small>v{{ material.version }}</small></span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-upload fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No Materials Uploaded Yet</h4>
+                            <p>Start sharing study materials with your students!</p>
+                            <a href="{% url 'staff_upload_material' %}" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Upload Your First Material
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

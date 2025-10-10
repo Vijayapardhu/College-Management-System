@@ -1,0 +1,129 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Student *</label>
+                                {{ form.student }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Session *</label>
+                                {{ form.session }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Semester *</label>
+                                {{ form.semester }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-3 mb-3">Credit Information</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Total Credits *</label>
+                                {{ form.total_credits }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Credits Earned *</label>
+                                {{ form.credits_earned }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-3 mb-3">Performance Metrics</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>SGPA *</label>
+                                {{ form.sgpa }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>CGPA *</label>
+                                {{ form.cgpa }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Total Marks *</label>
+                                {{ form.total_marks }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Marks Obtained *</label>
+                                {{ form.marks_obtained }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Percentage *</label>
+                                {{ form.percentage }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Has Backlogs?</label>
+                                <div class="mt-2">
+                                    {{ form.has_backlogs }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Number of Backlogs</label>
+                                {{ form.number_of_backlogs }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        {{ form.remarks }}
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-lightbulb"></i> Calculation Tips:</h6>
+                        <ul class="mb-0">
+                            <li><strong>SGPA:</strong> Semester Grade Point Average (0-10 scale)</li>
+                            <li><strong>CGPA:</strong> Cumulative Grade Point Average (0-10 scale)</li>
+                            <li><strong>Percentage:</strong> (Marks Obtained / Total Marks) × 100</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Add Semester Result
+                    </button>
+                    <a href="{% url 'manage_results' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Results
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

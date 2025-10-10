@@ -1,0 +1,141 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card admit-card-container">
+                    <div class="card-body" id="printableArea">
+                        <!-- University Header -->
+                        <div class="text-center border-bottom pb-3 mb-4">
+                            <h2 class="text-primary mb-0">EDUVISION UNIVERSITY</h2>
+                            <h4>EXAMINATION ADMIT CARD</h4>
+                            <p class="mb-0">{{ exam.get_exam_type_display }} - {{ exam.name }}</p>
+                        </div>
+                        
+                        <!-- Admit Card Number -->
+                        <div class="row mb-4">
+                            <div class="col-md-12 text-center">
+                                <h5>Admit Card Number: <span class="text-danger">{{ admit_card.admit_card_number }}</span></h5>
+                            </div>
+                        </div>
+                        
+                        <!-- Student Details -->
+                        <div class="row mb-4">
+                            <div class="col-md-9">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th width="30%">Student Name:</th>
+                                        <td><strong>{{ student.admin.first_name }} {{ student.admin.last_name }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Roll Number:</th>
+                                        <td>{{ student.roll_number|default:"N/A" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Course:</th>
+                                        <td>{{ student.course.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Semester:</th>
+                                        <td>{{ student.current_semester }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Session:</th>
+                                        <td>{{ exam.session }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                {% if student.photo %}
+                                <img src="{{ student.photo.url }}" alt="Student Photo" class="img-thumbnail" style="max-width: 120px;">
+                                {% else %}
+                                <div class="bg-secondary text-white p-4">
+                                    <i class="fas fa-user fa-3x"></i>
+                                    <p class="small mt-2">No Photo</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Exam Schedule -->
+                        <h5 class="bg-light p-2">Examination Schedule</h5>
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Room</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for schedule in schedules %}
+                                <tr>
+                                    <td><strong>{{ schedule.subject.name }}</strong></td>
+                                    <td>{{ schedule.exam_date|date:"d M Y (l)" }}</td>
+                                    <td>{{ schedule.start_time|time:"h:i A" }} - {{ schedule.end_time|time:"h:i A" }}</td>
+                                    <td class="text-center"><span class="badge badge-primary">{{ schedule.room_number }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                        <!-- Instructions -->
+                        <div class="mt-4">
+                            <h6 class="text-danger">Important Instructions:</h6>
+                            <ol class="small">
+                                <li>Bring this admit card to the examination hall</li>
+                                <li>Carry a valid photo ID (College ID Card/Aadhaar Card)</li>
+                                <li>Report to the exam hall 15 minutes before the exam starts</li>
+                                <li>Mobile phones and electronic devices are strictly prohibited</li>
+                                <li>Use of unfair means will lead to cancellation of examination</li>
+                            </ol>
+                        </div>
+                        
+                        <!-- Signature Section -->
+                        <div class="row mt-5 pt-3 border-top">
+                            <div class="col-6">
+                                <p class="mb-0">_______________________</p>
+                                <small>Student Signature</small>
+                            </div>
+                            <div class="col-6 text-right">
+                                <p class="mb-0">_______________________</p>
+                                <small>Controller of Examinations</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer no-print">
+                        <button class="btn btn-primary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print Admit Card
+                        </button>
+                        <a href="{% url 'student_view_exam_schedule' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Schedule
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.admit-card-container {
+    background: white;
+}
+@media print {
+    .no-print, .main-sidebar, .main-header, .content-header {
+        display: none !important;
+    }
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+}
+</style>
+{% endblock content %}
+
+

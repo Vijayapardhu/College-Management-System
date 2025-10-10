@@ -1,0 +1,189 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h3 class="card-title"><i class="fas fa-id-card"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if gate_passes %}
+                <ul class="nav nav-tabs" id="passTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#pending">Pending ({{ gate_passes|length }})</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#approved">Approved</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#rejected">Rejected</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#all">All</a>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3">
+                    <!-- Pending Tab -->
+                    <div class="tab-pane fade show active" id="pending">
+                        <div class="row">
+                            {% for pass in gate_passes %}
+                            {% if pass.status == 'pending' %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-warning">
+                                    <div class="card-header bg-warning">
+                                        <h5 class="card-title mb-0">
+                                            {{ pass.student.admin.first_name }} {{ pass.student.admin.last_name }}
+                                            <span class="badge badge-light float-right">{{ pass.get_pass_type_display }}</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong><i class="fas fa-user"></i> Roll Number:</strong> {{ pass.student.roll_number }}</p>
+                                        <p><strong><i class="fas fa-graduation-cap"></i> Course:</strong> {{ pass.student.course.name }}</p>
+                                        <hr>
+                                        <p><strong><i class="fas fa-comment"></i> Reason:</strong> {{ pass.reason }}</p>
+                                        <p><strong><i class="fas fa-map-marker-alt"></i> Destination:</strong> {{ pass.destination }}</p>
+                                        <p><strong><i class="fas fa-calendar-alt"></i> From:</strong> {{ pass.from_date|date:"Y-m-d H:i" }}</p>
+                                        <p><strong><i class="fas fa-calendar-check"></i> To:</strong> {{ pass.to_date|date:"Y-m-d H:i" }}</p>
+                                        <p><strong><i class="fas fa-phone"></i> Parent Contact:</strong> {{ pass.parent_contact }}</p>
+                                        {% if pass.parent_consent %}
+                                        <p><span class="badge badge-success"><i class="fas fa-check"></i> Parent Consent Given</span></p>
+                                        {% else %}
+                                        <p><span class="badge badge-danger"><i class="fas fa-times"></i> No Parent Consent</span></p>
+                                        {% endif %}
+                                        <small class="text-muted">Requested: {{ pass.created_at|date:"Y-m-d H:i" }}</small>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="post" action="{% url 'approve_gate_pass' pass.id %}" class="d-inline-block">
+                                            {% csrf_token %}
+                                            <button type="submit" name="action" value="approve" class="btn btn-success">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                            <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                                <i class="fas fa-times"></i> Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Approved Tab -->
+                    <div class="tab-pane fade" id="approved">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Destination</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Approved By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pass in gate_passes %}
+                                {% if pass.status == 'approved' %}
+                                <tr>
+                                    <td>{{ pass.student.admin.first_name }} {{ pass.student.admin.last_name }}</td>
+                                    <td>{{ pass.get_pass_type_display }}</td>
+                                    <td>{{ pass.destination }}</td>
+                                    <td>{{ pass.from_date|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ pass.to_date|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ pass.approved_by.admin.first_name }}</td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Rejected Tab -->
+                    <div class="tab-pane fade" id="rejected">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>Destination</th>
+                                    <th>Reason</th>
+                                    <th>Requested</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pass in gate_passes %}
+                                {% if pass.status == 'rejected' %}
+                                <tr>
+                                    <td>{{ pass.student.admin.first_name }} {{ pass.student.admin.last_name }}</td>
+                                    <td>{{ pass.get_pass_type_display }}</td>
+                                    <td>{{ pass.destination }}</td>
+                                    <td>{{ pass.reason|truncatewords:15 }}</td>
+                                    <td>{{ pass.created_at|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- All Tab -->
+                    <div class="tab-pane fade" id="all">
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Type</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pass in gate_passes %}
+                                <tr>
+                                    <td>{{ pass.student.admin.first_name }} {{ pass.student.admin.last_name }}</td>
+                                    <td>{{ pass.get_pass_type_display }}</td>
+                                    <td>{{ pass.from_date|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ pass.to_date|date:"Y-m-d H:i" }}</td>
+                                    <td>
+                                        {% if pass.status == 'approved' %}
+                                        <span class="badge badge-success">{{ pass.get_status_display }}</span>
+                                        {% elif pass.status == 'rejected' %}
+                                        <span class="badge badge-danger">{{ pass.get_status_display }}</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">{{ pass.get_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-check-circle"></i> No Gate Pass Requests</h5>
+                    <p class="mb-0">There are no gate pass requests at the moment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#internshipTable').DataTable({
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+
+

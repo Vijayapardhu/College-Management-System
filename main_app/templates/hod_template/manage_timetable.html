@@ -1,0 +1,105 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-calendar-alt"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'add_timetable' %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-plus"></i> Add Timetable Entry
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if timetable_entries %}
+                <!-- Filter Options -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-primary active" onclick="filterDay('all')">All</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="filterDay('Monday')">Monday</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="filterDay('Tuesday')">Tuesday</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="filterDay('Wednesday')">Wednesday</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="filterDay('Thursday')">Thursday</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="filterDay('Friday')">Friday</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="filterDay('Saturday')">Saturday</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm" id="timetableTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Day</th>
+                                <th>Period</th>
+                                <th>Time</th>
+                                <th>Subject</th>
+                                <th>Course</th>
+                                <th>Faculty</th>
+                                <th>Room</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in timetable_entries %}
+                            <tr data-day="{{ entry.day_of_week }}">
+                                <td><span class="badge badge-info">{{ entry.day_of_week }}</span></td>
+                                <td><strong>Period {{ entry.period_number }}</strong></td>
+                                <td>{{ entry.start_time|time:"H:i" }} - {{ entry.end_time|time:"H:i" }}</td>
+                                <td>{{ entry.subject.name }}</td>
+                                <td>{{ entry.course.name }}</td>
+                                <td>
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    {{ entry.staff.admin.first_name }} {{ entry.staff.admin.last_name }}
+                                </td>
+                                <td>
+                                    {% if entry.room_number %}
+                                    <span class="badge badge-secondary">{{ entry.room_number }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Timetable Entries</h5>
+                    <p class="mb-0">No timetable has been created yet. <a href="{% url 'add_timetable' %}">Create your first timetable entry</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function filterDay(day) {
+    var table = $('#timetableTable').DataTable();
+    if (day === 'all') {
+        table.search('').draw();
+    } else {
+        table.column(0).search(day).draw();
+    }
+}
+
+$(document).ready(function() {
+    $('#timetableTable').DataTable({
+        "order": [[0, "asc"], [1, "asc"]],
+        "pageLength": 50
+    });
+});
+</script>
+{% endblock content %}

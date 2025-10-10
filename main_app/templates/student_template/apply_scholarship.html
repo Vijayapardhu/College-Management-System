@@ -1,0 +1,72 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-file-invoice"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Select Scholarship *</label>
+                        {{ form.scholarship }}
+                    </div>
+                    
+                    <div class="alert alert-info" id="scholarshipDetails" style="display:none;">
+                        <h6><i class="fas fa-award"></i> Scholarship Details:</h6>
+                        <p id="scholarshipInfo"></p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Your CGPA</label>
+                                <input type="number" name="cgpa" step="0.01" min="0" max="10" class="form-control" placeholder="Your current CGPA">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Family Annual Income (₹)</label>
+                                <input type="number" name="annual_income" class="form-control" placeholder="Annual family income">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Why do you deserve this scholarship? *</label>
+                        <textarea name="reason" class="form-control" rows="4" required placeholder="Explain why you should be selected for this scholarship..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Supporting Documents (Optional)</label>
+                        <input type="file" name="documents" class="form-control" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                        <small class="form-text text-muted">Income certificate, mark sheets, etc. (PDF, JPG, PNG)</small>
+                    </div>
+                    
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6><strong>Your Details:</strong></h6>
+                            <p class="mb-1"><strong>Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+                            <p class="mb-1"><strong>Roll Number:</strong> {{ request.user.student.roll_number }}</p>
+                            <p class="mb-0"><strong>Course:</strong> {{ request.user.student.course.name }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                    <a href="{% url 'student_view_scholarships' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Scholarships
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,126 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Statistics Cards -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ total_materials }}</h3>
+                        <p>Total Materials</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">View Details <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ total_downloads }}</h3>
+                        <p>Total Downloads</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <a href="{% url 'admin_resource_stats' %}" class="small-box-footer">View Analytics <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ avg_rating|floatformat:1 }}</h3>
+                        <p>Average Rating</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">Out of 5.0 <i class="fas fa-star"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>{{ materials|length }}</h3>
+                        <p>Recent Uploads</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">This Month <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materials Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Study Materials</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'admin_resource_stats' %}" class="btn btn-info btn-sm">
+                                <i class="fas fa-chart-bar"></i> View Analytics
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Subject</th>
+                                        <th>Course</th>
+                                        <th>Uploaded By</th>
+                                        <th>Downloads</th>
+                                        <th>Rating</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for material in materials %}
+                                    <tr>
+                                        <td>
+                                            {% if material.material_type == 'document' %}
+                                            <i class="fas fa-file-pdf text-danger"></i>
+                                            {% elif material.material_type == 'video' %}
+                                            <i class="fab fa-youtube text-danger"></i>
+                                            {% else %}
+                                            <i class="fas fa-link text-primary"></i>
+                                            {% endif %}
+                                            {{ material.title }}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-{% if material.material_type == 'document' %}primary{% elif material.material_type == 'video' %}danger{% else %}success{% endif %}">
+                                                {{ material.get_material_type_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ material.subject.name }}</td>
+                                        <td>{{ material.course.name }}</td>
+                                        <td>{{ material.uploaded_by.admin.first_name }} {{ material.uploaded_by.admin.last_name }}</td>
+                                        <td><span class="badge badge-info">{{ material.download_count }}</span></td>
+                                        <td>{{ material.average_rating|floatformat:1 }} ⭐</td>
+                                        <td>{{ material.created_at|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted">No study materials uploaded yet</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

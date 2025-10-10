@@ -1,0 +1,97 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-bus"></i> My Transport Details</h3>
+            </div>
+            <div class="card-body">
+                {% if allocation %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h4 class="mb-0">
+                                    <i class="fas fa-bus"></i> {{ allocation.transport.route_name }}
+                                    <span class="badge badge-light float-right">{{ allocation.transport.bus_number }}</span>
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-primary mb-3">Route Information</h5>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th width="40%">Bus Number:</th>
+                                                <td><strong>{{ allocation.transport.bus_number }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Driver Name:</th>
+                                                <td>{{ allocation.transport.driver_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Driver Contact:</th>
+                                                <td><i class="fas fa-phone"></i> {{ allocation.transport.driver_contact }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>My Pickup Point:</th>
+                                                <td><strong class="text-success">{{ allocation.pickup_point }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Fee per Semester:</th>
+                                                <td><strong>₹{{ allocation.transport.fee_per_semester }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Registered Since:</th>
+                                                <td>{{ allocation.registered_date|date:"d M Y" }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <h5 class="text-primary mb-3">Route Details & Timings</h5>
+                                        <div class="bg-light p-3 rounded" style="white-space: pre-line;">{{ allocation.transport.route_details }}</div>
+                                        
+                                        <div class="mt-3">
+                                            <h6>Seat Status:</h6>
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar bg-success" role="progressbar" 
+                                                     style="width: {% widthratio allocation.transport.occupied_seats allocation.transport.total_seats 100 %}%">
+                                                    {{ allocation.transport.occupied_seats }} / {{ allocation.transport.total_seats }} Seats Occupied
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-warning mt-4">
+                                    <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> 
+                                    Please be at your pickup point 5 minutes before the scheduled time. The bus will not wait beyond schedule.
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> <strong>Emergency Contact:</strong> 
+                                    In case of any transport-related issues, contact the driver at {{ allocation.transport.driver_contact }} or visit the transport office.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> You are not registered for any transport facility.
+                    <hr>
+                    <p class="mb-0">Contact the administration office if you need to register for transport services.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

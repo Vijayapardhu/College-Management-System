@@ -1,0 +1,79 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-file-upload"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Subject *</label>
+                                <select name="subject_id" class="form-control" required>
+                                    <option value="">-- Select Subject --</option>
+                                    {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }} ({{ subject.course.name }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Exam Type *</label>
+                                <select name="exam_type" class="form-control" required>
+                                    <option value="">-- Select Type --</option>
+                                    <option value="mid">Mid-Term Exam</option>
+                                    <option value="end">End-Term Exam</option>
+                                    <option value="internal">Internal Assessment</option>
+                                    <option value="supplementary">Supplementary Exam</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Question Paper Title *</label>
+                        <input type="text" name="title" class="form-control" required placeholder="e.g., Mid-Term Exam 2024-25">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Question Paper (PDF) *</label>
+                        <input type="file" name="question_paper" class="form-control" accept=".pdf" required>
+                        <small class="form-text text-muted">Only PDF files are allowed. Max size: 10MB</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Instructions/Notes</label>
+                        <textarea name="instructions" class="form-control" rows="3" placeholder="Any special instructions for students..."></textarea>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle"></i> Benefits:</h6>
+                        <ul class="mb-0">
+                            <li>Students can download and practice previous year papers</li>
+                            <li>Helps students prepare better for exams</li>
+                            <li>Digital archive of all question papers</li>
+                            <li>Accessible anytime from student portal</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-upload"></i> Upload Question Paper
+                    </button>
+                    <a href="{% url 'staff_home' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

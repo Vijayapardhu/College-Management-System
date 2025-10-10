@@ -1,0 +1,91 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-money-bill-wave"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-award"></i> Scholarship Disbursement</h5>
+                    <p class="mb-0">Process payment for approved scholarship application</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Student Details</h6>
+                                <p><strong>Name:</strong> {{ application.student.admin.first_name }} {{ application.student.admin.last_name }}</p>
+                                <p><strong>Roll Number:</strong> {{ application.student.roll_number }}</p>
+                                <p><strong>Course:</strong> {{ application.student.course.name }}</p>
+                                <p><strong>Bank Account:</strong> {{ application.student.bank_account_number|default:"Not Available" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Scholarship Details</h6>
+                                <p><strong>Scholarship:</strong> {{ application.scholarship.name }}</p>
+                                <p><strong>Amount:</strong> <span class="text-success"><h4>₹{{ application.scholarship.amount }}</h4></span></p>
+                                <p><strong>Type:</strong> {{ application.scholarship.get_scholarship_type_display }}</p>
+                                <p><strong>Applied:</strong> {{ application.applied_date|date:"Y-m-d" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            <h3 class="card-title">Disbursement Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Disbursement Date *</label>
+                                        <input type="date" name="disbursement_date" class="form-control" value="{{ today }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Transaction ID *</label>
+                                        <input type="text" name="transaction_id" class="form-control" required placeholder="Bank transaction reference">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Payment Mode *</label>
+                                <select name="payment_mode" class="form-control" required>
+                                    <option value="">-- Select Mode --</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="cheque">Cheque</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="online">Online Payment</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-money-bill-wave"></i> Confirm Disbursement
+                            </button>
+                            <a href="{% url 'scholarship_applications' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

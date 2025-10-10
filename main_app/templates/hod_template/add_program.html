@@ -1,0 +1,109 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Program Name *</label>
+                                {{ form.name }}
+                                <small class="form-text text-muted">e.g., Computer Science Engineering, Electronics Engineering</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Program Code</label>
+                                {{ form.code }}
+                                <small class="form-text text-muted">e.g., CSE, ECE</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Program Type *</label>
+                                {{ form.program_type }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Department *</label>
+                                {{ form.department }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Duration (Years) *</label>
+                                {{ form.duration_years }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Total Seats</label>
+                                {{ form.total_seats }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Accreditation</label>
+                                {{ form.accreditation }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        {{ form.description }}
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-lightbulb"></i> Program Examples:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>B.Tech Programs:</strong></p>
+                                <ul class="mb-0">
+                                    <li>Computer Science & Engineering</li>
+                                    <li>Electronics & Communication Engineering</li>
+                                    <li>Mechanical Engineering</li>
+                                    <li>Civil Engineering</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>M.Tech Programs:</strong></p>
+                                <ul class="mb-0">
+                                    <li>Computer Science & Engineering</li>
+                                    <li>VLSI Design</li>
+                                    <li>Structural Engineering</li>
+                                    <li>Power Systems</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i> Add Program
+                    </button>
+                    <a href="{% url 'manage_programs' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

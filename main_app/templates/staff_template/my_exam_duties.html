@@ -1,0 +1,93 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-danger">
+                <h3 class="card-title"><i class="fas fa-clipboard-list"></i> My Examination Duties</h3>
+            </div>
+            <div class="card-body">
+                {% if duties %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="dutiesTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Exam</th>
+                                <th>Subject</th>
+                                <th>Date & Time</th>
+                                <th>Room</th>
+                                <th>Duty Type</th>
+                                <th>Documents</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for duty in duties %}
+                            <tr>
+                                <td>
+                                    <strong>{{ duty.exam_schedule.exam.name }}</strong><br>
+                                    <small class="text-muted">{{ duty.exam_schedule.exam.get_exam_type_display }}</small>
+                                </td>
+                                <td>{{ duty.exam_schedule.subject.name }}</td>
+                                <td>
+                                    <strong>{{ duty.exam_schedule.exam_date|date:"d M Y (D)" }}</strong><br>
+                                    <small>{{ duty.exam_schedule.start_time|time:"h:i A" }} - {{ duty.exam_schedule.end_time|time:"h:i A" }}</small>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-secondary">{{ duty.exam_schedule.room_number }}</span>
+                                </td>
+                                <td>
+                                    {% if duty.duty_type == 'chief' %}
+                                        <span class="badge badge-danger">Chief Invigilator</span>
+                                    {% else %}
+                                        <span class="badge badge-info">Assistant</span>
+                                    {% endif %}
+                                </td>
+                                <td class="small">
+                                    {% if duty.exam_schedule.question_paper %}
+                                        <i class="fas fa-check text-success"></i> Q.Paper<br>
+                                    {% endif %}
+                                    {% if duty.exam_schedule.answer_key %}
+                                        <i class="fas fa-check text-success"></i> Answer Key
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group-vertical btn-group-sm">
+                                        {% if duty.exam_schedule.subject.staff == staff %}
+                                        <a href="{% url 'staff_upload_question_paper' duty.exam_schedule.id %}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-upload"></i> Upload Q.Paper
+                                        </a>
+                                        <a href="{% url 'staff_upload_answer_key' duty.exam_schedule.id %}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-key"></i> Upload Key
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No examination duties assigned yet.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#dutiesTable').DataTable({
+        "order": [[2, "asc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}
+

@@ -1,0 +1,128 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Issue Book Section -->
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-hand-holding"></i> Issue Book</h3>
+                    </div>
+                    <form method="post" action="{% url 'issue_library_book' %}">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Student *</label>
+                                <select name="student_id" class="form-control" required>
+                                    <option value="">-- Select Student --</option>
+                                    {% for student in students %}
+                                    <option value="{{ student.id }}">{{ student.admin.first_name }} {{ student.admin.last_name }} ({{ student.roll_number }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Book *</label>
+                                <select name="book_id" class="form-control" required>
+                                    <option value="">-- Select Book --</option>
+                                    {% for book in available_books %}
+                                    <option value="{{ book.id }}">{{ book.title }} - {{ book.author }} ({{ book.available_stock }} available)</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Due Date *</label>
+                                <input type="date" name="due_date" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-check"></i> Issue Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Return Book Section -->
+            <div class="col-md-6">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-undo"></i> Return Book</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if issued_books %}
+                        <div class="list-group">
+                            {% for issue in issued_books %}
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <p class="mb-1"><strong>{{ issue.book.title }}</strong></p>
+                                        <small class="text-muted">{{ issue.student.admin.first_name }} ({{ issue.student.roll_number }})</small><br>
+                                        <small class="text-muted">Due: {{ issue.due_date|date:"Y-m-d" }}</small>
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <a href="{% url 'return_library_book' issue.id %}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-undo"></i> Return
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success">
+                            <p class="mb-0"><i class="fas fa-check-circle"></i> All books returned!</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current Issues Table -->
+        <div class="card mt-3">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-list"></i> Current Book Issues</h3>
+            </div>
+            <div class="card-body">
+                {% if all_issues %}
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Book</th>
+                            <th>Issue Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issue in all_issues %}
+                        <tr>
+                            <td>{{ issue.student.admin.first_name }} ({{ issue.student.roll_number }})</td>
+                            <td>{{ issue.book.title }}</td>
+                            <td>{{ issue.issue_date|date:"Y-m-d" }}</td>
+                            <td>{{ issue.due_date|date:"Y-m-d" }}</td>
+                            <td>
+                                {% if issue.is_returned %}
+                                <span class="badge badge-success">Returned</span>
+                                {% else %}
+                                <span class="badge badge-warning">Issued</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

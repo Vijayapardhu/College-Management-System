@@ -1,0 +1,70 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-briefcase"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle"></i> Placement Coordinator Dashboard</h6>
+                    <p class="mb-0">Manage placement drives and student applications</p>
+                </div>
+                
+                {% if drives %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="drivesTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th>Package (LPA)</th>
+                                <th>Drive Date</th>
+                                <th>Applications</th>
+                                <th>Selected</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for drive in drives %}
+                            <tr>
+                                <td><strong>{{ drive.company.name }}</strong></td>
+                                <td>{{ drive.job_role }}</td>
+                                <td class="text-success"><strong>₹{{ drive.salary_package }}</strong></td>
+                                <td>{{ drive.drive_date|date:"Y-m-d" }}</td>
+                                <td><span class="badge badge-info">{{ drive.applications.count }}</span></td>
+                                <td><span class="badge badge-success">{{ drive.applications.filter.count }}</span></td>
+                                <td>
+                                    <a href="{% url 'view_placement_applications' drive.id %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye"></i> View Applications
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <h5><i class="fas fa-exclamation-circle"></i> No Placement Drives</h5>
+                    <p class="mb-0">No placement drives assigned to you as coordinator.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#drivesTable').DataTable({
+        "order": [[3, "desc"]],
+        "pageLength": 25
+    });
+});
+</script>
+{% endblock content %}

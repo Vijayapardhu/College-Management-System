@@ -3,12 +3,14 @@ import math
 from datetime import datetime
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
                               redirect, render)
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from .forms import *
 from .models import *
@@ -205,3 +207,755 @@ def student_view_result(request):
         'page_title': "View Results"
     }
     return render(request, "student_template/student_view_result.html", context)
+
+
+# ==================== NEW STUDENT PORTAL VIEWS ====================
+
+def student_view_timetable(request):
+    """View weekly timetable"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    # Get timetable for student's course and semester
+    timetable = Timetable.objects.filter(
+        course=student.course,
+        semester=student.current_semester,
+        session=student.session
+    ).order_by('weekday', 'period')
+    
+    # Organize by weekday
+    weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+    organized_timetable = {}
+    
+    for day in weekdays:
+        organized_timetable[day] = timetable.filter(weekday=day)
+    
+    context = {
+        'page_title': 'My Timetable',
+        'timetable': organized_timetable,
+        'student': student
+    }
+    return render(request, 'student_template/view_timetable.html', context)
+
+
+def student_view_exam_schedule(request):
+    """View exam schedule"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    # Get active exams for student's session and semester
+    exams = Exam.objects.filter(
+        session=student.session,
+        semester=student.current_semester
+    ).order_by('-start_date')
+    
+    # Get exam schedules for subjects in student's course
+    subjects = Subject.objects.filter(course=student.course)
+    schedules = []
+    
+    for exam in exams:
+        exam_schedules = ExamSchedule.objects.filter(
+            exam=exam,
+            subject__in=subjects
+        ).order_by('exam_date', 'start_time')
+        
+        if exam_schedules.exists():
+            schedules.append({
+                'exam': exam,
+                'schedules': exam_schedules
+            })
+    
+    context = {
+        'page_title': 'Exam Schedule',
+        'schedules': schedules,
+        'student': student
+    }
+    return render(request, 'student_template/view_exam_schedule.html', context)
+
+
+def student_download_admit_card(request, exam_id):
+    """Download admit card for an exam"""
+    student = get_object_or_404(Student, admin=request.user)
+    exam = get_object_or_404(Exam, id=exam_id)
+    
+    # Get or create admit card
+    admit_card, created = AdmitCard.objects.get_or_create(
+        exam=exam,
+        student=student,
+        defaults={
+            'admit_card_number': f"{exam.id}-{student.id}-{exam.session.start_year.year}",
+            'is_generated': True
+        }
+    )
+    
+    # Mark as downloaded
+    if not admit_card.is_downloaded:
+        from django.utils import timezone
+        admit_card.is_downloaded = True
+        admit_card.downloaded_at = timezone.now()
+        admit_card.save()
+    
+    # Get exam schedules for this exam
+    subjects = Subject.objects.filter(course=student.course)
+    schedules = ExamSchedule.objects.filter(
+        exam=exam,
+        subject__in=subjects
+    ).order_by('exam_date', 'start_time')
+    
+    context = {
+        'page_title': 'Admit Card',
+        'admit_card': admit_card,
+        'student': student,
+        'exam': exam,
+        'schedules': schedules
+    }
+    return render(request, 'student_template/download_admit_card.html', context)
+
+
+def student_view_semester_results(request):
+    """View semester-wise results"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    # Get all published semester results
+    semester_results = SemesterResult.objects.filter(
+        student=student,
+        is_published=True
+    ).order_by('-session', '-semester')
+    
+    context = {
+        'page_title': 'My Results',
+        'semester_results': semester_results,
+        'student': student
+    }
+    return render(request, 'student_template/view_results.html', context)
+
+
+def student_view_semester_detail(request, result_id):
+    """View detailed subject-wise results for a semester"""
+    student = get_object_or_404(Student, admin=request.user)
+    semester_result = get_object_or_404(SemesterResult, id=result_id, student=student, is_published=True)
+    
+    # Get subject-wise results
+    subject_results = SubjectResult.objects.filter(semester_result=semester_result)
+    
+    context = {
+        'page_title': f'Semester {semester_result.semester} Results',
+        'semester_result': semester_result,
+        'subject_results': subject_results,
+        'student': student
+    }
+    return render(request, 'student_template/view_semester_detail.html', context)
+
+
+def student_view_placement_drives(request):
+    """View available placement drives"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    # Get active placement drives eligible for student's course
+    from django.utils import timezone
+    now = timezone.now()
+    
+    drives = PlacementDrive.objects.filter(
+        is_active=True,
+        registration_deadline__gte=now,
+        eligible_courses=student.course
+    ).order_by('registration_deadline')
+    
+    # Check eligibility based on CGPA and backlogs
+    eligible_drives = []
+    applied_drive_ids = PlacementApplication.objects.filter(student=student).values_list('placement_drive_id', flat=True)
+    
+    for drive in drives:
+        # Get student's latest CGPA
+        latest_result = SemesterResult.objects.filter(student=student).order_by('-semester').first()
+        
+        is_eligible = True
+        reasons = []
+        
+        if latest_result:
+            if latest_result.cgpa and latest_result.cgpa < drive.min_cgpa:
+                is_eligible = False
+                reasons.append(f"Min CGPA required: {drive.min_cgpa}, Your CGPA: {latest_result.cgpa}")
+            
+            if latest_result.number_of_backlogs > drive.allowed_backlogs:
+                is_eligible = False
+                reasons.append(f"Max backlogs allowed: {drive.allowed_backlogs}, You have: {latest_result.number_of_backlogs}")
+        
+        eligible_drives.append({
+            'drive': drive,
+            'is_eligible': is_eligible,
+            'reasons': reasons,
+            'has_applied': drive.id in applied_drive_ids
+        })
+    
+    context = {
+        'page_title': 'Placement Drives',
+        'eligible_drives': eligible_drives,
+        'student': student
+    }
+    return render(request, 'student_template/view_placement_drives.html', context)
+
+
+def student_apply_placement(request, drive_id):
+    """Apply for a placement drive"""
+    student = get_object_or_404(Student, admin=request.user)
+    drive = get_object_or_404(PlacementDrive, id=drive_id)
+    
+    # Check if already applied
+    if PlacementApplication.objects.filter(placement_drive=drive, student=student).exists():
+        messages.error(request, "You have already applied for this drive!")
+        return redirect('student_view_placement_drives')
+    
+    form = PlacementApplicationForm(request.POST or None, request.FILES or None)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.placement_drive = drive
+            application.student = student
+            application.status = 'registered'
+            application.save()
+            messages.success(request, "Application submitted successfully!")
+            return redirect('student_my_placement_applications')
+        else:
+            messages.error(request, "Failed to submit application. Please check the form.")
+    
+    context = {
+        'page_title': f'Apply for {drive.company.name}',
+        'form': form,
+        'drive': drive,
+        'student': student
+    }
+    return render(request, 'student_template/apply_placement.html', context)
+
+
+def student_my_placement_applications(request):
+    """View my placement applications"""
+    student = get_object_or_404(Student, admin=request.user)
+    applications = PlacementApplication.objects.filter(student=student).order_by('-applied_at')
+    
+    context = {
+        'page_title': 'My Placement Applications',
+        'applications': applications,
+        'student': student
+    }
+    return render(request, 'student_template/my_placement_applications.html', context)
+
+
+def student_view_fee_structure(request):
+    """View fee structure"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    # Get fee structure for student's course, type, and current semester
+    fee_structure = FeeStructure.objects.filter(
+        course=student.course,
+        course_type=student.course_type,
+        semester=student.current_semester,
+        session=student.session
+    ).first()
+    
+    # Get payment history
+    payments = FeePayment.objects.filter(student=student).order_by('-payment_date')
+    
+    # Calculate total paid and pending
+    total_paid = sum([p.amount_paid for p in payments])
+    total_due = 0
+    
+    if fee_structure:
+        total_due = fee_structure.total_fee - total_paid
+    
+    context = {
+        'page_title': 'Fee Structure',
+        'fee_structure': fee_structure,
+        'payments': payments,
+        'total_paid': total_paid,
+        'total_due': total_due,
+        'student': student
+    }
+    return render(request, 'student_template/view_fee_structure.html', context)
+
+
+def student_fee_receipts(request):
+    """View and download fee receipts"""
+    student = get_object_or_404(Student, admin=request.user)
+    payments = FeePayment.objects.filter(student=student).order_by('-payment_date')
+    
+    context = {
+        'page_title': 'Fee Receipts',
+        'payments': payments,
+        'student': student
+    }
+    return render(request, 'student_template/fee_receipts.html', context)
+
+
+def student_submit_grievance(request):
+    """Submit a grievance"""
+    student = get_object_or_404(Student, admin=request.user)
+    form = GrievanceForm(request.POST or None, request.FILES or None)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            grievance = form.save(commit=False)
+            grievance.submitted_by = request.user
+            
+            # Generate unique grievance number
+            from datetime import datetime
+            grievance_number = f"GRV-{datetime.now().year}-{datetime.now().month:02d}-{student.id}-{Grievance.objects.count() + 1}"
+            grievance.grievance_number = grievance_number
+            grievance.status = 'submitted'
+            
+            grievance.save()
+            messages.success(request, f"Grievance submitted successfully! Tracking Number: {grievance_number}")
+            return redirect('student_my_grievances')
+        else:
+            messages.error(request, "Failed to submit grievance. Please check the form.")
+    
+    context = {
+        'page_title': 'Submit Grievance',
+        'form': form,
+        'student': student
+    }
+    return render(request, 'student_template/submit_grievance.html', context)
+
+
+def student_my_grievances(request):
+    """View my grievances"""
+    student = get_object_or_404(Student, admin=request.user)
+    grievances = Grievance.objects.filter(submitted_by=request.user).order_by('-submitted_at')
+    
+    context = {
+        'page_title': 'My Grievances',
+        'grievances': grievances,
+        'student': student
+    }
+    return render(request, 'student_template/my_grievances.html', context)
+
+
+# ==================== LIBRARY FEATURES ====================
+
+def student_search_books(request):
+    """Search library books"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    search_query = request.GET.get('search', '')
+    category = request.GET.get('category', '')
+    subject_id = request.GET.get('subject', '')
+    
+    books = Library.objects.all()
+    
+    if search_query:
+        books = books.filter(
+            Q(title__icontains=search_query) | 
+            Q(author__icontains=search_query) | 
+            Q(isbn__icontains=search_query)
+        )
+    
+    if category:
+        books = books.filter(category=category)
+    
+    if subject_id:
+        books = books.filter(subject_id=subject_id)
+    
+    books = books.order_by('title')
+    
+    # Get subjects for filter
+    subjects = Subject.objects.filter(course=student.course)
+    
+    context = {
+        'page_title': 'Search Library Books',
+        'books': books,
+        'subjects': subjects,
+        'search_query': search_query,
+        'selected_category': category,
+        'selected_subject': subject_id,
+        'student': student
+    }
+    return render(request, 'student_template/search_books.html', context)
+
+
+def student_my_library_issues(request):
+    """View my library issues"""
+    student = get_object_or_404(Student, admin=request.user)
+    issues = LibraryIssue.objects.filter(student=student).order_by('-issue_date')
+    
+    # Count active issues
+    active_issues = issues.filter(status='issued').count()
+    overdue_issues = issues.filter(status='overdue').count()
+    total_fines = sum([issue.fine_amount for issue in issues])
+    
+    context = {
+        'page_title': 'My Library Books',
+        'issues': issues,
+        'active_issues': active_issues,
+        'overdue_issues': overdue_issues,
+        'total_fines': total_fines,
+        'student': student
+    }
+    return render(request, 'student_template/my_library_issues.html', context)
+
+
+# ==================== SCHOLARSHIP FEATURES ====================
+
+def student_view_scholarships(request):
+    """View available scholarships"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    from django.utils import timezone
+    now = timezone.now().date()
+    
+    # Get active scholarships with deadline not passed
+    scholarships = Scholarship.objects.filter(
+        is_active=True,
+        application_deadline__gte=now
+    ).order_by('application_deadline')
+    
+    # Check which scholarships student has applied for
+    applied_ids = ScholarshipApplication.objects.filter(student=student).values_list('scholarship_id', flat=True)
+    
+    context = {
+        'page_title': 'Available Scholarships',
+        'scholarships': scholarships,
+        'applied_ids': list(applied_ids),
+        'student': student
+    }
+    return render(request, 'student_template/view_scholarships.html', context)
+
+
+def student_apply_scholarship(request, scholarship_id):
+    """Apply for scholarship"""
+    student = get_object_or_404(Student, admin=request.user)
+    scholarship = get_object_or_404(Scholarship, id=scholarship_id)
+    
+    # Check if already applied
+    if ScholarshipApplication.objects.filter(scholarship=scholarship, student=student).exists():
+        messages.error(request, "You have already applied for this scholarship!")
+        return redirect('student_view_scholarships')
+    
+    form = ScholarshipApplicationForm(request.POST or None, request.FILES or None)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.student = student
+            application.status = 'applied'
+            application.save()
+            messages.success(request, "Scholarship application submitted successfully!")
+            return redirect('student_my_scholarship_applications')
+        else:
+            messages.error(request, "Failed to submit application.")
+    else:
+        form.fields['scholarship'].initial = scholarship
+        form.fields['scholarship'].widget = forms.HiddenInput()
+    
+    context = {
+        'page_title': f'Apply for {scholarship.name}',
+        'form': form,
+        'scholarship': scholarship,
+        'student': student
+    }
+    return render(request, 'student_template/apply_scholarship.html', context)
+
+
+def student_my_scholarship_applications(request):
+    """View my scholarship applications"""
+    student = get_object_or_404(Student, admin=request.user)
+    applications = ScholarshipApplication.objects.filter(student=student).order_by('-application_date')
+    
+    context = {
+        'page_title': 'My Scholarship Applications',
+        'applications': applications,
+        'student': student
+    }
+    return render(request, 'student_template/my_scholarship_applications.html', context)
+
+
+# ==================== TRANSPORT & HOSTEL FEATURES ====================
+
+def student_my_transport(request):
+    """View my transport details"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    allocation = TransportAllocation.objects.filter(student=student, is_active=True).first()
+    
+    context = {
+        'page_title': 'My Transport Details',
+        'allocation': allocation,
+        'student': student
+    }
+    return render(request, 'student_template/my_transport_details.html', context)
+
+
+def student_my_hostel(request):
+    """View my hostel details"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    try:
+        allocation = HostelAllocation.objects.get(student=student, is_active=True)
+    except HostelAllocation.DoesNotExist:
+        allocation = None
+    
+    context = {
+        'page_title': 'My Hostel Details',
+        'allocation': allocation,
+        'student': student
+    }
+    return render(request, 'student_template/my_hostel_details.html', context)
+
+
+# ============================================================================
+# NEW ECAP FEATURES - STUDENT VIEWS
+# ============================================================================
+
+# Online Examination
+@login_required
+def student_online_exams(request):
+    """Student view available online exams"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import OnlineExam
+    from datetime import datetime
+    
+    # Get exams for student's course that are currently active
+    available_exams = OnlineExam.objects.filter(
+        course=student.course,
+        is_published=True,
+        start_datetime__lte=datetime.now(),
+        end_datetime__gte=datetime.now()
+    ).select_related('subject', 'created_by')
+    
+    context = {
+        'page_title': 'Available Online Exams',
+        'exams': available_exams,
+        'student': student
+    }
+    return render(request, 'student_template/online_exams.html', context)
+
+
+@login_required
+def student_exam_results(request):
+    """Student view their online exam results"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import OnlineExamAttempt
+    
+    context = {
+        'page_title': 'My Exam Results',
+        'attempts': OnlineExamAttempt.objects.filter(student=student).select_related('exam').order_by('-submit_time')
+    }
+    return render(request, 'student_template/exam_results.html', context)
+
+
+# Certificates
+@login_required
+def student_my_certificates(request):
+    """Student view their certificates"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import Certificate
+    
+    context = {
+        'page_title': 'My Certificates',
+        'certificates': Certificate.objects.filter(student=student).order_by('-issued_date')
+    }
+    return render(request, 'student_template/my_certificates.html', context)
+
+
+@login_required
+def student_request_certificate(request):
+    """Student request a new certificate"""
+    student = get_object_or_404(Student, admin=request.user)
+    
+    if request.method == 'POST':
+        cert_type = request.POST.get('certificate_type')
+        reason = request.POST.get('reason', '')
+        
+        # Create a grievance or request for certificate
+        from main_app.models import Grievance
+        Grievance.objects.create(
+            student=student,
+            grievance_type='certificate_request',
+            description=f"Certificate Request: {cert_type}\nReason: {reason}",
+            status='pending'
+        )
+        messages.success(request, "Certificate request submitted successfully!")
+        return redirect('student_my_certificates')
+    
+    context = {
+        'page_title': 'Request Certificate',
+        'student': student
+    }
+    return render(request, 'student_template/request_certificate.html', context)
+
+
+# Internships
+@login_required
+def student_my_internships(request):
+    """Student view their internships"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import Internship
+    
+    context = {
+        'page_title': 'My Internships',
+        'internships': Internship.objects.filter(student=student).order_by('-start_date')
+    }
+    return render(request, 'student_template/my_internships.html', context)
+
+
+@login_required
+def student_add_internship(request):
+    """Student add internship details"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import Internship
+    from main_app.forms import InternshipForm
+    
+    if request.method == 'POST':
+        form = InternshipForm(request.POST, request.FILES)
+        if form.is_valid():
+            internship = form.save(commit=False)
+            internship.student = student
+            internship.status = 'applied'
+            internship.save()
+            messages.success(request, "Internship details added successfully!")
+            return redirect('student_my_internships')
+    else:
+        form = InternshipForm()
+    
+    context = {
+        'page_title': 'Add Internship',
+        'form': form
+    }
+    return render(request, 'student_template/add_internship.html', context)
+
+
+# Medical Records
+@login_required
+def student_medical_records(request):
+    """Student view their medical records"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import MedicalRecord
+    
+    context = {
+        'page_title': 'Medical Records',
+        'records': MedicalRecord.objects.filter(student=student).order_by('-record_date')
+    }
+    return render(request, 'student_template/medical_records.html', context)
+
+
+# Gate Pass
+@login_required
+def student_gate_pass(request):
+    """Student apply for gate pass"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import GatePass
+    from main_app.forms import GatePassForm
+    
+    if request.method == 'POST':
+        form = GatePassForm(request.POST)
+        if form.is_valid():
+            gate_pass = form.save(commit=False)
+            gate_pass.student = student
+            gate_pass.status = 'pending'
+            gate_pass.save()
+            messages.success(request, "Gate pass request submitted!")
+            return redirect('student_my_gate_passes')
+    else:
+        form = GatePassForm()
+    
+    context = {
+        'page_title': 'Apply for Gate Pass',
+        'form': form
+    }
+    return render(request, 'student_template/gate_pass.html', context)
+
+
+@login_required
+def student_my_gate_passes(request):
+    """Student view their gate passes"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import GatePass
+    
+    context = {
+        'page_title': 'My Gate Passes',
+        'gate_passes': GatePass.objects.filter(student=student).order_by('-created_at')
+    }
+    return render(request, 'student_template/my_gate_passes.html', context)
+
+
+# Sports & Activities
+@login_required
+def student_sports_activities(request):
+    """Student view and register for activities"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import SportsActivity, ActivityParticipation
+    from datetime import datetime
+    
+    # Handle registration
+    if request.method == 'POST':
+        activity_id = request.POST.get('activity_id')
+        activity = get_object_or_404(SportsActivity, id=activity_id)
+        
+        # Check if already registered
+        if not ActivityParticipation.objects.filter(activity=activity, student=student).exists():
+            ActivityParticipation.objects.create(
+                activity=activity,
+                student=student,
+                achievement_level='participated'
+            )
+            messages.success(request, f"Successfully registered for {activity.name}!")
+        else:
+            messages.warning(request, "You are already registered for this activity!")
+        return redirect('student_sports_activities')
+    
+    # Get active activities
+    activities = SportsActivity.objects.filter(
+        is_active=True,
+        registration_deadline__gte=datetime.now().date()
+    ).select_related('coordinator')
+    
+    # Get student's registrations
+    registered_ids = ActivityParticipation.objects.filter(student=student).values_list('activity_id', flat=True)
+    
+    context = {
+        'page_title': 'Sports & Cultural Activities',
+        'activities': activities,
+        'registered_ids': list(registered_ids)
+    }
+    return render(request, 'student_template/sports_activities.html', context)
+
+
+@login_required
+def student_my_activities(request):
+    """Student view their activity participations"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import ActivityParticipation
+    
+    context = {
+        'page_title': 'My Participations',
+        'participations': ActivityParticipation.objects.filter(student=student).select_related('activity').order_by('-registered_at')
+    }
+    return render(request, 'student_template/my_activities.html', context)
+
+
+# Anti-Ragging
+@login_required
+def student_report_ragging(request):
+    """Student report ragging incident"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import AntiRaggingCommittee
+    from main_app.forms import AntiRaggingForm
+    
+    if request.method == 'POST':
+        form = AntiRaggingForm(request.POST, request.FILES)
+        if form.is_valid():
+            incident = form.save(commit=False)
+            if not incident.is_anonymous:
+                incident.reporter = student
+            incident.status = 'reported'
+            incident.save()
+            messages.success(request, "Incident reported successfully. The committee will investigate.")
+            return redirect('student_home')
+    else:
+        import random
+        incident_number = f"RAG{datetime.now().year}{random.randint(10000, 99999)}"
+        form = AntiRaggingForm(initial={'incident_number': incident_number})
+    
+    context = {
+        'page_title': 'Report Ragging Incident',
+        'form': form
+    }
+    return render(request, 'student_template/report_ragging.html', context)

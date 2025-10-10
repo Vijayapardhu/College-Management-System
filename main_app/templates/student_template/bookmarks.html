@@ -1,0 +1,105 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-bookmark text-warning"></i> My Bookmarked Resources</h3>
+                        <div class="card-tools">
+                            <span class="badge badge-info">{{ bookmarks.count }} bookmarks</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if bookmarks %}
+                        <div class="list-group">
+                            {% for bookmark in bookmarks %}
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h5 class="mb-1">
+                                            {% if bookmark.material.material_type == 'document' %}
+                                                <i class="fas fa-file-pdf text-danger"></i>
+                                            {% elif bookmark.material.material_type == 'video' %}
+                                                <i class="fab fa-youtube text-danger"></i>
+                                            {% else %}
+                                                <i class="fas fa-link text-primary"></i>
+                                            {% endif %}
+                                            {{ bookmark.material.title }}
+                                        </h5>
+                                        <p class="mb-1 text-muted">
+                                            <small>
+                                                <i class="fas fa-book"></i> {{ bookmark.material.subject.name }} | 
+                                                <i class="fas fa-user"></i> {{ bookmark.material.uploaded_by.admin.first_name }} {{ bookmark.material.uploaded_by.admin.last_name }} |
+                                                <i class="fas fa-clock"></i> Bookmarked {{ bookmark.created_at|timesince }} ago
+                                            </small>
+                                        </p>
+                                        {% if bookmark.material.description %}
+                                        <p class="mb-0"><small>{{ bookmark.material.description|truncatewords:20 }}</small></p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <div class="btn-group-vertical btn-group-sm">
+                                            {% if bookmark.material.material_type == 'document' %}
+                                                <a href="{% url 'download_material' bookmark.material.id %}" class="btn btn-primary">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                            {% elif bookmark.material.material_type == 'video' %}
+                                                <a href="{{ bookmark.material.url }}" target="_blank" class="btn btn-danger">
+                                                    <i class="fab fa-youtube"></i> Watch
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ bookmark.material.url }}" target="_blank" class="btn btn-success">
+                                                    <i class="fas fa-external-link-alt"></i> Open
+                                                </a>
+                                            {% endif %}
+                                            <button class="btn btn-warning remove-bookmark" data-material-id="{{ bookmark.material.id }}">
+                                                <i class="fas fa-bookmark-slash"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="far fa-bookmark fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No Bookmarks Yet</h4>
+                            <p>Start bookmarking your favorite study materials for quick access!</p>
+                            <a href="{% url 'student_view_resources' %}" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Browse Resource Library
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $('.remove-bookmark').click(function() {
+        if (!confirm('Remove this bookmark?')) return;
+        
+        const materialId = $(this).data('material-id');
+        $.ajax({
+            url: '{% url "toggle_bookmark" %}',
+            method: 'POST',
+            data: { material_id: materialId },
+            success: function(response) {
+                if (response.status === 'success') {
+                    location.reload();
+                }
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

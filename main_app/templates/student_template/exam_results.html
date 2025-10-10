@@ -1,0 +1,68 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-chart-line"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                {% if attempts %}
+                <div class="row">
+                    {% for attempt in attempts %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card {% if attempt.is_passed %}border-success{% else %}border-danger{% endif %}">
+                            <div class="card-header {% if attempt.is_passed %}bg-success{% else %}bg-danger{% endif %}">
+                                <h5 class="card-title mb-0">
+                                    {{ attempt.exam.title }}
+                                    {% if attempt.is_passed %}
+                                    <span class="badge badge-light float-right"><i class="fas fa-check-circle"></i> PASSED</span>
+                                    {% else %}
+                                    <span class="badge badge-light float-right"><i class="fas fa-times-circle"></i> FAILED</span>
+                                    {% endif %}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Subject:</strong> {{ attempt.exam.subject.name }}</p>
+                                <p><strong>Exam Date:</strong> {{ attempt.start_time|date:"Y-m-d H:i" }}</p>
+                                <p><strong>Duration:</strong> {{ attempt.exam.duration_minutes }} minutes</p>
+                                <hr>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h3>{{ attempt.marks_obtained }}</h3>
+                                        <p class="text-muted">Marks Obtained</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h3>{{ attempt.exam.total_marks }}</h3>
+                                        <p class="text-muted">Total Marks</p>
+                                    </div>
+                                </div>
+                                <div class="progress mt-2">
+                                    {% widthratio attempt.marks_obtained attempt.exam.total_marks 100 as percentage %}
+                                    <div class="progress-bar {% if attempt.is_passed %}bg-success{% else %}bg-danger{% endif %}" 
+                                         style="width: {{ percentage }}%">
+                                        {{ percentage }}%
+                                    </div>
+                                </div>
+                                <p class="mt-2"><small class="text-muted">Passing Marks: {{ attempt.exam.passing_marks }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Exam Results Yet</h5>
+                    <p class="mb-0">You haven't attempted any online exams. <a href="{% url 'student_online_exams' %}">View available exams</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

@@ -1,0 +1,106 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h3 class="card-title"><i class="fas fa-list"></i> {{ page_title }}</h3>
+                <div class="card-tools">
+                    <a href="{% url 'student_gate_pass' %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-plus"></i> Apply New Gate Pass
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if gate_passes %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Type</th>
+                                <th>Reason</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pass in gate_passes %}
+                            <tr>
+                                <td><span class="badge badge-primary">{{ pass.get_pass_type_display }}</span></td>
+                                <td>{{ pass.reason|truncatewords:10 }}</td>
+                                <td>{{ pass.from_date|date:"Y-m-d H:i" }}</td>
+                                <td>{{ pass.to_date|date:"Y-m-d H:i" }}</td>
+                                <td>{{ pass.destination }}</td>
+                                <td>
+                                    {% if pass.status == 'approved' %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Approved</span>
+                                    {% elif pass.status == 'rejected' %}
+                                    <span class="badge badge-danger"><i class="fas fa-times-circle"></i> Rejected</span>
+                                    {% elif pass.status == 'used' %}
+                                    <span class="badge badge-secondary"><i class="fas fa-check"></i> Used</span>
+                                    {% elif pass.status == 'expired' %}
+                                    <span class="badge badge-dark"><i class="fas fa-clock"></i> Expired</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-hourglass-half"></i> Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#passModal{{ pass.id }}">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Details Modal -->
+                            <div class="modal fade" id="passModal{{ pass.id }}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-info">
+                                            <h4 class="modal-title">Gate Pass Details</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><strong>Type:</strong> {{ pass.get_pass_type_display }}</p>
+                                            <p><strong>Reason:</strong> {{ pass.reason }}</p>
+                                            <p><strong>From:</strong> {{ pass.from_date }}</p>
+                                            <p><strong>To:</strong> {{ pass.to_date }}</p>
+                                            <p><strong>Destination:</strong> {{ pass.destination }}</p>
+                                            <p><strong>Parent Contact:</strong> {{ pass.parent_contact }}</p>
+                                            <p><strong>Status:</strong> {{ pass.get_status_display }}</p>
+                                            {% if pass.approved_by %}
+                                            <p><strong>Approved By:</strong> {{ pass.approved_by.admin.first_name }}</p>
+                                            <p><strong>Approval Date:</strong> {{ pass.approval_date }}</p>
+                                            {% endif %}
+                                            {% if pass.remarks %}
+                                            <p><strong>Remarks:</strong> {{ pass.remarks }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> No Gate Passes Yet</h5>
+                    <p class="mb-0">You haven't applied for any gate pass. <a href="{% url 'student_gate_pass' %}">Apply now</a></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+

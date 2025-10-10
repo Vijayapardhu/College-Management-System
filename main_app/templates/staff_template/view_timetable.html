@@ -1,0 +1,95 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-calendar-week"></i> My Teaching Schedule</h3>
+                <div class="card-tools">
+                    <button class="btn btn-light btn-sm" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Faculty:</strong> {{ staff.admin.first_name }} {{ staff.admin.last_name }} | 
+                    <strong>Designation:</strong> {{ staff.get_designation_display }}
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped timetable-table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th width="10%">Period</th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                                <th>Saturday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for period_num in "12345678" %}
+                            <tr>
+                                <td class="font-weight-bold text-center bg-light">Period {{ period_num }}</td>
+                                {% for day, slots in timetable.items %}
+                                <td class="timetable-cell">
+                                    {% for slot in slots %}
+                                        {% if slot.period == period_num %}
+                                        <div class="timetable-slot {% if slot.is_lab %}lab-slot{% endif %}">
+                                            <div class="font-weight-bold">{{ slot.subject.name }}</div>
+                                            <small class="text-muted">
+                                                {{ slot.course.name }}<br>
+                                                Sem {{ slot.semester }}<br>
+                                                {{ slot.start_time|time:"h:i A" }} - {{ slot.end_time|time:"h:i A" }}<br>
+                                                <span class="badge badge-secondary">{{ slot.room_number }}</span>
+                                                {% if slot.is_lab %}<span class="badge badge-info">LAB</span>{% endif %}
+                                            </small>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.timetable-table td {
+    vertical-align: top;
+    min-height: 80px;
+}
+.timetable-cell {
+    padding: 5px !important;
+}
+.timetable-slot {
+    padding: 10px;
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+.lab-slot {
+    background: #e3f2fd;
+    border-left-color: #2196f3;
+}
+@media print {
+    .card-header .btn, .main-sidebar, .main-header, .content-header {
+        display: none !important;
+    }
+}
+</style>
+{% endblock content %}
+
+

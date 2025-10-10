@@ -1,0 +1,88 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title"><i class="fas fa-receipt"></i> Fee Payment Receipts</h3>
+            </div>
+            <div class="card-body">
+                {% if payments %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="receiptsTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Receipt #</th>
+                                <th>Payment Date</th>
+                                <th>Fee Type</th>
+                                <th>Amount Paid</th>
+                                <th>Payment Method</th>
+                                <th>Transaction ID</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td><strong>{{ payment.receipt_number }}</strong></td>
+                                <td>{{ payment.payment_date|date:"d M Y" }}</td>
+                                <td>
+                                    <small>
+                                        {{ payment.fee_structure.course.name }}<br>
+                                        Sem {{ payment.fee_structure.semester }}
+                                    </small>
+                                </td>
+                                <td class="text-right"><strong>₹{{ payment.amount_paid }}</strong></td>
+                                <td><span class="badge badge-info">{{ payment.get_payment_method_display }}</span></td>
+                                <td><small>{{ payment.transaction_id|default:"N/A" }}</small></td>
+                                <td>
+                                    {% if payment.status == 'paid' %}
+                                        <span class="badge badge-success">Paid</span>
+                                    {% elif payment.status == 'partial' %}
+                                        <span class="badge badge-warning">Partial</span>
+                                    {% elif payment.status == 'overdue' %}
+                                        <span class="badge badge-danger">Overdue</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="printReceipt('{{ payment.id }}')">
+                                        <i class="fas fa-print"></i> Print
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No payment receipts available.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#receiptsTable').DataTable({
+        "order": [[1, "desc"]],
+        "pageLength": 25
+    });
+});
+
+function printReceipt(paymentId) {
+    // Implement receipt printing functionality
+    window.print();
+}
+</script>
+{% endblock content %}
+
+

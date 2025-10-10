@@ -1,0 +1,138 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <!-- Assignment Details -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ assignment.title }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">Subject:</dt>
+                            <dd class="col-sm-8">{{ assignment.subject.name }}</dd>
+                            
+                            <dt class="col-sm-4">Faculty:</dt>
+                            <dd class="col-sm-8">{{ assignment.staff.admin.first_name }} {{ assignment.staff.admin.last_name }}</dd>
+                            
+                            <dt class="col-sm-4">Due Date:</dt>
+                            <dd class="col-sm-8">
+                                <strong class="{% if assignment.is_overdue %}text-danger{% else %}text-success{% endif %}">
+                                    {{ assignment.due_date|date:"M d, Y h:i A" }}
+                                    {% if assignment.is_overdue %}
+                                    <span class="badge badge-danger">OVERDUE</span>
+                                    {% else %}
+                                    <span class="badge badge-success">OPEN</span>
+                                    {% endif %}
+                                </strong>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Maximum Marks:</dt>
+                            <dd class="col-sm-8"><span class="badge badge-info">{{ assignment.max_marks }} marks</span></dd>
+                            
+                            <dt class="col-sm-4">Description:</dt>
+                            <dd class="col-sm-8">{{ assignment.description|linebreaks }}</dd>
+                        </dl>
+                        
+                        {% if assignment.attachment %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-paperclip"></i> <strong>Attachment:</strong>
+                            <a href="{{ assignment.attachment.url }}" class="btn btn-sm btn-primary ml-2" download>
+                                <i class="fas fa-download"></i> Download Question File
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Submission Form -->
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {% if existing_submission %}
+                            <i class="fas fa-redo"></i> Resubmit Assignment
+                            {% else %}
+                            <i class="fas fa-upload"></i> Submit Assignment
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            {% if existing_submission %}
+                            <div class="alert alert-warning">
+                                <i class="fas fa-info-circle"></i> <strong>Previous Submission:</strong><br>
+                                Submitted on: {{ existing_submission.submitted_at|date:"M d, Y h:i A" }}<br>
+                                Status: <span class="badge badge-{{ existing_submission.status }}">{{ existing_submission.get_status_display }}</span>
+                                {% if existing_submission.marks_obtained %}
+                                <br>Marks: {{ existing_submission.marks_obtained }} / {{ assignment.max_marks }}
+                                {% endif %}
+                                {% if existing_submission.feedback %}
+                                <br><strong>Feedback:</strong> {{ existing_submission.feedback }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            <div class="form-group">
+                                <label for="submissionFile">Upload Your Work *</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="submissionFile" name="submission_file" required>
+                                    <label class="custom-file-label" for="submissionFile">Choose file...</label>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Supported formats: PDF, DOC, DOCX, ZIP (Max 10MB)
+                                </small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="remarks">Remarks (Optional)</label>
+                                <textarea class="form-control" id="remarks" name="remarks" rows="3" 
+                                          placeholder="Any notes or clarifications for your faculty...">{{ existing_submission.remarks|default:"" }}</textarea>
+                            </div>
+                            
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong>
+                                {% if assignment.is_overdue %}
+                                This assignment is overdue. Your submission will be marked as late.
+                                {% else %}
+                                Submit before <strong>{{ assignment.due_date|date:"M d, Y h:i A" }}</strong> to avoid late submission.
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check"></i> {% if existing_submission %}Resubmit{% else %}Submit{% endif %} Assignment
+                            </button>
+                            <a href="{% url 'student_view_assignments' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Assignments
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    // File input handling
+    $('.custom-file-input').on('change', function() {
+        const fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+    
+    // Form submission
+    $('form').on('submit', function() {
+        const btn = $(this).find('button[type="submit"]');
+        btn.prop('disabled', true);
+        btn.html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
+    });
+</script>
+{% endblock custom_js %}

@@ -1,0 +1,120 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="card-title"><i class="fas fa-edit"></i> {{ page_title }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle"></i> Instructions:</h6>
+                    <ol class="mb-0">
+                        <li>Select the subject you want to enter marks for</li>
+                        <li>Choose the exam type (Internal/External)</li>
+                        <li>Enter marks for each student</li>
+                        <li>Submit to save all marks</li>
+                    </ol>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Select Subject *</label>
+                                <select name="subject_id" class="form-control" id="subjectSelect" required>
+                                    <option value="">-- Select Subject --</option>
+                                    {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }} ({{ subject.course.name }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Exam Type *</label>
+                                <select name="exam_type" class="form-control" required>
+                                    <option value="">-- Select Type --</option>
+                                    <option value="internal">Internal Assessment</option>
+                                    <option value="external">External Exam</option>
+                                    <option value="mid">Mid-Term</option>
+                                    <option value="end">End-Term</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <button type="submit" name="action" value="fetch_students" class="btn btn-info">
+                                <i class="fas fa-users"></i> Load Students
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                {% if students %}
+                <hr>
+                <h5 class="mb-3">Enter Marks for {{ selected_subject.name }}</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="subject_id" value="{{ selected_subject.id }}">
+                    <input type="hidden" name="exam_type" value="{{ selected_exam_type }}">
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="20%">Roll Number</th>
+                                    <th width="30%">Student Name</th>
+                                    <th width="15%">Marks Obtained</th>
+                                    <th width="15%">Max Marks</th>
+                                    <th width="15%">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ student.roll_number }}</td>
+                                    <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
+                                    <td>
+                                        <input type="number" name="marks_{{ student.id }}" class="form-control" min="0" max="100" step="0.01" placeholder="0">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="max_marks_{{ student.id }}" class="form-control" value="100" min="1" max="100">
+                                    </td>
+                                    <td>
+                                        <select name="grade_{{ student.id }}" class="form-control">
+                                            <option value="A+">A+</option>
+                                            <option value="A">A</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                            <option value="F">F</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <button type="submit" name="action" value="save_marks" class="btn btn-success btn-lg">
+                            <i class="fas fa-save"></i> Save All Marks
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
