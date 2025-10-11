@@ -43,7 +43,7 @@ class CustomUser(AbstractUser):
     GENDER = [("M", "Male"), ("F", "Female")]
     
     
-    username = None  # Removed username, using email instead
+    username = models.CharField(max_length=150, unique=True, null=True, blank=True, help_text="Unique ID: Roll Number, Employee ID, etc.")
     email = models.EmailField(unique=True)
     user_type = models.CharField(default=1, choices=USER_TYPE, max_length=1)
     gender = models.CharField(max_length=1, choices=GENDER, default="M")
@@ -2106,6 +2106,29 @@ class ClassroomMaintenance(models.Model):
     
     def __str__(self):
         return f"{self.classroom.room_number} - {self.get_issue_type_display()}"
+
+
+class OTP(models.Model):
+    """OTP Model for Two-Factor Authentication"""
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='otps')
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'OTP'
+        verbose_name_plural = 'OTPs'
+    
+    def __str__(self):
+        return f"OTP for {self.user.email} - {self.otp_code}"
+    
+    def is_valid(self):
+        """Check if OTP is still valid (not expired and not used)"""
+        from django.utils import timezone
+        return not self.is_used and timezone.now() < self.expires_at
 
 
 @receiver(post_save, sender=CustomUser)

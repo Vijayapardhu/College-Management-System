@@ -1,0 +1,289 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Information - EduVision</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+        .public-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        .public-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .stat-box h3 {
+            font-size: 3rem;
+            color: #667eea;
+            margin: 0;
+        }
+        .stat-box p {
+            margin: 10px 0 0 0;
+            color: #6c757d;
+            font-weight: 600;
+        }
+        .login-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .department-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .placement-card {
+            border-left: 4px solid #28a745;
+        }
+        .event-card {
+            border-left: 4px solid #ffc107;
+        }
+        .program-card {
+            border-left: 4px solid #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Button -->
+    <a href="{% url 'login_page' %}" class="btn btn-primary login-btn">
+        <i class="fas fa-sign-in-alt"></i> Login to System
+    </a>
+
+    <!-- Header -->
+    <div class="public-header">
+        <div class="container">
+            <div class="text-center">
+                <h1><i class="fas fa-university"></i> EduVision</h1>
+                <p class="lead">College Management System - Public Information</p>
+                <p class="mb-0"><i class="fas fa-info-circle"></i> No authentication required to view this page</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Statistics Row -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <h3><i class="fas fa-building"></i></h3>
+                    <h3>{{ departments.count }}</h3>
+                    <p>Departments</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <h3><i class="fas fa-graduation-cap"></i></h3>
+                    <h3>{{ programs.count }}</h3>
+                    <p>Programs</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <h3><i class="fas fa-briefcase"></i></h3>
+                    <h3>{{ recent_placements.count }}</h3>
+                    <p>Active Placements</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <h3><i class="fas fa-calendar-alt"></i></h3>
+                    <h3>{{ upcoming_events.count }}</h3>
+                    <p>Upcoming Events</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2 class="section-title">
+                    <i class="fas fa-building"></i> Departments
+                </h2>
+            </div>
+            {% for dept in departments %}
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h4><strong>{{ dept.code }}</strong> - {{ dept.name }}</h4>
+                    {% if dept.description %}
+                    <p class="text-muted">{{ dept.description|truncatewords:20 }}</p>
+                    {% endif %}
+                    {% if dept.contact_email %}
+                    <p class="mb-1"><i class="fas fa-envelope"></i> {{ dept.contact_email }}</p>
+                    {% endif %}
+                    {% if dept.contact_number %}
+                    <p class="mb-1"><i class="fas fa-phone"></i> {{ dept.contact_number }}</p>
+                    {% endif %}
+                    {% if dept.established_year %}
+                    <p class="mb-0"><i class="fas fa-calendar"></i> Established: {{ dept.established_year }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No departments available at the moment.</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Programs Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2 class="section-title">
+                    <i class="fas fa-graduation-cap"></i> Academic Programs
+                </h2>
+            </div>
+            {% for program in programs %}
+            <div class="col-md-6">
+                <div class="info-card program-card">
+                    <h4>{{ program.name }}</h4>
+                    <span class="department-badge">{{ program.department.name }}</span>
+                    <span class="badge badge-primary">{{ program.get_program_type_display }}</span>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="mb-1"><strong>Duration:</strong> {{ program.duration_years }} years</p>
+                            <p class="mb-0"><strong>Semesters:</strong> {{ program.total_semesters }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1"><strong>Program Code:</strong> {{ program.code }}</p>
+                            <p class="mb-0"><strong>Credits:</strong> {{ program.total_credits }}</p>
+                        </div>
+                    </div>
+                    {% if program.eligibility_criteria %}
+                    <hr>
+                    <p class="mb-0"><small><strong>Eligibility:</strong> {{ program.eligibility_criteria|truncatewords:15 }}</small></p>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No programs available at the moment.</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Placement Drives Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2 class="section-title">
+                    <i class="fas fa-briefcase"></i> Active Placement Drives
+                </h2>
+            </div>
+            {% for placement in recent_placements %}
+            <div class="col-md-6">
+                <div class="info-card placement-card">
+                    <h4>{{ placement.company.name }}</h4>
+                    <p class="mb-2"><strong>Position:</strong> {{ placement.job_position }}</p>
+                    <p class="mb-2"><strong>Package:</strong> ₹{{ placement.salary_package|floatformat:2 }} LPA</p>
+                    {% if placement.eligibility_criteria %}
+                    <p class="mb-2"><small><strong>Eligibility:</strong> {{ placement.eligibility_criteria }}</small></p>
+                    {% endif %}
+                    <p class="mb-0"><small><i class="fas fa-calendar"></i> Drive Date: {{ placement.drive_date }}</small></p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No active placement drives at the moment.</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Events Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-alt"></i> Upcoming Public Events
+                </h2>
+            </div>
+            {% for event in upcoming_events %}
+            <div class="col-md-6">
+                <div class="info-card event-card">
+                    <h4>{{ event.name }}</h4>
+                    {% if event.description %}
+                    <p class="text-muted">{{ event.description|truncatewords:20 }}</p>
+                    {% endif %}
+                    <p class="mb-1"><i class="fas fa-calendar"></i> <strong>Date:</strong> {{ event.date }}</p>
+                    {% if event.venue %}
+                    <p class="mb-1"><i class="fas fa-map-marker-alt"></i> <strong>Venue:</strong> {{ event.venue }}</p>
+                    {% endif %}
+                    {% if event.organizer %}
+                    <p class="mb-0"><i class="fas fa-user"></i> <strong>Organizer:</strong> {{ event.organizer.first_name }} {{ event.organizer.last_name }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No upcoming public events at the moment.</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Footer -->
+        <div class="row mt-5 mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4><i class="fas fa-info-circle"></i> Want to Access More Information?</h4>
+                        <p class="text-muted mb-3">Login to access detailed information, results, attendance, and more features.</p>
+                        <a href="{% url 'login_page' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Login to System
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+</body>
+</html>
+

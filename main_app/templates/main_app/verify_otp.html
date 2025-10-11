@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - EduVision</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .verify-otp-box {
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 25px;
+        }
+        .card-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .otp-input {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 15px;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+        }
+        .otp-input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
+        }
+        .btn-verify {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .btn-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-resend {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .btn-resend:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .public-link {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+        .public-link a {
+            color: #1976d2;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .public-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-otp-box">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1><i class="fas fa-shield-alt"></i> Verify OTP</h1>
+                <p class="mb-0">Enter the verification code sent to your email</p>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="info-box">
+                    <p class="mb-2"><i class="fas fa-info-circle"></i> <strong>Check your email</strong></p>
+                    <p class="mb-0 small text-muted">
+                        We've sent a 6-digit verification code to your registered email address.
+                        The code will expire in <span class="timer" id="timer">10:00</span> minutes.
+                    </p>
+                </div>
+
+                <form action="{% url 'verify_otp' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="otp_code">Enter 6-Digit OTP Code</label>
+                        <input type="text" 
+                               name="otp_code" 
+                               id="otp_code"
+                               class="form-control otp-input" 
+                               placeholder="000000"
+                               maxlength="6"
+                               pattern="[0-9]{6}"
+                               required
+                               autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-verify btn-block">
+                            <i class="fas fa-check-circle"></i> Verify & Login
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p class="mb-2">Didn't receive the code?</p>
+                    <a href="{% url 'resend_otp' %}" class="btn-resend">
+                        <i class="fas fa-redo"></i> Resend OTP
+                    </a>
+                </div>
+
+                <hr>
+
+                <div class="text-center">
+                    <a href="{% url 'login_page' %}" class="text-muted">
+                        <i class="fas fa-arrow-left"></i> Back to Login
+                    </a>
+                </div>
+
+                <div class="public-link">
+                    <p class="mb-2"><i class="fas fa-globe"></i> <strong>Want to view public information?</strong></p>
+                    <a href="{% url 'public_data' %}" target="_blank">
+                        View Public Data (No Login Required) <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+    
+    <script>
+        // OTP Input: Only allow numbers
+        document.getElementById('otp_code').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // OTP Input: Auto-submit when 6 digits entered (optional)
+        document.getElementById('otp_code').addEventListener('input', function(e) {
+            if (this.value.length === 6) {
+                // Optional: Auto-submit
+                // this.form.submit();
+            }
+        });
+
+        // Timer countdown
+        let timeLeft = 600; // 10 minutes in seconds
+        const timerElement = document.getElementById('timer');
+        
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = 'EXPIRED';
+                timerElement.style.color = '#dc3545';
+                document.getElementById('otp_code').disabled = true;
+                alert('OTP has expired. Please request a new one.');
+            }
+            timeLeft--;
+        }
+        
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+    </script>
+</body>
+</html>
+

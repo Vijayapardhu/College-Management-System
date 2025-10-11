@@ -115,3 +115,6 @@ admin.site.register(StudentCouncil)
 admin.site.register(Classroom)
 admin.site.register(ClassroomBooking)
 admin.site.register(ClassroomMaintenance)
+
+# OTP Authentication
+admin.site.register(OTP)

@@ -78,14 +78,23 @@
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
+                
+                <!-- Information Box -->
+                <div class="alert alert-info alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-info"></i> Login Information</h5>
+                    <p class="mb-1"><strong>Login with:</strong> Email, Roll Number, or Employee ID</p>
+                    <p class="mb-1"><strong>Default Password:</strong> <code>aditya</code></p>
+                    <p class="mb-0 small">After entering credentials, you'll receive an OTP via email for verification.</p>
+                </div>
+                
                 {% if messages %}
                 <div class="col-12">
                     {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                    <div class="alert alert-danger text-center ">
-                        {{message }}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        {{ message }}
                     </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -132,6 +141,14 @@
 
                 <p class="mb-1">
                     <a href="{% url 'password_reset' %}">I forgot my password</a>
+                </p>
+                
+                <hr>
+                
+                <p class="mb-0 text-center">
+                    <a href="{% url 'public_data' %}" class="text-primary" target="_blank">
+                        <i class="fas fa-globe"></i> View Public Information (No Login Required)
+                    </a>
                 </p>
 
             </div>

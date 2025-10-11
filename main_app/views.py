@@ -28,13 +28,15 @@ def doLogin(request, **kwargs):
     if request.method != 'POST':
         return HttpResponse("<h4>Denied</h4>")
     else:
+        from .otp_utils import create_otp, send_otp_email
+        
         username_or_id = request.POST.get('email')  # Can be email, roll number, or employee ID
         password = request.POST.get('password')
         
-        # Try to find user by email first
+        # Try to find user by email, username, or unique ID
         user = EmailBackend.authenticate(request, username=username_or_id, password=password)
         
-        # If not found by email, try by ID
+        # If not found, try by student roll number or staff employee ID
         if user is None:
             try:
                 # Try student roll number or admission number
@@ -54,22 +56,153 @@ def doLogin(request, **kwargs):
             except Exception as e:
                 pass
         
-        if user != None:
-            login(request, user)
-            if user.user_type == '1':
-                return redirect(reverse("admin_home"))
-            elif user.user_type == '2':
-                return redirect(reverse("staff_home"))
-            elif user.user_type == '3':
-                return redirect(reverse("student_home"))
-            elif user.user_type == '4':
-                return redirect(reverse("management_home"))
-            else:
-                return redirect(reverse("student_home"))
+        if user is not None:
+            # Generate and send OTP
+            try:
+                ip_address = request.META.get('REMOTE_ADDR')
+                otp = create_otp(user, ip_address)
+                
+                if send_otp_email(user, otp.otp_code):
+                    # Store user ID in session temporarily
+                    request.session['pending_login_user_id'] = user.id
+                    request.session['otp_sent_time'] = str(otp.created_at)
+                    
+                    messages.success(request, f"OTP has been sent to {user.email}. Please check your email.")
+                    return redirect(reverse("verify_otp"))
+                else:
+                    messages.error(request, "Failed to send OTP. Please try again later.")
+                    return redirect("/")
+                    
+            except Exception as e:
+                messages.error(request, f"Error sending OTP: {str(e)}")
+                return redirect("/")
         else:
             messages.error(request, "Invalid Email/ID or Password")
             return redirect("/")
 
+
+
+def verify_otp(request):
+    """OTP Verification Page"""
+    if request.user.is_authenticated:
+        # Already logged in, redirect to appropriate dashboard
+        if request.user.user_type == '1':
+            return redirect(reverse("admin_home"))
+        elif request.user.user_type == '2':
+            return redirect(reverse("staff_home"))
+        elif request.user.user_type == '3':
+            return redirect(reverse("student_home"))
+        elif request.user.user_type == '4':
+            return redirect(reverse("management_home"))
+    
+    # Check if there's a pending login
+    if 'pending_login_user_id' not in request.session:
+        messages.error(request, "No pending login found. Please login again.")
+        return redirect("/")
+    
+    if request.method == 'POST':
+        from .otp_utils import verify_otp as verify_otp_code
+        from .models import CustomUser
+        
+        otp_code = request.POST.get('otp_code', '').strip()
+        user_id = request.session.get('pending_login_user_id')
+        
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            
+            # Verify OTP
+            is_valid, result = verify_otp_code(user, otp_code)
+            
+            if is_valid:
+                # Clear session data
+                del request.session['pending_login_user_id']
+                if 'otp_sent_time' in request.session:
+                    del request.session['otp_sent_time']
+                
+                # Login user
+                login(request, user)
+                messages.success(request, "Login successful!")
+                
+                # Redirect based on user type
+                if user.user_type == '1':
+                    return redirect(reverse("admin_home"))
+                elif user.user_type == '2':
+                    return redirect(reverse("staff_home"))
+                elif user.user_type == '3':
+                    return redirect(reverse("student_home"))
+                elif user.user_type == '4':
+                    return redirect(reverse("management_home"))
+                else:
+                    return redirect(reverse("student_home"))
+            else:
+                messages.error(request, result)  # result contains error message
+                return redirect(reverse("verify_otp"))
+                
+        except CustomUser.DoesNotExist:
+            messages.error(request, "User not found. Please login again.")
+            del request.session['pending_login_user_id']
+            return redirect("/")
+        except Exception as e:
+            messages.error(request, f"Error verifying OTP: {str(e)}")
+            return redirect(reverse("verify_otp"))
+    
+    return render(request, 'main_app/verify_otp.html')
+
+
+def resend_otp(request):
+    """Resend OTP to user"""
+    if 'pending_login_user_id' not in request.session:
+        messages.error(request, "No pending login found. Please login again.")
+        return redirect("/")
+    
+    from .otp_utils import resend_otp as resend_otp_code
+    from .models import CustomUser
+    
+    user_id = request.session.get('pending_login_user_id')
+    
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        ip_address = request.META.get('REMOTE_ADDR')
+        
+        success, result = resend_otp_code(user, ip_address)
+        
+        if success:
+            request.session['otp_sent_time'] = str(result.created_at)
+            messages.success(request, f"New OTP has been sent to {user.email}")
+        else:
+            messages.error(request, result)  # result contains error message
+            
+    except CustomUser.DoesNotExist:
+        messages.error(request, "User not found. Please login again.")
+        del request.session['pending_login_user_id']
+        return redirect("/")
+    except Exception as e:
+        messages.error(request, f"Error resending OTP: {str(e)}")
+    
+    return redirect(reverse("verify_otp"))
+
+
+def public_data(request):
+    """
+    Public data access page - No authentication required
+    Shows publicly available information about the institution
+    """
+    from .models import Department, Course, Program, PlacementDrive, Event
+    
+    # Get public data
+    departments = Department.objects.all()
+    programs = Program.objects.select_related('department').all()
+    recent_placements = PlacementDrive.objects.filter(is_active=True).order_by('-created_at')[:5]
+    upcoming_events = Event.objects.filter(is_public=True).order_by('date')[:5]
+    
+    context = {
+        'departments': departments,
+        'programs': programs,
+        'recent_placements': recent_placements,
+        'upcoming_events': upcoming_events,
+    }
+    
+    return render(request, 'main_app/public_data.html', context)
 
 
 def logout_user(request):

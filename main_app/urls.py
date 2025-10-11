@@ -25,6 +25,13 @@ urlpatterns = [
     path("firebase-messaging-sw.js", views.showFirebaseJS, name='showFirebaseJS'),
     path("doLogin/", views.doLogin, name='user_login'),
     path("logout_user/", views.logout_user, name='user_logout'),
+    
+    # OTP Authentication
+    path("verify-otp/", views.verify_otp, name='verify_otp'),
+    path("resend-otp/", views.resend_otp, name='resend_otp'),
+    
+    # Public Data Access (No authentication required)
+    path("public/", views.public_data, name='public_data'),
     path("admin/home/", hod_views.admin_home, name='admin_home'),
     path("staff/add", hod_views.add_staff, name='add_staff'),
     path("course/add", hod_views.add_course, name='add_course'),
