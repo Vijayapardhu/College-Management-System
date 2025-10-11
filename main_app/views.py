@@ -169,12 +169,12 @@ def verify_otp(request):
         
         otp_code = request.POST.get('otp_code', '').strip()
         user_id = request.session.get('pending_login_user_id')
-        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         
         print(f"[DEBUG VIEW] Received OTP code: '{otp_code}'")
         print(f"[DEBUG VIEW] User ID from session: {user_id}")
-        print(f"[DEBUG VIEW] Is AJAX: {is_ajax}")
+        print(f"[DEBUG VIEW] Is AJAX (from earlier): {is_ajax}")
         print(f"[DEBUG VIEW] All POST data: {request.POST}")
+        print(f"[DEBUG VIEW] Will return JSON: {is_ajax}")
         
         try:
             user = CustomUser.objects.get(id=user_id)
@@ -249,6 +249,8 @@ def verify_otp(request):
             messages.error(request, f"Error verifying OTP: {str(e)}")
             return redirect(reverse("verify_otp"))
     
+    # Only render template for GET requests (non-AJAX)
+    print(f"[DEBUG VIEW] Rendering template (GET request or non-AJAX)")
     return render(request, 'main_app/verify_otp.html')
 
 
