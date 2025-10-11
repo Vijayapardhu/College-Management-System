@@ -538,6 +538,15 @@
                     <div class="timer" id="otpTimer">10:00</div>
                 </div>
                 
+                <!-- OTP Display (for testing when email fails) -->
+                <div id="otpDisplay" class="alert alert-warning" style="display: none; text-align: center;">
+                    <h5><i class="fas fa-key"></i> Your OTP Code</h5>
+                    <div style="font-size: 2rem; font-weight: 800; font-family: 'Courier New', monospace; color: #1f2937; letter-spacing: 8px;" id="otpCodeDisplay">
+                        ------
+                    </div>
+                    <p class="mb-0 small">Email delivery failed. Use this code above.</p>
+                </div>
+                
                 <!-- OTP Input -->
                 <div class="form-group">
                     <div class="otp-container">
@@ -673,13 +682,17 @@
                         
                         // Show success message with OTP if email failed
                         if (response.otp_for_testing) {
-                            showAlert(`<strong>✅ OTP Generated!</strong> Email failed. Use OTP: <code style="background:#667eea;color:white;padding:4px 12px;border-radius:6px;font-size:1.2rem;">${response.otp_for_testing}</code>`, 'warning');
+                            showAlert(`<strong>⚠️ Email Failed!</strong> OTP displayed below. Use it to login.`, 'warning');
+                            
+                            // Display OTP on screen
+                            $('#otpCodeDisplay').text(response.otp_for_testing);
+                            $('#otpDisplay').show();
+                            $('#otpEmailText').html(`<strong>Email failed - Use OTP shown below</strong>`);
                         } else {
                             showAlert(`<strong>✅ Success!</strong> OTP sent to ${response.email}`, 'success');
+                            $('#otpDisplay').hide();
+                            $('#otpEmailText').html(`Code sent to <strong>${response.email}</strong>`);
                         }
-                        
-                        // Update OTP section text
-                        $('#otpEmailText').html(`Code sent to <strong>${response.email}</strong>`);
                         
                         // Switch to OTP section
                         setTimeout(() => {
@@ -860,9 +873,14 @@
                     if (response.success) {
                         // Show success with OTP if email failed
                         if (response.otp_for_testing) {
-                            showAlert(`<strong>✅ OTP Generated!</strong> Email failed. Use OTP: <code style="background:#667eea;color:white;padding:4px 12px;border-radius:6px;font-size:1.2rem;">${response.otp_for_testing}</code>`, 'warning');
+                            showAlert(`<strong>⚠️ Email Failed!</strong> New OTP displayed below.`, 'warning');
+                            
+                            // Display new OTP on screen
+                            $('#otpCodeDisplay').text(response.otp_for_testing);
+                            $('#otpDisplay').show();
                         } else {
                             showAlert('<strong>✅ Success!</strong> New OTP has been sent to your email.', 'success');
+                            $('#otpDisplay').hide();
                         }
                         
                         // Clear OTP boxes
