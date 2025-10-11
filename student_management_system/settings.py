@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import dj_database_url
 import os
 from pathlib import Path
-
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('MY_SECRET_KEY')  # Consider using your secret key
+SECRET_KEY = config('SECRET_KEY', default='MySecretKey123!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-# ALLOWED_HOSTS = ['smswithdjango.herokuapp.com']
-ALLOWED_HOSTS = ['*']  # Not recommended but useful in dev mode
+# ALLOWED_HOSTS can be set in .env file (comma-separated)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 
 # Application definition
@@ -89,17 +89,17 @@ WSGI_APPLICATION = 'student_management_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.yqwszaekwucrnnjuadtp',
-        'PASSWORD': 'oiXsUCnflSlzH7zH',
-        'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
-        'PORT': '6543',
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config('DB_NAME', default='postgres'),
+        'USER': config('DB_USER', default='postgres.yqwszaekwucrnnjuadtp'),
+        'PASSWORD': config('DB_PASSWORD', default='oiXsUCnflSlzH7zH'),
+        'HOST': config('DB_HOST', default='aws-1-ap-south-1.pooler.supabase.com'),
+        'PORT': config('DB_PORT', default='6543'),
         'OPTIONS': {
-            'sslmode': 'require',
+            'sslmode': config('DB_SSL_MODE', default='require'),
         },
     }
-    # SQLite backup (uncomment to switch back)
+    # SQLite backup (set DB_ENGINE=django.db.backends.sqlite3 in .env)
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
@@ -158,22 +158,20 @@ TIME_ZONE = 'Africa/Lagos'
 # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_mails")
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-
-EMAIL_HOST_USER = os.environ.get('EMAIL_ADDRESS') 
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 # DEFAULT_FROM_EMAIL = "EduVision <admin@admin.com>"
 
 # Use WhiteNoise without compression for development
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage' if not DEBUG else 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Update database configuration from DATABASE_URL environment variable (for production)
-if os.environ.get('DATABASE_URL'):
+if config('DATABASE_URL', default=''):
     prod_db = dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(prod_db)
 
-SECRET_KEY = 'MySecretKey123!'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

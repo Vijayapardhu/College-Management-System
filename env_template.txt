@@ -1,0 +1,25 @@
+# Django Settings
+SECRET_KEY=MySecretKey123!
+DEBUG=True
+ALLOWED_HOSTS=*
+
+# Database Configuration (Supabase PostgreSQL)
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+DB_USER=postgres.yqwszaekwucrnnjuadtp
+DB_PASSWORD=oiXsUCnflSlzH7zH
+DB_HOST=aws-1-ap-south-1.pooler.supabase.com
+DB_PORT=6543
+DB_SSL_MODE=require
+
+# Email Configuration
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
+
+# Optional: Database URL (for deployment)
+# DATABASE_URL=postgresql://postgres.yqwszaekwucrnnjuadtp:oiXsUCnflSlzH7zH@aws-1-ap-south-1.pooler.supabase.com:6543/postgres
+
