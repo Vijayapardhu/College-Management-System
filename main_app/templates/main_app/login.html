@@ -321,7 +321,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <form action="doLogin/" method="post">
+                <form action="{% url 'user_login' %}" method="post" id="loginForm">
                     {% csrf_token %}
                     <div class="input-group mb-3">
                         <input required type="text" name='email' class="form-control" placeholder="Email / Roll Number / Employee ID">
@@ -390,24 +390,27 @@
     <script>
         // Enhanced login form with loading state
         $(document).ready(function() {
-            const loginForm = $('form');
+            const loginForm = $('#loginForm');
             const submitBtn = $('.btn-primary');
             const emailInput = $('input[name="email"]');
             const passwordInput = $('input[name="password"]');
             
-            // Form submission with loading state
+            // Form submission with loading state - DON'T prevent default
             loginForm.on('submit', function(e) {
                 // Validate inputs
                 if (emailInput.val().trim() === '' || passwordInput.val() === '') {
                     e.preventDefault();
-                    alert('Please enter both email/ID and password');
+                    alert('⚠️ Please enter both email/ID and password');
                     return false;
                 }
                 
-                // Show loading state
+                // Show loading state and allow form to submit normally
                 submitBtn.addClass('loading');
                 submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Signing in...');
                 submitBtn.prop('disabled', true);
+                
+                // Allow form to submit - will redirect to OTP page
+                return true;
             });
             
             // Input validation styling
@@ -431,18 +434,20 @@
             // Auto-focus on email field
             emailInput.focus();
             
-            // Enter key navigation
+            // Enter key navigation between fields
             emailInput.on('keypress', function(e) {
                 if (e.which === 13) {
                     e.preventDefault();
                     passwordInput.focus();
+                    return false;
                 }
             });
             
+            // Enter key on password field submits form
             passwordInput.on('keypress', function(e) {
                 if (e.which === 13) {
-                    e.preventDefault();
-                    loginForm.submit();
+                    // Don't prevent default - let form submit
+                    return true;
                 }
             });
         });
