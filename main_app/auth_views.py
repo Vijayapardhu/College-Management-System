@@ -51,41 +51,64 @@ def handle_login(request, data):
     email_or_id = data.get('email', '').strip()
     password = data.get('password', '')
     
+    print(f"[AUTH] Login attempt: {email_or_id}")
+    
     if not email_or_id or not password:
+        print(f"[AUTH] Missing credentials")
         return JsonResponse({
             'success': False,
             'message': 'Please enter both email/ID and password'
         })
     
     # Authenticate user
-    user = EmailBackend().authenticate(request, username=email_or_id, password=password)
-    
-    if not user:
+    try:
+        user = EmailBackend().authenticate(request, username=email_or_id, password=password)
+        print(f"[AUTH] Authentication result: {user}")
+    except Exception as e:
+        print(f"[AUTH] Authentication exception: {e}")
         return JsonResponse({
             'success': False,
-            'message': 'Invalid email/ID or password'
+            'message': f'Authentication error: {str(e)}'
+        })
+    
+    if not user:
+        print(f"[AUTH] Authentication failed - invalid credentials")
+        return JsonResponse({
+            'success': False,
+            'message': 'Invalid email/ID or password. Default password is: aditya'
         })
     
     # Generate OTP
     try:
+        print(f"[AUTH] User authenticated: {user.email}")
         ip_address = request.META.get('REMOTE_ADDR', '127.0.0.1')
         otp_code = create_otp(user, ip_address)  # Returns OTP code directly from cache
         
+        print(f"[AUTH] OTP generated: {otp_code}")
+        
         # Store in session
         request.session['pending_user_id'] = user.id
+        print(f"[AUTH] Stored user ID in session: {user.id}")
         
         # Try to send email
         email_sent = send_otp_email(user, otp_code)
+        print(f"[AUTH] Email sent: {email_sent}")
         
-        return JsonResponse({
+        response_data = {
             'success': True,
             'email': user.email,
             'otp_sent': email_sent,
             'otp_code': otp_code if not email_sent else None,  # Show OTP if email fails
             'message': 'OTP sent to your email' if email_sent else 'OTP generated (email failed)'
-        })
+        }
+        print(f"[AUTH] Returning response: {response_data}")
+        
+        return JsonResponse(response_data)
         
     except Exception as e:
+        print(f"[AUTH] Exception generating OTP: {e}")
+        import traceback
+        traceback.print_exc()
         return JsonResponse({
             'success': False,
             'message': f'Error generating OTP: {str(e)}'
