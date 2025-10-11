@@ -22,11 +22,15 @@ def create_otp(user, ip_address=None):
     Expires in 10 minutes
     """
     # Invalidate all previous OTPs for this user
-    OTP.objects.filter(user=user, is_used=False).update(is_used=True)
+    old_otps_count = OTP.objects.filter(user=user, is_used=False).update(is_used=True)
+    print(f"[DEBUG] Invalidated {old_otps_count} old OTPs for user: {user.email}")
     
     # Generate new OTP
     otp_code = generate_otp_code()
     expires_at = timezone.now() + timedelta(minutes=10)
+    
+    print(f"[DEBUG] Creating new OTP: '{otp_code}' for user: {user.email}")
+    print(f"[DEBUG] OTP will expire at: {expires_at}")
     
     otp = OTP.objects.create(
         user=user,
@@ -35,6 +39,7 @@ def create_otp(user, ip_address=None):
         ip_address=ip_address
     )
     
+    print(f"[DEBUG] OTP created successfully with ID: {otp.id}")
     return otp
 
 
@@ -90,6 +95,15 @@ def verify_otp(user, otp_code):
     Verify the OTP code for the user
     Returns (True, OTP) if valid, (False, error_message) if invalid
     """
+    print(f"[DEBUG] Verifying OTP for user: {user.email}")
+    print(f"[DEBUG] OTP code received: '{otp_code}' (length: {len(otp_code)})")
+    
+    # Get all OTPs for this user for debugging
+    all_otps = OTP.objects.filter(user=user).order_by('-created_at')[:5]
+    print(f"[DEBUG] Recent OTPs for user:")
+    for otp_obj in all_otps:
+        print(f"  - Code: '{otp_obj.otp_code}' | Used: {otp_obj.is_used} | Expired: {timezone.now() > otp_obj.expires_at} | Created: {otp_obj.created_at}")
+    
     try:
         otp = OTP.objects.filter(
             user=user,
@@ -97,20 +111,26 @@ def verify_otp(user, otp_code):
             is_used=False
         ).latest('created_at')
         
+        print(f"[DEBUG] Found OTP: {otp.otp_code} | Created: {otp.created_at} | Expires: {otp.expires_at}")
+        
         if not otp.is_valid():
             if timezone.now() > otp.expires_at:
+                print(f"[DEBUG] OTP expired!")
                 return False, "OTP has expired. Please request a new one."
             else:
+                print(f"[DEBUG] OTP invalid (already used)!")
                 return False, "Invalid OTP code."
         
         # Mark OTP as used
         otp.is_used = True
         otp.save()
         
+        print(f"[DEBUG] OTP verified successfully!")
         return True, otp
         
     except OTP.DoesNotExist:
-        return False, "Invalid OTP code."
+        print(f"[DEBUG] No matching OTP found in database!")
+        return False, "Invalid OTP code. Please check and try again."
 
 
 def resend_otp(user, ip_address=None):

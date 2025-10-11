@@ -140,11 +140,18 @@ def verify_otp(request):
         user_id = request.session.get('pending_login_user_id')
         is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         
+        print(f"[DEBUG VIEW] Received OTP code: '{otp_code}'")
+        print(f"[DEBUG VIEW] User ID from session: {user_id}")
+        print(f"[DEBUG VIEW] Is AJAX: {is_ajax}")
+        print(f"[DEBUG VIEW] All POST data: {request.POST}")
+        
         try:
             user = CustomUser.objects.get(id=user_id)
+            print(f"[DEBUG VIEW] Found user: {user.email}")
             
             # Verify OTP
             is_valid, result = verify_otp_code(user, otp_code)
+            print(f"[DEBUG VIEW] Verification result: Valid={is_valid}, Message={result}")
             
             if is_valid:
                 # Clear session data
