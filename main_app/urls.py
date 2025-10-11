@@ -20,23 +20,18 @@ from main_app.EditResultView import EditResultView
 from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views
 
 urlpatterns = [
-    # New Clean Auth System
+    # New Clean Auth System (Single-Page Login with OTP)
     path("", auth_views.login_with_otp, name='login_with_otp'),
+    path("login/", auth_views.login_with_otp, name='login_page'),  # Alias for compatibility
     path("logout/", auth_views.logout_view, name='logout'),
-    
-    # Legacy Auth (backup)
-    path("old-login/", views.login_page, name='login_page'),
-    path("get_attendance", views.get_attendance, name='get_attendance'),
-    path("firebase-messaging-sw.js", views.showFirebaseJS, name='showFirebaseJS'),
-    path("doLogin/", views.doLogin, name='user_login'),
-    path("logout_user/", views.logout_user, name='user_logout'),
-    
-    # OTP Authentication (legacy)
-    path("verify-otp/", views.verify_otp, name='verify_otp'),
-    path("resend-otp/", views.resend_otp, name='resend_otp'),
+    path("logout_user/", auth_views.logout_view, name='user_logout'),  # Alias
     
     # Public Data Access (No authentication required)
     path("public/", views.public_data, name='public_data'),
+    
+    # Utility endpoints
+    path("get_attendance", views.get_attendance, name='get_attendance'),
+    path("firebase-messaging-sw.js", views.showFirebaseJS, name='showFirebaseJS'),
     path("admin/home/", hod_views.admin_home, name='admin_home'),
     path("staff/add", hod_views.add_staff, name='add_staff'),
     path("course/add", hod_views.add_course, name='add_course'),

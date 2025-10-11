@@ -14,15 +14,8 @@ from .models import Attendance, Session, Subject, Student, Staff
 
 
 def login_page(request):
-    if request.user.is_authenticated:
-        if request.user.user_type == '1':
-            return redirect(reverse("admin_home"))
-        elif request.user.user_type == '2':
-            return redirect(reverse("staff_home"))
-        elif request.user.user_type == '3':
-            return redirect(reverse("student_home"))
-    # Use single-page login
-    return render(request, 'main_app/login_single_page.html')
+    """Redirect to new clean auth system"""
+    return redirect('login_with_otp')
 
 
 def doLogin(request, **kwargs):
