@@ -794,7 +794,7 @@
         function verifyOTP() {
             const otp = getOTP();
             
-            console.log('Verifying OTP:', otp);
+            console.log('Verifying OTP:', otp, 'Length:', otp.length);
             
             if (otp.length !== 6) {
                 otpBoxes.each(function() {
@@ -814,15 +814,19 @@
             // Make all boxes green
             otpBoxes.css('border-color', '#10b981');
             
+            console.log('Sending OTP to server:', otp);
+            
             // AJAX OTP Verification
             $.ajax({
                 url: '{% url "verify_otp" %}',
                 type: 'POST',
                 dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 data: {
-                    otp_code: otp
+                    'otp_code': otp.toString()
                 },
                 success: function(response) {
+                    console.log('Verification response:', response);
                     if (response.success) {
                         showAlert('<strong>✅ Success!</strong> Login successful. Redirecting...', 'success');
                         
@@ -830,7 +834,8 @@
                             window.location.href = response.redirect_url;
                         }, 1000);
                     } else {
-                        showAlert(`<strong>❌ Error!</strong> ${response.message}`, 'danger');
+                        console.error('Verification failed:', response.message);
+                        showAlert(`<strong>❌ Invalid OTP!</strong> ${response.message}`, 'danger');
                         otpBoxes.addClass('error').css('border-color', '#ef4444');
                         setTimeout(() => {
                             otpBoxes.removeClass('error').css('border-color', '#e5e7eb').val('').removeClass('filled');
@@ -841,11 +846,16 @@
                         verifyBtn.html('<i class="fas fa-check-circle"></i> Verify & Login');
                     }
                 },
-                error: function(xhr) {
-                    console.log('Error response:', xhr);
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', xhr, status, error);
+                    console.log('Response Text:', xhr.responseText);
+                    console.log('Response JSON:', xhr.responseJSON);
+                    
                     let errorMsg = 'Verification failed. Please try again.';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMsg = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        errorMsg = 'Server error. Check console for details.';
                     }
                     showAlert(`<strong>❌ Error!</strong> ${errorMsg}`, 'danger');
                     otpBoxes.val('').removeClass('filled').css('border-color', '#e5e7eb');
