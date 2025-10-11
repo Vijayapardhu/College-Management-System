@@ -31,6 +31,18 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 # ALLOWED_HOSTS can be set in .env file (comma-separated)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
+# CSRF Trusted Origins (for ngrok, production domains, etc.)
+CSRF_TRUSTED_ORIGINS = [
+    'https://897961e7bc49.ngrok-free.app',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
+
+# Add custom CSRF trusted origins from environment
+csrf_origins_env = config('CSRF_TRUSTED_ORIGINS', default='')
+if csrf_origins_env:
+    CSRF_TRUSTED_ORIGINS.extend(csrf_origins_env.split(','))
+
 
 # Application definition
 

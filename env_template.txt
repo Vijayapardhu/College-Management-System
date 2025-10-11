@@ -3,6 +3,11 @@ SECRET_KEY=MySecretKey123!
 DEBUG=True
 ALLOWED_HOSTS=*
 
+# CSRF Trusted Origins (comma-separated)
+# Add your ngrok URL, production domain, or any other trusted origins
+# Example: CSRF_TRUSTED_ORIGINS=https://your-ngrok-url.ngrok-free.app,https://yourdomain.com
+CSRF_TRUSTED_ORIGINS=
+
 # Database Configuration (Supabase PostgreSQL)
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=postgres

@@ -183,16 +183,43 @@
     <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
     
     <script>
+        const otpInput = document.getElementById('otp_code');
+        const verifyButton = document.querySelector('.btn-verify');
+        const otpForm = verifyButton.closest('form');
+        
         // OTP Input: Only allow numbers
-        document.getElementById('otp_code').addEventListener('input', function(e) {
+        otpInput.addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Visual feedback
+            if (this.value.length === 6) {
+                this.style.borderColor = '#10b981';
+                this.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.3)';
+            } else {
+                this.style.borderColor = '#667eea';
+                this.style.boxShadow = '0 0 10px rgba(102, 126, 234, 0.3)';
+            }
         });
 
-        // OTP Input: Auto-submit when 6 digits entered (optional)
-        document.getElementById('otp_code').addEventListener('input', function(e) {
+        // Auto-submit when 6 digits entered
+        otpInput.addEventListener('input', function(e) {
             if (this.value.length === 6) {
-                // Optional: Auto-submit
-                // this.form.submit();
+                // Show loading state
+                verifyButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                verifyButton.disabled = true;
+                
+                // Auto-submit after brief delay for better UX
+                setTimeout(() => {
+                    otpForm.submit();
+                }, 500);
+            }
+        });
+
+        // Handle manual verify button click
+        verifyButton.addEventListener('click', function(e) {
+            if (otpInput.value.length === 6) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                this.disabled = true;
             }
         });
 
@@ -205,18 +232,49 @@
             const seconds = timeLeft % 60;
             timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
             
+            // Warning at 2 minutes
+            if (timeLeft <= 120 && timeLeft > 60) {
+                timerElement.style.color = '#f59e0b';
+            }
+            
+            // Critical at 1 minute
+            if (timeLeft <= 60) {
+                timerElement.style.color = '#dc3545';
+                timerElement.classList.add('animate__animated', 'animate__pulse');
+            }
+            
+            // Expired
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 timerElement.textContent = 'EXPIRED';
                 timerElement.style.color = '#dc3545';
-                document.getElementById('otp_code').disabled = true;
-                alert('OTP has expired. Please request a new one.');
+                otpInput.disabled = true;
+                verifyButton.disabled = true;
+                
+                // Show expiry message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger mt-3';
+                alertDiv.innerHTML = '<strong>OTP Expired!</strong> Please click "Resend OTP" to get a new code.';
+                document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('.info-box'));
             }
             timeLeft--;
         }
         
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer(); // Initial call
+
+        // Add keyboard shortcut (Enter key)
+        otpInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.length === 6) {
+                e.preventDefault();
+                verifyButton.click();
+            }
+        });
+
+        // Focus on input on page load
+        window.addEventListener('load', function() {
+            otpInput.focus();
+        });
     </script>
 </body>
 </html>
