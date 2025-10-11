@@ -75,11 +75,12 @@ def doLogin(request, **kwargs):
             
             # Store user ID in session first (before email attempt)
             request.session['pending_login_user_id'] = user.id
-            request.session['otp_sent_time'] = str(otp.created_at)
-            request.session['otp_code_temp'] = otp.otp_code  # Store OTP temporarily for debugging
+            from django.utils import timezone
+            request.session['otp_sent_time'] = str(timezone.now())
+            request.session['otp_code_temp'] = otp  # OTP is now just the code string
             
             # Try to send email
-            email_sent = send_otp_email(user, otp.otp_code)
+            email_sent = send_otp_email(user, otp)  # otp is now just the code string
             
             print(f"[DEBUG] Email sent: {email_sent}")
             print(f"[DEBUG] Returning response - AJAX: {is_ajax}")
@@ -88,17 +89,17 @@ def doLogin(request, **kwargs):
             if is_ajax:
                 return JsonResponse({
                     'success': True,
-                    'message': 'OTP sent successfully' if email_sent else f'Email failed. OTP: {otp.otp_code}',
+                    'message': 'OTP sent successfully' if email_sent else f'Email failed. OTP: {otp}',
                     'email': user.email,
                     'user_id': user.id,
-                    'otp_for_testing': otp.otp_code if not email_sent else None
+                    'otp_for_testing': otp if not email_sent else None
                 })
             
             # Regular Response (redirect) - only for non-AJAX
             if email_sent:
                 messages.success(request, f"✅ OTP has been sent to {user.email}. Please check your email inbox.")
             else:
-                messages.warning(request, f"⚠️ Email sending failed. For testing, use OTP: {otp.otp_code}")
+                messages.warning(request, f"⚠️ Email sending failed. For testing, use OTP: {otp}")
             
             return redirect(reverse("verify_otp"))
                 
@@ -273,24 +274,25 @@ def resend_otp(request):
         user = CustomUser.objects.get(id=user_id)
         ip_address = request.META.get('REMOTE_ADDR')
         
-        success, result = resend_otp_code(user, ip_address)
+        success, otp_code = resend_otp_code(user, ip_address)
         
         if success:
-            request.session['otp_sent_time'] = str(result.created_at)
+            from django.utils import timezone
+            request.session['otp_sent_time'] = str(timezone.now())
             
             # AJAX Response
             if is_ajax:
                 return JsonResponse({
                     'success': True,
                     'message': f'New OTP sent to {user.email}',
-                    'otp_for_testing': result.otp_code  # For testing when email fails
+                    'otp_for_testing': otp_code  # For testing when email fails
                 })
             
             messages.success(request, f"New OTP has been sent to {user.email}")
         else:
             if is_ajax:
-                return JsonResponse({'success': False, 'message': result})
-            messages.error(request, result)
+                return JsonResponse({'success': False, 'message': otp_code})  # otp_code contains error message
+            messages.error(request, otp_code)  # otp_code contains error message
             
     except CustomUser.DoesNotExist:
         if is_ajax:
