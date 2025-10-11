@@ -23,6 +23,7 @@ urlpatterns = [
     # New Clean Auth System (Single-Page Login with OTP)
     path("", auth_views.login_with_otp, name='login_with_otp'),
     path("login/", auth_views.login_with_otp, name='login_page'),  # Alias for compatibility
+    path("user_login/", auth_views.login_with_otp, name='user_login'),  # Alias for old templates
     path("logout/", auth_views.logout_view, name='logout'),
     path("logout_user/", auth_views.logout_view, name='user_logout'),  # Alias
     
