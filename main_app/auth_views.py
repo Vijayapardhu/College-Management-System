@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .models import CustomUser, OTP
-from .otp_utils import create_otp, send_otp_email, verify_otp as verify_otp_code
+from .otp_utils import create_otp, send_otp_email, verify_otp as verify_otp_code, resend_otp
 from .EmailBackend import EmailBackend
 
 
@@ -69,20 +69,19 @@ def handle_login(request, data):
     # Generate OTP
     try:
         ip_address = request.META.get('REMOTE_ADDR', '127.0.0.1')
-        otp = create_otp(user, ip_address)
+        otp_code = create_otp(user, ip_address)  # Returns OTP code directly from cache
         
         # Store in session
         request.session['pending_user_id'] = user.id
-        request.session['otp_id'] = otp.id
         
         # Try to send email
-        email_sent = send_otp_email(user, otp.otp_code)
+        email_sent = send_otp_email(user, otp_code)
         
         return JsonResponse({
             'success': True,
             'email': user.email,
             'otp_sent': email_sent,
-            'otp_code': otp.otp_code if not email_sent else None,  # Show OTP if email fails
+            'otp_code': otp_code if not email_sent else None,  # Show OTP if email fails
             'message': 'OTP sent to your email' if email_sent else 'OTP generated (email failed)'
         })
         
@@ -165,18 +164,23 @@ def handle_resend_otp(request):
         user = CustomUser.objects.get(id=user_id)
         ip_address = request.META.get('REMOTE_ADDR', '127.0.0.1')
         
-        # Generate new OTP
-        otp = create_otp(user, ip_address)
-        request.session['otp_id'] = otp.id
+        # Generate new OTP (returns OTP code from cache)
+        success, otp_code = resend_otp(user, ip_address)
+        
+        if not success:
+            return JsonResponse({
+                'success': False,
+                'message': otp_code  # Error message
+            })
         
         # Try to send email
-        email_sent = send_otp_email(user, otp.otp_code)
+        email_sent = send_otp_email(user, otp_code)
         
         return JsonResponse({
             'success': True,
             'email': user.email,
             'otp_sent': email_sent,
-            'otp_code': otp.otp_code if not email_sent else None,
+            'otp_code': otp_code if not email_sent else None,
             'message': 'New OTP sent' if email_sent else 'New OTP generated'
         })
         

@@ -1,14 +1,12 @@
 """
-OTP Utility Functions
-Handles OTP generation, validation, and email sending
+OTP Utility Functions - Cache-Based
+Handles OTP generation, validation, and email sending using Django cache
 """
 import random
 import string
-from datetime import timedelta
-from django.utils import timezone
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import OTP
 
 
 def generate_otp_code(length=6):
@@ -18,29 +16,42 @@ def generate_otp_code(length=6):
 
 def create_otp(user, ip_address=None):
     """
-    Create and return a new OTP for the user
-    Expires in 10 minutes
+    Create and store OTP in cache
+    Returns the OTP code
+    Cache key: otp_{user_id}
+    Expires in 10 minutes (600 seconds)
     """
-    # Invalidate all previous OTPs for this user
-    old_otps_count = OTP.objects.filter(user=user, is_used=False).update(is_used=True)
-    print(f"[DEBUG] Invalidated {old_otps_count} old OTPs for user: {user.email}")
-    
-    # Generate new OTP
     otp_code = generate_otp_code()
-    expires_at = timezone.now() + timedelta(minutes=10)
+    cache_key = f'otp_{user.id}'
     
-    print(f"[DEBUG] Creating new OTP: '{otp_code}' for user: {user.email}")
-    print(f"[DEBUG] OTP will expire at: {expires_at}")
+    # Store OTP in cache with 600 second (10 minute) expiry
+    cache.set(cache_key, {
+        'code': otp_code,
+        'email': user.email,
+        'ip_address': ip_address,
+        'attempts': 0
+    }, timeout=600)
     
-    otp = OTP.objects.create(
-        user=user,
-        otp_code=otp_code,
-        expires_at=expires_at,
-        ip_address=ip_address
-    )
+    print(f"[OTP] Generated OTP: {otp_code} for user: {user.email}")
+    print(f"[OTP] Stored in cache with key: {cache_key}")
     
-    print(f"[DEBUG] OTP created successfully with ID: {otp.id}")
-    return otp
+    # Also store in database for audit trail (optional)
+    try:
+        from .models import OTP
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        OTP.objects.filter(user=user, is_used=False).update(is_used=True)
+        OTP.objects.create(
+            user=user,
+            otp_code=otp_code,
+            expires_at=timezone.now() + timedelta(minutes=10),
+            ip_address=ip_address
+        )
+    except:
+        pass  # Cache is primary, database is just for logging
+    
+    return otp_code
 
 
 def send_otp_email(user, otp_code):
@@ -92,62 +103,77 @@ This is an automated email. Please do not reply.
 
 def verify_otp(user, otp_code):
     """
-    Verify the OTP code for the user
-    Returns (True, OTP) if valid, (False, error_message) if invalid
+    Verify OTP from cache
+    Returns (True, 'Success') if valid, (False, error_message) if invalid
     """
-    print(f"[DEBUG] Verifying OTP for user: {user.email}")
-    print(f"[DEBUG] OTP code received: '{otp_code}' (length: {len(otp_code)})")
+    cache_key = f'otp_{user.id}'
     
-    # Get all OTPs for this user for debugging
-    all_otps = OTP.objects.filter(user=user).order_by('-created_at')[:5]
-    print(f"[DEBUG] Recent OTPs for user:")
-    for otp_obj in all_otps:
-        print(f"  - Code: '{otp_obj.otp_code}' | Used: {otp_obj.is_used} | Expired: {timezone.now() > otp_obj.expires_at} | Created: {otp_obj.created_at}")
+    print(f"[OTP] Verifying OTP for user: {user.email}")
+    print(f"[OTP] Entered code: '{otp_code}'")
+    print(f"[OTP] Cache key: {cache_key}")
     
-    try:
-        otp = OTP.objects.filter(
-            user=user,
-            otp_code=otp_code,
-            is_used=False
-        ).latest('created_at')
+    # Get OTP data from cache
+    otp_data = cache.get(cache_key)
+    
+    if not otp_data:
+        print(f"[OTP] No OTP found in cache (expired or not generated)")
+        return False, "OTP expired or not found. Please request a new one."
+    
+    print(f"[OTP] Found OTP in cache: {otp_data['code']}")
+    print(f"[OTP] Attempts so far: {otp_data.get('attempts', 0)}")
+    
+    # Check attempts
+    if otp_data.get('attempts', 0) >= 5:
+        cache.delete(cache_key)
+        print(f"[OTP] Too many attempts, OTP invalidated")
+        return False, "Too many failed attempts. Please request a new OTP."
+    
+    # Verify OTP
+    if otp_data['code'] == otp_code:
+        # OTP is correct - delete from cache
+        cache.delete(cache_key)
+        print(f"[OTP] ✅ OTP verified successfully!")
         
-        print(f"[DEBUG] Found OTP: {otp.otp_code} | Created: {otp.created_at} | Expires: {otp.expires_at}")
+        # Mark as used in database (for audit)
+        try:
+            from .models import OTP
+            OTP.objects.filter(user=user, otp_code=otp_code, is_used=False).update(is_used=True)
+        except:
+            pass
         
-        if not otp.is_valid():
-            if timezone.now() > otp.expires_at:
-                print(f"[DEBUG] OTP expired!")
-                return False, "OTP has expired. Please request a new one."
-            else:
-                print(f"[DEBUG] OTP invalid (already used)!")
-                return False, "Invalid OTP code."
+        return True, "Success"
+    else:
+        # Wrong OTP - increment attempts
+        otp_data['attempts'] = otp_data.get('attempts', 0) + 1
+        cache.set(cache_key, otp_data, timeout=600)
         
-        # Mark OTP as used
-        otp.is_used = True
-        otp.save()
+        remaining = 5 - otp_data['attempts']
+        print(f"[OTP] ❌ Wrong OTP. Attempts remaining: {remaining}")
         
-        print(f"[DEBUG] OTP verified successfully!")
-        return True, otp
-        
-    except OTP.DoesNotExist:
-        print(f"[DEBUG] No matching OTP found in database!")
-        return False, "Invalid OTP code. Please check and try again."
+        return False, f"Invalid OTP. {remaining} attempts remaining."
 
 
 def resend_otp(user, ip_address=None):
     """
-    Resend OTP to user
-    Returns (True, otp) if successful, (False, error_message) if failed
+    Generate and resend new OTP
+    Returns (True, otp_code) if successful, (False, error_message) if failed
     """
     try:
-        # Create new OTP
-        otp = create_otp(user, ip_address)
+        # Create new OTP (overwrites old one in cache)
+        otp_code = create_otp(user, ip_address)
         
         # Send email
-        if send_otp_email(user, otp.otp_code):
-            return True, otp
-        else:
-            return False, "Failed to send OTP email. Please try again."
+        email_sent = send_otp_email(user, otp_code)
+        
+        return True, otp_code
             
     except Exception as e:
+        print(f"[OTP] Error in resend: {e}")
         return False, f"Error: {str(e)}"
+
+
+def get_otp_from_cache(user_id):
+    """Get OTP data from cache for debugging"""
+    cache_key = f'otp_{user_id}'
+    return cache.get(cache_key)
 
