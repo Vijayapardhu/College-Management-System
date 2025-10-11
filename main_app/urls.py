@@ -17,16 +17,21 @@ from django.urls import path
 
 from main_app.EditResultView import EditResultView
 
-from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views
+from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views
 
 urlpatterns = [
-    path("", views.login_page, name='login_page'),
+    # New Clean Auth System
+    path("", auth_views.login_with_otp, name='login_with_otp'),
+    path("logout/", auth_views.logout_view, name='logout'),
+    
+    # Legacy Auth (backup)
+    path("old-login/", views.login_page, name='login_page'),
     path("get_attendance", views.get_attendance, name='get_attendance'),
     path("firebase-messaging-sw.js", views.showFirebaseJS, name='showFirebaseJS'),
     path("doLogin/", views.doLogin, name='user_login'),
     path("logout_user/", views.logout_user, name='user_logout'),
     
-    # OTP Authentication
+    # OTP Authentication (legacy)
     path("verify-otp/", views.verify_otp, name='verify_otp'),
     path("resend-otp/", views.resend_otp, name='resend_otp'),
     

@@ -1,0 +1,361 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVision - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .form-control {
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            width: 100%;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        .otp-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .otp-box {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+        }
+        .otp-box:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .otp-box.filled {
+            border-color: #10b981;
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .alert-success { background: #d1fae5; color: #065f46; }
+        .alert-danger { background: #fee2e2; color: #991b1b; }
+        .alert-warning { background: #fef3c7; color: #92400e; }
+        .timer {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 15px 0;
+        }
+        .otp-display {
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .otp-display-code {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #1f2937;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <h1><i class="fas fa-graduation-cap"></i> EduVision</h1>
+        </div>
+        
+        <div class="auth-card">
+            <div id="messages"></div>
+            
+            <!-- LOGIN SECTION -->
+            <div id="loginSection" class="section active">
+                <h3 style="text-align:center; margin-bottom:20px;">Sign In</h3>
+                <input type="text" id="emailInput" class="form-control" placeholder="Email / Roll Number / Employee ID" autocomplete="off">
+                <input type="password" id="passwordInput" class="form-control" placeholder="Password (default: aditya)">
+                <button onclick="doLogin()" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                <p style="text-align:center; margin-top:15px;">
+                    <a href="{% url 'public_data' %}" style="color:#667eea;">View Public Info</a>
+                </p>
+            </div>
+            
+            <!-- OTP SECTION -->
+            <div id="otpSection" class="section">
+                <h3 style="text-align:center; margin-bottom:10px;">Verify OTP</h3>
+                <p id="otpEmail" style="text-align:center; color:#6b7280; margin-bottom:20px;"></p>
+                
+                <div class="timer" id="timer">10:00</div>
+                
+                <div id="otpDisplayBox" class="otp-display" style="display:none;">
+                    <p style="margin:0; font-weight:600;">Your OTP Code:</p>
+                    <div class="otp-display-code" id="displayedOTP">------</div>
+                </div>
+                
+                <div class="otp-boxes">
+                    <input type="text" class="otp-box" id="otp1" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-box" id="otp2" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-box" id="otp3" maxlength="1" inputmode="numeric">
+                    <span style="font-size:2rem; font-weight:bold; color:#667eea;">-</span>
+                    <input type="text" class="otp-box" id="otp4" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-box" id="otp5" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-box" id="otp6" maxlength="1" inputmode="numeric">
+                </div>
+                
+                <button onclick="verifyOTP()" class="btn-primary">
+                    <i class="fas fa-check"></i> Verify & Login
+                </button>
+                <button onclick="resendOTP()" class="btn-primary" style="background:#6b7280; margin-top:10px;">
+                    <i class="fas fa-redo"></i> Resend OTP
+                </button>
+                <p style="text-align:center; margin-top:15px;">
+                    <a href="#" onclick="backToLogin(); return false;" style="color:#667eea;">Back to Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script>
+        let timerInterval;
+        const csrfToken = '{{ csrf_token }}';
+        
+        // Show message
+        function showMessage(msg, type='info') {
+            const colors = {
+                success: 'alert-success',
+                danger: 'alert-danger',
+                warning: 'alert-warning'
+            };
+            $('#messages').html(`<div class="alert ${colors[type]}">${msg}</div>`);
+            setTimeout(() => $('#messages').html(''), 5000);
+        }
+        
+        // Switch section
+        function showSection(section) {
+            $('.section').removeClass('active');
+            $(`#${section}`).addClass('active');
+        }
+        
+        // LOGIN
+        function doLogin() {
+            const email = $('#emailInput').val().trim();
+            const password = $('#passwordInput').val();
+            
+            if (!email || !password) {
+                showMessage('Please enter both email and password', 'danger');
+                return;
+            }
+            
+            $.ajax({
+                url: '{% url "login_with_otp" %}',
+                method: 'POST',
+                contentType: 'application/json',
+                headers: {'X-CSRFToken': csrfToken},
+                data: JSON.stringify({
+                    action: 'login',
+                    email: email,
+                    password: password
+                }),
+                success: function(res) {
+                    if (res.success) {
+                        $('#otpEmail').text('Code sent to ' + res.email);
+                        
+                        if (!res.otp_sent && res.otp_code) {
+                            $('#displayedOTP').text(res.otp_code);
+                            $('#otpDisplayBox').show();
+                            showMessage('OTP: ' + res.otp_code, 'warning');
+                        }
+                        
+                        showSection('otpSection');
+                        $('#otp1').focus();
+                        startTimer();
+                    } else {
+                        showMessage(res.message, 'danger');
+                    }
+                },
+                error: function() {
+                    showMessage('Login failed', 'danger');
+                }
+            });
+        }
+        
+        // VERIFY OTP
+        function verifyOTP() {
+            const otp = $('#otp1').val() + $('#otp2').val() + $('#otp3').val() + 
+                       $('#otp4').val() + $('#otp5').val() + $('#otp6').val();
+            
+            if (otp.length !== 6) {
+                showMessage('Please enter all 6 digits', 'danger');
+                return;
+            }
+            
+            $.ajax({
+                url: '{% url "login_with_otp" %}',
+                method: 'POST',
+                contentType: 'application/json',
+                headers: {'X-CSRFToken': csrfToken},
+                data: JSON.stringify({
+                    action: 'verify_otp',
+                    otp_code: otp
+                }),
+                success: function(res) {
+                    if (res.success) {
+                        showMessage('Login successful! Redirecting...', 'success');
+                        setTimeout(() => window.location.href = res.redirect_url, 1000);
+                    } else {
+                        showMessage(res.message, 'danger');
+                        $('.otp-box').val('');
+                        $('#otp1').focus();
+                    }
+                },
+                error: function() {
+                    showMessage('Verification failed', 'danger');
+                }
+            });
+        }
+        
+        // RESEND OTP
+        function resendOTP() {
+            $.ajax({
+                url: '{% url "login_with_otp" %}',
+                method: 'POST',
+                contentType: 'application/json',
+                headers: {'X-CSRFToken': csrfToken},
+                data: JSON.stringify({action: 'resend_otp'}),
+                success: function(res) {
+                    if (res.success) {
+                        if (!res.otp_sent && res.otp_code) {
+                            $('#displayedOTP').text(res.otp_code);
+                            $('#otpDisplayBox').show();
+                            showMessage('New OTP: ' + res.otp_code, 'warning');
+                        } else {
+                            showMessage('New OTP sent to ' + res.email, 'success');
+                        }
+                        $('.otp-box').val('');
+                        $('#otp1').focus();
+                        clearInterval(timerInterval);
+                        startTimer();
+                    } else {
+                        showMessage(res.message, 'danger');
+                    }
+                }
+            });
+        }
+        
+        // Back to login
+        function backToLogin() {
+            clearInterval(timerInterval);
+            showSection('loginSection');
+            $('.otp-box').val('');
+            $('#emailInput').focus();
+        }
+        
+        // OTP box navigation
+        $('.otp-box').on('input', function() {
+            $(this).val($(this).val().replace(/[^0-9]/g, ''));
+            if ($(this).val()) {
+                $(this).addClass('filled');
+                const next = $(this).next('.otp-box');
+                if (next.length) next.focus();
+                else if ($('.otp-box').filter(function() { return $(this).val(); }).length === 6) {
+                    verifyOTP();
+                }
+            }
+        });
+        
+        $('.otp-box').on('keydown', function(e) {
+            if (e.key === 'Backspace' && !$(this).val()) {
+                $(this).prev('.otp-box').focus();
+            }
+        });
+        
+        // Timer
+        function startTimer() {
+            let time = 600;
+            timerInterval = setInterval(() => {
+                const m = Math.floor(time / 60);
+                const s = time % 60;
+                $('#timer').text(`${m}:${s.toString().padStart(2, '0')}`);
+                time--;
+                if (time < 0) {
+                    clearInterval(timerInterval);
+                    $('#timer').text('EXPIRED').css('color', '#ef4444');
+                    showMessage('OTP expired. Please resend.', 'warning');
+                }
+            }, 1000);
+        }
+        
+        // Auto-focus
+        $(document).ready(() => $('#emailInput').focus());
+    </script>
+</body>
+</html>
+
