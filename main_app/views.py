@@ -21,70 +21,93 @@ def login_page(request):
             return redirect(reverse("staff_home"))
         elif request.user.user_type == '3':
             return redirect(reverse("student_home"))
-    return render(request, 'main_app/login.html')
+    # Use single-page login
+    return render(request, 'main_app/login_single_page.html')
 
 
 def doLogin(request, **kwargs):
     if request.method != 'POST':
         return HttpResponse("<h4>Denied</h4>")
-    else:
-        from .otp_utils import create_otp, send_otp_email
-        
-        username_or_id = request.POST.get('email')  # Can be email, roll number, or employee ID
-        password = request.POST.get('password')
-        
-        # Try to find user by email, username, or unique ID
-        user = EmailBackend.authenticate(request, username=username_or_id, password=password)
-        
-        # If not found, try by student roll number or staff employee ID
-        if user is None:
-            try:
-                # Try student roll number or admission number
-                student = Student.objects.filter(
-                    Q(roll_number=username_or_id) | Q(admission_number=username_or_id)
-                ).first()
-                
-                if student:
-                    user = EmailBackend.authenticate(request, username=student.admin.email, password=password)
-                
-                # Try staff employee ID
-                if user is None:
-                    staff = Staff.objects.filter(employee_id=username_or_id).first()
-                    if staff:
-                        user = EmailBackend.authenticate(request, username=staff.admin.email, password=password)
-                        
-            except Exception as e:
-                pass
-        
-        if user is not None:
-            # Generate and send OTP
-            try:
-                ip_address = request.META.get('REMOTE_ADDR')
-                otp = create_otp(user, ip_address)
-                
-                # Store user ID in session first (before email attempt)
-                request.session['pending_login_user_id'] = user.id
-                request.session['otp_sent_time'] = str(otp.created_at)
-                request.session['otp_code_temp'] = otp.otp_code  # Store OTP temporarily for debugging
-                
-                # Try to send email
-                email_sent = send_otp_email(user, otp.otp_code)
-                
-                if email_sent:
-                    messages.success(request, f"✅ OTP has been sent to {user.email}. Please check your email inbox.")
-                else:
-                    # Still redirect to OTP page but show warning
-                    messages.warning(request, f"⚠️ Email sending failed. For testing, use OTP: {otp.otp_code} (This will be removed in production)")
-                
-                # Always redirect to OTP verification page
-                return redirect(reverse("verify_otp"))
+    
+    from .otp_utils import create_otp, send_otp_email
+    
+    username_or_id = request.POST.get('email')  # Can be email, roll number, or employee ID
+    password = request.POST.get('password')
+    
+    # Try to find user by email, username, or unique ID
+    user = EmailBackend.authenticate(request, username=username_or_id, password=password)
+    
+    # If not found, try by student roll number or staff employee ID
+    if user is None:
+        try:
+            # Try student roll number or admission number
+            student = Student.objects.filter(
+                Q(roll_number=username_or_id) | Q(admission_number=username_or_id)
+            ).first()
+            
+            if student:
+                user = EmailBackend.authenticate(request, username=student.admin.email, password=password)
+            
+            # Try staff employee ID
+            if user is None:
+                staff = Staff.objects.filter(employee_id=username_or_id).first()
+                if staff:
+                    user = EmailBackend.authenticate(request, username=staff.admin.email, password=password)
                     
-            except Exception as e:
-                messages.error(request, f"Error: {str(e)}. Please try again.")
-                return redirect("/")
-        else:
-            messages.error(request, "❌ Invalid Email/ID or Password. Please try again.")
+        except Exception as e:
+            pass
+    
+    # Check if this is an AJAX request
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    
+    if user is not None:
+        # Generate and send OTP
+        try:
+            ip_address = request.META.get('REMOTE_ADDR')
+            otp = create_otp(user, ip_address)
+            
+            # Store user ID in session first (before email attempt)
+            request.session['pending_login_user_id'] = user.id
+            request.session['otp_sent_time'] = str(otp.created_at)
+            request.session['otp_code_temp'] = otp.otp_code  # Store OTP temporarily for debugging
+            
+            # Try to send email
+            email_sent = send_otp_email(user, otp.otp_code)
+            
+            # AJAX Response
+            if is_ajax:
+                return JsonResponse({
+                    'success': True,
+                    'message': 'OTP sent successfully' if email_sent else f'Email failed. OTP: {otp.otp_code}',
+                    'email': user.email,
+                    'user_id': user.id,
+                    'otp_for_testing': otp.otp_code if not email_sent else None
+                })
+            
+            # Regular Response (redirect)
+            if email_sent:
+                messages.success(request, f"✅ OTP has been sent to {user.email}. Please check your email inbox.")
+            else:
+                messages.warning(request, f"⚠️ Email sending failed. For testing, use OTP: {otp.otp_code}")
+            
+            return redirect(reverse("verify_otp"))
+                
+        except Exception as e:
+            if is_ajax:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Error: {str(e)}'
+                })
+            messages.error(request, f"Error: {str(e)}. Please try again.")
             return redirect("/")
+    else:
+        if is_ajax:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid Email/ID or Password'
+            })
+        messages.error(request, "❌ Invalid Email/ID or Password. Please try again.")
+        return redirect("/")
 
 
 
@@ -103,6 +126,9 @@ def verify_otp(request):
     
     # Check if there's a pending login
     if 'pending_login_user_id' not in request.session:
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': 'No pending login found'})
         messages.error(request, "No pending login found. Please login again.")
         return redirect("/")
     
@@ -112,6 +138,7 @@ def verify_otp(request):
         
         otp_code = request.POST.get('otp_code', '').strip()
         user_id = request.session.get('pending_login_user_id')
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         
         try:
             user = CustomUser.objects.get(id=user_id)
@@ -121,34 +148,66 @@ def verify_otp(request):
             
             if is_valid:
                 # Clear session data
-                del request.session['pending_login_user_id']
+                if 'pending_login_user_id' in request.session:
+                    del request.session['pending_login_user_id']
                 if 'otp_sent_time' in request.session:
                     del request.session['otp_sent_time']
+                if 'otp_code_temp' in request.session:
+                    del request.session['otp_code_temp']
                 
                 # Login user
                 login(request, user)
-                messages.success(request, "Login successful!")
                 
-                # Redirect based on user type
+                # Determine redirect URL
                 if user.user_type == '1':
-                    return redirect(reverse("admin_home"))
+                    redirect_url = reverse("admin_home")
                 elif user.user_type == '2':
-                    return redirect(reverse("staff_home"))
+                    redirect_url = reverse("staff_home")
                 elif user.user_type == '3':
-                    return redirect(reverse("student_home"))
+                    redirect_url = reverse("student_home")
                 elif user.user_type == '4':
-                    return redirect(reverse("management_home"))
+                    redirect_url = reverse("management_home")
                 else:
-                    return redirect(reverse("student_home"))
+                    redirect_url = reverse("student_home")
+                
+                # AJAX Response
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Login successful',
+                        'redirect_url': redirect_url
+                    })
+                
+                # Regular Response
+                messages.success(request, "Login successful!")
+                return redirect(redirect_url)
             else:
-                messages.error(request, result)  # result contains error message
+                # AJAX Response
+                if is_ajax:
+                    return JsonResponse({
+                        'success': False,
+                        'message': result
+                    })
+                
+                messages.error(request, result)
                 return redirect(reverse("verify_otp"))
                 
         except CustomUser.DoesNotExist:
+            if is_ajax:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'User not found'
+                })
             messages.error(request, "User not found. Please login again.")
-            del request.session['pending_login_user_id']
+            if 'pending_login_user_id' in request.session:
+                del request.session['pending_login_user_id']
             return redirect("/")
         except Exception as e:
+            if is_ajax:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Error: {str(e)}'
+                })
             messages.error(request, f"Error verifying OTP: {str(e)}")
             return redirect(reverse("verify_otp"))
     
@@ -157,7 +216,11 @@ def verify_otp(request):
 
 def resend_otp(request):
     """Resend OTP to user"""
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    
     if 'pending_login_user_id' not in request.session:
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': 'No pending login found'})
         messages.error(request, "No pending login found. Please login again.")
         return redirect("/")
     
@@ -174,15 +237,31 @@ def resend_otp(request):
         
         if success:
             request.session['otp_sent_time'] = str(result.created_at)
+            
+            # AJAX Response
+            if is_ajax:
+                return JsonResponse({
+                    'success': True,
+                    'message': f'New OTP sent to {user.email}',
+                    'otp_for_testing': result.otp_code  # For testing when email fails
+                })
+            
             messages.success(request, f"New OTP has been sent to {user.email}")
         else:
-            messages.error(request, result)  # result contains error message
+            if is_ajax:
+                return JsonResponse({'success': False, 'message': result})
+            messages.error(request, result)
             
     except CustomUser.DoesNotExist:
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': 'User not found'})
         messages.error(request, "User not found. Please login again.")
-        del request.session['pending_login_user_id']
+        if 'pending_login_user_id' in request.session:
+            del request.session['pending_login_user_id']
         return redirect("/")
     except Exception as e:
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
         messages.error(request, f"Error resending OTP: {str(e)}")
     
     return redirect(reverse("verify_otp"))
