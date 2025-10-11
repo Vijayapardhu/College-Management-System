@@ -1,0 +1,501 @@
+---
+alwaysApply: true
+---
+# EduVision - College Management System (Django) - Complete Cursor Rules
+
+## Project Overview
+You are working on "EduVision", a comprehensive Django-based College Management System (ERP) designed to automate academic and administrative operations with role-based access control.
+
+### Core Architecture  
+- **Framework**: Django 3.2+ with Python 3.8+
+- **Database**: SQLite (development) / PostgreSQL (production)
+- **Frontend**: Django Templates + AdminLTE 3 + Bootstrap 4
+- **Authentication**: Django Auth with custom email/roll number/employee ID login
+- **File Storage**: Django FileSystemStorage for media uploads
+- **Charts**: Chart.js for analytics visualization
+- **Tables**: DataTables.js for data display
+
+### User Roles & Permissions
+1. **HOD/Admin (user_type='1')** - Full system access, user management, analytics, approvals
+2. **Faculty/Staff (user_type='2')** - Academic operations (attendance, marks, materials upload)
+3. **Student (user_type='3')** - Academic services (view records, applications, resources access)
+4. **Management (user_type='4')** - Administrative operations, non-academic staff coordination
+5. **Proctor** - Student mentoring, absentee tracking, performance monitoring
+
+## Project Structure Pattern
+```
+College-Management-System/
+├── main_app/
+│   ├── models.py              # All database models
+│   ├── views.py               # Common views
+│   ├── hod_views.py           # HOD panel views  
+│   ├── staff_views.py         # Faculty panel views
+│   ├── student_views.py       # Student panel views
+│   ├── management_views.py    # Management panel views
+│   ├── forms.py               # All form definitions
+│   ├── urls.py                # URL routing
+│   └── templates/             # Role-based templates
+│       ├── hod_template/
+│       ├── staff_template/
+│       ├── student_template/
+│       └── management_template/
+├── static/                    # CSS, JS, images
+├── media/                     # User uploaded files
+└── student_management_system/ # Project settings
+```
+
+## Django Development Standards
+
+### Model Development Rules
+- Keep all models in `models.py` with proper relationships
+- Use Django's built-in User model extension (CustomUser)
+- Always include `created_at` and `updated_at` timestamp fields
+- Use proper field types (EmailField, URLField, FileField, etc.)
+- Add descriptive `__str__` methods for better admin representation
+- Implement proper Meta classes with unique_together constraints
+
+```
+# Standard Model Pattern
+class Student(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    roll_number = models.CharField(max_length=20, unique=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ['roll_number', 'session']
+    
+    def __str__(self):
+        return f"{self.roll_number} - {self.user.first_name} {self.user.last_name}"
+```
+
+### View Development Rules
+- Always use `@login_required` decorator for protected views
+- Implement proper role-based permission checking
+- Use try-except blocks for error handling
+- Add Django messages for user feedback
+- Use class-based views when appropriate (ListView, CreateView, etc.)
+- Handle file uploads securely with proper validation
+
+```
+# Standard View Pattern
+@login_required
+def student_dashboard(request):
+    # Role validation
+    if request.user.user_type != '3':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    try:
+        student = Student.objects.get(user=request.user)
+        # Use select_related for optimization
+        attendance_data = Attendance.objects.filter(student=student).select_related('subject')
+        
+        context = {
+            'student': student,
+            'attendance_percentage': calculate_attendance_percentage(student),
+            'recent_activities': get_recent_activities(student),
+        }
+        return render(request, 'student_template/home.html', context)
+    except Student.DoesNotExist:
+        messages.error(request, 'Student profile not found')
+        return redirect('login')
+    except Exception as e:
+        messages.error(request, 'Error loading dashboard')
+        return redirect('login')
+```
+
+### Form Development Rules
+- Use Django ModelForms when possible
+- Include proper field validation and clean methods
+- Add Bootstrap CSS classes for consistent styling
+- Handle file uploads with size and type validation
+- Use Django Crispy Forms for better form rendering
+
+```
+# Standard Form Pattern
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['roll_number', 'course', 'profile_picture']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['roll_number'].widget.attrs.update({'class': 'form-control'})
+        self.fields['course'].widget.attrs.update({'class': 'form-control'})
+    
+    def clean_profile_picture(self):
+        picture = self.cleaned_data.get('profile_picture')
+        if picture:
+            if picture.size > 2 * 1024 * 1024:  # 2MB limit
+                raise forms.ValidationError('File size cannot exceed 2MB')
+        return picture
+```
+
+## Frontend Template Standards
+
+### Template Structure Rules
+- Use AdminLTE 3 base templates for consistency
+- Implement proper template inheritance hierarchy
+- Include role-based navigation and sidebar
+- Add responsive design classes for mobile compatibility
+- Use proper block structure for flexibility
+
+```
+<!-- Base Template Pattern -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}EduVision - College Management{% endblock %}</title>
+    
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        {% include 'includes/navbar.html' %}
+        {% include 'includes/sidebar.html' %}
+        
+        <div class="content-wrapper">
+            {% block content %}{% endblock %}
+        </div>
+        
+        {% include 'includes/footer.html' %}
+    </div>
+    
+    <!-- Scripts -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+```
+
+### Form Styling Rules
+- Use Bootstrap form classes consistently
+- Add proper validation feedback styling
+- Include loading states for form submissions
+- Implement file upload previews and progress bars
+
+```
+<!-- Standard Form Pattern -->
+<form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="{{ form.roll_number.id_for_label }}">Roll Number</label>
+        {{ form.roll_number }}
+        <div class="invalid-feedback">
+            {{ form.roll_number.errors }}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Save Changes
+    </button>
+</form>
+```
+
+## Security Implementation Rules
+
+### Authentication & Authorization
+- Always validate user authentication and role permissions
+- Use Django's built-in permission system
+- Implement proper session management
+- Add CSRF protection to all forms
+
+```
+# Permission Helper Pattern
+def check_user_permission(user, required_types):
+    """Check if user has required permissions"""
+    if not user.is_authenticated:
+        return False
+    return user.user_type in required_types
+
+def require_roles(allowed_roles):
+    """Decorator for role-based access control"""
+    def decorator(view_func):
+        def wrapper(request, *args, **kwargs):
+            if not check_user_permission(request.user, allowed_roles):
+                messages.error(request, 'Access denied')
+                return redirect('login')
+            return view_func(request, *args, **kwargs)
+        return wrapper
+    return decorator
+
+# Usage
+@require_roles(['1', '2'])  # HOD and Faculty only
+def protected_view(request):
+    # View logic here
+    pass
+```
+
+### File Upload Security
+- Validate file types, sizes, and content
+- Store uploads outside web-accessible directories
+- Use secure file naming conventions
+- Implement malware scanning when possible
+
+```
+# Secure File Upload Pattern
+def handle_uploaded_file(uploaded_file, user, file_type='document'):
+    # File size validation
+    max_sizes = {
+        'document': 5 * 1024 * 1024,    # 5MB for documents
+        'image': 2 * 1024 * 1024,       # 2MB for images
+        'video': 50 * 1024 * 1024,      # 50MB for videos
+    }
+    
+    if uploaded_file.size > max_sizes.get(file_type, 5 * 1024 * 1024):
+        raise ValidationError(f'File too large for {file_type}')
+    
+    # File type validation
+    allowed_extensions = {
+        'document': ['pdf', 'doc', 'docx', 'txt', 'ppt', 'pptx'],
+        'image': ['jpg', 'jpeg', 'png', 'gif'],
+        'video': ['mp4', 'avi', 'mov', 'wmv'],
+    }
+    
+    file_extension = uploaded_file.name.split('.')[-1].lower()
+    if file_extension not in allowed_extensions.get(file_type, []):
+        raise ValidationError(f'File type not allowed for {file_type}')
+    
+    # Generate secure filename
+    timestamp = timezone.now().strftime('%Y%m%d_%H%M%S')
+    secure_filename = f"{user.id}_{timestamp}_{uploaded_file.name}"
+    
+    return secure_filename
+```
+
+## College Domain-Specific Rules
+
+### Academic Structure Implementation
+- Course → Subject → Session hierarchy
+- Student enrollment in Course and Session
+- Faculty assignment to multiple Subjects
+- Department management by HOD
+
+### Core Models Structure
+```
+# Essential Models Pattern
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=20, unique=True)
+    duration_years = models.IntegerField()
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=20)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    credits = models.IntegerField()
+    staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
+
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.BooleanField(default=False)  # True = Present
+    marked_by = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['student', 'subject', 'date']
+
+class StudyMaterial(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    uploaded_by = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='study_materials/')
+    youtube_url = models.URLField(blank=True, null=True)
+    reference_links = models.TextField(blank=True)
+    material_type = models.CharField(max_length=20, choices=[
+        ('notes', 'Lecture Notes'),
+        ('assignment', 'Assignment'),
+        ('reference', 'Reference Material'),
+        ('video', 'Video Lesson'),
+    ])
+    created_at = models.DateTimeField(auto_now_add=True)
+```
+
+### Feature Implementation Guidelines
+
+#### Student Services Features
+- Leave applications with approval workflow
+- Certificate requests (Bonafide, Transfer Certificate, etc.)
+- Hostel allocation and visitor management
+- Transport allocation and route management
+- Scholarship applications and disbursement tracking
+- Placement drive participation and tracking
+
+#### Faculty Features
+- Attendance marking with QR code support
+- Marks entry with grade calculation
+- Study materials upload (documents, videos, links)
+- Assignment creation and submission management
+- Online exam creation with auto-grading
+- Student performance analytics
+
+#### HOD/Admin Features
+- User management (students, faculty, staff)
+- Course and subject management
+- Timetable creation and exam scheduling
+- Result compilation and publishing
+- Analytics dashboards with Chart.js
+- Report generation (attendance, performance, fees)
+
+#### Analytics Implementation
+```
+# Analytics Helper Functions
+def calculate_attendance_percentage(student, subject=None, date_range=None):
+    query = Attendance.objects.filter(student=student)
+    if subject:
+        query = query.filter(subject=subject)
+    if date_range:
+        query = query.filter(date__range=date_range)
+    
+    total_classes = query.count()
+    if total_classes == 0:
+        return 0
+    
+    attended_classes = query.filter(status=True).count()
+    return round((attended_classes / total_classes) * 100, 2)
+
+def get_department_performance(department):
+    students = Student.objects.filter(course__department=department)
+    performance_data = []
+    
+    for student in students:
+        avg_marks = Result.objects.filter(student=student).aggregate(
+            avg_marks=models.Avg('marks')
+        )['avg_marks'] or 0
+        
+        attendance_pct = calculate_attendance_percentage(student)
+        
+        performance_data.append({
+            'student': student,
+            'average_marks': round(avg_marks, 2),
+            'attendance_percentage': attendance_pct,
+        })
+    
+    return performance_data
+```
+
+## JavaScript and AJAX Patterns
+
+### DataTables Implementation
+```
+// Standard DataTable Pattern
+$(document).ready(function() {
+    $('#example-table').DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: ["copy", "csv", "excel", "pdf", "print"],
+        pageLength: 25,
+        order: [[0, 'desc']],
+    }).buttons().container().appendTo('#example-table_wrapper .col-md-6:eq(0)');
+});
+```
+
+### Chart.js Implementation
+```
+// Analytics Chart Pattern
+function createAttendanceChart(data) {
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Attendance Percentage',
+                data: data.values,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+}
+```
+
+## Database Optimization Rules
+- Use `select_related()` for foreign key relationships
+- Use `prefetch_related()` for many-to-many and reverse foreign key relationships
+- Add proper database indexes for frequently queried fields
+- Avoid N+1 queries in templates and views
+- Use database aggregation functions instead of Python loops
+
+```
+# Optimized Query Patterns
+# Good: Using select_related
+students = Student.objects.select_related('user', 'course', 'session').all()
+
+# Good: Using prefetch_related
+courses = Course.objects.prefetch_related('subjects', 'students').all()
+
+# Good: Using aggregation
+department_stats = Department.objects.annotate(
+    total_students=Count('courses__students'),
+    avg_attendance=Avg('courses__students__attendance__status')
+)
+```
+
+## Error Handling and Logging
+- Use Django's logging framework for debugging
+- Implement proper exception handling in views
+- Add user-friendly error messages
+- Log security-related events
+
+```
+import logging
+logger = logging.getLogger(__name__)
+
+def safe_view_execution(view_func):
+    def wrapper(request, *args, **kwargs):
+        try:
+            return view_func(request, *args, **kwargs)
+        except Exception as e:
+            logger.error(f"Error in {view_func.__name__}: {str(e)}")
+            messages.error(request, 'An error occurred. Please try again.')
+            return redirect('dashboard')
+    return wrapper
+```
+
+## Testing Guidelines
+- Write unit tests for models and utility functions
+- Create integration tests for complex workflows
+- Test role-based access control
+- Test file upload functionality
+- Use Django's TestCase and Client for testing
+
+Remember to:
+- Always follow Django's security best practices
+- Implement proper data validation at both frontend and backend
+- Use Django's built-in features instead of reinventing solutions
+- Write clean, maintainable, and well-documented code
+- Consider scalability and performance in design decisions
+- Implement proper error handling and user feedback mechanisms

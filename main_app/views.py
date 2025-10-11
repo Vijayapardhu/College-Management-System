@@ -31,8 +31,17 @@ def doLogin(request, **kwargs):
     
     from .otp_utils import create_otp, send_otp_email
     
+    # Check if this is an AJAX request FIRST
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json'
+    
+    print(f"[DEBUG] doLogin called - Is AJAX: {is_ajax}")
+    print(f"[DEBUG] Request headers: X-Requested-With = {request.headers.get('X-Requested-With')}")
+    print(f"[DEBUG] Content-Type: {request.content_type}")
+    
     username_or_id = request.POST.get('email')  # Can be email, roll number, or employee ID
     password = request.POST.get('password')
+    
+    print(f"[DEBUG] Login attempt with: {username_or_id}")
     
     # Try to find user by email, username, or unique ID
     user = EmailBackend.authenticate(request, username=username_or_id, password=password)
@@ -55,10 +64,8 @@ def doLogin(request, **kwargs):
                     user = EmailBackend.authenticate(request, username=staff.admin.email, password=password)
                     
         except Exception as e:
+            print(f"[DEBUG] Error trying alternate auth: {e}")
             pass
-    
-    # Check if this is an AJAX request
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     
     if user is not None:
         # Generate and send OTP
@@ -74,7 +81,10 @@ def doLogin(request, **kwargs):
             # Try to send email
             email_sent = send_otp_email(user, otp.otp_code)
             
-            # AJAX Response
+            print(f"[DEBUG] Email sent: {email_sent}")
+            print(f"[DEBUG] Returning response - AJAX: {is_ajax}")
+            
+            # ALWAYS return JSON for AJAX requests
             if is_ajax:
                 return JsonResponse({
                     'success': True,
@@ -84,7 +94,7 @@ def doLogin(request, **kwargs):
                     'otp_for_testing': otp.otp_code if not email_sent else None
                 })
             
-            # Regular Response (redirect)
+            # Regular Response (redirect) - only for non-AJAX
             if email_sent:
                 messages.success(request, f"✅ OTP has been sent to {user.email}. Please check your email inbox.")
             else:
@@ -93,6 +103,9 @@ def doLogin(request, **kwargs):
             return redirect(reverse("verify_otp"))
                 
         except Exception as e:
+            print(f"[DEBUG] Exception in doLogin: {e}")
+            import traceback
+            traceback.print_exc()
             if is_ajax:
                 return JsonResponse({
                     'success': False,
@@ -101,6 +114,7 @@ def doLogin(request, **kwargs):
             messages.error(request, f"Error: {str(e)}. Please try again.")
             return redirect("/")
     else:
+        print(f"[DEBUG] Authentication failed")
         if is_ajax:
             return JsonResponse({
                 'success': False,
@@ -113,8 +127,25 @@ def doLogin(request, **kwargs):
 
 def verify_otp(request):
     """OTP Verification Page"""
+    # Check if this is an AJAX request
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json'
+    
+    print(f"[DEBUG] verify_otp called - Is AJAX: {is_ajax}")
+    
     if request.user.is_authenticated:
-        # Already logged in, redirect to appropriate dashboard
+        # Already logged in
+        if is_ajax:
+            # Return redirect URL for AJAX
+            if request.user.user_type == '1':
+                return JsonResponse({'success': True, 'redirect_url': reverse("admin_home")})
+            elif request.user.user_type == '2':
+                return JsonResponse({'success': True, 'redirect_url': reverse("staff_home")})
+            elif request.user.user_type == '3':
+                return JsonResponse({'success': True, 'redirect_url': reverse("student_home")})
+            elif request.user.user_type == '4':
+                return JsonResponse({'success': True, 'redirect_url': reverse("management_home")})
+        
+        # Regular redirect for non-AJAX
         if request.user.user_type == '1':
             return redirect(reverse("admin_home"))
         elif request.user.user_type == '2':
@@ -126,7 +157,7 @@ def verify_otp(request):
     
     # Check if there's a pending login
     if 'pending_login_user_id' not in request.session:
-        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        print(f"[DEBUG] No pending login in session")
         if is_ajax:
             return JsonResponse({'success': False, 'message': 'No pending login found'})
         messages.error(request, "No pending login found. Please login again.")
