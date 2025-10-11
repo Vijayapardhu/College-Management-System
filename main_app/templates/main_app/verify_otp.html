@@ -39,18 +39,70 @@
         .card-body {
             padding: 30px;
         }
-        .otp-input {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 15px;
-            padding: 15px;
-            border: 2px solid #667eea;
-            border-radius: 10px;
+        .otp-input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
         }
-        .otp-input:focus {
+        
+        .otp-box {
+            width: 55px;
+            height: 60px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: white;
+            color: #1f2937;
+        }
+        
+        .otp-box:focus {
+            outline: none;
             border-color: #764ba2;
-            box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
+            box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .otp-box.filled {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .otp-box.error {
+            border-color: #ef4444;
+            animation: shake 0.5s;
+        }
+        
+        .otp-separator {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            padding: 0 5px;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        @media (max-width: 576px) {
+            .otp-box {
+                width: 45px;
+                height: 50px;
+                font-size: 22px;
+            }
+            .otp-separator {
+                font-size: 26px;
+            }
+            .otp-input-container {
+                gap: 6px;
+            }
         }
         .btn-verify {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -131,22 +183,72 @@
                     </p>
                 </div>
 
-                <form action="{% url 'verify_otp' %}" method="POST">
+                <form action="{% url 'verify_otp' %}" method="POST" id="otpForm">
                     {% csrf_token %}
+                    
+                    <!-- Hidden input for actual OTP submission -->
+                    <input type="hidden" name="otp_code" id="otp_code_hidden">
+                    
                     <div class="form-group">
-                        <label for="otp_code">Enter 6-Digit OTP Code</label>
-                        <input type="text" 
-                               name="otp_code" 
-                               id="otp_code"
-                               class="form-control otp-input" 
-                               placeholder="000000"
-                               maxlength="6"
-                               pattern="[0-9]{6}"
-                               required
-                               autofocus>
+                        <label for="otp_1" class="text-center d-block mb-3">
+                            <strong>Enter 6-Digit OTP Code</strong>
+                        </label>
+                        
+                        <!-- Modern OTP Input Boxes -->
+                        <div class="otp-input-container">
+                            <input type="text" 
+                                   class="otp-box" 
+                                   id="otp_1" 
+                                   maxlength="1" 
+                                   pattern="[0-9]"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   required>
+                            <input type="text" 
+                                   class="otp-box" 
+                                   id="otp_2" 
+                                   maxlength="1" 
+                                   pattern="[0-9]"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   required>
+                            <input type="text" 
+                                   class="otp-box" 
+                                   id="otp_3" 
+                                   maxlength="1" 
+                                   pattern="[0-9]"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   required>
+                            <span class="otp-separator">-</span>
+                            <input type="text" 
+                                   class="otp-box" 
+                                   id="otp_4" 
+                                   maxlength="1" 
+                                   pattern="[0-9]"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   required>
+                            <input type="text" 
+                                   class="otp-box" 
+                                   id="otp_5" 
+                                   maxlength="1" 
+                                   pattern="[0-9]"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   required>
+                            <input type="text" 
+                                   class="otp-box" 
+                                   id="otp_6" 
+                                   maxlength="1" 
+                                   pattern="[0-9]"
+                                   inputmode="numeric"
+                                   autocomplete="off"
+                                   required>
+                        </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-4">
                         <button type="submit" class="btn btn-primary btn-verify btn-block">
                             <i class="fas fa-check-circle"></i> Verify & Login
                         </button>
@@ -183,46 +285,138 @@
     <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
     
     <script>
-        const otpInput = document.getElementById('otp_code');
+        // OTP Box Management
+        const otpBoxes = document.querySelectorAll('.otp-box');
+        const otpHiddenInput = document.getElementById('otp_code_hidden');
         const verifyButton = document.querySelector('.btn-verify');
-        const otpForm = verifyButton.closest('form');
+        const otpForm = document.getElementById('otpForm');
         
-        // OTP Input: Only allow numbers
-        otpInput.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Visual feedback
-            if (this.value.length === 6) {
-                this.style.borderColor = '#10b981';
-                this.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.3)';
-            } else {
-                this.style.borderColor = '#667eea';
-                this.style.boxShadow = '0 0 10px rgba(102, 126, 234, 0.3)';
-            }
+        // Auto-focus on first box
+        window.addEventListener('load', function() {
+            otpBoxes[0].focus();
         });
-
-        // Auto-submit when 6 digits entered
-        otpInput.addEventListener('input', function(e) {
-            if (this.value.length === 6) {
+        
+        // Handle OTP input and navigation
+        otpBoxes.forEach((box, index) => {
+            // Only allow numbers
+            box.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // Add filled class
+                if (this.value) {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+                
+                // Auto-move to next box
+                if (this.value && index < otpBoxes.length - 1) {
+                    otpBoxes[index + 1].focus();
+                }
+                
+                // Combine all boxes into hidden input
+                combineOTP();
+                
+                // Auto-submit when all 6 digits are entered
+                if (index === 5 && this.value) {
+                    checkAndSubmit();
+                }
+            });
+            
+            // Handle backspace
+            box.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace') {
+                    if (!this.value && index > 0) {
+                        otpBoxes[index - 1].focus();
+                        otpBoxes[index - 1].value = '';
+                        otpBoxes[index - 1].classList.remove('filled');
+                        combineOTP();
+                    }
+                }
+                
+                // Handle paste
+                if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    navigator.clipboard.readText().then(text => {
+                        const digits = text.replace(/[^0-9]/g, '').substring(0, 6);
+                        digits.split('').forEach((digit, i) => {
+                            if (otpBoxes[i]) {
+                                otpBoxes[i].value = digit;
+                                otpBoxes[i].classList.add('filled');
+                            }
+                        });
+                        combineOTP();
+                        if (digits.length === 6) {
+                            otpBoxes[5].focus();
+                            checkAndSubmit();
+                        }
+                    });
+                }
+            });
+            
+            // Handle arrow keys
+            box.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft' && index > 0) {
+                    e.preventDefault();
+                    otpBoxes[index - 1].focus();
+                }
+                if (e.key === 'ArrowRight' && index < otpBoxes.length - 1) {
+                    e.preventDefault();
+                    otpBoxes[index + 1].focus();
+                }
+            });
+        });
+        
+        // Combine OTP from all boxes
+        function combineOTP() {
+            let otp = '';
+            otpBoxes.forEach(box => {
+                otp += box.value;
+            });
+            otpHiddenInput.value = otp;
+            return otp;
+        }
+        
+        // Check if OTP is complete and submit
+        function checkAndSubmit() {
+            const otp = combineOTP();
+            if (otp.length === 6) {
                 // Show loading state
                 verifyButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
                 verifyButton.disabled = true;
                 
-                // Auto-submit after brief delay for better UX
+                // Visual feedback
+                otpBoxes.forEach(box => {
+                    box.style.borderColor = '#10b981';
+                });
+                
+                // Submit form
                 setTimeout(() => {
                     otpForm.submit();
                 }, 500);
             }
-        });
-
-        // Handle manual verify button click
+        }
+        
+        // Manual verify button click
         verifyButton.addEventListener('click', function(e) {
-            if (otpInput.value.length === 6) {
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-                this.disabled = true;
+            e.preventDefault();
+            const otp = combineOTP();
+            
+            if (otp.length !== 6) {
+                // Shake boxes
+                otpBoxes.forEach(box => {
+                    if (!box.value) {
+                        box.classList.add('error');
+                        setTimeout(() => box.classList.remove('error'), 500);
+                    }
+                });
+                alert('Please enter all 6 digits');
+                return;
             }
+            
+            checkAndSubmit();
         });
-
+        
         // Timer countdown
         let timeLeft = 600; // 10 minutes in seconds
         const timerElement = document.getElementById('timer');
@@ -240,7 +434,6 @@
             // Critical at 1 minute
             if (timeLeft <= 60) {
                 timerElement.style.color = '#dc3545';
-                timerElement.classList.add('animate__animated', 'animate__pulse');
             }
             
             // Expired
@@ -248,13 +441,18 @@
                 clearInterval(timerInterval);
                 timerElement.textContent = 'EXPIRED';
                 timerElement.style.color = '#dc3545';
-                otpInput.disabled = true;
+                
+                // Disable all OTP boxes
+                otpBoxes.forEach(box => {
+                    box.disabled = true;
+                    box.style.opacity = '0.5';
+                });
                 verifyButton.disabled = true;
                 
                 // Show expiry message
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-danger mt-3';
-                alertDiv.innerHTML = '<strong>OTP Expired!</strong> Please click "Resend OTP" to get a new code.';
+                alertDiv.innerHTML = '<strong><i class="fas fa-clock"></i> OTP Expired!</strong> Please click "Resend OTP" to get a new code.';
                 document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('.info-box'));
             }
             timeLeft--;
@@ -262,19 +460,6 @@
         
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer(); // Initial call
-
-        // Add keyboard shortcut (Enter key)
-        otpInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && this.value.length === 6) {
-                e.preventDefault();
-                verifyButton.click();
-            }
-        });
-
-        // Focus on input on page load
-        window.addEventListener('load', function() {
-            otpInput.focus();
-        });
     </script>
 </body>
 </html>

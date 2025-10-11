@@ -62,22 +62,28 @@ def doLogin(request, **kwargs):
                 ip_address = request.META.get('REMOTE_ADDR')
                 otp = create_otp(user, ip_address)
                 
-                if send_otp_email(user, otp.otp_code):
-                    # Store user ID in session temporarily
-                    request.session['pending_login_user_id'] = user.id
-                    request.session['otp_sent_time'] = str(otp.created_at)
-                    
-                    messages.success(request, f"OTP has been sent to {user.email}. Please check your email.")
-                    return redirect(reverse("verify_otp"))
+                # Store user ID in session first (before email attempt)
+                request.session['pending_login_user_id'] = user.id
+                request.session['otp_sent_time'] = str(otp.created_at)
+                request.session['otp_code_temp'] = otp.otp_code  # Store OTP temporarily for debugging
+                
+                # Try to send email
+                email_sent = send_otp_email(user, otp.otp_code)
+                
+                if email_sent:
+                    messages.success(request, f"✅ OTP has been sent to {user.email}. Please check your email inbox.")
                 else:
-                    messages.error(request, "Failed to send OTP. Please try again later.")
-                    return redirect("/")
+                    # Still redirect to OTP page but show warning
+                    messages.warning(request, f"⚠️ Email sending failed. For testing, use OTP: {otp.otp_code} (This will be removed in production)")
+                
+                # Always redirect to OTP verification page
+                return redirect(reverse("verify_otp"))
                     
             except Exception as e:
-                messages.error(request, f"Error sending OTP: {str(e)}")
+                messages.error(request, f"Error: {str(e)}. Please try again.")
                 return redirect("/")
         else:
-            messages.error(request, "Invalid Email/ID or Password")
+            messages.error(request, "❌ Invalid Email/ID or Password. Please try again.")
             return redirect("/")
 
 
