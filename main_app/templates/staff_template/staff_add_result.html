@@ -1,82 +1,183 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    .page-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 20px 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: #003d82;
+        color: white;
+        padding: 20px 25px;
+        border: none;
+    }
+
+    .result-form-container {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        margin-top: 20px;
+        display: none;
+    }
+
+    .result-form-container.active {
+        display: block;
+    }
+</style>
+{% endblock custom_css %}
+
 {% block content %}
 
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-user-tie me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0;">
+                        <i class="fas fa-chart-line me-2"></i>{{page_title}}
+                    </h2>
+                    <p style="font-size: 14px; color: #4a5568; margin: 5px 0 0 0;">
+                        Enter internal and external marks for students
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'bulk_marks_import' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-file-upload me-1"></i>Bulk Import
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
-                    <form method="POST">
-                        {% csrf_token %}
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-
-       
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
-
-
-                        <div class="form-group">
-                            <label>Subject</label>
-                            <select name="subject" class="form-control" id='subject'>
-                                <option value="">----</option>
-                                {% for subject in subjects  %}
-                                <option value="{{subject.id}}">{{subject.name}}</option>
-                                {% endfor %}
-                            </select>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="result-card">
+                        <div class="card-header-custom">
+                            <h3 style="font-size: 18px; font-weight: 600; margin: 0;">Select Subject and Session</h3>
                         </div>
 
+                        <div style="padding: 25px;">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                        Subject <span class="text-danger">*</span>
+                                    </label>
+                                    <select name="subject" class="form-select" id='subject' required>
+                                        <option value="">Select Subject</option>
+                                        {% for subject in subjects %}
+                                        <option value="{{subject.id}}">{{subject.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
 
-                        <div class="form-group">
-                            <label>Session Year</label>
-                            <select name="session" id='session' class="form-control">
-                                <option value="">----</option>
-                                {% for session in sessions  %}
-                                <option value="{{session.id}}">{{session}} </option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                        Session Year <span class="text-danger">*</span>
+                                    </label>
+                                    <select name="session" id='session' class="form-select" required>
+                                        <option value="">Select Session</option>
+                                        {% for session in sessions %}
+                                        <option value="{{session.id}}">{{session}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
 
+                            <div class="text-center">
+                                <button type="button" id='fetch_student' class="btn btn-professional-primary">
+                                    <i class="fas fa-users me-2"></i>Fetch Students
+                                </button>
+                            </div>
 
-                    </div>
-                    <!-- /.card-body -->
+                            <!-- Result Entry Form -->
+                            <div class="result-form-container" id="result_form">
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                            Select Student <span class="text-danger">*</span>
+                                        </label>
+                                        <select class='form-select' name='student_list' id='student_list' required>
+                                            <option value="">Choose student...</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                    <div class="card-footer">
-                        <button type="button" id='fetch_student' class="btn btn-primary btn-block">Fetch
-                            Students</button>
-                        <div class="form-group" id="student_data">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                            Internal Marks (Max 30) <span class="text-danger">*</span>
+                                        </label>
+                                        <input class='form-control' name='test' placeholder='Enter internal marks' max='30' min='0' required type='number' step='0.01' />
+                                        <small class="text-muted">Tests, quizzes, attendance marks</small>
+                                    </div>
 
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                            External Marks (Max 70) <span class="text-danger">*</span>
+                                        </label>
+                                        <input class='form-control' placeholder='Enter external marks' name='exam' max='70' min='0' required type='number' step='0.01' />
+                                        <small class="text-muted">Final examination marks</small>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mt-3">
+                                    <button type='submit' class='btn btn-success btn-lg'>
+                                        <i class='fas fa-save me-2'></i>Save Result
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
-                </div>
-                <!-- /.card -->
-
             </div>
         </div>
     </div>
 </section>
 {% endblock content %}
 
-
 {% block custom_js %}
 <script>
     $(document).ready(function () {
-
-       
         $("#fetch_student").click(function () {
-            var subject = $("#subject").val()
-            var session = $("#session").val()
-            $("#student_data").html(null)
-if (subject.length  == 0 || session.length == 0){
-    alert("Please select session and subject");
-    return false;
-}
+            var subject = $("#subject").val();
+            var session = $("#session").val();
+            
+            if (subject.length == 0 || session.length == 0){
+                window.toast.error("Please select both subject and session");
+                return false;
+            }
+            
+            window.loader.showPageLoader('Loading students...');
+            
             $.ajax({
                 url: "{% url 'get_students' %}",
                 type: 'POST',
@@ -85,27 +186,26 @@ if (subject.length  == 0 || session.length == 0){
                     session: session
                 }
             }).done(function (response) {
-                var json_data = JSON.parse(response)
+                window.loader.hidePageLoader();
+                var json_data = JSON.parse(response);
+                
                 if (json_data.length < 1) {
-                    alert("No data to display")
+                    window.toast.error("No students found");
                 } else {
-                    var div_data = "<hr/><div class='form-group'> <label> Student List</label> <select class='student_list form-control' name='student_list'> "
-
+                    // Populate student dropdown
+                    var options = "<option value=''>Choose student...</option>";
                     for (key in json_data) {
-                        div_data += "<option value='" + json_data[key]['id'] + "'>" + json_data[key]['name'] + " </option>"
+                        options += "<option value='" + json_data[key]['id'] + "'>" + json_data[key]['name'] + "</option>";
                     }
-                    div_data += "</select></div>"
-                    div_data += "<div class='form-group row'> <div class='col-md-6'> <label> Test Score </label> <input class='form-control' name='test' placeholder='Test Score' max='40' min='0' required type='number' /></div><div class='col-md-6'><label> Exam Score </label>  <input class='form-control' placeholder='Exam Score'  name='exam' max='60' min='0' required type='number' /> </div></div><div class='form-group'><button id='save_attendance' class='btn btn-success' type='submit'>Save Result</button></div></div>"
-                    $("#student_data").html(div_data)
+                    $("#student_list").html(options);
+                    $("#result_form").addClass('active');
+                    window.toast.success(json_data.length + ' students loaded');
                 }
             }).fail(function (response) {
-                alert("Error in fetching students")
-            })
-
-
-
-
-        })
-    })
+                window.loader.hidePageLoader();
+                window.toast.error("Error fetching students");
+            });
+        });
+    });
 </script>
 {% endblock custom_js %}

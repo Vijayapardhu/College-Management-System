@@ -3,21 +3,51 @@
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block content %}
-
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Add Course"%}
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                        <i class="fas fa-graduation-cap me-2"></i>{{page_title}}
+                    </h2>
+                    <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                        Create a new course or program
+                    </p>
                 </div>
-                <!-- /.card -->
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'manage_course' %}" class="btn btn-professional-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Courses
+                    </a>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">Course Details</h3>
+                    </div>
+                    <div class="card-body-professional">
+                        {% include "main_app/form_template.html" with messages=messages form=form button_text="Add Course"%}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="alert-professional-info">
+                    <h6 style="color: #0369a1; font-weight: 600; margin-bottom: 10px;">
+                        <i class="fas fa-info-circle me-2"></i>Course Guidelines
+                    </h6>
+                    <ul style="font-size: 13px; padding-left: 20px; margin: 0;">
+                        <li>Provide clear course name</li>
+                        <li>Add unique course code</li>
+                        <li>Specify duration in years</li>
+                        <li>Assign to department if applicable</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

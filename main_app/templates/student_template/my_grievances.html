@@ -1,115 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}My Grievances{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-warning">
-                <h3 class="card-title"><i class="fas fa-list"></i> My Grievances</h3>
-                <div class="card-tools">
-                    <a href="{% url 'student_submit_grievance' %}" class="btn btn-dark btn-sm">
-                        <i class="fas fa-plus"></i> New Grievance
-                    </a>
-                </div>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-exclamation-circle me-2"></i>My Grievances
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Track status of your submitted grievances
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <div class="card-body">
-                {% if grievances %}
-                {% for grievance in grievances %}
-                <div class="card mb-3 {% if grievance.status == 'resolved' %}border-success{% elif grievance.status == 'rejected' %}border-danger{% else %}border-warning{% endif %}">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h5 class="mb-0">
-                                    {{ grievance.subject }}
-                                    <small class="text-muted">#{{ grievance.grievance_number }}</small>
-                                </h5>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                {% if grievance.status == 'resolved' %}
-                                    <span class="badge badge-success p-2">
-                                        <i class="fas fa-check-circle"></i> {{ grievance.get_status_display }}
-                                    </span>
-                                {% elif grievance.status == 'rejected' %}
-                                    <span class="badge badge-danger p-2">
-                                        <i class="fas fa-times-circle"></i> {{ grievance.get_status_display }}
-                                    </span>
-                                {% elif grievance.status == 'in_progress' %}
-                                    <span class="badge badge-info p-2">
-                                        <i class="fas fa-sync"></i> {{ grievance.get_status_display }}
-                                    </span>
-                                {% else %}
-                                    <span class="badge badge-warning p-2">
-                                        <i class="fas fa-clock"></i> {{ grievance.get_status_display }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-4">
-                                <small class="text-muted">Type:</small><br>
-                                <span class="badge badge-secondary">{{ grievance.get_grievance_type_display }}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-muted">Priority:</small><br>
-                                {% if grievance.priority == 'urgent' %}
-                                    <span class="badge badge-danger">{{ grievance.get_priority_display }}</span>
-                                {% elif grievance.priority == 'high' %}
-                                    <span class="badge badge-warning">{{ grievance.get_priority_display }}</span>
-                                {% else %}
-                                    <span class="badge badge-info">{{ grievance.get_priority_display }}</span>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-muted">Submitted:</small><br>
-                                <strong>{{ grievance.submitted_at|date:"d M Y" }}</strong>
-                            </div>
-                        </div>
-                        
-                        <hr>
-                        
-                        <p><strong>Description:</strong></p>
-                        <p>{{ grievance.description }}</p>
-                        
-                        {% if grievance.attachment %}
-                        <p>
-                            <i class="fas fa-paperclip"></i>
-                            <a href="{{ grievance.attachment.url }}" target="_blank">View Attachment</a>
-                        </p>
-                        {% endif %}
-                        
-                        {% if grievance.assigned_to %}
-                        <div class="alert alert-info p-2">
-                            <strong><i class="fas fa-user-tie"></i> Assigned to:</strong> {{ grievance.assigned_to }}
-                        </div>
-                        {% endif %}
-                        
-                        {% if grievance.resolution %}
-                        <div class="alert alert-success">
-                            <strong><i class="fas fa-check"></i> Resolution:</strong><br>
-                            {{ grievance.resolution }}
-                            {% if grievance.resolved_at %}
-                            <br><small class="text-muted">Resolved on: {{ grievance.resolved_at|date:"d M Y, h:i A" }}</small>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    </div>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
-                {% endfor %}
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> You haven't submitted any grievances yet.
-                    <a href="{% url 'student_submit_grievance' %}">Submit your first grievance</a>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

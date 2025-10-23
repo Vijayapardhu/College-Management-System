@@ -131,7 +131,7 @@ def verify_otp(request):
         if is_ajax:
             # Return redirect URL for AJAX
             if request.user.user_type == '1':
-                return JsonResponse({'success': True, 'redirect_url': reverse("admin_home")})
+                return JsonResponse({'success': True, 'redirect_url': reverse("hod_home")})
             elif request.user.user_type == '2':
                 return JsonResponse({'success': True, 'redirect_url': reverse("staff_home")})
             elif request.user.user_type == '3':
@@ -141,7 +141,7 @@ def verify_otp(request):
         
         # Regular redirect for non-AJAX
         if request.user.user_type == '1':
-            return redirect(reverse("admin_home"))
+            return redirect(reverse("hod_home"))
         elif request.user.user_type == '2':
             return redirect(reverse("staff_home"))
         elif request.user.user_type == '3':
@@ -193,7 +193,7 @@ def verify_otp(request):
                 
                 # Determine redirect URL
                 if user.user_type == '1':
-                    redirect_url = reverse("admin_home")
+                    redirect_url = reverse("hod_home")
                 elif user.user_type == '2':
                     redirect_url = reverse("staff_home")
                 elif user.user_type == '3':

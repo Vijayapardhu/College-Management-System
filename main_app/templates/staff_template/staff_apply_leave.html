@@ -3,54 +3,84 @@
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block content %}
-
 <section class="content">
     <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-calendar-times me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Apply for leave and track your leave applications
+            </p>
+        </div>
+
         <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
+            <!-- Leave Application Form -->
+            <div class="col-lg-6">
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">Apply for Leave</h3>
                     </div>
-
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Apply For Leave"%}
+                    <div class="card-body-professional">
+                        {% include "main_app/form_template.html" with messages=messages form=form button_text="Submit Application"%}
+                    </div>
                 </div>
-                <!-- /.card -->
-<div class="card card-primary">
-    <div class="card-header"><h3 class="card-title">{{page_title}}</h3>
-   <div class="table">
+            </div>
 
-       <table class="table table-bordered">
-           <tr>
-               <th>ID</th>
-               <th>Date</th>
-               <th>Message</th>
-            <th>Status</th>
-        </tr>
-        {% for leave in leave_history %}
-        <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{leave.date}}</td>
-              <td>{{leave.message}}</td>
-              <td>
-                  
-                  {% if leave.status == 0 %}
-                  <span class="badge badge-warning">Pending</span>
-                  {% elif leave.status == 1 %}
-                  <span class="badge badge-success">Accepted</span>
-                  
-                    {% else %}
-                    <span class="badge badge-danger">Rejected</span>
-                    
-                    {% endif %}
-                    
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    </div>
+            <!-- Leave History -->
+            <div class="col-lg-6">
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">Leave History</h3>
+                    </div>
+                    <div style="padding: 0;">
+                        {% if leave_history %}
+                        <div class="table-responsive">
+                            <table class="table table-professional mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Date</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for leave in leave_history %}
+                                    <tr>
+                                        <td><strong>{{forloop.counter}}</strong></td>
+                                        <td>{{leave.date|date:"d M Y"}}</td>
+                                        <td>{{leave.message|truncatewords:10}}</td>
+                                        <td>
+                                            {% if leave.status == 0 %}
+                                            <span class="badge-professional-warning">
+                                                <i class="fas fa-clock me-1"></i>Pending
+                                            </span>
+                                            {% elif leave.status == 1 %}
+                                            <span class="badge-professional-success">
+                                                <i class="fas fa-check me-1"></i>Approved
+                                            </span>
+                                            {% else %}
+                                            <span class="badge-professional-danger">
+                                                <i class="fas fa-times me-1"></i>Rejected
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="empty-state-professional">
+                            <i class="fas fa-calendar-day"></i>
+                            <h4>No Leave Applications</h4>
+                            <p>You haven't applied for any leave yet</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -60,13 +60,57 @@ def staff_upload_material(request):
 
 
 def staff_view_materials(request):
-    """View all materials uploaded by staff"""
+    """View all materials uploaded by staff with search and filters"""
     staff = get_object_or_404(Staff, admin=request.user)
-    materials = StudyMaterial.objects.filter(uploaded_by=staff, is_archived=False).order_by('-created_at')
+    
+    # Get filter parameters
+    search_query = request.GET.get('q', '')
+    material_type = request.GET.get('type', '')
+    subject_id = request.GET.get('subject', '')
+    
+    # Base query
+    materials = StudyMaterial.objects.filter(uploaded_by=staff, is_archived=False)
+    
+    # Apply filters
+    if search_query:
+        materials = materials.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(tags__icontains=search_query)
+        )
+    
+    if material_type:
+        materials = materials.filter(material_type=material_type)
+    
+    if subject_id:
+        materials = materials.filter(subject_id=subject_id)
+    
+    materials = materials.select_related('subject', 'course').order_by('-created_at')
+    
+    # Statistics
+    total_materials = materials.count()
+    total_downloads = sum(m.download_count for m in materials if hasattr(m, 'download_count'))
+    avg_rating = materials.aggregate(Avg('rating'))['rating__avg'] or 0
+    
+    # Get subjects for filter
+    subjects = Subject.objects.filter(staff=staff)
+    
+    # Pagination
+    from django.core.paginator import Paginator
+    paginator = Paginator(materials, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     context = {
         'page_title': 'My Study Materials',
-        'materials': materials,
+        'materials': page_obj,
+        'subjects': subjects,
+        'search_query': search_query,
+        'selected_type': material_type,
+        'selected_subject': subject_id,
+        'total_materials': total_materials,
+        'total_downloads': total_downloads,
+        'avg_rating': round(avg_rating, 2),
     }
     
     return render(request, 'staff_template/view_materials.html', context)
@@ -320,8 +364,9 @@ def download_material(request, material_id):
         )
         
         # Increment download count
-        material.download_count += 1
-        material.save()
+        if hasattr(material, 'download_count'):
+            material.download_count += 1
+            material.save()
         
         # Return file
         if material.file:
@@ -334,6 +379,69 @@ def download_material(request, material_id):
     except Exception as e:
         messages.error(request, f"Error downloading file: {str(e)}")
         return redirect('student_view_resources')
+
+
+def bulk_download_materials(request):
+    """Download multiple study materials as ZIP"""
+    from django.http import HttpResponse
+    import zipfile
+    from io import BytesIO
+    from datetime import datetime
+    
+    if request.method == 'POST':
+        material_ids = request.POST.getlist('material_ids')
+        
+        if not material_ids:
+            messages.error(request, 'No materials selected for download')
+            return redirect('student_view_resources')
+        
+        try:
+            student = Student.objects.get(admin=request.user)
+            materials = StudyMaterial.objects.filter(
+                id__in=material_ids,
+                course=student.course
+            )
+            
+            if not materials.exists():
+                messages.error(request, 'No valid materials found')
+                return redirect('student_view_resources')
+            
+            # Create ZIP file
+            zip_buffer = BytesIO()
+            
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                for material in materials:
+                    if material.file:
+                        try:
+                            # Read file content
+                            file_content = material.file.read()
+                            
+                            # Add to zip with organized folder structure
+                            subject_name = material.subject.name if material.subject else 'General'
+                            zip_path = f"{subject_name}/{material.title}_{material.id}{os.path.splitext(material.file.name)[1]}"
+                            zip_file.writestr(zip_path, file_content)
+                            
+                            # Log download
+                            ResourceDownloadLog.objects.create(
+                                material=material,
+                                user=request.user,
+                                ip_address=request.META.get('REMOTE_ADDR')
+                            )
+                        except Exception as e:
+                            print(f"Error adding {material.title} to zip: {str(e)}")
+            
+            zip_buffer.seek(0)
+            
+            response = HttpResponse(zip_buffer, content_type='application/zip')
+            response['Content-Disposition'] = f'attachment; filename="study_materials_{datetime.now().strftime("%Y%m%d_%H%M%S")}.zip"'
+            
+            return response
+            
+        except Exception as e:
+            messages.error(request, f'Error creating download: {str(e)}')
+            return redirect('student_view_resources')
+    
+    return redirect('student_view_resources')
 
 
 def student_view_assignments(request):
@@ -720,6 +828,9 @@ def reply_discussion(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
     
     return JsonResponse({'status': 'error'})
+
+
+
 
 
 

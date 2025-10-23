@@ -1,0 +1,427 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .upload-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .upload-zone {
+        border: 2px dashed #d4d4d4;
+        border-radius: 4px;
+        padding: 50px 30px;
+        text-align: center;
+        background: #fafafa;
+        transition: all 0.2s ease;
+        margin-bottom: 25px;
+    }
+
+    .upload-zone:hover {
+        border-color: #003d82;
+        background: #f5f5f5;
+    }
+
+    .upload-zone.dragover {
+        border-color: #003d82;
+        background: #e6f2ff;
+        border-style: solid;
+    }
+
+    .file-preview {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .file-preview.active {
+        display: block;
+    }
+
+    .category-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .category-option {
+        border: 2px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: white;
+    }
+
+    .category-option:hover {
+        border-color: #003d82;
+        background: #f5f5f5;
+    }
+
+    .category-option.selected {
+        border-color: #003d82;
+        background: #e6f2ff;
+    }
+
+    .category-option i {
+        font-size: 32px;
+        color: #003d82;
+        margin-bottom: 10px;
+    }
+
+    .category-option input[type="radio"] {
+        display: none;
+    }
+
+    .help-text {
+        background: #e6f2ff;
+        border-left: 4px solid #0369a1;
+        padding: 15px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #4a5568;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin-bottom: 5px;">
+                    <i class="fas fa-cloud-upload-alt me-2"></i>{{ page_title }}
+                </h2>
+                <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                    Add a new document to your digital locker
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="upload-card">
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        {% csrf_token %}
+
+                        <!-- Document Title -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                Document Title <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="title" 
+                                   class="form-control" 
+                                   placeholder="e.g., 10th Grade Certificate"
+                                   required
+                                   maxlength="200">
+                            <small class="text-muted">Give your document a clear, descriptive name</small>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" style="font-weight: 600; color: #1a202c; margin-bottom: 15px;">
+                                Document Category <span class="text-danger">*</span>
+                            </label>
+                            <div class="category-selector">
+                                {% for category_key, category_info in categories.items %}
+                                <label class="category-option" onclick="selectCategory(this, '{{ category_key }}')">
+                                    <input type="radio" name="category" value="{{ category_key }}" required>
+                                    <i class="{{ category_info.icon }}"></i>
+                                    <div style="font-size: 13px; font-weight: 600; color: #1a202c;">
+                                        {{ category_info.name }}
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            <div id="categoryHelp" class="help-text" style="display: none;">
+                                <strong>Allowed file types:</strong> <span id="allowedTypes"></span><br>
+                                <strong>Maximum size:</strong> <span id="maxSize"></span>
+                            </div>
+                        </div>
+
+                        <!-- File Upload -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                Upload File <span class="text-danger">*</span>
+                            </label>
+                            <div class="upload-zone" id="uploadZone">
+                                <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                                <h5 style="color: #1a202c;">Drop file here or click to browse</h5>
+                                <p class="text-muted">Select a category first to see allowed file types</p>
+                                <input type="file" 
+                                       name="file" 
+                                       id="fileInput" 
+                                       class="form-control" 
+                                       required
+                                       style="display: none;">
+                                <button type="button" class="btn btn-outline-primary mt-3" id="browseBtn" disabled>
+                                    <i class="fas fa-folder-open me-2"></i>Browse Files
+                                </button>
+                            </div>
+                            <div class="file-preview" id="filePreview">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file fa-2x text-primary me-3"></i>
+                                    <div class="flex-grow-1">
+                                        <div id="fileName" style="font-weight: 600; color: #1a202c;"></div>
+                                        <div id="fileSize" style="font-size: 13px; color: #4a5568;"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="clearFile()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                Description (Optional)
+                            </label>
+                            <textarea name="description" 
+                                      class="form-control" 
+                                      rows="3"
+                                      placeholder="Add any additional information about this document"
+                                      maxlength="500"></textarea>
+                            <small class="text-muted">0/500 characters</small>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="form-group mb-4">
+                            <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                Tags (Optional)
+                            </label>
+                            <input type="text" 
+                                   name="tags" 
+                                   class="form-control" 
+                                   placeholder="e.g., important, semester-1, mathematics"
+                                   maxlength="200">
+                            <small class="text-muted">Separate tags with commas for easy searching</small>
+                        </div>
+
+                        <!-- Important Flag -->
+                        <div class="form-group mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" 
+                                       name="is_important" 
+                                       id="isImportant" 
+                                       class="form-check-input">
+                                <label class="form-check-label" for="isImportant">
+                                    <i class="fas fa-star text-warning"></i>
+                                    Mark as Important Document
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="text-end">
+                            <a href="{% url 'student_document_locker' %}" class="btn btn-professional-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-professional-primary" id="submitBtn">
+                                <i class="fas fa-upload me-2"></i>Upload Document
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar - Instructions -->
+            <div class="col-lg-4">
+                <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                    <h6 style="color: #1a202c; font-weight: 600; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle me-2"></i>Upload Guidelines
+                    </h6>
+                    <ol style="font-size: 14px; color: #4a5568; padding-left: 20px;">
+                        <li class="mb-2">Choose appropriate category for your document</li>
+                        <li class="mb-2">Provide a clear, descriptive title</li>
+                        <li class="mb-2">Ensure file type and size meet requirements</li>
+                        <li class="mb-2">Add tags to make documents easily searchable</li>
+                        <li class="mb-2">Mark important documents with star flag</li>
+                        <li>Maximum storage limit: 1GB per student</li>
+                    </ol>
+                </div>
+
+                <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 15px; margin-top: 20px;">
+                    <h6 style="color: #856404; font-weight: 600; margin-bottom: 10px;">
+                        <i class="fas fa-shield-alt me-2"></i>Security Features
+                    </h6>
+                    <ul style="font-size: 13px; color: #856404; padding-left: 20px; margin: 0;">
+                        <li>All files are encrypted during storage</li>
+                        <li>SHA-256 hash for integrity verification</li>
+                        <li>QR code for document authentication</li>
+                        <li>Access logs maintained for security</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+const categories = {{ categories|safe }};
+let selectedCategory = null;
+
+// Category selection
+function selectCategory(element, categoryKey) {
+    // Remove selected class from all
+    document.querySelectorAll('.category-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    // Add selected to clicked
+    element.classList.add('selected');
+    selectedCategory = categoryKey;
+    
+    // Enable file upload
+    document.getElementById('browseBtn').disabled = false;
+    document.getElementById('fileInput').disabled = false;
+    
+    // Show help text with allowed types
+    const categoryInfo = categories[categoryKey];
+    document.getElementById('allowedTypes').textContent = categoryInfo.allowed_types.join(', ');
+    document.getElementById('maxSize').textContent = categoryInfo.max_size_mb + ' MB';
+    document.getElementById('categoryHelp').style.display = 'block';
+    
+    // Update file input accept attribute
+    document.getElementById('fileInput').setAttribute('accept', categoryInfo.allowed_types.join(','));
+}
+
+// File input handling
+const fileInput = document.getElementById('fileInput');
+const uploadZone = document.getElementById('uploadZone');
+const filePreview = document.getElementById('filePreview');
+const browseBtn = document.getElementById('browseBtn');
+
+browseBtn.addEventListener('click', () => {
+    if (!selectedCategory) {
+        window.toast.error('Please select a category first');
+        return;
+    }
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', function(e) {
+    if (this.files.length > 0) {
+        const file = this.files[0];
+        
+        // Validate size
+        const maxSize = categories[selectedCategory].max_size_mb * 1024 * 1024;
+        if (file.size > maxSize) {
+            window.toast.error(`File size exceeds ${categories[selectedCategory].max_size_mb}MB limit`);
+            this.value = '';
+            return;
+        }
+        
+        // Validate extension
+        const ext = '.' + file.name.split('.').pop().toLowerCase();
+        if (!categories[selectedCategory].allowed_types.includes(ext)) {
+            window.toast.error(`File type ${ext} not allowed for this category`);
+            this.value = '';
+            return;
+        }
+        
+        // Show preview
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        filePreview.classList.add('active');
+        window.toast.success('File selected successfully');
+    }
+});
+
+// Drag and drop
+uploadZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    if (selectedCategory) {
+        this.classList.add('dragover');
+    }
+});
+
+uploadZone.addEventListener('dragleave', function(e) {
+    this.classList.remove('dragover');
+});
+
+uploadZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+    
+    if (!selectedCategory) {
+        window.toast.error('Please select a category first');
+        return;
+    }
+    
+    if (e.dataTransfer.files.length > 0) {
+        fileInput.files = e.dataTransfer.files;
+        fileInput.dispatchEvent(new Event('change'));
+    }
+});
+
+function clearFile() {
+    fileInput.value = '';
+    filePreview.classList.remove('active');
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+// Character counter for description
+document.querySelector('textarea[name="description"]').addEventListener('input', function() {
+    const count = this.value.length;
+    this.nextElementSibling.textContent = `${count}/500 characters`;
+});
+
+// Form submission
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    if (!selectedCategory) {
+        e.preventDefault();
+        window.toast.error('Please select a category');
+        return false;
+    }
+    
+    const submitBtn = document.getElementById('submitBtn');
+    if (this.checkValidity()) {
+        window.loader.showButtonLoading(submitBtn, 'Uploading...');
+    }
+});
+
+// Convert categories to JavaScript object
+const categoriesData = JSON.parse('{{ categories|escapejs }}');
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

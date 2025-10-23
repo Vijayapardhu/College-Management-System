@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 
@@ -223,20 +224,6 @@ class Student(models.Model):
     tenth_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     tenth_cgpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     
-    twelfth_board = models.CharField(max_length=100, blank=True, verbose_name="12th Board")
-    twelfth_school = models.CharField(max_length=200, blank=True, verbose_name="12th School Name")
-    twelfth_year = models.IntegerField(null=True, blank=True, verbose_name="12th Passing Year")
-    twelfth_marks_total = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
-    twelfth_marks_obtained = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
-    twelfth_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    twelfth_cgpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
-    
-    # Diploma Details (for lateral entry)
-    diploma_college = models.CharField(max_length=200, blank=True)
-    diploma_branch = models.CharField(max_length=100, blank=True)
-    diploma_year = models.IntegerField(null=True, blank=True)
-    diploma_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    diploma_cgpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     
     # Entrance Exam Details
     entrance_exam_name = models.CharField(max_length=100, blank=True, help_text="E.g., JEE Main, EAMCET, GATE")
@@ -249,14 +236,19 @@ class Student(models.Model):
     photo = models.ImageField(upload_to='student_photos/', blank=True, null=True)
     signature = models.ImageField(upload_to='student_signatures/', blank=True, null=True)
     tenth_certificate = models.FileField(upload_to='certificates/10th/', blank=True, null=True)
-    twelfth_certificate = models.FileField(upload_to='certificates/12th/', blank=True, null=True)
-    diploma_certificate = models.FileField(upload_to='certificates/diploma/', blank=True, null=True)
     transfer_certificate = models.FileField(upload_to='certificates/tc/', blank=True, null=True)
     migration_certificate = models.FileField(upload_to='certificates/migration/', blank=True, null=True)
     character_certificate = models.FileField(upload_to='certificates/character/', blank=True, null=True)
     caste_certificate = models.FileField(upload_to='certificates/caste/', blank=True, null=True)
     income_certificate = models.FileField(upload_to='certificates/income/', blank=True, null=True)
     disability_certificate = models.FileField(upload_to='certificates/disability/', blank=True, null=True)
+    
+    # Additional Required Documents
+    aadhaar_card = models.FileField(upload_to='documents/aadhaar/', blank=True, null=True)
+    pan_card = models.FileField(upload_to='documents/pan/', blank=True, null=True)
+    bank_passbook = models.FileField(upload_to='documents/bank_passbook/', blank=True, null=True)
+    birth_certificate = models.FileField(upload_to='documents/birth/', blank=True, null=True)
+    entrance_exam_scorecard = models.FileField(upload_to='documents/entrance/', blank=True, null=True)
     
     # Status & Graduation
     student_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
@@ -272,6 +264,31 @@ class Student(models.Model):
     bank_ifsc_code = models.CharField(max_length=20, blank=True)
     bank_name = models.CharField(max_length=100, blank=True)
     
+    # Additional Required Fields for College Enrollment
+    pan_number = models.CharField(max_length=10, blank=True, help_text="Permanent Account Number")
+    
+    # Medical Information
+    medical_conditions = models.TextField(blank=True, help_text="Any medical conditions or allergies")
+    
+    # Language Proficiency
+    mother_tongue = models.CharField(max_length=50, blank=True)
+    
+    # Extracurricular Activities
+    hobbies = models.TextField(blank=True)
+    achievements = models.TextField(blank=True, help_text="Academic and extracurricular achievements")
+    
+    # Admission Specific
+    admission_mode = models.CharField(max_length=20, choices=[('Direct', 'Direct'), ('Merit', 'Merit'), ('Management', 'Management'), ('NRI', 'NRI'), ('Sports', 'Sports'), ('Cultural', 'Cultural')], default='Merit')
+    admission_quota = models.CharField(max_length=20, choices=[('General', 'General'), ('SC', 'SC'), ('ST', 'ST'), ('OBC', 'OBC'), ('EWS', 'EWS'), ('PH', 'PH'), ('NRI', 'NRI')], default='General')
+    admission_fee_paid = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    admission_date = models.DateField(null=True, blank=True)
+    
+    # Verification Status
+    documents_verified = models.BooleanField(default=False)
+    fee_paid = models.BooleanField(default=False)
+    library_card_issued = models.BooleanField(default=False)
+    id_card_issued = models.BooleanField(default=False)
+    
     # Emergency Contact
     emergency_contact_name = models.CharField(max_length=200, blank=True)
     emergency_contact_relation = models.CharField(max_length=50, blank=True)
@@ -282,6 +299,18 @@ class Student(models.Model):
     
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['roll_number'], name='student_roll_number_idx'),
+            models.Index(fields=['admission_number'], name='student_admission_number_idx'),
+            models.Index(fields=['course', 'session'], name='student_course_session_idx'),
+            models.Index(fields=['admission_year'], name='student_admission_year_idx'),
+            models.Index(fields=['current_semester'], name='student_current_semester_idx'),
+            models.Index(fields=['mobile_number'], name='student_mobile_number_idx'),
+            models.Index(fields=['aadhaar_number'], name='student_aadhaar_number_idx'),
+            models.Index(fields=['student_status'], name='student_status_idx'),
+        ]
     
     @property
     def full_name(self):
@@ -295,9 +324,6 @@ class Student(models.Model):
             return today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
         return None
     
-    @property
-    def is_lateral_entry(self):
-        return bool(self.diploma_college)
 
 
 class Staff(models.Model):
@@ -380,6 +406,16 @@ class Staff(models.Model):
     def __str__(self):
         return self.admin.last_name + " " + self.admin.first_name
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['employee_id'], name='staff_employee_id_idx'),
+            models.Index(fields=['department'], name='staff_department_idx'),
+            models.Index(fields=['designation'], name='staff_designation_idx'),
+            models.Index(fields=['mobile_number'], name='staff_mobile_number_idx'),
+            models.Index(fields=['aadhaar_number'], name='staff_aadhaar_number_idx'),
+            models.Index(fields=['date_of_joining'], name='staff_joining_date_idx'),
+        ]
+    
     @property
     def full_name(self):
         return f"{self.admin.first_name} {self.admin.last_name}"
@@ -406,6 +442,15 @@ class Attendance(models.Model):
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['date'], name='attendance_date_idx'),
+            models.Index(fields=['subject', 'date'], name='attendance_subject_date_idx'),
+            models.Index(fields=['session', 'date'], name='attendance_session_date_idx'),
+            models.Index(fields=['created_at'], name='attendance_created_at_idx'),
+        ]
+        unique_together = ['subject', 'date', 'session']
 
 
 class AttendanceReport(models.Model):
@@ -891,7 +936,9 @@ class FeePayment(models.Model):
     payment_date = models.DateField()
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD, default='online')
     transaction_id = models.CharField(max_length=100, blank=True)
+    payment_gateway = models.CharField(max_length=50, blank=True, help_text="Razorpay, PayU, etc.")
     receipt_number = models.CharField(max_length=50, unique=True)
+    payment_proof = models.FileField(upload_to='payment_proofs/%Y/%m/%d/', blank=True, null=True)
     
     status = models.CharField(max_length=20, choices=PAYMENT_STATUS, default='pending')
     remarks = models.TextField(blank=True)
@@ -901,9 +948,109 @@ class FeePayment(models.Model):
     
     class Meta:
         ordering = ['-payment_date']
+        indexes = [
+            models.Index(fields=['payment_date'], name='fee_payment_date_idx'),
+            models.Index(fields=['student', 'payment_date'], name='fee_payment_student_date_idx'),
+            models.Index(fields=['status'], name='fee_payment_status_idx'),
+            models.Index(fields=['receipt_number'], name='fee_payment_receipt_idx'),
+            models.Index(fields=['created_at'], name='fee_payment_created_at_idx'),
+        ]
     
     def __str__(self):
         return f"{self.student} - {self.receipt_number}"
+    
+    def get_payment_status_display_color(self):
+        """Return color class for payment status"""
+        colors = {
+            'pending': 'warning',
+            'partial': 'info',
+            'paid': 'success',
+            'overdue': 'danger',
+        }
+        return colors.get(self.status, 'secondary')
+    
+    def is_online_payment(self):
+        """Check if payment was made online"""
+        return self.payment_method in ['online', 'card']
+
+
+class FeeReminder(models.Model):
+    """Automated fee reminder system"""
+    REMINDER_TYPE = (
+        ('email', 'Email'),
+        ('sms', 'SMS'),
+        ('both', 'Email & SMS'),
+    )
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='fee_reminders')
+    fee_structure = models.ForeignKey(FeeStructure, on_delete=models.CASCADE)
+    reminder_date = models.DateTimeField()
+    reminder_type = models.CharField(max_length=10, choices=REMINDER_TYPE, default='email')
+    sent_status = models.BooleanField(default=False)
+    sent_date = models.DateTimeField(null=True, blank=True)
+    message = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Reminder for {self.student} - {self.reminder_date.strftime('%Y-%m-%d')}"
+    
+    class Meta:
+        ordering = ['-reminder_date']
+
+
+class FeeConcession(models.Model):
+    """Fee discounts and scholarships"""
+    CONCESSION_TYPE = (
+        ('scholarship', 'Scholarship'),
+        ('merit', 'Merit Based'),
+        ('need', 'Need Based'),
+        ('sports', 'Sports'),
+        ('cultural', 'Cultural'),
+        ('other', 'Other'),
+    )
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='fee_concessions')
+    concession_type = models.CharField(max_length=20, choices=CONCESSION_TYPE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    reason = models.TextField()
+    approved_by = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True)
+    approval_date = models.DateTimeField(null=True, blank=True)
+    is_approved = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.student} - {self.get_concession_type_display()}"
+    
+    class Meta:
+        ordering = ['-created_at']
+
+
+class FeeInstallment(models.Model):
+    """Split fee payments into installments"""
+    INSTALLMENT_STATUS = (
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('overdue', 'Overdue'),
+        ('cancelled', 'Cancelled'),
+    )
+    
+    fee_structure = models.ForeignKey(FeeStructure, on_delete=models.CASCADE, related_name='installments')
+    installment_number = models.PositiveIntegerField()
+    due_date = models.DateField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=INSTALLMENT_STATUS, default='pending')
+    paid_date = models.DateField(null=True, blank=True)
+    payment_reference = models.CharField(max_length=100, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Installment {self.installment_number} - {self.fee_structure}"
+    
+    class Meta:
+        ordering = ['installment_number']
+        unique_together = ['fee_structure', 'installment_number']
 
 
 class Scholarship(models.Model):
@@ -1126,6 +1273,14 @@ class Exam(models.Model):
     
     class Meta:
         ordering = ['-start_date']
+        indexes = [
+            models.Index(fields=['exam_type'], name='exam_type_idx'),
+            models.Index(fields=['session', 'semester'], name='exam_session_semester_idx'),
+            models.Index(fields=['start_date'], name='exam_start_date_idx'),
+            models.Index(fields=['end_date'], name='exam_end_date_idx'),
+            models.Index(fields=['is_published'], name='exam_published_idx'),
+            models.Index(fields=['created_at'], name='exam_created_at_idx'),
+        ]
 
 
 class ExamSchedule(models.Model):
@@ -1610,7 +1765,7 @@ class Certificate(models.Model):
 
 
 class Alumni(models.Model):
-    """Alumni Management"""
+    """Enhanced Alumni Management"""
     student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='alumni_profile')
     
     passout_year = models.IntegerField()
@@ -1622,22 +1777,106 @@ class Alumni(models.Model):
     current_location = models.CharField(max_length=200, blank=True)
     current_salary_package = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     
-    # Contact
+    # Enhanced Professional Information
+    industry = models.CharField(max_length=100, blank=True, help_text="Industry sector")
+    work_experience_years = models.IntegerField(null=True, blank=True, help_text="Years of work experience")
+    job_function = models.CharField(max_length=100, blank=True, help_text="Job function/role")
+    company_size = models.CharField(max_length=50, blank=True, choices=[
+        ('startup', 'Startup (1-50 employees)'),
+        ('small', 'Small (51-200 employees)'),
+        ('medium', 'Medium (201-1000 employees)'),
+        ('large', 'Large (1000+ employees)'),
+        ('mnc', 'Multinational Corporation'),
+    ])
+    
+    # Contact Information
     current_email = models.EmailField(blank=True)
     current_mobile = models.CharField(max_length=15, blank=True)
     linkedin_profile = models.URLField(blank=True)
+    twitter_handle = models.CharField(max_length=100, blank=True)
+    personal_website = models.URLField(blank=True)
     
-    # Engagement
+    # Engagement & Volunteering
     is_willing_to_mentor = models.BooleanField(default=False)
+    is_available_for_placement_talks = models.BooleanField(default=False)
     is_recruiter = models.BooleanField(default=False)
+    is_willing_to_host_interns = models.BooleanField(default=False)
+    is_willing_to_sponsor_events = models.BooleanField(default=False)
     
+    # Mentorship Preferences
+    mentorship_areas = models.JSONField(default=list, blank=True, help_text="Areas where alumni can mentor")
+    mentorship_availability = models.CharField(max_length=20, choices=[
+        ('available', 'Available'),
+        ('limited', 'Limited Availability'),
+        ('unavailable', 'Currently Unavailable'),
+    ], default='available')
+    max_mentees = models.IntegerField(default=2, help_text="Maximum number of mentees")
+    
+    # Social Media & Online Presence
+    facebook_profile = models.URLField(blank=True)
+    instagram_handle = models.CharField(max_length=100, blank=True)
+    github_profile = models.URLField(blank=True)
+    portfolio_url = models.URLField(blank=True)
+    
+    # Achievements & Recognition
     achievements = models.TextField(blank=True)
+    awards_received = models.TextField(blank=True, help_text="Awards and recognitions")
+    publications = models.TextField(blank=True, help_text="Research publications or articles")
+    patents = models.TextField(blank=True, help_text="Patents filed or granted")
+    
+    # Testimonial & Feedback
     testimonial = models.TextField(blank=True)
+    college_impact_story = models.TextField(blank=True, help_text="How college impacted their career")
+    advice_for_current_students = models.TextField(blank=True)
+    
+    # Engagement Metrics
+    event_participation_count = models.IntegerField(default=0)
+    mentorship_sessions_count = models.IntegerField(default=0)
+    total_donations = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    last_engagement_date = models.DateTimeField(null=True, blank=True)
+    
+    # Privacy & Communication Preferences
+    profile_visibility = models.CharField(max_length=20, choices=[
+        ('public', 'Public'),
+        ('alumni_only', 'Alumni Only'),
+        ('private', 'Private'),
+    ], default='alumni_only')
+    newsletter_subscription = models.BooleanField(default=True)
+    event_notifications = models.BooleanField(default=True)
+    mentorship_requests = models.BooleanField(default=True)
+    
+    # Profile Completion
+    profile_completion_percentage = models.IntegerField(default=0)
+    is_profile_verified = models.BooleanField(default=False)
+    verification_date = models.DateTimeField(null=True, blank=True)
     
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.student} - Batch {self.passout_year}"
+    
+    @property
+    def full_name(self):
+        """Get alumni full name"""
+        return f"{self.student.admin.first_name} {self.student.admin.last_name}"
+    
+    @property
+    def is_active_mentor(self):
+        """Check if alumni is an active mentor"""
+        return (self.is_willing_to_mentor and 
+                self.mentorship_availability == 'available' and
+                self.mentorship_sessions_count < self.max_mentees)
+    
+    class Meta:
+        ordering = ['-passout_year', 'student__admin__first_name']
+        indexes = [
+            models.Index(fields=['passout_year'], name='alumni_passout_year_idx'),
+            models.Index(fields=['current_company'], name='alumni_company_idx'),
+            models.Index(fields=['is_willing_to_mentor'], name='alumni_mentor_idx'),
+            models.Index(fields=['is_recruiter'], name='alumni_recruiter_idx'),
+            models.Index(fields=['industry'], name='alumni_industry_idx'),
+            models.Index(fields=['profile_visibility'], name='alumni_visibility_idx'),
+        ]
 
 
 class Internship(models.Model):
@@ -2116,6 +2355,7 @@ class OTP(models.Model):
     expires_at = models.DateTimeField()
     is_used = models.BooleanField(default=False)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
+    attempts = models.IntegerField(default=0, help_text="Number of failed verification attempts")
     
     class Meta:
         ordering = ['-created_at']
@@ -2154,3 +2394,362 @@ def save_user_profile(sender, instance, **kwargs):
         instance.student.save()
     if instance.user_type == 4:
         instance.management.save()
+
+
+# ================================
+# AUDIT AND SECURITY MODELS
+# ================================
+
+# Import audit models from separate file to avoid circular imports
+from .audit_models import AuditLog, SecurityEvent, DataAccessLog
+
+# Import admission models from separate file to avoid circular imports
+from .admission_models import (
+    AdmissionSession, AdmissionProgram, AdmissionApplication,
+    AdmissionDocument, AdmissionTest, AdmissionPayment,
+    AdmissionMeritList, AdmissionMeritEntry
+)
+
+# Payroll models are defined in this file
+class PayrollStructure(models.Model):
+    """Payroll structure for different employee categories"""
+    name = models.CharField(max_length=100)
+    basic_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    hra = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    da = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    medical_allowance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    transport_allowance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['name']
+
+
+class EmployeeSalary(models.Model):
+    """Employee salary details"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='salaries')
+    payroll_structure = models.ForeignKey(PayrollStructure, on_delete=models.CASCADE)
+    basic_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    hra = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    da = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    medical_allowance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    transport_allowance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    effective_from = models.DateField()
+    effective_to = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.total_salary}"
+    
+    class Meta:
+        ordering = ['-effective_from']
+
+
+class Payslip(models.Model):
+    """Monthly payslip generation"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='payslips')
+    month = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
+    year = models.IntegerField()
+    basic_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    allowances = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    deductions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    net_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    generated_date = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)
+    paid_date = models.DateField(null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.month}/{self.year}"
+    
+    class Meta:
+        ordering = ['-year', '-month']
+        unique_together = ['staff', 'month', 'year']
+
+
+class TaxDeclaration(models.Model):
+    """Employee tax declarations"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='tax_declarations')
+    financial_year = models.CharField(max_length=9)  # e.g., "2024-25"
+    total_income = models.DecimalField(max_digits=10, decimal_places=2)
+    tax_deducted = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    submitted_date = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+    verified_by = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, related_name='verified_tax_declarations')
+    verified_date = models.DateTimeField(null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.financial_year}"
+    
+    class Meta:
+        ordering = ['-financial_year']
+
+
+class LeaveBalance(models.Model):
+    """Employee leave balance"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='leave_balances')
+    leave_type = models.CharField(max_length=50)
+    total_leaves = models.IntegerField(default=0)
+    used_leaves = models.IntegerField(default=0)
+    remaining_leaves = models.IntegerField(default=0)
+    year = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.leave_type} ({self.year})"
+    
+    class Meta:
+        ordering = ['-year']
+        unique_together = ['staff', 'leave_type', 'year']
+
+
+class AttendanceRegister(models.Model):
+    """Employee attendance register"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='attendance_records')
+    date = models.DateField()
+    check_in = models.TimeField(null=True, blank=True)
+    check_out = models.TimeField(null=True, blank=True)
+    hours_worked = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+    status = models.CharField(max_length=20, choices=[
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+        ('half_day', 'Half Day'),
+        ('late', 'Late'),
+        ('overtime', 'Overtime'),
+    ], default='present')
+    remarks = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.date}"
+    
+    class Meta:
+        ordering = ['-date']
+        unique_together = ['staff', 'date']
+
+
+class Bonus(models.Model):
+    """Employee bonuses and incentives"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='bonuses')
+    bonus_type = models.CharField(max_length=50)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    reason = models.TextField()
+    bonus_date = models.DateField()
+    approved_by = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_bonuses')
+    approved_date = models.DateTimeField(null=True, blank=True)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.bonus_type}"
+    
+    class Meta:
+        ordering = ['-bonus_date']
+
+
+class Loan(models.Model):
+    """Employee loans"""
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='loans')
+    loan_type = models.CharField(max_length=50)
+    principal_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    interest_rate = models.DecimalField(max_digits=5, decimal_places=2)
+    tenure_months = models.IntegerField()
+    monthly_emi = models.DecimalField(max_digits=10, decimal_places=2)
+    loan_date = models.DateField()
+    status = models.CharField(max_length=20, choices=[
+        ('active', 'Active'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ], default='active')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.staff.admin.first_name} - {self.loan_type}"
+    
+    class Meta:
+        ordering = ['-loan_date']
+
+
+class LoanEMI(models.Model):
+    """Loan EMI payments"""
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE, related_name='emis')
+    emi_number = models.IntegerField()
+    due_date = models.DateField()
+    principal_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    interest_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total_emi = models.DecimalField(max_digits=10, decimal_places=2)
+    paid_date = models.DateField(null=True, blank=True)
+    is_paid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.loan.staff.admin.first_name} - EMI {self.emi_number}"
+    
+    class Meta:
+        ordering = ['emi_number']
+        unique_together = ['loan', 'emi_number']
+
+# Import alumni models from separate file to avoid circular imports
+from .alumni_models import (
+    AlumniAchievement, AlumniEvent, AlumniEventRegistration, AlumniDonation,
+    AlumniDonationTransaction, AlumniMentorship, AlumniJob, AlumniNewsletter
+)
+
+# Communication models are defined in this file
+
+# Placement models are defined in this file
+
+# Import LMS models from separate file
+from .lms_models import (
+    CourseModule, Quiz, Question, QuestionOption, QuizAttempt,
+    StudentProgress, CourseEnrollment, DiscussionForum, DiscussionPost,
+    LMSAssignment, LMSAssignmentSubmission
+)
+
+
+class PublicLink(models.Model):
+    """Public links accessible to students on dashboard"""
+    CATEGORY_CHOICES = [
+        ('academic', 'Academic Resources'),
+        ('administrative', 'Administrative Services'),
+        ('external', 'External Resources'),
+        ('internal', 'Internal Services'),
+    ]
+    
+    LINK_TYPE_CHOICES = [
+        ('website', 'Website'),
+        ('portal', 'Portal'),
+        ('resource', 'Resource'),
+        ('service', 'Service'),
+        ('course', 'Online Course'),
+    ]
+    
+    TARGET_CHOICES = [
+        ('_blank', 'New Tab'),
+        ('_self', 'Same Tab'),
+    ]
+    
+    title = models.CharField(max_length=200, help_text="Display name for the link")
+    url = models.URLField(help_text="Full URL including http:// or https://")
+    description = models.TextField(blank=True, help_text="Brief description of the link")
+    icon = models.CharField(max_length=50, default='fas fa-link', help_text="FontAwesome icon class")
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='external')
+    link_type = models.CharField(max_length=20, choices=LINK_TYPE_CHOICES, default='website')
+    target = models.CharField(max_length=10, choices=TARGET_CHOICES, default='_blank')
+    is_active = models.BooleanField(default=True, help_text="Show/hide this link")
+    display_order = models.PositiveIntegerField(default=0, help_text="Order of display (lower numbers first)")
+    is_featured = models.BooleanField(default=False, help_text="Show as featured/prominent link")
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='created_links')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['display_order', 'title']
+        verbose_name = 'Public Link'
+        verbose_name_plural = 'Public Links'
+    
+    def __str__(self):
+        return f"{self.title} ({self.get_category_display()})"
+    
+    def get_icon_html(self):
+        """Return formatted icon HTML"""
+        return f'<i class="{self.icon}"></i>'
+    
+    def is_external(self):
+        """Check if link is external (opens in new tab)"""
+        return self.target == '_blank'
+
+
+class DocumentType(models.Model):
+    """Document types required for student enrollment"""
+    DOCUMENT_CHOICES = (
+        ('photo', 'Photo'),
+        ('aadhar', 'Aadhar Card'),
+        ('tenth_cert', '10th Certificate'),
+        ('twelfth_cert', '12th Certificate'),
+        ('transfer_cert', 'Transfer Certificate'),
+        ('migration_cert', 'Migration Certificate'),
+        ('caste_cert', 'Caste Certificate'),
+        ('income_cert', 'Income Certificate'),
+        ('medical_cert', 'Medical Certificate'),
+        ('other', 'Other'),
+    )
+    
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=20, unique=True)
+    document_type = models.CharField(max_length=20, choices=DOCUMENT_CHOICES)
+    is_mandatory = models.BooleanField(default=True)
+    description = models.TextField(blank=True)
+    max_file_size = models.IntegerField(default=5, help_text="Maximum file size in MB")
+    allowed_formats = models.CharField(max_length=100, default="pdf,jpg,jpeg,png", help_text="Comma-separated file extensions")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True, help_text="Specific to course (null for all courses)")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.name} ({self.get_document_type_display()})"
+    
+    class Meta:
+        ordering = ['name']
+
+
+class StudentDocument(models.Model):
+    """Student uploaded documents"""
+    VERIFICATION_STATUS = (
+        ('pending', 'Pending'),
+        ('verified', 'Verified'),
+        ('rejected', 'Rejected'),
+        ('reupload_required', 'Re-upload Required'),
+    )
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='documents')
+    document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='student_documents/%Y/%m/%d/')
+    uploaded_date = models.DateTimeField(auto_now_add=True)
+    verified_status = models.CharField(max_length=20, choices=VERIFICATION_STATUS, default='pending')
+    verified_by = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True)
+    verified_date = models.DateTimeField(null=True, blank=True)
+    remarks = models.TextField(blank=True, help_text="Admin remarks for verification")
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.student.admin.first_name} - {self.document_type.name}"
+    
+    class Meta:
+        ordering = ['-uploaded_date']
+        unique_together = ['student', 'document_type']
+    
+    def get_file_size(self):
+        """Get file size in human readable format"""
+        if self.file:
+            size = self.file.size
+            for unit in ['B', 'KB', 'MB', 'GB']:
+                if size < 1024.0:
+                    return f"{size:.1f} {unit}"
+                size /= 1024.0
+        return "0 B"
+    
+    def get_file_extension(self):
+        """Get file extension"""
+        if self.file:
+            return self.file.name.split('.')[-1].lower()
+        return ""
+    
+    def is_verified(self):
+        """Check if document is verified"""
+        return self.verified_status == 'verified'
+    
+    def is_pending(self):
+        """Check if document is pending verification"""
+        return self.verified_status == 'pending'
+    
+    def is_rejected(self):
+        """Check if document is rejected"""
+        return self.verified_status == 'rejected'

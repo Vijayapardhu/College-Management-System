@@ -1,0 +1,415 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .analytics-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid;
+        border-radius: 4px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .stat-card.primary { border-left-color: #003d82; }
+    .stat-card.success { border-left-color: #0f7c4f; }
+    .stat-card.danger { border-left-color: #b91c1c; }
+    .stat-card.warning { border-left-color: #b45309; }
+
+    .stat-number {
+        font-size: 36px;
+        font-weight: 700;
+        margin: 10px 0;
+    }
+
+    .stat-card.primary .stat-number { color: #003d82; }
+    .stat-card.success .stat-number { color: #0f7c4f; }
+    .stat-card.danger .stat-number { color: #b91c1c; }
+    .stat-card.warning .stat-number { color: #b45309; }
+
+    .stat-label {
+        font-size: 13px;
+        color: #4a5568;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .chart-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .chart-card h5 {
+        color: #1a202c;
+        font-weight: 600;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e5e5e5;
+        font-size: 16px;
+    }
+
+    .filter-card {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-calendar-check me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="analytics-header">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin-bottom: 8px;">
+                <i class="fas fa-chart-line me-2"></i>Attendance Analytics
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Comprehensive attendance insights and reports
+            </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-card">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Subject</label>
+                    <select name="subject" class="form-select">
+                        <option value="">All Subjects</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject.id }}" {% if subject.id|stringformat:"s" == selected_subject %}selected{% endif %}>
+                            {{ subject.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Apply
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card primary">
+                    <i class="fas fa-calendar-check" style="font-size: 36px; opacity: 0.15; color: #003d82;"></i>
+                    <div class="stat-number">{{ total_classes }}</div>
+                    <div class="stat-label">Total Classes</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card success">
+                    <i class="fas fa-user-check" style="font-size: 36px; opacity: 0.15; color: #0f7c4f;"></i>
+                    <div class="stat-number">{{ present_count }}</div>
+                    <div class="stat-label">Present Records</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card danger">
+                    <i class="fas fa-user-times" style="font-size: 36px; opacity: 0.15; color: #b91c1c;"></i>
+                    <div class="stat-number">{{ absent_count }}</div>
+                    <div class="stat-label">Absent Records</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card warning">
+                    <i class="fas fa-percentage" style="font-size: 36px; opacity: 0.15; color: #b45309;"></i>
+                    <div class="stat-number">{{ attendance_percentage }}%</div>
+                    <div class="stat-label">Overall Attendance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row">
+            <!-- Daily Trend Chart -->
+            <div class="col-lg-8">
+                <div class="chart-card">
+                    <h5><i class="fas fa-chart-area me-2"></i>Daily Attendance Trend (Last 30 Days)</h5>
+                    <canvas id="dailyTrendChart" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Subject-wise Breakdown -->
+            <div class="col-lg-4">
+                <div class="chart-card">
+                    <h5><i class="fas fa-chart-pie me-2"></i>Subject-wise Attendance</h5>
+                    <canvas id="subjectChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Statistics Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chart-card">
+                    <h5><i class="fas fa-table me-2"></i>Subject-wise Detailed Statistics</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Total Classes</th>
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                    <th>Attendance %</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in subject_stats %}
+                                <tr>
+                                    <td><strong>{{ stat.subject }}</strong></td>
+                                    <td>{{ stat.total_classes }}</td>
+                                    <td class="text-success">{{ stat.present }}</td>
+                                    <td class="text-danger">{{ stat.absent }}</td>
+                                    <td><strong>{{ stat.percentage }}%</strong></td>
+                                    <td>
+                                        {% if stat.percentage >= 85 %}
+                                        <span class="badge bg-success">Excellent</span>
+                                        {% elif stat.percentage >= 75 %}
+                                        <span class="badge bg-info">Good</span>
+                                        {% elif stat.percentage >= 65 %}
+                                        <span class="badge bg-warning">Average</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">Poor</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">No data available for selected filters</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Attendance Students -->
+        {% if low_attendance_students %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chart-card">
+                    <h5 style="color: #b91c1c;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Students with Low Attendance (<75%)
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Roll Number</th>
+                                    <th>Student Name</th>
+                                    <th>Total Classes</th>
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                    <th>Attendance %</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in low_attendance_students %}
+                                <tr>
+                                    <td><code>{{ item.student.roll_number }}</code></td>
+                                    <td><strong>{{ item.student.admin.first_name }} {{ item.student.admin.last_name }}</strong></td>
+                                    <td>{{ item.total }}</td>
+                                    <td class="text-success">{{ item.present }}</td>
+                                    <td class="text-danger">{{ item.absent }}</td>
+                                    <td>
+                                        <span class="badge {% if item.percentage < 65 %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ item.percentage }}%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" onclick="sendAlert('{{ item.student.id }}')">
+                                            <i class="fas fa-envelope me-1"></i>Send Alert
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a href="{% url 'staff_take_attendance' %}" class="btn btn-professional-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Attendance
+                </a>
+                <button class="btn btn-professional-success" onclick="exportReport()">
+                    <i class="fas fa-file-excel me-2"></i>Export Report
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+// Daily Trend Chart
+const dailyCtx = document.getElementById('dailyTrendChart').getContext('2d');
+const dailyData = {
+    labels: [{% for item in daily_trend %}'{{ item.date }}',{% endfor %}],
+    datasets: [{
+        label: 'Attendance %',
+        data: [{% for item in daily_trend %}{{ item.percentage }},{% endfor %}],
+        borderColor: '#003d82',
+        backgroundColor: 'rgba(0, 61, 130, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4
+    }]
+};
+
+new Chart(dailyCtx, {
+    type: 'line',
+    data: dailyData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return 'Attendance: ' + context.parsed.y + '%';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                    callback: function(value) {
+                        return value + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Subject-wise Chart
+const subjectCtx = document.getElementById('subjectChart').getContext('2d');
+const subjectData = {
+    labels: [{% for stat in subject_stats %}'{{ stat.subject }}',{% endfor %}],
+    datasets: [{
+        data: [{% for stat in subject_stats %}{{ stat.percentage }},{% endfor %}],
+        backgroundColor: [
+            '#003d82',
+            '#0f7c4f',
+            '#b45309',
+            '#0369a1',
+            '#b91c1c'
+        ]
+    }]
+};
+
+new Chart(subjectCtx, {
+    type: 'doughnut',
+    data: subjectData,
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Send attendance alert email
+function sendAlert(studentId) {
+    if (confirm('Send low attendance alert email to this student?')) {
+        window.loader.showPageLoader('Sending email...');
+        // AJAX call to send email
+        $.post('/staff/attendance/send-alert/', {
+            student_id: studentId
+        }).done(function(response) {
+            window.loader.hidePageLoader();
+            window.toast.success('Alert email sent successfully');
+        }).fail(function() {
+            window.loader.hidePageLoader();
+            window.toast.error('Failed to send alert');
+        });
+    }
+}
+
+// Export report functionality
+function exportReport() {
+    window.toast.info('Generating Excel report...');
+    window.location.href = '/staff/attendance/export-report/?subject={{ selected_subject }}&start={{ start_date }}&end={{ end_date }}';
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

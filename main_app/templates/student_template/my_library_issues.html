@@ -1,135 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}My Library Books{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-info">
-                <h3 class="card-title"><i class="fas fa-book-reader"></i> My Library Books</h3>
-                <div class="card-tools">
-                    <a href="{% url 'student_search_books' %}" class="btn btn-light btn-sm">
-                        <i class="fas fa-search"></i> Search Books
-                    </a>
-                </div>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-book-reader me-2"></i>My Library Books
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View borrowed books and due dates
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <div class="card-body">
-                <!-- Statistics -->
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <div class="info-box bg-info">
-                            <span class="info-box-icon"><i class="fas fa-book"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Currently Issued</span>
-                                <span class="info-box-number">{{ active_issues }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="info-box bg-danger">
-                            <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Overdue Books</span>
-                                <span class="info-box-number">{{ overdue_issues }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="info-box bg-warning">
-                            <span class="info-box-icon"><i class="fas fa-rupee-sign"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Fines</span>
-                                <span class="info-box-number">₹{{ total_fines }}</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-book-reader"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
-                
-                <!-- Issues Table -->
-                {% if issues %}
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="issuesTable">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Book</th>
-                                <th>Author</th>
-                                <th>Issue Date</th>
-                                <th>Due Date</th>
-                                <th>Return Date</th>
-                                <th>Status</th>
-                                <th>Fine</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for issue in issues %}
-                            <tr {% if issue.status == 'overdue' %}class="table-danger"{% elif issue.status == 'issued' %}class="table-warning"{% endif %}>
-                                <td><strong>{{ issue.book.title }}</strong></td>
-                                <td>{{ issue.book.author }}</td>
-                                <td>{{ issue.issue_date|date:"d M Y" }}</td>
-                                <td>
-                                    {{ issue.due_date|date:"d M Y" }}
-                                    {% if issue.status == 'overdue' %}
-                                    <br><small class="text-danger">OVERDUE!</small>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if issue.return_date %}
-                                        {{ issue.return_date|date:"d M Y" }}
-                                    {% else %}
-                                        <span class="badge badge-warning">Not Returned</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if issue.status == 'issued' %}
-                                        <span class="badge badge-primary">Issued</span>
-                                    {% elif issue.status == 'overdue' %}
-                                        <span class="badge badge-danger">Overdue</span>
-                                    {% elif issue.status == 'returned' %}
-                                        <span class="badge badge-success">Returned</span>
-                                    {% elif issue.status == 'lost' %}
-                                        <span class="badge badge-dark">Lost</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-right">
-                                    {% if issue.fine_amount > 0 %}
-                                        <strong class="text-danger">₹{{ issue.fine_amount }}</strong>
-                                    {% else %}
-                                        <span class="text-muted">₹0</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                {% if total_fines > 0 %}
-                <div class="alert alert-danger mt-3">
-                    <i class="fas fa-rupee-sign"></i> <strong>Total Outstanding Fine: ₹{{ total_fines }}</strong>
-                    <p class="mb-0 mt-2">Please pay your fines at the library counter to avoid further penalties.</p>
-                </div>
-                {% endif %}
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> You haven't borrowed any books from the library yet.
-                    <a href="{% url 'student_search_books' %}">Search for books</a> to get started!
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </section>
-
-<script>
-$(document).ready(function() {
-    $('#issuesTable').DataTable({
-        "order": [[2, "desc"]],
-        "pageLength": 25
-    });
-});
-</script>
-{% endblock content %}
-
-
-
+{%endblock %}

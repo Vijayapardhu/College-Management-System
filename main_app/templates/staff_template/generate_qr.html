@@ -1,0 +1,118 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .qr-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-banner {
+        background: #e6f2ff;
+        border-left: 4px solid #0369a1;
+        padding: 20px;
+        border-radius: 4px;
+        margin-bottom: 25px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin-bottom: 5px;">
+                    <i class="fas fa-qrcode me-2"></i>{{ page_title }}
+                </h2>
+                <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                    Generate QR code for students to mark attendance
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="info-banner">
+                    <h6 style="color: #0369a1; margin-bottom: 10px;">
+                        <i class="fas fa-lightbulb me-2"></i>How it works
+                    </h6>
+                    <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                        1. Select subject, session, and date<br>
+                        2. Generate QR code<br>
+                        3. Display QR code to students in class<br>
+                        4. Students scan with mobile app to mark attendance<br>
+                        5. QR code remains valid for current class only
+                    </p>
+                </div>
+
+                <div class="qr-card">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Subject <span class="text-danger">*</span></label>
+                            <select name="subject" class="form-select" required>
+                                <option value="">Select Subject</option>
+                                {% for subject in subjects %}
+                                <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Session <span class="text-danger">*</span></label>
+                            <select name="session" class="form-select" required>
+                                <option value="">Select Session</option>
+                                {% for session in sessions %}
+                                <option value="{{ session.id }}">{{ session }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="form-label">Date <span class="text-danger">*</span></label>
+                            <input type="date" name="date" class="form-control" required value="{% now 'Y-m-d' %}" max="{% now 'Y-m-d' %}">
+                        </div>
+
+                        <div class="text-end">
+                            <a href="{% url 'staff_take_attendance' %}" class="btn btn-professional-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back
+                            </a>
+                            <button type="submit" class="btn btn-professional-primary">
+                                <i class="fas fa-qrcode me-2"></i>Generate QR Code
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+
+
+
+

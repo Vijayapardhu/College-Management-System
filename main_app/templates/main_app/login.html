@@ -321,7 +321,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <form action="{% url 'user_login' %}" method="post" id="loginForm">
+                <form action="{% url 'user_login' %}" method="post" id="loginForm" class="compact-form">
                     {% csrf_token %}
                     <div class="input-group mb-3">
                         <input required type="text" name='email' class="form-control" placeholder="Email / Roll Number / Employee ID">
@@ -346,7 +346,7 @@
                         <div class="col-8">
                             <div class="icheck-primary">
                                 <input type="checkbox" id="remember">
-                                <label for="remember">
+                                <label for="remember"> style="font-size: 12px; margin-bottom: 2px;">
                                     Remember Me
                                 </label>
                             </div>

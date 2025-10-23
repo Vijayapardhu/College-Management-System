@@ -1,73 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}Medical Records{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-danger">
-                <h3 class="card-title"><i class="fas fa-heartbeat"></i> {{ page_title }}</h3>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file-medical me-2"></i>Medical Records
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View and update your medical information
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <div class="card-body">
-                {% if records %}
-                <div class="timeline">
-                    {% for record in records %}
-                    <div>
-                        <i class="fas fa-hospital bg-red"></i>
-                        <div class="timeline-item">
-                            <span class="time"><i class="fas fa-clock"></i> {{ record.record_date|date:"Y-m-d" }}</span>
-                            <h3 class="timeline-header">Medical Visit</h3>
-                            <div class="timeline-body">
-                                <p><strong>Complaint:</strong> {{ record.complaint }}</p>
-                                {% if record.diagnosis %}
-                                <p><strong>Diagnosis:</strong> {{ record.diagnosis }}</p>
-                                {% endif %}
-                                {% if record.treatment %}
-                                <p><strong>Treatment:</strong> {{ record.treatment }}</p>
-                                {% endif %}
-                                {% if record.doctor_name %}
-                                <p><strong>Doctor:</strong> {{ record.doctor_name }}</p>
-                                {% endif %}
-                                {% if record.follow_up_required %}
-                                <div class="alert alert-warning mt-2">
-                                    <i class="fas fa-exclamation-triangle"></i> Follow-up Required
-                                    {% if record.follow_up_date %}
-                                    on {{ record.follow_up_date|date:"Y-m-d" }}
-                                    {% endif %}
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="timeline-footer">
-                                {% if record.prescription %}
-                                <a href="{{ record.prescription.url }}" class="btn btn-primary btn-sm" download>
-                                    <i class="fas fa-file-medical"></i> Download Prescription
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <div>
-                        <i class="fas fa-clock bg-gray"></i>
-                    </div>
-                </div>
-                {% else %}
-                <div class="alert alert-success">
-                    <h5><i class="fas fa-check-circle"></i> No Medical Records</h5>
-                    <p class="mb-0">You have no medical visits on record. Stay healthy!</p>
-                </div>
-                {% endif %}
-                
-                <div class="alert alert-info mt-3">
-                    <h6><i class="fas fa-info-circle"></i> Health Information:</h6>
-                    <p class="mb-0">For medical emergencies, contact the campus medical center or dial emergency services. Your medical records are confidential and only accessible to authorized medical staff.</p>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-file-medical"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

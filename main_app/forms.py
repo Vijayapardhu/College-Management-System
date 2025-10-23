@@ -3,6 +3,86 @@ from django.forms.widgets import DateInput, TextInput
 
 from .models import *
 
+# Admission forms are defined in this file
+
+# Payroll forms are defined in this file
+
+# Alumni forms are defined in this file
+
+# Chat forms are defined in this file
+
+# Placement forms are defined in this file
+
+# LMS forms are defined in this file
+
+
+class PublicLinkForm(forms.ModelForm):
+    """Form for managing public links"""
+    
+    class Meta:
+        model = PublicLink
+        fields = [
+            'title', 'url', 'description', 'icon', 'category', 
+            'link_type', 'target', 'is_active', 'display_order', 'is_featured'
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter link title'
+            }),
+            'url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Brief description of the link'
+            }),
+            'icon': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'fas fa-link'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'link_type': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'target': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'display_order': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'is_featured': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            })
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add help text for icon field
+        self.fields['icon'].help_text = 'FontAwesome icon class (e.g., fas fa-university, fas fa-book, fas fa-graduation-cap)'
+        self.fields['url'].help_text = 'Include http:// or https:// in the URL'
+        self.fields['display_order'].help_text = 'Lower numbers appear first (0 = top)'
+    
+    def clean_url(self):
+        url = self.cleaned_data.get('url')
+        if url and not (url.startswith('http://') or url.startswith('https://')):
+            raise forms.ValidationError('URL must start with http:// or https://')
+        return url
+    
+    def clean_icon(self):
+        icon = self.cleaned_data.get('icon')
+        if icon and not icon.startswith(('fas fa-', 'far fa-', 'fab fa-', 'fal fa-')):
+            raise forms.ValidationError('Icon must be a valid FontAwesome class (e.g., fas fa-link)')
+        return icon
+
 
 class FormSettings(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -60,8 +140,28 @@ class StudentForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields + \
-            ['course', 'session']
+        fields = CustomUserForm.Meta.fields + [
+            'course', 'session', 'course_type', 'admission_year', 'roll_number', 'admission_number',
+            'date_of_birth', 'nationality', 'religion', 'blood_group', 'mobile_number', 
+            'alternate_mobile', 'aadhaar_number', 'pan_number', 'medical_conditions',
+            'mother_tongue', 'hobbies', 'achievements', 'admission_mode', 'admission_quota', 
+            'admission_fee_paid', 'admission_date', 'caste_category', 'income_certificate_number', 
+            'annual_family_income', 'is_disabled', 'disability_percentage', 'scholarship_applied', 
+            'scholarship_name', 'permanent_address', 'permanent_city', 'permanent_state', 
+            'permanent_pincode', 'current_address', 'current_city', 'current_state', 
+            'current_pincode', 'father_name', 'father_occupation', 'father_mobile',
+            'mother_name', 'mother_occupation', 'mother_mobile', 'guardian_name', 
+            'guardian_relation', 'guardian_mobile', 'tenth_board', 'tenth_school', 
+            'tenth_year', 'tenth_marks_total', 'tenth_marks_obtained', 'tenth_percentage', 
+            'tenth_cgpa', 'entrance_exam_name', 'entrance_exam_year', 'entrance_exam_rank', 
+            'entrance_exam_score', 'entrance_category_rank', 'bank_account_number', 
+            'bank_ifsc_code', 'bank_name', 'emergency_contact_name', 'emergency_contact_relation', 
+            'emergency_contact_mobile', 'hostel_required', 'transport_required', 'photo', 
+            'signature', 'tenth_certificate', 'transfer_certificate', 'migration_certificate', 
+            'character_certificate', 'caste_certificate', 'income_certificate', 
+            'disability_certificate', 'aadhaar_card', 'pan_card', 'bank_passbook', 
+            'birth_certificate', 'entrance_exam_scorecard', 'student_status', 'remarks'
+        ]
 
 
 class AdminForm(CustomUserForm):
@@ -93,8 +193,13 @@ class StaffForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Staff
-        fields = CustomUserForm.Meta.fields + \
-            ['course' ]
+        fields = CustomUserForm.Meta.fields + [
+            'course', 'department', 'designation', 'employee_id', 'qualification', 'specialization',
+            'experience_years', 'mobile_number', 'alternate_mobile', 'emergency_contact',
+            'date_of_birth', 'date_of_joining', 'date_of_retirement', 'status',
+            'blood_group', 'aadhaar_number', 'pan_number', 'bank_account_number',
+            'bank_ifsc_code', 'bank_name', 'resume', 'remarks'
+        ]
 
 
 class CourseForm(FormSettings):
@@ -179,7 +284,28 @@ class StudentEditForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields 
+        fields = CustomUserForm.Meta.fields + [
+            'course', 'session', 'course_type', 'admission_year', 'roll_number', 'admission_number',
+            'date_of_birth', 'nationality', 'religion', 'blood_group', 'mobile_number', 
+            'alternate_mobile', 'aadhaar_number', 'pan_number', 'medical_conditions',
+            'mother_tongue', 'hobbies', 'achievements', 'admission_mode', 'admission_quota', 
+            'admission_fee_paid', 'admission_date', 'caste_category', 'income_certificate_number', 
+            'annual_family_income', 'is_disabled', 'disability_percentage', 'scholarship_applied', 
+            'scholarship_name', 'permanent_address', 'permanent_city', 'permanent_state', 
+            'permanent_pincode', 'current_address', 'current_city', 'current_state', 
+            'current_pincode', 'father_name', 'father_occupation', 'father_mobile',
+            'mother_name', 'mother_occupation', 'mother_mobile', 'guardian_name', 
+            'guardian_relation', 'guardian_mobile', 'tenth_board', 'tenth_school', 
+            'tenth_year', 'tenth_marks_total', 'tenth_marks_obtained', 'tenth_percentage', 
+            'tenth_cgpa', 'entrance_exam_name', 'entrance_exam_year', 'entrance_exam_rank', 
+            'entrance_exam_score', 'entrance_category_rank', 'bank_account_number', 
+            'bank_ifsc_code', 'bank_name', 'emergency_contact_name', 'emergency_contact_relation', 
+            'emergency_contact_mobile', 'hostel_required', 'transport_required', 'photo', 
+            'signature', 'tenth_certificate', 'transfer_certificate', 'migration_certificate', 
+            'character_certificate', 'caste_certificate', 'income_certificate', 
+            'disability_certificate', 'aadhaar_card', 'pan_card', 'bank_passbook', 
+            'birth_certificate', 'entrance_exam_scorecard', 'student_status', 'remarks'
+        ] 
 
 
 class StaffEditForm(CustomUserForm):
@@ -202,7 +328,6 @@ class EditResultForm(FormSettings):
     class Meta:
         model = StudentResult
         fields = ['session_year', 'subject', 'student', 'test', 'exam']
-
 
 # ==================== NEW ERP FORMS ====================
 

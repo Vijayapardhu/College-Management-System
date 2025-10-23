@@ -2,20 +2,67 @@
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-success">
                 <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
             </div>
-            <form method="post">
+            <form method="post" class="compact-form">
                 {% csrf_token %}
-                <div class="card-body">
+                <div class="card-body-professional" style="padding: 10px;">
+                    <!-- Department Information Section -->
+                    <div class="section-header text-primary">
+                        <i class="fas fa-building"></i> Department Information
+                    </div>
+                    
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_name">Department Name *</label>
+                            <div class="form-group mb-2">
+                                <label for="id_name" style="font-size: 12px; margin-bottom: 2px;">Department Name *</label>
                                 {{ form.name }}
                                 {% if form.name.errors %}
                                 <div class="text-danger">
@@ -27,8 +74,8 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_code">Department Code</label>
+                            <div class="form-group mb-2">
+                                <label for="id_code" style="font-size: 12px; margin-bottom: 2px;">Department Code</label>
                                 {{ form.code }}
                                 {% if form.code.errors %}
                                 <div class="text-danger">
@@ -37,15 +84,15 @@
                                     {% endfor %}
                                 </div>
                                 {% endif %}
-                                <small class="form-text text-muted">e.g., CSE, ECE, MECH, CIVIL, EEE</small>
+                                <small class="form-text text-muted" style="font-size: 11px;">e.g., CSE, ECE, MECH, CIVIL, EEE</small>
                             </div>
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_hod">Head of Department (HOD)</label>
+                            <div class="form-group mb-2">
+                                <label for="id_hod" style="font-size: 12px; margin-bottom: 2px;">Head of Department (HOD)</label>
                                 {{ form.hod }}
                                 {% if form.hod.errors %}
                                 <div class="text-danger">
@@ -54,12 +101,12 @@
                                     {% endfor %}
                                 </div>
                                 {% endif %}
-                                <small class="form-text text-muted">Select a staff member as HOD (optional)</small>
+                                <small class="form-text text-muted" style="font-size: 11px;">Select a staff member as HOD (optional)</small>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="id_contact_email">Contact Email</label>
+                            <div class="form-group mb-2">
+                                <label for="id_contact_email" style="font-size: 12px; margin-bottom: 2px;">Contact Email</label>
                                 {{ form.contact_email }}
                                 {% if form.contact_email.errors %}
                                 <div class="text-danger">
@@ -68,13 +115,13 @@
                                     {% endfor %}
                                 </div>
                                 {% endif %}
-                                <small class="form-text text-muted">Department official email</small>
+                                <small class="form-text text-muted" style="font-size: 11px;">Department official email</small>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="id_contact_number">Contact Number</label>
+                    <div class="form-group mb-2">
+                        <label for="id_contact_number" style="font-size: 12px; margin-bottom: 2px;">Contact Number</label>
                         {{ form.contact_number }}
                         {% if form.contact_number.errors %}
                         <div class="text-danger">
@@ -83,7 +130,7 @@
                             {% endfor %}
                         </div>
                         {% endif %}
-                        <small class="form-text text-muted">Department official phone number</small>
+                        <small class="form-text text-muted" style="font-size: 11px;">Department official phone number</small>
                     </div>
                     
                     <div class="alert alert-success mt-3">
@@ -110,7 +157,7 @@
                     <button type="submit" class="btn btn-success btn-lg">
                         <i class="fas fa-plus-circle"></i> Add Department
                     </button>
-                    <a href="{% url 'manage_departments' %}" class="btn btn-secondary">
+                    <a href="{% url 'manage_departments' %}" class="btn btn-professional-secondary">
                         <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>

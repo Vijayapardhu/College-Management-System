@@ -3,21 +3,31 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-money-bill-wave me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-danger">
                 <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> {{ page_title }}</h3>
             </div>
-            <div class="card-body">
+            <div class="card-body-professional">
                 {% if defaulters %}
-                <div class="alert alert-warning">
+                <div class="alert-professional-warning">
                     <h5><i class="fas fa-info-circle"></i> Fee Defaulters Summary:</h5>
                     <p class="mb-0"><strong>Total Defaulters:</strong> {{ defaulters.count }} students with pending dues</p>
                 </div>
                 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="defaultersTable">
+                    <table class="table table-professional" id="defaultersTable">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Roll Number</th>
@@ -50,7 +60,7 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="alert alert-success">
+                <div class="alert-professional-success">
                     <h5><i class="fas fa-check-circle"></i> No Fee Defaulters</h5>
                     <p class="mb-0">All students have paid their fees on time. Excellent!</p>
                 </div>

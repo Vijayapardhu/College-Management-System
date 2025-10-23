@@ -1,0 +1,436 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard - EduVision{% endblock %}
+
+{% block custom_css %}
+<style>
+    .dashboard-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .dashboard-card .card-body {
+        position: relative;
+        z-index: 2;
+    }
+
+    .metric-icon {
+        font-size: 3rem;
+        opacity: 0.3;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .metric-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+
+    .quick-action-btn {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #495057;
+        display: block;
+    }
+
+    .quick-action-btn:hover {
+        border-color: #007bff;
+        color: #007bff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,123,255,0.1);
+    }
+
+    .quick-action-btn i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .recent-activity {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+
+    .activity-content h6 {
+        margin: 0;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .activity-content small {
+        color: #6c757d;
+    }
+
+    .progress-ring {
+        width: 80px;
+        height: 80px;
+    }
+
+    .progress-ring circle {
+        fill: transparent;
+        stroke-width: 6;
+        stroke-linecap: round;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+    }
+
+    .progress-ring .progress-ring-circle {
+        stroke: #007bff;
+        transition: stroke-dasharray 0.3s ease;
+    }
+
+    .progress-ring .progress-ring-background {
+        stroke: #e9ecef;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">Welcome back, {{ student.user.first_name }}!</h2>
+                            <p class="text-muted mb-0">Here's what's happening with your academics today.</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="d-inline-block position-relative">
+                                <div class="progress-ring">
+                                    <svg width="80" height="80">
+                                        <circle class="progress-ring-background" cx="40" cy="40" r="34"></circle>
+                                        <circle class="progress-ring-circle" cx="40" cy="40" r="34" 
+                                                stroke-dasharray="{{ attendance_percentage|floatformat:0 }} 100"></circle>
+                                    </svg>
+                                    <div class="progress-text">{{ attendance_percentage|floatformat:0 }}%</div>
+                                </div>
+                                <small class="d-block text-center mt-2 text-muted">Attendance</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body-professional">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="metric-value">{{ total_attendance }}</p>
+                            <p class="metric-label">Total Attendance</p>
+                        </div>
+                        <i class="fas fa-user-check metric-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="card-body-professional">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="metric-value">{{ percent_present|floatformat:0 }}%</p>
+                            <p class="metric-label">Present</p>
+                        </div>
+                        <i class="fas fa-check-circle metric-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="card-body-professional">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="metric-value">{{ percent_absent|floatformat:0 }}%</p>
+                            <p class="metric-label">Absent</p>
+                        </div>
+                        <i class="fas fa-times-circle metric-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="card-body-professional">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="metric-value">{{ total_subject }}</p>
+                            <p class="metric-label">Subjects</p>
+                        </div>
+                        <i class="fas fa-book metric-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Charts Section -->
+        <div class="col-lg-8 mb-4">
+            <div class="chart-container">
+                <h5 class="mb-3">Attendance Overview</h5>
+                <canvas id="attendanceChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body-professional">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="{% url 'student_view_attendance' %}" class="quick-action-btn">
+                                <i class="fas fa-user-check"></i>
+                                <div>Attendance</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'student_view_result' %}" class="quick-action-btn">
+                                <i class="fas fa-chart-line"></i>
+                                <div>Results</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'view_assignments' %}" class="quick-action-btn">
+                                <i class="fas fa-tasks"></i>
+                                <div>Assignments</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'view_materials' %}" class="quick-action-btn">
+                                <i class="fas fa-book"></i>
+                                <div>Materials</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'student_apply_leave' %}" class="quick-action-btn">
+                                <i class="fas fa-calendar-times"></i>
+                                <div>Apply Leave</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'view_messages' %}" class="quick-action-btn">
+                                <i class="fas fa-envelope"></i>
+                                <div>Messages</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="recent-activity">
+                <h5 class="mb-3">Recent Activity</h5>
+                <div class="activity-item">
+                    <div class="activity-icon bg-primary text-white">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Attendance Marked</h6>
+                        <small>Mathematics - Present</small>
+                    </div>
+                    <small class="text-muted">2 hours ago</small>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon bg-success text-white">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>Assignment Submitted</h6>
+                        <small>Data Structures Assignment #3</small>
+                    </div>
+                    <small class="text-muted">1 day ago</small>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon bg-info text-white">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h6>New Notification</h6>
+                        <small>Exam schedule updated</small>
+                    </div>
+                    <small class="text-muted">2 days ago</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+$(document).ready(function() {
+    // Attendance Chart
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    const subjects = {{ data_name|safe }};
+    const presentData = {{ data_present }};
+    const absentData = {{ data_absent }};
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: subjects,
+            datasets: [{
+                label: 'Present',
+                data: presentData,
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                borderRadius: 5
+            }, {
+                label: 'Absent',
+                data: absentData,
+                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Animate progress ring
+    const progressRing = document.querySelector('.progress-ring-circle');
+    const circumference = 2 * Math.PI * 34;
+    progressRing.style.strokeDasharray = circumference;
+    progressRing.style.strokeDashoffset = circumference;
+
+    const offset = circumference - ({{ attendance_percentage|floatformat:0 }} / 100) * circumference;
+    progressRing.style.strokeDashoffset = offset;
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

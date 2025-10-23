@@ -1,104 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}Report Ragging{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card border-danger">
-            <div class="card-header bg-danger">
-                <h3 class="card-title"><i class="fas fa-shield-alt"></i> {{ page_title }}</h3>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-shield-alt me-2"></i>Report Ragging
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Report any ragging incidents confidentially
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="card-body">
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Anti-Ragging - Your Safety Matters</h5>
-                        <p class="mb-0">Ragging is a serious offense. This form is confidential and will be handled by the Anti-Ragging Committee. You can report anonymously if you wish.</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Incident Number *</label>
-                        {{ form.incident_number }}
-                        <small class="form-text text-muted">Auto-generated unique identifier</small>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Incident Date *</label>
-                                {{ form.incident_date }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Location *</label>
-                                {{ form.location }}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Incident Description *</label>
-                        {{ form.incident_description }}
-                        <small class="form-text text-muted">Describe what happened in detail</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Severity *</label>
-                        {{ form.severity }}
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Accused Students</label>
-                        {{ form.accused_students }}
-                        <small class="form-text text-muted">Names of students involved (if known)</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Witnesses</label>
-                        {{ form.witnesses }}
-                        <small class="form-text text-muted">Names of any witnesses</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            {{ form.is_anonymous }}
-                            <label class="custom-control-label" for="id_is_anonymous">
-                                <strong>Report Anonymously</strong>
-                                <br><small class="text-muted">Your identity will not be revealed</small>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-info">
-                        <h6><i class="fas fa-info-circle"></i> What Happens Next:</h6>
-                        <ol class="mb-0">
-                            <li>Your report is logged with a unique incident number</li>
-                            <li>Anti-Ragging Committee reviews the complaint</li>
-                            <li>An investigating officer is assigned</li>
-                            <li>Investigation is conducted confidentially</li>
-                            <li>Appropriate action is taken</li>
-                        </ol>
-                    </div>
-                    
-                    <div class="alert alert-warning">
-                        <strong>Emergency Contact:</strong> If you are in immediate danger, contact campus security or call the emergency helpline.
-                    </div>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-danger btn-lg">
-                        <i class="fas fa-shield-alt"></i> Submit Report
-                    </button>
-                    <a href="{% url 'student_home' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

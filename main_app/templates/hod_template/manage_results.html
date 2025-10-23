@@ -3,9 +3,19 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-chart-line me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-primary">
                 <h3 class="card-title"><i class="fas fa-chart-bar"></i> {{ page_title }}</h3>
                 <div class="card-tools">
@@ -14,7 +24,7 @@
                     </a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body-professional">
                 <!-- Filter Options -->
                 <div class="row mb-3">
                     <div class="col-md-3">
@@ -42,7 +52,7 @@
                 
                 {% if results %}
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="resultsTable">
+                    <table class="table table-professional" id="resultsTable">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Student</th>
@@ -84,7 +94,7 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="alert alert-info">
+                <div class="alert-professional-info">
                     <h5><i class="fas fa-info-circle"></i> No Results Available</h5>
                     <p class="mb-0">No semester results have been added yet. <a href="{% url 'add_semester_result' %}">Add semester results</a></p>
                 </div>

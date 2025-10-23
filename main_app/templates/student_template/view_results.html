@@ -1,82 +1,275 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}Academic Results{% endblock %}
 
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-success">
-                <h3 class="card-title"><i class="fas fa-chart-bar"></i> My Academic Results</h3>
-            </div>
-            <div class="card-body">
-                {% if semester_results %}
-                <div class="row mb-4">
-                    {% for result in semester_results %}
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card border-primary">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">
-                                    Semester {{ result.semester }}
-                                    <small class="float-right">{{ result.session }}</small>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row text-center mb-2">
-                                    <div class="col-6">
-                                        <h3 class="text-primary mb-0">{{ result.sgpa|default:"N/A" }}</h3>
-                                        <small class="text-muted">SGPA</small>
-                                    </div>
-                                    <div class="col-6">
-                                        <h3 class="text-success mb-0">{{ result.cgpa|default:"N/A" }}</h3>
-                                        <small class="text-muted">CGPA</small>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="small">
-                                    <div class="d-flex justify-content-between">
-                                        <span>Credits Earned:</span>
-                                        <strong>{{ result.credits_earned }} / {{ result.total_credits }}</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span>Marks:</span>
-                                        <strong>{{ result.marks_obtained }} / {{ result.total_marks }}</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span>Percentage:</span>
-                                        <strong>{{ result.percentage }}%</strong>
-                                    </div>
-                                    {% if result.has_backlogs %}
-                                    <div class="alert alert-warning p-2 mt-2 mb-0">
-                                        <i class="fas fa-exclamation-triangle"></i> Backlogs: {{ result.number_of_backlogs }}
-                                    </div>
-                                    {% else %}
-                                    <div class="alert alert-success p-2 mt-2 mb-0">
-                                        <i class="fas fa-check-circle"></i> No Backlogs
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <a href="{% url 'student_view_semester_detail' result.id %}" class="btn btn-sm btn-info btn-block">
-                                    <i class="fas fa-eye"></i> View Detailed Marksheet
-                                </a>
-                                <small class="text-muted">Published: {{ result.published_date|date:"d M Y" }}</small>
-                            </div>
-                        </div>
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-chart-bar me-2"></i>Academic Results
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View your examination results and academic performance
+            </p>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card primary">
+                    <div class="metric-icon">
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
-                    {% endfor %}
+                    <div class="metric-content">
+                        <h3>8.5</h3>
+                        <p>Current CGPA</p>
+                    </div>
                 </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No published results available yet.
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card success">
+                    <div class="metric-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>85%</h3>
+                        <p>Overall Percentage</p>
+                    </div>
                 </div>
-                {% endif %}
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card warning">
+                    <div class="metric-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>6</h3>
+                        <p>Subjects Passed</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card info">
+                    <div class="metric-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>A</h3>
+                        <p>Overall Grade</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">
+                    <i class="fas fa-list me-2"></i>Subject-wise Results
+                </h3>
+            </div>
+            <div style="padding: 0;">
+                <div class="table-responsive">
+                    <table class="table table-professional mb-0">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Subject Name</th>
+                                <th>Internal Marks</th>
+                                <th>External Marks</th>
+                                <th>Total Marks</th>
+                                <th>Grade</th>
+                                <th>Grade Point</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>MATH101</strong></td>
+                                <td>Calculus and Linear Algebra</td>
+                                <td>28/30</td>
+                                <td>52/70</td>
+                                <td>80/100</td>
+                                <td><span class="grade-badge A">A</span></td>
+                                <td>8.0</td>
+                                <td><span class="badge-professional-success">Pass</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>PHYS101</strong></td>
+                                <td>Physics I</td>
+                                <td>26/30</td>
+                                <td>48/70</td>
+                                <td>74/100</td>
+                                <td><span class="grade-badge B">B+</span></td>
+                                <td>7.5</td>
+                                <td><span class="badge-professional-success">Pass</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CHEM101</strong></td>
+                                <td>Chemistry I</td>
+                                <td>29/30</td>
+                                <td>55/70</td>
+                                <td>84/100</td>
+                                <td><span class="grade-badge A">A</span></td>
+                                <td>8.5</td>
+                                <td><span class="badge-professional-success">Pass</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CS101</strong></td>
+                                <td>Programming Fundamentals</td>
+                                <td>30/30</td>
+                                <td>62/70</td>
+                                <td>92/100</td>
+                                <td><span class="grade-badge A-plus">A+</span></td>
+                                <td>9.5</td>
+                                <td><span class="badge-professional-success">Pass</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ENG101</strong></td>
+                                <td>Technical Communication</td>
+                                <td>27/30</td>
+                                <td>50/70</td>
+                                <td>77/100</td>
+                                <td><span class="grade-badge B">B+</span></td>
+                                <td>7.5</td>
+                                <td><span class="badge-professional-success">Pass</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>HUM101</strong></td>
+                                <td>Humanities and Social Sciences</td>
+                                <td>28/30</td>
+                                <td>53/70</td>
+                                <td>81/100</td>
+                                <td><span class="grade-badge A">A</span></td>
+                                <td>8.0</td>
+                                <td><span class="badge-professional-success">Pass</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <a href="#" class="btn btn-professional-primary me-2">
+                    <i class="fas fa-download me-2"></i>Download Marksheet
+                </a>
+                <a href="#" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-print me-2"></i>Print Results
+                </a>
+                <a href="{% url 'student_home' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+.metric-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-left: 4px solid;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    text-align: center;
+    height: 100%;
+}
+
+.metric-card.primary { border-left-color: #003d82; }
+.metric-card.success { border-left-color: #0f7c4f; }
+.metric-card.warning { border-left-color: #b45309; }
+.metric-card.info { border-left-color: #0369a1; }
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.metric-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.metric-content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color: #1a202c;
+}
+
+.metric-content p {
+    font-size: 14px;
+    color: #4a5568;
+    margin: 0;
+}
+
+.grade-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+    min-width: 30px;
+}
+
+.grade-badge.A-plus {
+    background: #10b981;
+    color: white;
+}
+
+.grade-badge.A {
+    background: #3b82f6;
+    color: white;
+}
+
+.grade-badge.B {
+    background: #f59e0b;
+    color: white;
+}
+
+.grade-badge.C {
+    background: #ef4444;
+    color: white;
+}
+
+.badge-professional-success {
+    background: #0f7c4f;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.btn-professional-primary {
+    background: #003d82;
+    border-color: #003d82;
+    color: white;
+    font-weight: 500;
+    padding: 10px 20px;
+}
+
+.btn-professional-primary:hover {
+    background: #002952;
+    border-color: #002952;
+    color: white;
+}
+</style>
 {% endblock content %}
+
+
+
+
+
 
 
 

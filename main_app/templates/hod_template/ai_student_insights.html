@@ -1,0 +1,332 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .ai-header {
+        background: linear-gradient(135deg, #1a202c 0%, #003d82 100%);
+        border-radius: 4px;
+        padding: 30px;
+        margin-bottom: 25px;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid;
+        border-radius: 4px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .stat-card.critical { border-left-color: #b91c1c; }
+    .stat-card.high { border-left-color: #b45309; }
+    .stat-card.moderate { border-left-color: #0369a1; }
+    .stat-card.total { border-left-color: #003d82; }
+
+    .stat-number {
+        font-size: 42px;
+        font-weight: 700;
+        margin: 10px 0;
+    }
+
+    .stat-card.critical .stat-number { color: #b91c1c; }
+    .stat-card.high .stat-number { color: #b45309; }
+    .stat-card.moderate .stat-number { color: #0369a1; }
+    .stat-card.total .stat-number { color: #003d82; }
+
+    .student-risk-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .student-risk-card.danger { border-left-color: #b91c1c; }
+    .student-risk-card.warning { border-left-color: #b45309; }
+    .student-risk-card.info { border-left-color: #0369a1; }
+
+    .risk-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .risk-badge.critical {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .risk-badge.high {
+        background: #b45309;
+        color: white;
+    }
+
+    .risk-badge.moderate {
+        background: #0369a1;
+        color: white;
+    }
+
+    .intervention-list {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .intervention-item {
+        padding: 10px;
+        background: white;
+        border-left: 3px solid #003d82;
+        margin-bottom: 10px;
+        border-radius: 2px;
+    }
+
+    .intervention-item:last-child {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-user-graduate me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- AI Header -->
+        <div class="ai-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 10px;">
+                        <i class="fas fa-brain me-2"></i>AI Student Insights
+                    </h2>
+                    <p style="font-size: 15px; opacity: 0.9; margin: 0;">
+                        Early Warning System - Predict and prevent student failures with AI
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'generate_ai_report' %}" class="btn btn-light">
+                        <i class="fas fa-envelope me-2"></i>Email Report
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 20px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Course</label>
+                    <select name="course" class="form-select">
+                        <option value="">All Courses</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}" {% if course.id|stringformat:"s" == selected_course %}selected{% endif %}>
+                            {{ course.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Session</label>
+                    <select name="session" class="form-select">
+                        <option value="">All Sessions</option>
+                        {% for session in sessions %}
+                        <option value="{{ session.id }}" {% if session.id|stringformat:"s" == selected_session %}selected{% endif %}>
+                            {{ session }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Risk Level</label>
+                    <select name="risk_level" class="form-select">
+                        <option value="all" {% if selected_risk == 'all' %}selected{% endif %}>All Levels</option>
+                        <option value="critical" {% if selected_risk == 'critical' %}selected{% endif %}>Critical Only</option>
+                        <option value="high" {% if selected_risk == 'high' %}selected{% endif %}>High Only</option>
+                        <option value="moderate" {% if selected_risk == 'moderate' %}selected{% endif %}>Moderate Only</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-2"></i>Apply Filters
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Statistics Summary -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card total">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 36px; opacity: 0.15; color: #003d82;"></i>
+                    <div class="stat-number">{{ total_at_risk }}</div>
+                    <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Total At-Risk</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card critical">
+                    <i class="fas fa-bell" style="font-size: 36px; opacity: 0.15; color: #b91c1c;"></i>
+                    <div class="stat-number">{{ critical_count }}</div>
+                    <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Critical Risk</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card high">
+                    <i class="fas fa-exclamation-circle" style="font-size: 36px; opacity: 0.15; color: #b45309;"></i>
+                    <div class="stat-number">{{ high_count }}</div>
+                    <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">High Risk</div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card moderate">
+                    <i class="fas fa-info-circle" style="font-size: 36px; opacity: 0.15; color: #0369a1;"></i>
+                    <div class="stat-number">{{ moderate_count }}</div>
+                    <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Moderate Risk</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- At-Risk Students List -->
+        <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 25px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+            <h5 style="color: #1a202c; font-weight: 600; margin-bottom: 20px;">
+                <i class="fas fa-users me-2"></i>At-Risk Students Analysis
+            </h5>
+
+            {% if at_risk_students %}
+                {% for item in at_risk_students %}
+                <div class="student-risk-card {{ item.risk_color }}">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <h6 style="margin: 0 0 5px 0; color: #1a202c; font-weight: 600;">
+                                {{ item.student.admin.first_name }} {{ item.student.admin.last_name }}
+                            </h6>
+                            <div style="font-size: 13px; color: #4a5568;">
+                                <code>{{ item.student.roll_number }}</code> • 
+                                {{ item.student.course.name }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div style="font-size: 13px; color: #4a5568;">
+                                <div><strong>Attendance:</strong> {{ item.attendance_percentage|floatformat:1 }}%</div>
+                                <div><strong>Avg Marks:</strong> {{ item.average_marks|floatformat:1 }}%</div>
+                                <div><strong>Subjects Failed:</strong> {{ item.subjects_failed }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 text-center">
+                            <span class="risk-badge {{ item.risk_level|lower }}">
+                                {{ item.risk_level }}
+                            </span>
+                            <div style="font-size: 24px; font-weight: 700; color: #{% if item.risk_level == 'CRITICAL' %}b91c1c{% elif item.risk_level == 'HIGH' %}b45309{% else %}0369a1{% endif %}; margin-top: 5px;">
+                                {{ item.risk_probability|floatformat:0 }}%
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-end">
+                            <button class="btn btn-sm btn-primary mb-1" onclick="viewInterventions({{ item.student.id }})">
+                                <i class="fas fa-lightbulb me-1"></i>Interventions
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="sendAlert({{ item.student.id }})">
+                                <i class="fas fa-envelope me-1"></i>Send Alert
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Intervention Recommendations -->
+                    <div id="interventions-{{ item.student.id }}" class="intervention-list" style="display: none;">
+                        <h6 style="color: #1a202c; margin-bottom: 10px; font-weight: 600;">
+                            <i class="fas fa-tasks me-2"></i>Recommended Interventions
+                        </h6>
+                        {% for intervention in item.interventions %}
+                        <div class="intervention-item">
+                            <div style="font-weight: 600; color: #003d82; margin-bottom: 5px;">
+                                <i class="fas fa-arrow-right me-2"></i>{{ intervention.type }}
+                                {% if intervention.severity == 'high' %}
+                                <span class="badge bg-danger ms-2">High Priority</span>
+                                {% elif intervention.severity == 'medium' %}
+                                <span class="badge bg-warning ms-2">Medium Priority</span>
+                                {% endif %}
+                            </div>
+                            <div style="font-size: 13px; color: #1a202c; margin-bottom: 5px;">
+                                <strong>Issue:</strong> {{ intervention.action }}
+                            </div>
+                            <div style="font-size: 13px; color: #4a5568;">
+                                <strong>Recommendation:</strong> {{ intervention.recommendation }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-check-circle" style="font-size: 64px; color: #0f7c4f; margin-bottom: 20px;"></i>
+                    <h4 style="color: #1a202c; margin-bottom: 10px;">Excellent! No At-Risk Students</h4>
+                    <p class="text-muted">All students are performing well based on current filters</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function viewInterventions(studentId) {
+    const interventionDiv = document.getElementById('interventions-' + studentId);
+    if (interventionDiv.style.display === 'none') {
+        interventionDiv.style.display = 'block';
+    } else {
+        interventionDiv.style.display = 'none';
+    }
+}
+
+function sendAlert(studentId) {
+    if (confirm('Send early warning alert to student and parents?')) {
+        window.loader.showPageLoader('Sending alert...');
+        
+        $.post('/admin/send-performance-alert/', {
+            student_id: studentId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }).done(function(response) {
+            window.loader.hidePageLoader();
+            window.toast.success('Alert sent successfully to student and parents');
+        }).fail(function() {
+            window.loader.hidePageLoader();
+            window.toast.error('Failed to send alert');
+        });
+    }
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

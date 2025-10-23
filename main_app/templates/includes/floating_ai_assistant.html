@@ -1,0 +1,766 @@
+{% load static %}
+<!-- Floating AI Assistant Widget -->
+<div id="floatingAI" class="floating-ai-widget">
+    <!-- Minimized State (Floating Button) -->
+    <div class="ai-float-button" id="aiFloatButton">
+        <div class="ai-avatar-container">
+            <div class="ai-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="ai-pulse"></div>
+        </div>
+        <span class="ai-badge" id="aiBadge" style="display: none;">1</span>
+    </div>
+
+    <!-- Expanded State (Chat Window) -->
+    <div class="ai-chat-window" id="aiChatWindow" style="display: none;">
+        <!-- Header -->
+        <div class="ai-chat-header">
+            <div class="ai-header-content">
+                <div class="ai-avatar-small">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="ai-header-info">
+                    <h6>AI Learning Assistant</h6>
+                    <small class="ai-status">
+                        <i class="fas fa-circle"></i> Always here to help
+                    </small>
+                </div>
+            </div>
+            <div class="ai-header-actions">
+                <button class="ai-action-btn" id="aiMinimize" title="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="ai-action-btn" id="aiClose" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Tips Section -->
+        <div class="ai-quick-tips" id="aiQuickTips">
+            <div class="tip-card" data-tip="attendance">
+                <i class="fas fa-calendar-check text-success"></i>
+                <span>Check Attendance</span>
+            </div>
+            <div class="tip-card" data-tip="improve">
+                <i class="fas fa-chart-line text-primary"></i>
+                <span>Improve Grades</span>
+            </div>
+            <div class="tip-card" data-tip="study">
+                <i class="fas fa-book text-info"></i>
+                <span>Study Tips</span>
+            </div>
+            <div class="tip-card" data-tip="help">
+                <i class="fas fa-question-circle text-warning"></i>
+                <span>Need Help?</span>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-welcome-message">
+                <div class="ai-message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="ai-message-bubble bot">
+                    <p>👋 Hi! I'm your AI Learning Assistant powered by Google Gemini.</p>
+                    <p>I can help you with:</p>
+                    <ul class="ai-help-list">
+                        <li>✓ Improving your academic performance</li>
+                        <li>✓ Study strategies and tips</li>
+                        <li>✓ Career guidance</li>
+                        <li>✓ Answering questions about courses</li>
+                        <li>✓ Time management advice</li>
+                    </ul>
+                    <p>Click on a quick tip above or ask me anything!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="ai-typing-indicator" id="aiTyping" style="display: none;">
+            <div class="ai-message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="ai-chat-input">
+            <form id="aiChatForm">
+                <input type="text" id="aiMessageInput" placeholder="Ask me anything..." autocomplete="off">
+                <button type="submit" class="ai-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="ai-suggestions" id="aiSuggestions">
+            <button class="suggestion-chip" data-question="How can I improve my attendance?">
+                📊 Improve Attendance
+            </button>
+            <button class="suggestion-chip" data-question="Give me study tips for exams">
+                📚 Study Tips
+            </button>
+            <button class="suggestion-chip" data-question="How to manage my time better?">
+                ⏰ Time Management
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Floating AI Widget Styles */
+.floating-ai-widget {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Float Button */
+.ai-float-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #003d82 0%, #0052a3 100%);
+    box-shadow: 0 4px 20px rgba(0, 61, 130, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.ai-float-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 61, 130, 0.5);
+}
+
+.ai-avatar-container {
+    position: relative;
+}
+
+.ai-avatar {
+    color: white;
+    font-size: 28px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.ai-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #003d82;
+    animation: pulse 2s ease-out infinite;
+    opacity: 0;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.ai-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    border: 2px solid white;
+}
+
+/* Chat Window */
+.ai-chat-window {
+    width: 380px;
+    height: 600px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Header */
+.ai-chat-header {
+    background: linear-gradient(135deg, #003d82 0%, #0052a3 100%);
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-avatar-small {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.ai-header-info h6 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.ai-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.ai-status i {
+    font-size: 6px;
+    color: #10b981;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.3; }
+}
+
+.ai-header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ai-action-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.ai-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Quick Tips */
+.ai-quick-tips {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.tip-card {
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.tip-card:hover {
+    border-color: #003d82;
+    background: #f0f7ff;
+    transform: translateY(-2px);
+}
+
+.tip-card i {
+    font-size: 18px;
+}
+
+/* Messages */
+.ai-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #fafafa;
+}
+
+.ai-message-bubble {
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    max-width: 85%;
+    animation: messageSlide 0.3s ease;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ai-message-bubble.bot {
+    background: white;
+    border: 1px solid #e5e5e5;
+    color: #1a202c;
+}
+
+.ai-message-bubble.user {
+    background: #003d82;
+    color: white;
+    margin-left: auto;
+}
+
+.ai-welcome-message {
+    display: flex;
+    gap: 12px;
+}
+
+.ai-message-avatar {
+    width: 32px;
+    height: 32px;
+    background: #003d82;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.ai-help-list {
+    margin: 8px 0;
+    padding-left: 20px;
+    font-size: 13px;
+}
+
+.ai-help-list li {
+    margin: 4px 0;
+}
+
+/* Typing Indicator */
+.ai-typing-indicator {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: #fafafa;
+}
+
+.typing-dots {
+    background: white;
+    border: 1px solid #e5e5e5;
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    background: #003d82;
+    border-radius: 50%;
+    animation: typingDot 1.4s infinite;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+    0%, 60%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    30% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* Input */
+.ai-chat-input {
+    padding: 12px;
+    background: white;
+    border-top: 1px solid #e5e5e5;
+}
+
+.ai-chat-input form {
+    display: flex;
+    gap: 8px;
+}
+
+.ai-chat-input input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e5e5e5;
+    border-radius: 24px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.ai-chat-input input:focus {
+    border-color: #003d82;
+}
+
+.ai-send-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #003d82;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.ai-send-btn:hover {
+    background: #002952;
+    transform: scale(1.05);
+}
+
+/* Suggestions */
+.ai-suggestions {
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    background: white;
+    border-top: 1px solid #e5e5e5;
+}
+
+.suggestion-chip {
+    padding: 6px 12px;
+    background: #f0f7ff;
+    border: 1px solid #003d82;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #003d82;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suggestion-chip:hover {
+    background: #003d82;
+    color: white;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .ai-chat-window {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    .floating-ai-widget {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .ai-float-button {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+/* Scrollbar Styling */
+.ai-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb {
+    background: #003d82;
+    border-radius: 3px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #002952;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    const floatButton = $('#aiFloatButton');
+    const chatWindow = $('#aiChatWindow');
+    const chatMessages = $('#aiChatMessages');
+    const messageInput = $('#aiMessageInput');
+    const typingIndicator = $('#aiTyping');
+    const suggestions = $('#aiSuggestions');
+    const badge = $('#aiBadge');
+
+    // Toggle chat window
+    floatButton.on('click', function() {
+        floatButton.hide();
+        chatWindow.fadeIn(300);
+        badge.hide();
+    });
+
+    $('#aiMinimize, #aiClose').on('click', function() {
+        chatWindow.fadeOut(300, function() {
+            floatButton.fadeIn(300);
+        });
+    });
+
+    // Handle form submission
+    $('#aiChatForm').on('submit', function(e) {
+        e.preventDefault();
+        const message = messageInput.val().trim();
+        
+        if (message) {
+            sendMessage(message);
+            messageInput.val('');
+            suggestions.hide();
+        }
+    });
+
+    // Handle quick tips
+    $('.tip-card').on('click', function() {
+        const tip = $(this).data('tip');
+        let question = '';
+        
+        switch(tip) {
+            case 'attendance':
+                question = 'How can I improve my attendance and what are the consequences of low attendance?';
+                break;
+            case 'improve':
+                question = 'Give me personalized tips to improve my grades based on my current performance';
+                break;
+            case 'study':
+                question = 'What are the best study techniques and strategies for better learning?';
+                break;
+            case 'help':
+                question = 'I need help with my academics. Can you guide me?';
+                break;
+        }
+        
+        if (question) {
+            sendMessage(question);
+        }
+    });
+
+    // Handle suggestion chips
+    $(document).on('click', '.suggestion-chip', function() {
+        const question = $(this).data('question');
+        sendMessage(question);
+    });
+
+    function sendMessage(message) {
+        // Add user message
+        const userMsg = `
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+                <div class="ai-message-bubble user">
+                    ${escapeHtml(message)}
+                </div>
+            </div>
+        `;
+        chatMessages.append(userMsg);
+        scrollToBottom();
+
+        // Show typing
+        typingIndicator.show();
+        scrollToBottom();
+
+        // Send to AI
+        $.ajax({
+            url: '{% url "ai_chatbot_api" %}',
+            method: 'POST',
+            data: JSON.stringify({ message: message }),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                typingIndicator.hide();
+                
+                if (response.success) {
+                    const botMsg = `
+                        <div class="ai-welcome-message">
+                            <div class="ai-message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="ai-message-bubble bot">
+                                ${formatMessage(response.response)}
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.append(botMsg);
+                    scrollToBottom();
+                    
+                    // Update suggestions based on context
+                    updateSuggestions(message);
+                }
+            },
+            error: function() {
+                typingIndicator.hide();
+                const errorMsg = `
+                    <div class="ai-welcome-message">
+                        <div class="ai-message-avatar" style="background: #ef4444;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="ai-message-bubble bot" style="border-color: #fde68a; background: #fef3cd;">
+                            I'm having trouble connecting right now. Please try again in a moment!
+                        </div>
+                    </div>
+                `;
+                chatMessages.append(errorMsg);
+                scrollToBottom();
+            }
+        });
+    }
+
+    function formatMessage(text) {
+        // Convert line breaks to <br>
+        text = text.replace(/\n/g, '<br>');
+        
+        // Convert bullet points
+        text = text.replace(/^[•\-\*]\s/gm, '✓ ');
+        
+        return text;
+    }
+
+    function updateSuggestions(lastMessage) {
+        const lower = lastMessage.toLowerCase();
+        
+        if (lower.includes('attendance')) {
+            suggestions.html(`
+                <button class="suggestion-chip" data-question="Show my attendance percentage">
+                    📊 My Attendance
+                </button>
+                <button class="suggestion-chip" data-question="What happens if attendance is low?">
+                    ⚠️ Low Attendance
+                </button>
+            `).show();
+        } else if (lower.includes('grade') || lower.includes('marks')) {
+            suggestions.html(`
+                <button class="suggestion-chip" data-question="How to improve specific subject?">
+                    📚 Subject Help
+                </button>
+                <button class="suggestion-chip" data-question="Study schedule suggestions">
+                    📅 Study Plan
+                </button>
+            `).show();
+        } else {
+            suggestions.html(`
+                <button class="suggestion-chip" data-question="Tell me about my progress">
+                    📈 My Progress
+                </button>
+                <button class="suggestion-chip" data-question="What should I focus on?">
+                    🎯 Focus Areas
+                </button>
+            `).show();
+        }
+    }
+
+    function scrollToBottom() {
+        chatMessages.animate({ scrollTop: chatMessages[0].scrollHeight }, 300);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Show welcome notification after 3 seconds
+    setTimeout(function() {
+        if (!chatWindow.is(':visible')) {
+            badge.text('1').fadeIn();
+            
+            // Auto-show after 5 more seconds if not opened
+            setTimeout(function() {
+                if (!chatWindow.is(':visible')) {
+                    floatButton.trigger('click');
+                }
+            }, 5000);
+        }
+    }, 3000);
+});
+</script>
+
+
+
+
+
+
+
+
+

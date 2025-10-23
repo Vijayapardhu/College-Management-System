@@ -1,71 +1,208 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    /* Professional Faculty Dashboard */
+    
+    /* Welcome Header - Professional */
+    .welcome-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .welcome-header h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #003d82;
+        margin-bottom: 8px;
+    }
+
+    .welcome-header p {
+        font-size: 14px;
+        color: #4a5568;
+        margin: 0;
+    }
+
+    .staff-info {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .staff-info-item {
+        display: inline-block;
+        margin-right: 25px;
+        font-size: 13px;
+        color: #718096;
+    }
+
+    .staff-info-item strong {
+        color: #1a202c;
+        font-weight: 600;
+    }
+
+    /* Professional Metric Cards */
+    .metric-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid;
+        border-radius: 4px;
+        padding: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        text-align: center;
+        height: 100%;
+    }
+
+    .metric-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .metric-card.info { border-left-color: #0369a1; }
+    .metric-card.success { border-left-color: #0f7c4f; }
+    .metric-card.warning { border-left-color: #b45309; }
+    .metric-card.danger { border-left-color: #b91c1c; }
+
+    .metric-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        opacity: 0.15;
+    }
+
+    .metric-card.info .metric-icon { color: #0369a1; }
+    .metric-card.success .metric-icon { color: #0f7c4f; }
+    .metric-card.warning .metric-icon { color: #b45309; }
+    .metric-card.danger .metric-icon { color: #b91c1c; }
+
+    .metric-value {
+        font-size: 42px;
+        font-weight: 700;
+        margin: 10px 0;
+    }
+
+    .metric-card.info .metric-value { color: #0369a1; }
+    .metric-card.success .metric-value { color: #0f7c4f; }
+    .metric-card.warning .metric-value { color: #b45309; }
+    .metric-card.danger .metric-value { color: #b91c1c; }
+
+    .metric-label {
+        font-size: 14px;
+        color: #4a5568;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Professional Chart Cards */
+    .card-secondary {
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-secondary .card-header {
+        background: #f5f5f5;
+        border-bottom: 2px solid #e5e5e5;
+        padding: 15px 20px;
+    }
+
+    .card-secondary .card-title {
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+        font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .staff-info-item {
+            display: block;
+            margin: 5px 0;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{total_students}}</h3>
+        <!-- Professional Welcome Header -->
+        <div class="welcome-header">
+            <h2>Faculty Dashboard - {{ user.first_name }} {{ user.last_name }}</h2>
+            <p>Manage your classes, students, and academic activities</p>
+            <div class="staff-info">
+                <span class="staff-info-item">
+                    <i class="fas fa-user-tie me-1"></i>
+                    <strong>Designation:</strong> {{ staff.designation|default:"Faculty" }}
+                </span>
+                <span class="staff-info-item">
+                    <i class="fas fa-building me-1"></i>
+                    <strong>Department:</strong> {{ staff.department.name|default:"Not Assigned" }}
+                </span>
+                <span class="staff-info-item">
+                    <i class="fas fa-envelope me-1"></i>
+                    <strong>Email:</strong> {{ user.email }}
+                </span>
+            </div>
+        </div>
 
-                        <p>Total Students</p>
+        <!-- Metric Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card info">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                   
+                    <div class="metric-value">{{total_students}}</div>
+                    <div class="metric-label">Total Students</div>
                 </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{total_attendance}}</h3>
 
-                        <p>Total Attendance Taken</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card success">
+                    <div class="metric-icon">
+                        <i class="fas fa-check-square"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                   
+                    <div class="metric-value">{{total_attendance}}</div>
+                    <div class="metric-label">Attendance Taken</div>
                 </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{total_leave}}</h3>
 
-                        <p>Total Leave Applied</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card warning">
+                    <div class="metric-icon">
+                        <i class="fas fa-calendar-times"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-person-add"></i>
-                    </div>
-                   
+                    <div class="metric-value">{{total_leave}}</div>
+                    <div class="metric-label">Leave Applications</div>
                 </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>{{total_subject}}</h3>
 
-                        <p>Total Subjects</p>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card danger">
+                    <div class="metric-icon">
+                        <i class="fas fa-book-open"></i>
                     </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
-                   
+                    <div class="metric-value">{{total_subject}}</div>
+                    <div class="metric-label">Assigned Subjects</div>
                 </div>
             </div>
-            <!-- ./col -->
         </div>
         <!-- /.row -->
         <!-- Main row -->
@@ -73,7 +210,7 @@
             <div class="col-md-6">
                 <!-- LINE CHART -->
                 <div class="card card-secondary">
-                  <div class="card-header">
+                  <div class="card-header-professional">
                     <h3 class="card-title">{{page_title}}</h3>
     
                     <div class="card-tools">
@@ -82,7 +219,7 @@
                       <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
                     </div>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body-professional">
                     <div class="chart">
                       <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                     </div>
@@ -91,7 +228,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card card-secondary">
-              <div class="card-header">
+              <div class="card-header-professional">
                 <h3 class="card-title">{{page_title}}</h3>
 
                 <div class="card-tools">
@@ -100,7 +237,7 @@
                   <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
                 </div>
               </div>
-              <div class="card-body">
+              <div class="card-body-professional">
                 <div class="chart">
                   <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>

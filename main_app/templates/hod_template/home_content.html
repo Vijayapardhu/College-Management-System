@@ -1,191 +1,430 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
-{% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{total_students}}</h3>
 
-                        <p>Total Students</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                    <a href="{% url 'manage_student' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{total_staff}}</h3>
-
-                        <p>Total Staff</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                    <a href="{% url 'manage_staff' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{total_course}}</h3>
-
-                        <p>Total Course</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-person-add"></i>
-                    </div>
-                    <a href="{% url 'manage_course' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>{{total_subject}}</h3>
-
-                        <p>Total Subjects</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
-                    <a href="{% url 'manage_subject' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-            <div class="col-md-6">
-                <!-- LINE CHART -->
-                <div class="card card-secondary">
-                  <div class="card-header">
-                    <h3 class="card-title">{{page_title}}</h3>
+{% block custom_css %}
+<style>
+    /* Professional Corporate Dashboard - Classical Design */
     
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div></div>
-                  <!-- /.card-body -->
-                </div>
-                <div class="col-md-6">
-                    <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">{{page_title}}</h3>
+    /* Page Header - Professional */
+    .page-header-section {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .page-header-section h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #003d82;
+        margin-bottom: 8px;
+    }
+    
+    .page-header-section p {
+        font-size: 14px;
+        color: #4a5568;
+        margin: 0;
+    }
+    
+    .quick-stats {
+        display: flex;
+        gap: 30px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e5e5;
+    }
+    
+    .quick-stat {
+        text-align: center;
+    }
+    
+    .quick-stat h4 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #003d82;
+        margin: 0;
+    }
+    
+    .quick-stat small {
+        font-size: 13px;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Dashboard Metrics - Professional Cards */
+    .dashboard-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .metric-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid;
+        border-radius: 4px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    
+    .metric-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .metric-card.primary { border-left-color: #003d82; }
+    .metric-card.success { border-left-color: #0f7c4f; }
+    .metric-card.warning { border-left-color: #b45309; }
+    .metric-card.info { border-left-color: #0369a1; }
+    
+    .metric-card .icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 40px;
+        opacity: 0.1;
+        color: #1a202c;
+    }
+    
+    .metric-card h3 {
+        font-size: 36px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+    }
+    
+    .metric-card.primary h3 { color: #003d82; }
+    .metric-card.success h3 { color: #0f7c4f; }
+    .metric-card.warning h3 { color: #b45309; }
+    .metric-card.info h3 { color: #0369a1; }
+    
+    .metric-card p {
+        font-size: 14px;
+        color: #4a5568;
+        margin: 0 0 12px 0;
+        font-weight: 500;
+    }
+    
+    .metric-card .btn {
+        font-size: 13px;
+        padding: 6px 15px;
+    }
+    
+    /* Chart Section - Professional */
+    .chart-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .chart-container {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .chart-container h3 {
+        color: #1a202c;
+        font-weight: 600;
+        margin-bottom: 20px;
+        font-size: 18px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e5e5e5;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .chart-section {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-metrics {
+            grid-template-columns: 1fr;
+        }
+        
+        .quick-stats {
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .page-header-section {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock custom_css %}
 
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="chart">
-                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-                </div>
-            <!-- right col -->
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
         </div>
-        <!-- /.row (main row) -->
-    </div><!-- /.container-fluid -->
-</section>
+<div class="container-fluid">
+    <!-- Professional Page Header -->
+    <div class="page-header-section">
+        <h2>Administrative Dashboard</h2>
+        <p>Monitor and manage all aspects of college operations</p>
+        <div class="quick-stats">
+            <div class="quick-stat">
+                <h4>{{total_students}}</h4>
+                <small>Total Students</small>
+            </div>
+            <div class="quick-stat">
+                <h4>{{total_staff}}</h4>
+                <small>Total Staff</small>
+            </div>
+            <div class="quick-stat">
+                <h4>{{total_course}}</h4>
+                <small>Total Courses</small>
+            </div>
+            <div class="quick-stat">
+                <h4>{{total_subject}}</h4>
+                <small>Total Subjects</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard Metrics - Professional Cards -->
+    <div class="dashboard-metrics">
+        <div class="metric-card primary">
+            <i class="fas fa-users icon"></i>
+            <h3>{{total_students}}</h3>
+            <p>Total Students</p>
+            <a href="{% url 'manage_student' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-arrow-right me-1"></i>View Students
+            </a>
+        </div>
+        
+        <div class="metric-card success">
+            <i class="fas fa-chalkboard-teacher icon"></i>
+            <h3>{{total_staff}}</h3>
+            <p>Total Staff</p>
+            <a href="{% url 'manage_staff' %}" class="btn btn-success btn-sm">
+                <i class="fas fa-arrow-right me-1"></i>View Staff
+            </a>
+        </div>
+        
+        <div class="metric-card info">
+            <i class="fas fa-graduation-cap icon"></i>
+            <h3>{{total_course}}</h3>
+            <p>Total Courses</p>
+            <a href="{% url 'manage_course' %}" class="btn btn-info btn-sm">
+                <i class="fas fa-arrow-right me-1"></i>View Courses
+            </a>
+        </div>
+        
+        <div class="metric-card warning">
+            <i class="fas fa-book icon"></i>
+            <h3>{{total_subject}}</h3>
+            <p>Total Subjects</p>
+            <a href="{% url 'manage_subject' %}" class="btn btn-warning btn-sm">
+                <i class="fas fa-arrow-right me-1"></i>View Subjects
+            </a>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="chart-section">
+        <!-- PIE CHART -->
+        <div class="chart-container">
+            <h3>Student & Staff Distribution</h3>
+            <canvas id="pieChart" height="300"></canvas>
+        </div>
+        
+        <!-- BAR CHART -->
+        <div class="chart-container">
+            <h3>Attendance Per Subject</h3>
+            <canvas id="barChart" height="300"></canvas>
+        </div>
+    </div>
+</div>
 {% endblock content %}
 
 {% block custom_js %}
-  <script>
-      $(document).ready(function(){
-        var donutData        = {
-            labels: ['Students', 'Staff'],
-            datasets: [
-              {
-                data:[{{total_students}}, {{total_staff}}],
-                backgroundColor : ['#00a65a', '#f39c12',],
-              }
-            ]
-          }
-        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-        var pieData        = donutData;
-        var pieOptions     = {
-          maintainAspectRatio : false,
-          responsive : true,
-        }
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        var pieChart = new Chart(pieChartCanvas, {
-          type: 'pie',
-          data: pieData,
-          options: pieOptions      
-        });
+<script>
+$(document).ready(function(){
+    // Modern Chart.js Configuration
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#6b7280';
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.padding = 20;
 
-        var subject_list = {{ subject_list|safe|escape }};
-        var attendance_list = {{ attendance_list }};
-  
-            var barChartData = {
-      labels  : subject_list,
-      datasets: [
-      {
-        label               : 'Attendance Per Subject',
-        backgroundColor     : '#6c757d',
-        borderColor         : 'rgba(60,141,188,0.8)',
-        pointRadius          : false,
-        pointColor          : '#3b8bba',
-        pointStrokeColor    : 'rgba(60,141,188,1)',
-        pointHighlightFill  : '#fff',
-        pointHighlightStroke: 'rgba(60,141,188,1)',
-        data                : attendance_list
-      }, 
-      
-      ]
-    }
-        var barChartCanvas = $('#barChart').get(0).getContext('2d')
-        var temp0 = barChartData.datasets[0]
-        //var temp1 = areaChartData.datasets[1]
-        barChartData.datasets[0] = temp0
-       // barChartData.datasets[1] = temp0
-    
-    var stackedBarChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      scales: {
-        xAxes: [{
-          stacked: true,
-        }],
-        yAxes: [{
-          stacked: true
+    // Pie Chart Data
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const pieData = {
+        labels: ['Students', 'Staff'],
+        datasets: [{
+            data: [{{total_students}}, {{total_staff}}],
+            backgroundColor: [
+                'rgba(102, 126, 234, 0.8)',
+                'rgba(240, 147, 251, 0.8)'
+            ],
+            borderColor: [
+                'rgba(102, 126, 234, 1)',
+                'rgba(240, 147, 251, 1)'
+            ],
+            borderWidth: 2,
+            hoverOffset: 10
         }]
-      }
-    }
+    };
+
+    const pieOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    font: {
+                        size: 14,
+                        weight: '500'
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: 'white',
+                bodyColor: 'white',
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true
+            }
+        },
+        animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 1000
+        }
+    };
+
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: pieData,
+        options: pieOptions
+    });
+
+    // Bar Chart Data
+    const subjectList = {{ subject_list|safe|escape }};
+    const attendanceList = {{ attendance_list }};
     
-        var barChart = new Chart(barChartCanvas, {
-          type: 'bar', 
-          data: barChartData,
-          options: stackedBarChartOptions
-        })
-      })
-  </script>
+    // Truncate long subject names for better display
+    const truncatedLabels = subjectList.map(function(label) {
+        return label.length > 10 ? label.substring(0, 10) + '...' : label;
+    });
+
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    const barData = {
+        labels: truncatedLabels,
+        datasets: [{
+            label: 'Attendance Per Subject',
+            data: attendanceList,
+            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 2,
+            borderRadius: 6,
+            borderSkipped: false,
+            hoverBackgroundColor: 'rgba(102, 126, 234, 0.9)',
+            hoverBorderColor: 'rgba(102, 126, 234, 1)',
+            hoverBorderWidth: 3
+        }]
+    };
+
+    const barOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: 'white',
+                bodyColor: 'white',
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 1,
+                cornerRadius: 8,
+                callbacks: {
+                    title: function(context) {
+                        const index = context[0].dataIndex;
+                        return subjectList[index]; // Show full name in tooltip
+                    },
+                    label: function(context) {
+                        return 'Attendance: ' + context.parsed.y + ' students';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                display: true,
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    maxRotation: 45,
+                    minRotation: 45,
+                    font: {
+                        size: 11,
+                        weight: '500'
+                    },
+                    color: '#6b7280'
+                }
+            },
+            y: {
+                display: true,
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    font: {
+                        size: 11,
+                        weight: '500'
+                    },
+                    color: '#6b7280',
+                    callback: function(value) {
+                        return value + ' students';
+                    }
+                }
+            }
+        },
+        animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart'
+        }
+    };
+
+    new Chart(barCtx, {
+        type: 'bar',
+        data: barData,
+        options: barOptions
+    });
+
+    // Add smooth animations to metric cards
+    const metricCards = document.querySelectorAll('.metric-card');
+    metricCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in');
+    });
+});
+</script>
 {% endblock custom_js %}

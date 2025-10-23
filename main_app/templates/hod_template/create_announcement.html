@@ -1,35 +1,78 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-10 offset-md-1">
                 <div class="card card-warning">
-                    <div class="card-header">
+                    <div class="card-header-professional">
                         <h3 class="card-title"><i class="fas fa-bullhorn"></i> Post New Announcement</h3>
                     </div>
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" class="compact-form">
                         {% csrf_token %}
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="title">Announcement Title *</label>
+                        <div class="card-body-professional" style="padding: 10px;">
+                            <div class="form-group" mb-2>
+                                <label for="title"> style="font-size: 12px; margin-bottom: 2px;">Announcement Title *</label>
                                 <input type="text" name="title" id="title" class="form-control" 
                                        placeholder="E.g., Exam Schedule Released" required maxlength="200">
                             </div>
 
-                            <div class="form-group">
-                                <label for="message">Message *</label>
+                            <div class="form-group" mb-2>
+                                <label for="message"> style="font-size: 12px; margin-bottom: 2px;">Message *</label>
                                 <textarea name="message" id="message" class="form-control" rows="6" 
                                           placeholder="Type your announcement here..." required></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="priority">Priority Level *</label>
+                                    <div class="form-group" mb-2>
+                                        <label for="priority"> style="font-size: 12px; margin-bottom: 2px;">Priority Level *</label>
                                         <select name="priority" id="priority" class="form-control" required>
                                             <option value="low">Low - General information</option>
                                             <option value="medium" selected>Medium - Important update</option>
@@ -39,8 +82,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="target_audience">Target Audience *</label>
+                                    <div class="form-group" mb-2>
+                                        <label for="target_audience"> style="font-size: 12px; margin-bottom: 2px;">Target Audience *</label>
                                         <select name="target_audience" id="target_audience" class="form-control" required>
                                             <option value="all">Everyone (All Users)</option>
                                             <option value="students">Students Only</option>
@@ -52,7 +95,7 @@
                             </div>
 
                             <div class="form-group course-select" style="display:none;">
-                                <label for="course">Select Course *</label>
+                                <label for="course"> style="font-size: 12px; margin-bottom: 2px;">Select Course *</label>
                                 <select name="course" id="course" class="form-control">
                                     <option value="">-- Select Course --</option>
                                     {% for course in courses %}
@@ -61,22 +104,22 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="expires_at">Expiry Date (Optional)</label>
+                            <div class="form-group" mb-2>
+                                <label for="expires_at"> style="font-size: 12px; margin-bottom: 2px;">Expiry Date (Optional)</label>
                                 <input type="datetime-local" name="expires_at" id="expires_at" class="form-control">
-                                <small class="form-text text-muted">Leave empty for permanent announcement</small>
+                                <small class="form-text text-muted" style="font-size: 11px;">Leave empty for permanent announcement</small>
                             </div>
 
-                            <div class="form-group">
-                                <label for="attachment">Attachment (Optional)</label>
+                            <div class="form-group" mb-2>
+                                <label for="attachment"> style="font-size: 12px; margin-bottom: 2px;">Attachment (Optional)</label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="attachment" name="attachment">
-                                    <label class="custom-file-label" for="attachment">Choose file...</label>
+                                    <label class="custom-file-label" for="attachment"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                 </div>
-                                <small class="form-text text-muted">PDF, DOC, Image files supported (Max 5MB)</small>
+                                <small class="form-text text-muted" style="font-size: 11px;">PDF, DOC, Image files supported (Max 5MB)</small>
                             </div>
 
-                            <div class="alert alert-info">
+                            <div class="alert-professional-info">
                                 <h5><i class="icon fas fa-info-circle"></i> Preview</h5>
                                 <div id="preview">
                                     <strong id="preview-title">Title will appear here</strong>
@@ -90,7 +133,7 @@
                             <button type="submit" class="btn btn-warning btn-lg">
                                 <i class="fas fa-bullhorn"></i> Post Announcement
                             </button>
-                            <a href="{% url 'admin_view_announcements' %}" class="btn btn-secondary">
+                            <a href="{% url 'admin_view_announcements' %}" class="btn btn-professional-secondary">
                                 <i class="fas fa-arrow-left"></i> Cancel
                             </a>
                         </div>

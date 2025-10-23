@@ -2,47 +2,115 @@
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
+{% block custom_css %}
+<style>
+    .resource-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.2s ease;
+        margin-bottom: 20px;
+        height: 100%;
+    }
+
+    .resource-card:hover {
+        border-color: #003d82;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .resource-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background: #f5f5f5;
+    }
+
+    .resource-header.document { border-left: 4px solid #b91c1c; }
+    .resource-header.video { border-left: 4px solid #b45309; }
+    .resource-header.link { border-left: 4px solid #0369a1; }
+
+    .resource-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .bookmark-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #ffc107;
+        transition: all 0.2s ease;
+    }
+
+    .bookmark-btn:hover {
+        transform: scale(1.2);
+    }
+
+    .rating-stars i {
+        cursor: pointer;
+        color: #ffc107;
+        font-size: 16px;
+    }
+
+    .rating-stars i.far {
+        color: #d4d4d4;
+    }
+</style>
+{% endblock custom_css %}
+
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <!-- Search and Filter Section -->
-        <div class="row mb-3">
-            <div class="col-md-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-body">
-                        <form method="get" class="form-inline">
-                            <div class="input-group input-group-sm mr-2 mb-2">
-                                <input type="text" name="search" class="form-control" placeholder="Search materials..." value="{{ search_query }}">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <select name="subject" class="form-control form-control-sm mr-2 mb-2">
-                                <option value="">All Subjects</option>
-                                {% for subject in subjects %}
-                                <option value="{{ subject.id }}">{{ subject.name }}</option>
-                                {% endfor %}
-                            </select>
-                            
-                            <select name="type" class="form-control form-control-sm mr-2 mb-2">
-                                <option value="">All Types</option>
-                                <option value="document">Documents</option>
-                                <option value="link">Links</option>
-                                <option value="video">Videos</option>
-                            </select>
-                            
-                            <button type="submit" class="btn btn-sm btn-info mb-2">
-                                <i class="fas fa-filter"></i> Filter
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-book-open me-2"></i>Study Materials Library
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Access lecture notes, videos, and reference materials
+            </p>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="card-professional mb-4">
+            <div class="card-body-professional" style="padding: 20px;">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search materials..." value="{{ search_query }}">
+                            <button class="btn btn-professional-primary" type="submit">
+                                <i class="fas fa-search"></i>
                             </button>
-                            <a href="{% url 'student_view_resources' %}" class="btn btn-sm btn-secondary ml-2 mb-2">
-                                <i class="fas fa-redo"></i> Reset
-                            </a>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="col-md-3">
+                        <select name="subject" class="form-select">
+                            <option value="">All Subjects</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id }}">{{ subject.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <select name="type" class="form-select">
+                            <option value="">All Types</option>
+                            <option value="document">Documents</option>
+                            <option value="link">Links</option>
+                            <option value="video">Videos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <a href="{% url 'student_view_bookmarks' %}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-bookmark me-1"></i>Bookmarks
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -50,70 +118,71 @@
         <div class="row">
             {% for material in materials %}
             <div class="col-md-6 col-lg-4">
-                <div class="card card-outline {% if material.material_type == 'document' %}card-primary{% elif material.material_type == 'video' %}card-danger{% else %}card-success{% endif %}">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            {% if material.material_type == 'document' %}
-                                <i class="fas fa-file-pdf text-danger"></i>
-                            {% elif material.material_type == 'video' %}
-                                <i class="fab fa-youtube text-danger"></i>
-                            {% else %}
-                                <i class="fas fa-link text-primary"></i>
-                            {% endif %}
-                            {{ material.title|truncatewords:5 }}
-                        </h5>
-                        <div class="card-tools">
-                            <button class="btn btn-tool bookmark-btn {% if material.id in bookmarked_ids %}bookmarked{% endif %}" 
-                                    data-material-id="{{ material.id }}" title="Bookmark">
-                                <i class="{% if material.id in bookmarked_ids %}fas{% else %}far{% endif %} fa-bookmark text-warning"></i>
+                <div class="resource-card">
+                    <div class="resource-header {{material.material_type}}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h5 style="font-size: 16px; font-weight: 600; color: #1a202c; margin: 0;">
+                                    {% if material.material_type == 'document' %}
+                                        <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    {% elif material.material_type == 'video' %}
+                                        <i class="fab fa-youtube text-danger me-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-link text-primary me-2"></i>
+                                    {% endif %}
+                                    {{ material.title|truncatewords:6 }}
+                                </h5>
+                            </div>
+                            <button class="bookmark-btn {% if material.id in bookmarked_ids %}bookmarked{% endif %}" 
+                                    data-material-id="{{ material.id }}">
+                                <i class="{% if material.id in bookmarked_ids %}fas{% else %}far{% endif %} fa-bookmark"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted mb-2">
-                            <small>
-                                <i class="fas fa-book"></i> {{ material.subject.name }}<br>
-                                <i class="fas fa-user"></i> {{ material.uploaded_by.admin.first_name }} {{ material.uploaded_by.admin.last_name }}<br>
-                                <i class="fas fa-download"></i> {{ material.download_count }} downloads
-                            </small>
-                        </p>
+                    
+                    <div style="padding: 15px;">
+                        <div style="font-size: 13px; color: #4a5568; margin-bottom: 10px;">
+                            <div><i class="fas fa-book me-1"></i>{{ material.subject.name }}</div>
+                            <div><i class="fas fa-user-tie me-1"></i>{{ material.uploaded_by.admin.first_name }} {{ material.uploaded_by.admin.last_name }}</div>
+                            <div><i class="fas fa-download me-1"></i>{{ material.download_count|default:"0" }} downloads</div>
+                        </div>
                         
                         {% if material.description %}
-                        <p class="mb-2">{{ material.description|truncatewords:15 }}</p>
+                        <p style="font-size: 13px; color: #4a5568; margin-bottom: 10px;">
+                            {{ material.description|truncatewords:15 }}
+                        </p>
                         {% endif %}
                         
                         {% if material.tags %}
-                        <p class="mb-2">
+                        <div style="margin-bottom: 10px;">
                             {% for tag in material.tags.split:',' %}
-                            <span class="badge badge-secondary">{{ tag|trim }}</span>
+                            <span class="badge bg-secondary">{{ tag|trim }}</span>
                             {% endfor %}
-                        </p>
+                        </div>
                         {% endif %}
                         
-                        <!-- Rating Display -->
-                        <div class="mb-2">
-                            <div class="rating-stars" data-material-id="{{ material.id }}">
-                                {% for i in "12345" %}
-                                <i class="{% if forloop.counter <= material.average_rating %}fas{% else %}far{% endif %} fa-star" 
-                                   data-rating="{{ forloop.counter }}"></i>
-                                {% endfor %}
-                                <small class="text-muted">({{ material.average_rating|floatformat:1 }})</small>
-                            </div>
+                        <!-- Rating -->
+                        <div class="rating-stars mb-2" data-material-id="{{ material.id }}">
+                            {% for i in "12345" %}
+                            <i class="{% if forloop.counter <= material.average_rating|default:0 %}fas{% else %}far{% endif %} fa-star" 
+                               data-rating="{{ forloop.counter }}"></i>
+                            {% endfor %}
+                            <small class="text-muted">({{ material.average_rating|default:0|floatformat:1 }})</small>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="btn-group btn-block">
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-grid">
                             {% if material.material_type == 'document' %}
-                                <a href="{% url 'download_material' material.id %}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-download"></i> Download
+                                <a href="{% url 'download_material' material.id %}" class="btn btn-professional-primary btn-sm">
+                                    <i class="fas fa-download me-1"></i>Download
                                 </a>
                             {% elif material.material_type == 'video' %}
-                                <a href="{{ material.url }}" target="_blank" class="btn btn-danger btn-sm">
-                                    <i class="fab fa-youtube"></i> Watch
+                                <a href="{{ material.url }}" target="_blank" class="btn btn-professional-danger btn-sm">
+                                    <i class="fab fa-youtube me-1"></i>Watch Video
                                 </a>
                             {% else %}
-                                <a href="{{ material.url }}" target="_blank" class="btn btn-success btn-sm">
-                                    <i class="fas fa-external-link-alt"></i> Open Link
+                                <a href="{{ material.url }}" target="_blank" class="btn btn-professional-success btn-sm">
+                                    <i class="fas fa-external-link-alt me-1"></i>Open Link
                                 </a>
                             {% endif %}
                         </div>
@@ -122,12 +191,10 @@
             </div>
             {% empty %}
             <div class="col-12">
-                <div class="card">
-                    <div class="card-body text-center py-5">
-                        <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
-                        <h4 class="text-muted">No study materials available yet</h4>
-                        <p>Check back later or contact your faculty for course materials.</p>
-                    </div>
+                <div class="empty-state-professional">
+                    <i class="fas fa-folder-open"></i>
+                    <h4>No Study Materials Available</h4>
+                    <p>Check back later or contact your faculty for course materials</p>
                 </div>
             </div>
             {% endfor %}
@@ -153,11 +220,11 @@
                     if (response.action === 'added') {
                         btn.addClass('bookmarked');
                         btn.find('i').removeClass('far').addClass('fas');
-                        showToast('Added to bookmarks!', 'success');
+                        window.toast.success('Added to bookmarks!');
                     } else {
                         btn.removeClass('bookmarked');
                         btn.find('i').removeClass('fas').addClass('far');
-                        showToast('Removed from bookmarks', 'info');
+                        window.toast.info('Removed from bookmarks');
                     }
                 }
             }
@@ -189,7 +256,7 @@
             },
             success: function(response) {
                 if (response.status === 'success') {
-                    showToast('Rated ' + rating + '/5 stars!', 'success');
+                    window.toast.success('Rated ' + rating + '/5 stars!');
                     if (response.average) {
                         stars.find('small').text('(' + parseFloat(response.average).toFixed(1) + ')');
                     }

@@ -1,15 +1,58 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-warning">
                 <h3 class="card-title"><i class="fas fa-exclamation-circle"></i> {{ page_title }}</h3>
             </div>
-            <div class="card-body">
+            <div class="card-body-professional" style="padding: 10px;">
                 {% if grievances %}
                 <ul class="nav nav-tabs" id="grievanceTab" role="tablist">
                     <li class="nav-item">
@@ -208,7 +251,7 @@
                                 {% endif %}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-professional-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -223,12 +266,12 @@
                                 <h4 class="modal-title">Assign Grievance</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
-                            <form method="post" action="{% url 'assign_grievance' %}">
+                            <form method="post" action="{% url 'assign_grievance' %}" class="compact-form">
                                 {% csrf_token %}
                                 <input type="hidden" name="grievance_id" value="{{ grievance.id }}">
                                 <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Assign to Staff Member</label>
+                                    <div class="form-group" mb-2>
+                                        <label> style="font-size: 12px; margin-bottom: 2px;">Assign to Staff Member</label>
                                         <select name="staff_id" class="form-control" required>
                                             <option value="">-- Select Staff --</option>
                                             {% for staff in all_staff %}
@@ -238,17 +281,17 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-warning">Assign</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-professional-warning">Assign</button>
+                                    <button type="button" class="btn btn-professional-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </form>
                         </div>
                     </div>
-                </div>
+            </div>
                 {% endif %}
                 {% endfor %}
                 {% else %}
-                <div class="alert alert-success">
+                <div class="alert-professional-success">
                     <h5><i class="fas fa-check-circle"></i> No Grievances</h5>
                     <p class="mb-0">No grievances have been submitted. Excellent!</p>
                 </div>

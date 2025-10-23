@@ -32,3 +32,5 @@ EMAIL_HOST_PASSWORD=your-16-character-app-password
 # Optional: Database URL (for deployment)
 # DATABASE_URL=postgresql://postgres.yqwszaekwucrnnjuadtp:oiXsUCnflSlzH7zH@aws-1-ap-south-1.pooler.supabase.com:6543/postgres
 
+
+

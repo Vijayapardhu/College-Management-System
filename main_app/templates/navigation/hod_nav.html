@@ -1,0 +1,404 @@
+<!-- HOD/Admin Navigation -->
+<nav class="sidebar-nav main-sidebar" style="height: 100vh; overflow-y: auto; overflow-x: hidden; min-width: 280px; width: 280px;">
+    <!-- Search -->
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <div class="relative">
+            <input type="text" 
+                   placeholder="Search..." 
+                   class="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                   id="nav-search">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <ul class="space-y-1 px-3 py-4" style="height: calc(100vh - 120px); overflow-y: auto;">
+        <!-- Comprehensive Dashboard -->
+        <li>
+            <a href="{% url 'hod_comprehensive_dashboard' %}" 
+               class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-gray-800"
+               style="white-space: nowrap; overflow: visible;">
+                <i class="fas fa-university mr-3 text-lg flex-shrink-0"></i>
+                <span class="nav-text flex-1 min-w-0" style="white-space: nowrap; overflow: visible;">Department Dashboard</span>
+                <span class="ml-auto bg-primary-100 text-primary-800 text-xs px-2 py-1 rounded-full flex-shrink-0">New</span>
+            </a>
+        </li>
+
+        <!-- Legacy Dashboard -->
+        <li>
+            <a href="{% url 'hod_home' %}" 
+               class="nav-item group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-gray-800">
+                <i class="fas fa-tachometer-alt mr-3 text-lg"></i>
+                <span class="nav-text">Legacy Dashboard</span>
+            </a>
+        </li>
+
+        <!-- Department Management -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-building mr-2"></i>
+                Department Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'timetable_dashboard' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-calendar-alt mr-3"></i>
+                        <span class="nav-text">Timetables</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'department_analytics' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'department_management' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-cogs mr-3"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- User Management -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-users mr-2"></i>
+                User Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'user_management_hub' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-users-cog mr-3"></i>
+                        <span class="nav-text">User Hub</span>
+                        <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">New</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'add_student' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user-plus mr-3"></i>
+                        <span class="nav-text">Add Student</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'manage_student' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user-graduate mr-3"></i>
+                        <span class="nav-text">Manage Students</span>
+                        <span class="ml-auto bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">{{ total_students }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'add_staff' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user-tie mr-3"></i>
+                        <span class="nav-text">Add Staff</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'manage_staff' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-chalkboard-teacher mr-3"></i>
+                        <span class="nav-text">Manage Staff</span>
+                        <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{{ total_staff }}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Academic Management -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Academic Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'add_course' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-plus-circle mr-3"></i>
+                        <span class="nav-text">Add Course</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'manage_course' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-book mr-3"></i>
+                        <span class="nav-text">Manage Courses</span>
+                        <span class="ml-auto bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">{{ total_course }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'add_subject' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-plus mr-3"></i>
+                        <span class="nav-text">Add Subject</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'manage_subject' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-list mr-3"></i>
+                        <span class="nav-text">Manage Subjects</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'add_session' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-calendar-plus mr-3"></i>
+                        <span class="nav-text">Add Session</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'manage_session' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-calendar-alt mr-3"></i>
+                        <span class="nav-text">Manage Sessions</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Academic Operations -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Academic Operations
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'academic_operations' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-tasks mr-3"></i>
+                        <span class="nav-text">Operations Center</span>
+                        <span class="ml-auto bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">New</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'reports_hub' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        <span class="nav-text">Reports Hub</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Approval Center -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-check-circle mr-2"></i>
+                Approvals & Workflows
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'approval_center' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-inbox mr-3"></i>
+                        <span class="nav-text">Approval Center</span>
+                        <span class="ml-auto bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full" id="pending-approvals-count">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'student_leave_view' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-calendar-times mr-3"></i>
+                        <span class="nav-text">Student Leaves</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_leave_view' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user-clock mr-3"></i>
+                        <span class="nav-text">Staff Leaves</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Attendance & Results -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-chart-line mr-2"></i>
+                Academic Tracking
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'student_attendance_view' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user-check mr-3"></i>
+                        <span class="nav-text">Student Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'student_feedback_message' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-comments mr-3"></i>
+                        <span class="nav-text">Student Feedback</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_feedback_message' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-comment-dots mr-3"></i>
+                        <span class="nav-text">Staff Feedback</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'student_leave_view' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-calendar-times mr-3"></i>
+                        <span class="nav-text">Student Leave</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_leave_view' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-calendar-minus mr-3"></i>
+                        <span class="nav-text">Staff Leave</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Analytics & Reports -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-chart-bar mr-2"></i>
+                Analytics & Reports
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'analytics_dashboard' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-chart-pie mr-3"></i>
+                        <span class="nav-text">Analytics Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance_analytics' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        <span class="nav-text">Attendance Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'report_builder' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        <span class="nav-text">Report Builder</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- System Management -->
+        <li class="nav-section">
+            <div class="nav-section-header flex items-center px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <i class="fas fa-cogs mr-2"></i>
+                System Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'view_profile' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user mr-3"></i>
+                        <span class="nav-text">View Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'edit_profile' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-user-edit mr-3"></i>
+                        <span class="nav-text">Edit Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'manage_public_links' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+                        <i class="fas fa-link mr-3"></i>
+                        <span class="nav-text">Manage Public Links</span>
+                        <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">New</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'admin_logout' %}" 
+                       class="nav-item group flex items-center px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- Recently Accessed -->
+    <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Recently Accessed</h3>
+        <div class="space-y-1">
+            <a href="#" class="flex items-center px-2 py-1 text-xs text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                <i class="fas fa-clock mr-2"></i>
+                <span>Student List</span>
+            </a>
+            <a href="#" class="flex items-center px-2 py-1 text-xs text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                <i class="fas fa-clock mr-2"></i>
+                <span>Attendance Report</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Navigation JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('nav-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.closest('li').style.display = 'block';
+                } else {
+                    item.closest('li').style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Active state management
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-item');
+    
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+            link.classList.add('bg-primary-100', 'text-primary-700', 'dark:bg-gray-800');
+            link.classList.remove('text-gray-700', 'hover:bg-gray-100', 'hover:text-gray-900');
+        }
+    });
+
+    // Collapsible sections
+    const sectionHeaders = document.querySelectorAll('.nav-section-header');
+    sectionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const section = this.closest('.nav-section');
+            const submenu = section.querySelector('ul');
+            if (submenu) {
+                submenu.classList.toggle('hidden');
+                this.classList.toggle('active');
+            }
+        });
+    });
+});
+</script>

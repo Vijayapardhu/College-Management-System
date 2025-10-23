@@ -5,46 +5,170 @@
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-info">
-                <h3 class="card-title"><i class="fas fa-laptop-code"></i> {{ page_title }}</h3>
-            </div>
-            <div class="card-body">
-                {% if exams %}
-                <div class="row">
-                    {% for exam in exams %}
-                    <div class="col-md-6 mb-3">
-                        <div class="card">
-                            <div class="card-header bg-primary">
-                                <h5 class="card-title mb-0">{{ exam.title }}</h5>
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-laptop-code me-2"></i>Online Examinations
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Take your online exams and track your performance
+            </p>
+        </div>
+
+        {% if exams %}
+        <div class="row">
+            {% for exam in exams %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card-professional exam-card">
+                    <div class="card-header-professional exam-header">
+                        <h5 style="font-size: 16px; font-weight: 600; color: #1a202c; margin: 0;">
+                            <i class="fas fa-file-alt me-2"></i>{{ exam.title }}
+                        </h5>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="exam-details">
+                            <div class="detail-item">
+                                <i class="fas fa-book text-primary me-2"></i>
+                                <span><strong>Subject:</strong> {{ exam.subject.name }}</span>
                             </div>
-                            <div class="card-body">
-                                <p><strong>Subject:</strong> {{ exam.subject.name }}</p>
-                                <p><strong>Duration:</strong> {{ exam.duration_minutes }} minutes</p>
-                                <p><strong>Total Marks:</strong> {{ exam.total_marks }}</p>
-                                <p><strong>Start:</strong> {{ exam.start_datetime|date:"Y-m-d H:i" }}</p>
-                                <p><strong>End:</strong> {{ exam.end_datetime|date:"Y-m-d H:i" }}</p>
-                                {% if exam.instructions %}
-                                <hr>
-                                <p><small>{{ exam.instructions }}</small></p>
-                                {% endif %}
+                            <div class="detail-item">
+                                <i class="fas fa-clock text-warning me-2"></i>
+                                <span><strong>Duration:</strong> {{ exam.duration_minutes }} minutes</span>
                             </div>
-                            <div class="card-footer">
-                                <a href="#" class="btn btn-success btn-block">
-                                    <i class="fas fa-play"></i> Start Exam
-                                </a>
+                            <div class="detail-item">
+                                <i class="fas fa-star text-success me-2"></i>
+                                <span><strong>Total Marks:</strong> {{ exam.total_marks }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar text-info me-2"></i>
+                                <span><strong>Start:</strong> {{ exam.start_datetime|date:"d M Y, H:i" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-times text-danger me-2"></i>
+                                <span><strong>End:</strong> {{ exam.end_datetime|date:"d M Y, H:i" }}</span>
                             </div>
                         </div>
+                        
+                        {% if exam.instructions %}
+                        <div class="exam-instructions">
+                            <h6 style="font-size: 14px; font-weight: 600; color: #4a5568; margin: 15px 0 8px 0;">
+                                <i class="fas fa-info-circle me-1"></i>Instructions:
+                            </h6>
+                            <p style="font-size: 13px; color: #4a5568; margin: 0; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                {{ exam.instructions }}
+                            </p>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="exam-status mt-3">
+                            {% now "Y-m-d H:i:s" as current_time %}
+                            {% if exam.start_datetime|date:"Y-m-d H:i:s" > current_time %}
+                                <span class="badge-professional-warning">
+                                    <i class="fas fa-clock me-1"></i>Not Started
+                                </span>
+                            {% elif exam.end_datetime|date:"Y-m-d H:i:s" < current_time %}
+                                <span class="badge-professional-danger">
+                                    <i class="fas fa-times me-1"></i>Expired
+                                </span>
+                            {% else %}
+                                <span class="badge-professional-success">
+                                    <i class="fas fa-play me-1"></i>Available
+                                </span>
+                            {% endif %}
+                        </div>
                     </div>
-                    {% endfor %}
+                    <div style="padding: 15px 20px; border-top: 1px solid #e5e5e5; background: #f8f9fa;">
+                        <div class="d-grid">
+                            {% now "Y-m-d H:i:s" as current_time %}
+                            {% if exam.start_datetime|date:"Y-m-d H:i:s" <= current_time and exam.end_datetime|date:"Y-m-d H:i:s" >= current_time %}
+                                <a href="#" class="btn btn-professional-primary">
+                                    <i class="fas fa-play me-2"></i>Start Exam
+                                </a>
+                            {% elif exam.start_datetime|date:"Y-m-d H:i:s" > current_time %}
+                                <button class="btn btn-outline-secondary" disabled>
+                                    <i class="fas fa-clock me-2"></i>Exam Not Started
+                                </button>
+                            {% else %}
+                                <button class="btn btn-outline-danger" disabled>
+                                    <i class="fas fa-times me-2"></i>Exam Expired
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No exams available at the moment. Check back later!
-                </div>
-                {% endif %}
             </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-state-professional">
+            <i class="fas fa-laptop-code"></i>
+            <h4>No Online Exams Available</h4>
+            <p>There are no online examinations scheduled at the moment. Check back later!</p>
+        </div>
+        {% endif %}
     </div>
 </section>
+
+<style>
+.exam-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e5e5e5;
+}
+
+.exam-card:hover {
+    border-color: #003d82;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.exam-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.exam-details .detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.exam-details .detail-item i {
+    width: 16px;
+    text-align: center;
+}
+
+.exam-instructions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.badge-professional-warning {
+    background: #b45309;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-professional-success {
+    background: #0f7c4f;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-professional-danger {
+    background: #b91c1c;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+</style>
 {% endblock content %}

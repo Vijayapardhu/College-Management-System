@@ -27,19 +27,29 @@
 {% endblock custom_css %}
 {% block content %}
 
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-calendar-check me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
+                <div class="card-professional">
+                    <div class="card-header-professional">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
 
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <div class="card-body">
+                    <div class="card-body-professional">
 
 
 
@@ -61,8 +71,8 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group"><div  style="display: none;" class="alert alert-danger" id='error_attendance'></div>
-                                <div class="alert alert-success" id='success_attendance' style="display: none;"></div>
+                        <div class="form-group"><div  style="display: none;" class="alert-professional-danger" id='error_attendance'></div>
+                                <div class="alert-professional-success" id='success_attendance' style="display: none;"></div>
                              <button type="button" id='fetch_attendance' class="btn btn-primary btn-block">Fetch
                                     Attendance</button>
                         </div>
@@ -146,7 +156,7 @@
 
                 }
             }).fail(function(response){
-                alert("Error While Fetching Data")
+                window.toast.error("Error While Fetching Data")
                 $("#error_attendance").html("")
                 $("#error_attendance").show()
                 $("#attendance_block").hide()
@@ -162,7 +172,7 @@
             var subject = $("#subject").val()
             $("#student_data").html(null)
 if (attendance_date.length  == 0){
-    alert("Please Choose A Date");
+    window.toast.error("Please Choose A Date");
     $("#save_attendance").hide()
 
     return false;
@@ -178,7 +188,7 @@ if (attendance_date.length  == 0){
             }).done(function (response) {
                 var json_data = JSON.parse(response)
                 if (json_data.length < 1) {
-                    alert("No data to display")
+                    window.toast.error("No data to display")
 
                 } else {
 
@@ -197,7 +207,7 @@ if (attendance_date.length  == 0){
                     $("#student_data").html(div_data)
                 }
             }).fail(function (response) {
-                alert("Error in fetching students")
+                window.toast.error("Error in fetching students")
             })
 
         })

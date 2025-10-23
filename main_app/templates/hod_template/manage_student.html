@@ -2,47 +2,292 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
+{% block custom_css %}
+<style>
+    /* Professional Table Card */
+    .card {
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+        background: #f5f5f5;
+        color: #1a202c;
+        border-bottom: 2px solid #e5e5e5;
+        padding: 20px 25px;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .card-header h3 {
+        font-weight: 600;
+        margin: 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #1a202c;
+    }
+
+    /* Table enhancements */
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 2px solid #e2e8f0;
+        padding: 1rem;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8fafc;
+        transform: scale(1.01);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .table tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    /* Professional Buttons */
+    .btn {
+        border-radius: 4px;
+        font-weight: 500;
+        padding: 8px 16px;
+        transition: all 0.2s ease;
+        border: none;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background: #003d82;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #002952;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-danger {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #991b1b;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-success {
+        background: #0f7c4f;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #0a5c3a;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-outline-primary {
+        background: white;
+        color: #003d82;
+        border: 1px solid #003d82;
+    }
+
+    .btn-outline-primary:hover {
+        background: #003d82;
+        color: white;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    /* Action buttons group */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* Badge styling */
+    .badge {
+        padding: 0.35em 0.65em;
+        font-weight: 500;
+        border-radius: 0.375rem;
+    }
+
+    /* Search and filter section */
+    .search-filter-section {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e2e8f0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-user-graduate me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
+        <!-- Professional Header -->
+        <div class="page-header mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 style="margin: 0; font-size: 26px; font-weight: 600; color: #003d82;">
+                        {{page_title}}
+                    </h2>
+                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #4a5568;">
+                        Manage and view all registered students
+                    </p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="{% url 'add_student' %}" class="btn btn-professional-primary">
+                        <i class="fas fa-plus me-2"></i>Add New Student
+                    </a>
+                    <button class="btn btn-outline-primary" onclick="exportTableToExcel()">
+                        <i class="fas fa-file-excel me-2"></i>Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 class="card-title">
+                            <i class="fas fa-table me-2"></i>Student Records
+                            <span class="badge bg-light text-dark ms-2" id="studentCount">{{ students|length }}</span>
+                        </h3>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="example2" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>SN</th>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>Gender</th>
-                                    <th>Course</th>
-                                    <th>Edit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for student in students %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{student.last_name}}, {{student.first_name}}</td>
-                                    <td>{{student.email}}</td>
-                                    <td>{{student.gender}}</td>
-                                    <td>{{student.student.course.name}}</td>
-    
-                                    
-                                    <td><a href="{% url 'edit_student' student.student.id %}" class="btn btn-primary">Edit</a> -
-                                        <a href="{% url 'delete_student' student.student.id %}" class="btn btn-danger" onclick="return confirm('Are you sure about this ?')">Delete</a>
+                    
+                    <div class="card-body-professional">
+                        {% if students %}
+                        <!-- Loading skeleton (shown while table initializes) -->
+                        <div id="tableLoader" style="display: none;">
+                            <div class="text-center p-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2 text-muted">Loading students...</p>
+                            </div>
+                        </div>
 
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <!-- Actual table -->
+                        <div id="tableContent">
+                            <table id="example2" class="table table-bordered table-hover data-table">
+                                <thead>
+                                    <tr>
+                                        <th>SN</th>
+                                        <th>Full Name</th>
+                                        <th>Email</th>
+                                        <th>Gender</th>
+                                        <th>Course</th>
+                                        <th>Roll Number</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for student in students %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if student.admin.profile_pic %}
+                                                <img src="{{ student.admin.profile_pic.url }}" 
+                                                     alt="{{ student.admin.first_name }}" 
+                                                     class="rounded-circle me-2"
+                                                     style="width: 32px; height: 32px; object-fit: cover;">
+                                                {% else %}
+                                                <div class="bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center" 
+                                                     style="width: 32px; height: 32px; font-size: 12px; font-weight: 600;">
+                                                    {{ student.admin.first_name|first }}{{ student.admin.last_name|first }}
+                                                </div>
+                                                {% endif %}
+                                                <strong>{{student.admin.last_name}}, {{student.admin.first_name}}</strong>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-envelope text-muted me-1"></i>
+                                            {{student.admin.email}}
+                                        </td>
+                                        <td>
+                                            {% if student.admin.gender == 'M' %}
+                                            <span class="badge bg-info">Male</span>
+                                            {% elif student.admin.gender == 'F' %}
+                                            <span class="badge bg-pink">Female</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary">Other</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-graduation-cap text-muted me-1"></i>
+                                            {{student.course.name}}
+                                        </td>
+                                        <td>
+                                            <code>{{student.roll_number|default:"N/A"}}</code>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'edit_student' student.id %}" 
+                                                   class="btn btn-sm btn-primary"
+                                                   data-bs-toggle="tooltip"
+                                                   title="Edit student details">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'delete_student' student.id %}" 
+                                                   class="btn btn-sm btn-danger delete-btn"
+                                                   data-student-name="{{student.admin.first_name}} {{student.admin.last_name}}"
+                                                   data-bs-toggle="tooltip"
+                                                   title="Delete student">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <!-- Empty state -->
+                        <div class="empty-state text-center py-5">
+                            <div class="empty-state-icon mb-3">
+                                <i class="fas fa-users" style="font-size: 4rem; color: #cbd5e0;"></i>
+                            </div>
+                            <h4>No Students Found</h4>
+                            <p class="text-muted">Start by adding your first student to the system.</p>
+                            <a href="{% url 'add_student' %}" class="btn btn-primary mt-3">
+                                <i class="fas fa-plus me-2"></i>Add First Student
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -50,3 +295,98 @@
     </div>
 </section>
 {% endblock content %}
+
+{% block custom_js %}
+<script>
+$(document).ready(function() {
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+
+    {% if students %}
+    // Show loading skeleton briefly
+    $('#tableLoader').show();
+    $('#tableContent').hide();
+
+    // Initialize DataTable with enhanced features
+    const table = $('#example2').DataTable({
+        responsive: true,
+        lengthChange: true,
+        autoWidth: false,
+        pageLength: 25,
+        order: [[1, 'asc']], // Sort by name
+        language: {
+            search: "Search students:",
+            lengthMenu: "Show _MENU_ students per page",
+            info: "Showing _START_ to _END_ of _TOTAL_ students",
+            infoEmpty: "No students found",
+            infoFiltered: "(filtered from _TOTAL_ total students)",
+            zeroRecords: "No matching students found",
+            paginate: {
+                first: "First",
+                last: "Last",
+                next: "Next",
+                previous: "Previous"
+            }
+        },
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
+        initComplete: function() {
+            // Hide loader, show table
+            $('#tableLoader').hide();
+            $('#tableContent').fadeIn();
+            
+            // Show success message
+            window.toast.info(`Loaded ${this.api().data().length} students`);
+        }
+    });
+
+    // Enhanced delete confirmation
+    $('.delete-btn').on('click', function(e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+        const studentName = $(this).data('student-name');
+
+        ConfirmationDialog.show({
+            title: 'Delete Student',
+            message: `Are you sure you want to delete <strong>${studentName}</strong>? This action cannot be undone and will remove all associated records.`,
+            type: 'danger',
+            confirmText: 'Yes, Delete',
+            cancelText: 'Cancel',
+            onConfirm: () => {
+                window.loader.showPageLoader('Deleting student...');
+                window.location.href = url;
+            }
+        });
+    });
+
+    // Add export to Excel functionality
+    window.exportTableToExcel = function() {
+        const data = table.rows({ search: 'applied' }).data().toArray();
+        
+        if (data.length === 0) {
+            window.toast.warning('No data to export');
+            return;
+        }
+
+        window.toast.info('Export functionality will be implemented using DataTables buttons');
+        // Note: Full Excel export requires DataTables Buttons extension
+    };
+
+    // Update count badge on filter
+    table.on('search.dt', function() {
+        const count = table.rows({ search: 'applied' }).count();
+        $('#studentCount').text(count);
+    });
+    {% endif %}
+
+    // Show success message if student was added/edited
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('added') === 'true') {
+        window.toast.success('Student added successfully!');
+    } else if (urlParams.get('updated') === 'true') {
+        window.toast.success('Student updated successfully!');
+    } else if (urlParams.get('deleted') === 'true') {
+        window.toast.success('Student deleted successfully!');
+    }
+});
+</script>
+{% endblock custom_js %}

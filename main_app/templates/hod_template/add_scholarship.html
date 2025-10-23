@@ -1,47 +1,90 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-warning">
                 <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
             </div>
-            <form method="post">
+            <form method="post" class="compact-form">
                 {% csrf_token %}
-                <div class="card-body">
+                <div class="card-body-professional" style="padding: 10px;">
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="form-group">
-                                <label>Scholarship Name *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Scholarship Name *</label>
                                 {{ form.name }}
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Scholarship Type *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Scholarship Type *</label>
                                 {{ form.scholarship_type }}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Description *</label>
+                    <div class="form-group" mb-2>
+                        <label> style="font-size: 12px; margin-bottom: 2px;">Description *</label>
                         {{ form.description }}
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Amount (₹) *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Amount (₹) *</label>
                                 {{ form.amount }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Minimum CGPA</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Minimum CGPA</label>
                                 {{ form.minimum_cgpa }}
                             </div>
                         </div>
@@ -49,21 +92,21 @@
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Application Start Date *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Application Start Date *</label>
                                 {{ form.application_start_date }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Application End Date *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Application End Date *</label>
                                 {{ form.application_end_date }}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Eligibility Criteria</label>
+                    <div class="form-group" mb-2>
+                        <label> style="font-size: 12px; margin-bottom: 2px;">Eligibility Criteria</label>
                         {{ form.eligibility_criteria }}
                     </div>
                 </div>
@@ -71,7 +114,7 @@
                     <button type="submit" class="btn btn-warning btn-lg">
                         <i class="fas fa-save"></i> Create Scholarship
                     </button>
-                    <a href="{% url 'manage_scholarships' %}" class="btn btn-secondary">
+                    <a href="{% url 'manage_scholarships' %}" class="btn btn-professional-secondary">
                         <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>

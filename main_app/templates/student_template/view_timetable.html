@@ -1,99 +1,40 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}My Class Timetable{% endblock %}
 
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-primary">
-                <h3 class="card-title"><i class="fas fa-table"></i> My Weekly Timetable</h3>
-                <div class="card-tools">
-                    <button class="btn btn-light btn-sm" onclick="window.print()">
-                        <i class="fas fa-print"></i> Print
-                    </button>
-                </div>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-calendar-alt me-2"></i>My Class Timetable
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View your weekly class schedule
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Weekly Schedule</h3>
             </div>
-            <div class="card-body">
-                <div class="alert alert-info">
-                    <strong>Course:</strong> {{ student.course.name }} | 
-                    <strong>Semester:</strong> {{ student.current_semester }} | 
-                    <strong>Session:</strong> {{ student.session }}
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped timetable-table">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Period</th>
-                                <th>Monday</th>
-                                <th>Tuesday</th>
-                                <th>Wednesday</th>
-                                <th>Thursday</th>
-                                <th>Friday</th>
-                                <th>Saturday</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for period_num in "12345678" %}
-                            <tr>
-                                <td class="font-weight-bold text-center">P{{ period_num }}</td>
-                                {% for day in "monday,tuesday,wednesday,thursday,friday,saturday"|split:"," %}
-                                <td>
-                                    {% for slot in timetable|get_item:day %}
-                                        {% if slot.period == period_num %}
-                                        <div class="timetable-slot {% if slot.is_lab %}lab-slot{% endif %}">
-                                            <strong>{{ slot.subject.name }}</strong><br>
-                                            <small class="text-muted">
-                                                {{ slot.staff.admin.first_name }} {{ slot.staff.admin.last_name }}<br>
-                                                {{ slot.start_time|time:"h:i A" }} - {{ slot.end_time|time:"h:i A" }}<br>
-                                                Room: {{ slot.room_number }}
-                                                {% if slot.is_lab %}<span class="badge badge-info">LAB</span>{% endif %}
-                                            </small>
-                                        </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h4>Timetable Not Available</h4>
+                    <p>Your class timetable will be displayed here once published by administration</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
 
-<style>
-.timetable-table td {
-    vertical-align: top;
-    min-height: 80px;
-}
-.timetable-slot {
-    padding: 8px;
-    background: #f8f9fa;
-    border-left: 3px solid #007bff;
-    margin-bottom: 5px;
-}
-.lab-slot {
-    background: #e3f2fd;
-    border-left-color: #2196f3;
-}
-@media print {
-    .card-header .btn, .main-sidebar, .main-header, .content-header {
-        display: none !important;
-    }
-}
-</style>
 
-<script>
-// Custom Django template filter for dictionary access
-Vue.filter('get_item', function(obj, key) {
-    return obj[key];
-});
-</script>
-{% endblock content %}
+
+
+
+
 
 
 

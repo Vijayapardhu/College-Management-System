@@ -1,0 +1,282 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .upload-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .upload-zone {
+        border: 2px dashed #d4d4d4;
+        border-radius: 4px;
+        padding: 40px;
+        text-align: center;
+        background: #fafafa;
+        transition: all 0.2s ease;
+    }
+
+    .upload-zone:hover {
+        border-color: #003d82;
+        background: #f5f5f5;
+    }
+
+    .upload-zone.dragover {
+        border-color: #003d82;
+        background: #e6f2ff;
+    }
+
+    .instructions-box {
+        background: #f5f5f5;
+        border-left: 4px solid #0369a1;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: 4px;
+    }
+
+    .sample-template {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-calendar-check me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin-bottom: 5px;">
+                    <i class="fas fa-file-upload me-2"></i>{{ page_title }}
+                </h2>
+                <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                    Import attendance records from Excel or CSV file
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="upload-card">
+                    <form method="POST" enctype="multipart/form-data" id="bulkUploadForm">
+                        {% csrf_token %}
+
+                        <!-- Subject and Session Selection -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Subject <span class="text-danger">*</span></label>
+                                <select name="subject" class="form-select" required>
+                                    <option value="">Select Subject</option>
+                                    {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Session <span class="text-danger">*</span></label>
+                                <select name="session" class="form-select" required>
+                                    <option value="">Select Session</option>
+                                    {% for session in sessions %}
+                                    <option value="{{ session.id }}">{{ session }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Attendance Date <span class="text-danger">*</span></label>
+                                <input type="date" name="date" class="form-control" required max="{{ today }}">
+                            </div>
+                        </div>
+
+                        <!-- File Upload Zone -->
+                        <div class="upload-zone" id="uploadZone">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <h5>Drop Excel/CSV file here or click to browse</h5>
+                            <p class="text-muted mb-3">Supported formats: .xlsx, .xls, .csv (Max size: 5MB)</p>
+                            <input type="file" 
+                                   name="attendance_file" 
+                                   id="attendanceFile" 
+                                   accept=".xlsx,.xls,.csv" 
+                                   class="form-control" 
+                                   required
+                                   style="display: none;">
+                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('attendanceFile').click()">
+                                <i class="fas fa-folder-open me-2"></i>Browse Files
+                            </button>
+                            <div id="fileName" class="mt-3 fw-semibold text-primary" style="display: none;"></div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <a href="{% url 'staff_take_attendance' %}" class="btn btn-professional-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-professional-primary" id="submitBtn">
+                                <i class="fas fa-upload me-2"></i>Import Attendance
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="col-lg-4">
+                <div class="instructions-box">
+                    <h5 style="color: #0369a1; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle me-2"></i>Instructions
+                    </h5>
+                    <ol style="font-size: 14px; padding-left: 20px; color: #4a5568;">
+                        <li class="mb-2">Select subject, session, and date</li>
+                        <li class="mb-2">Upload Excel or CSV file with attendance data</li>
+                        <li class="mb-2">File must contain two columns:
+                            <ul>
+                                <li><code>roll_number</code> - Student roll number</li>
+                                <li><code>status</code> - Present/Absent or 1/0</li>
+                            </ul>
+                        </li>
+                        <li class="mb-2">Click Import to process the file</li>
+                        <li>System will show success/error count</li>
+                    </ol>
+                </div>
+
+                <div class="sample-template">
+                    <h6 style="color: #1a202c; margin-bottom: 15px;">
+                        <i class="fas fa-file-excel me-2"></i>Sample File Format
+                    </h6>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>roll_number</th>
+                                <th>status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>21CSE001</td>
+                                <td>Present</td>
+                            </tr>
+                            <tr>
+                                <td>21CSE002</td>
+                                <td>Absent</td>
+                            </tr>
+                            <tr>
+                                <td>21CSE003</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>21CSE004</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-sm btn-success w-100 mt-2" onclick="downloadSampleTemplate()">
+                        <i class="fas fa-download me-2"></i>Download Sample Template
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+$(document).ready(function() {
+    // File input handling
+    const fileInput = document.getElementById('attendanceFile');
+    const uploadZone = document.getElementById('uploadZone');
+    const fileName = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                window.toast.error('File size must be less than 5MB');
+                this.value = '';
+                return;
+            }
+            
+            fileName.textContent = `Selected: ${file.name}`;
+            fileName.style.display = 'block';
+            window.toast.success('File selected successfully');
+        }
+    });
+
+    // Drag and drop
+    uploadZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', function(e) {
+        this.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // Form submission
+    $('#bulkUploadForm').on('submit', function(e) {
+        const submitBtn = document.getElementById('submitBtn');
+        if (this.checkValidity()) {
+            window.loader.showButtonLoading(submitBtn, 'Importing...');
+        }
+    });
+});
+
+// Download sample template
+function downloadSampleTemplate() {
+    const csvContent = "roll_number,status\n21CSE001,Present\n21CSE002,Absent\n21CSE003,1\n21CSE004,0";
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'attendance_template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    window.toast.success('Sample template downloaded');
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

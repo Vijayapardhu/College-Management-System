@@ -1,140 +1,371 @@
-"""
-Management Panel Views - Administrative Operations
-Handles: Hostel, Transport, Library, Fees, Scholarships, Facilities
-"""
-
-import json
-from datetime import datetime, date, timedelta
-from decimal import Decimal
-
+from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import (HttpResponse, HttpResponseRedirect,
-                              get_object_or_404, redirect, render)
-from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Count, Sum, Q
-
-from .forms import *
-from .models import *
+from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url='login')
 def management_home(request):
-    """Management dashboard"""
-    management = get_object_or_404(Management, admin=request.user)
+    """Management home dashboard"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
     
-    # Statistics
-    total_students = Student.objects.filter(student_status='active').count()
-    total_staff = Staff.objects.filter(status='active').count()
-    
-    # Transport stats
-    total_buses = Transport.objects.count()
-    occupied_seats = sum([t.occupied_seats for t in Transport.objects.all()])
-    total_seats = sum([t.total_seats for t in Transport.objects.all()])
-    
-    # Hostel stats
-    total_hostels = Hostel.objects.count()
-    occupied_rooms = sum([h.occupied_rooms for h in Hostel.objects.all()])
-    total_rooms = sum([h.total_rooms for h in Hostel.objects.all()])
-    
-    # Library stats
-    total_books = Library.objects.count()
-    active_issues = LibraryIssue.objects.filter(status__in=['issued', 'overdue']).count()
-    overdue_books = LibraryIssue.objects.filter(status='overdue').count()
-    
-    # Fee stats
-    total_collected = sum([p.amount_paid for p in FeePayment.objects.filter(status='paid')])
-    defaulters_count = Student.objects.filter(
-        fee_payments__status__in=['pending', 'partial', 'overdue']
-    ).distinct().count()
-    
-    # Scholarship stats
-    active_scholarships = Scholarship.objects.filter(is_active=True).count()
-    pending_applications = ScholarshipApplication.objects.filter(status='applied').count()
-    
-    # Grievance stats
-    pending_grievances = Grievance.objects.filter(status__in=['submitted', 'in_progress']).count()
-    
-    context = {
-        'page_title': 'Management Dashboard',
-        'management': management,
-        'total_students': total_students,
-        'total_staff': total_staff,
-        'total_buses': total_buses,
-        'occupied_seats': occupied_seats,
-        'total_seats': total_seats,
-        'total_hostels': total_hostels,
-        'occupied_rooms': occupied_rooms,
-        'total_rooms': total_rooms,
-        'total_books': total_books,
-        'active_issues': active_issues,
-        'overdue_books': overdue_books,
-        'total_collected': total_collected,
-        'defaulters_count': defaulters_count,
-        'active_scholarships': active_scholarships,
-        'pending_applications': pending_applications,
-        'pending_grievances': pending_grievances,
-    }
-    return render(request, 'management_template/home_content.html', context)
+    context = {'page_title': 'Management Dashboard'}
+    return render(request, 'management_template/management_home.html', context)
 
 
+@login_required(login_url='login')
 def management_view_profile(request):
-    """View/Edit management profile"""
-    management = get_object_or_404(Management, admin=request.user)
+    """Management view profile"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
     
-    context = {
-        'page_title': 'My Profile',
-        'management': management
-    }
-    return render(request, 'management_template/view_profile.html', context)
+    context = {'page_title': 'Management Profile'}
+    return render(request, 'management_template/management_profile.html', context)
 
 
-# Import all views from hod_views for facilities management
-from . import hod_views
-
-# Re-use HOD views for administrative tasks
 # Transport Management
-manage_transport = hod_views.manage_transport
-add_transport = hod_views.add_transport
-edit_transport = hod_views.edit_transport
-transport_allocations = hod_views.transport_allocations
-allocate_transport = hod_views.allocate_transport
+@login_required(login_url='login')
+def manage_transport(request):
+    """Manage transport"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Manage Transport'}
+    return render(request, 'management_template/manage_transport.html', context)
+
+
+@login_required(login_url='login')
+def add_transport(request):
+    """Add transport"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Add Transport'}
+    return render(request, 'management_template/add_transport.html', context)
+
+
+@login_required(login_url='login')
+def edit_transport(request, transport_id):
+    """Edit transport"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Edit Transport', 'transport_id': transport_id}
+    return render(request, 'management_template/edit_transport.html', context)
+
+
+@login_required(login_url='login')
+def transport_allocations(request):
+    """Transport allocations"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Transport Allocations'}
+    return render(request, 'management_template/transport_allocations.html', context)
+
+
+@login_required(login_url='login')
+def allocate_transport(request):
+    """Allocate transport"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Allocate Transport'}
+    return render(request, 'management_template/allocate_transport.html', context)
+
 
 # Hostel Management
-manage_hostels = hod_views.manage_hostels
-add_hostel = hod_views.add_hostel
-hostel_allocations = hod_views.hostel_allocations
-allocate_hostel = hod_views.allocate_hostel
-hostel_visitor_logs = hod_views.hostel_visitor_logs
+@login_required(login_url='login')
+def manage_hostels(request):
+    """Manage hostels"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Manage Hostels'}
+    return render(request, 'management_template/manage_hostels.html', context)
+
+
+@login_required(login_url='login')
+def add_hostel(request):
+    """Add hostel"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Add Hostel'}
+    return render(request, 'management_template/add_hostel.html', context)
+
+
+@login_required(login_url='login')
+def hostel_allocations(request):
+    """Hostel allocations"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Hostel Allocations'}
+    return render(request, 'management_template/hostel_allocations.html', context)
+
+
+@login_required(login_url='login')
+def allocate_hostel(request):
+    """Allocate hostel"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Allocate Hostel'}
+    return render(request, 'management_template/allocate_hostel.html', context)
+
+
+@login_required(login_url='login')
+def hostel_visitor_logs(request):
+    """Hostel visitor logs"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Hostel Visitor Logs'}
+    return render(request, 'management_template/hostel_visitor_logs.html', context)
+
 
 # Library Management
-manage_library = hod_views.manage_library
-add_library_book = hod_views.add_library_book
-edit_library_book = hod_views.edit_library_book
-library_issues = hod_views.library_issues
-issue_library_book = hod_views.issue_library_book
-return_library_book = hod_views.return_library_book
+@login_required(login_url='login')
+def manage_library(request):
+    """Manage library"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Manage Library'}
+    return render(request, 'management_template/manage_library.html', context)
+
+
+@login_required(login_url='login')
+def add_library_book(request):
+    """Add library book"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Add Library Book'}
+    return render(request, 'management_template/add_library_book.html', context)
+
+
+@login_required(login_url='login')
+def edit_library_book(request, book_id):
+    """Edit library book"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Edit Library Book', 'book_id': book_id}
+    return render(request, 'management_template/edit_library_book.html', context)
+
+
+@login_required(login_url='login')
+def library_issues(request):
+    """Library issues"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Library Issues'}
+    return render(request, 'management_template/library_issues.html', context)
+
+
+@login_required(login_url='login')
+def issue_library_book(request):
+    """Issue library book"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Issue Library Book'}
+    return render(request, 'management_template/issue_library_book.html', context)
+
+
+@login_required(login_url='login')
+def return_library_book(request, issue_id):
+    """Return library book"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Return Library Book', 'issue_id': issue_id}
+    return render(request, 'management_template/return_library_book.html', context)
+
 
 # Fee Management
-manage_fee_structure = hod_views.manage_fee_structure
-add_fee_structure = hod_views.add_fee_structure
-edit_fee_structure = hod_views.edit_fee_structure
-view_fee_payments = hod_views.view_fee_payments
-record_fee_payment = hod_views.record_fee_payment
-fee_defaulters = hod_views.fee_defaulters
+@login_required(login_url='login')
+def manage_fee_structure(request):
+    """Manage fee structure"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Manage Fee Structure'}
+    return render(request, 'management_template/manage_fee_structure.html', context)
+
+
+@login_required(login_url='login')
+def add_fee_structure(request):
+    """Add fee structure"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Add Fee Structure'}
+    return render(request, 'management_template/add_fee_structure.html', context)
+
+
+@login_required(login_url='login')
+def edit_fee_structure(request, structure_id):
+    """Edit fee structure"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Edit Fee Structure', 'structure_id': structure_id}
+    return render(request, 'management_template/edit_fee_structure.html', context)
+
+
+@login_required(login_url='login')
+def view_fee_payments(request):
+    """View fee payments"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'View Fee Payments'}
+    return render(request, 'management_template/view_fee_payments.html', context)
+
+
+@login_required(login_url='login')
+def record_fee_payment(request):
+    """Record fee payment"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Record Fee Payment'}
+    return render(request, 'management_template/record_fee_payment.html', context)
+
+
+@login_required(login_url='login')
+def fee_defaulters(request):
+    """Fee defaulters"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Fee Defaulters'}
+    return render(request, 'management_template/fee_defaulters.html', context)
+
 
 # Scholarship Management
-manage_scholarships = hod_views.manage_scholarships
-add_scholarship = hod_views.add_scholarship
-scholarship_applications = hod_views.scholarship_applications
-review_scholarship_application = hod_views.review_scholarship_application
-disburse_scholarship = hod_views.disburse_scholarship
+@login_required(login_url='login')
+def manage_scholarships(request):
+    """Manage scholarships"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Manage Scholarships'}
+    return render(request, 'management_template/manage_scholarships.html', context)
 
-# Grievance Management  
-view_grievances = hod_views.view_grievances
-assign_grievance = hod_views.assign_grievance
-resolve_grievance = hod_views.resolve_grievance
+
+@login_required(login_url='login')
+def add_scholarship(request):
+    """Add scholarship"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Add Scholarship'}
+    return render(request, 'management_template/add_scholarship.html', context)
+
+
+@login_required(login_url='login')
+def scholarship_applications(request):
+    """Scholarship applications"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Scholarship Applications'}
+    return render(request, 'management_template/scholarship_applications.html', context)
+
+
+@login_required(login_url='login')
+def review_scholarship_application(request, app_id):
+    """Review scholarship application"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Review Scholarship Application', 'app_id': app_id}
+    return render(request, 'management_template/review_scholarship_application.html', context)
+
+
+@login_required(login_url='login')
+def disburse_scholarship(request, app_id):
+    """Disburse scholarship"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Disburse Scholarship', 'app_id': app_id}
+    return render(request, 'management_template/disburse_scholarship.html', context)
+
+
+# Grievance Management
+@login_required(login_url='login')
+def view_grievances(request):
+    """View grievances"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'View Grievances'}
+    return render(request, 'management_template/view_grievances.html', context)
+
+
+@login_required(login_url='login')
+def assign_grievance(request, grievance_id):
+    """Assign grievance"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Assign Grievance', 'grievance_id': grievance_id}
+    return render(request, 'management_template/assign_grievance.html', context)
+
+
+@login_required(login_url='login')
+def resolve_grievance(request, grievance_id):
+    """Resolve grievance"""
+    if request.user.user_type != '4':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    context = {'page_title': 'Resolve Grievance', 'grievance_id': grievance_id}
+    return render(request, 'management_template/resolve_grievance.html', context)
+
+
+
+
+
+
+
 
 
 

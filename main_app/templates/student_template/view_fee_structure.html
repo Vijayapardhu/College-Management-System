@@ -1,145 +1,40 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}Fee Structure{% endblock %}
 
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <!-- Fee Structure Card -->
-        <div class="card">
-            <div class="card-header bg-warning">
-                <h3 class="card-title"><i class="fas fa-money-check-alt"></i> Fee Structure & Payment Status</h3>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-money-bill-wave me-2"></i>My Fee Structure
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View your fee details and payment information
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Fee Details</h3>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="info-box bg-light">
-                            <span class="info-box-icon bg-info"><i class="fas fa-user-graduate"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Student Details</span>
-                                <span class="info-box-number">{{ student.admin.first_name }} {{ student.admin.last_name }}</span>
-                                <small>{{ student.course.name }} - Sem {{ student.current_semester }}</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="info-box bg-success">
-                            <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Paid</span>
-                                <span class="info-box-number">₹{{ total_paid|floatformat:2 }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="info-box bg-danger">
-                            <span class="info-box-icon"><i class="fas fa-exclamation-circle"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Due</span>
-                                <span class="info-box-number">₹{{ total_due|floatformat:2 }}</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h4>Fee Structure Not Available</h4>
+                    <p>Your fee structure will be displayed here once assigned by administration</p>
                 </div>
-                
-                {% if fee_structure %}
-                <h5 class="mt-4 mb-3">Current Semester Fee Breakdown</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Fee Component</th>
-                                <th class="text-right">Amount (₹)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Tuition Fee</td>
-                                <td class="text-right">{{ fee_structure.tuition_fee }}</td>
-                            </tr>
-                            <tr>
-                                <td>Development Fee</td>
-                                <td class="text-right">{{ fee_structure.development_fee }}</td>
-                            </tr>
-                            <tr>
-                                <td>Lab Fee</td>
-                                <td class="text-right">{{ fee_structure.lab_fee }}</td>
-                            </tr>
-                            <tr>
-                                <td>Library Fee</td>
-                                <td class="text-right">{{ fee_structure.library_fee }}</td>
-                            </tr>
-                            <tr>
-                                <td>Exam Fee</td>
-                                <td class="text-right">{{ fee_structure.exam_fee }}</td>
-                            </tr>
-                            <tr>
-                                <td>Other Fees</td>
-                                <td class="text-right">{{ fee_structure.other_fee }}</td>
-                            </tr>
-                            <tr class="table-primary">
-                                <td><strong>Total Fee</strong></td>
-                                <td class="text-right"><strong>₹{{ fee_structure.total_fee }}</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> Fee structure not configured for your course/semester yet.
-                </div>
-                {% endif %}
-                
-                <!-- Payment History -->
-                <h5 class="mt-4 mb-3">Payment History</h5>
-                {% if payments %}
-                <div class="table-responsive">
-                    <table class="table table-sm table-bordered">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Receipt #</th>
-                                <th>Date</th>
-                                <th>Amount Paid</th>
-                                <th>Method</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for payment in payments %}
-                            <tr>
-                                <td><strong>{{ payment.receipt_number }}</strong></td>
-                                <td>{{ payment.payment_date|date:"d M Y" }}</td>
-                                <td>₹{{ payment.amount_paid }}</td>
-                                <td><span class="badge badge-info">{{ payment.get_payment_method_display }}</span></td>
-                                <td>
-                                    {% if payment.status == 'paid' %}
-                                        <span class="badge badge-success">{{ payment.get_status_display }}</span>
-                                    {% elif payment.status == 'overdue' %}
-                                        <span class="badge badge-danger">{{ payment.get_status_display }}</span>
-                                    {% else %}
-                                        <span class="badge badge-warning">{{ payment.get_status_display }}</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No payment records found.
-                </div>
-                {% endif %}
-            </div>
-            <div class="card-footer">
-                <a href="{% url 'student_fee_receipts' %}" class="btn btn-primary">
-                    <i class="fas fa-receipt"></i> View All Receipts
-                </a>
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,197 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .parent-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .child-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .child-card:hover {
+        border-color: #003d82;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .metric-box {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .metric-value {
+        font-size: 28px;
+        font-weight: 700;
+        color: #003d82;
+    }
+
+    .metric-label {
+        font-size: 12px;
+        color: #4a5568;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-good {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-attention {
+        background: #fef3c7;
+        color: #92400e;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Parent Header -->
+        <div class="parent-header">
+            <h2 style="font-size: 26px; font-weight: 600; color: #003d82; margin-bottom: 8px;">
+                <i class="fas fa-home me-2"></i>Parent Dashboard
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Monitor your child's academic progress and performance
+            </p>
+        </div>
+
+        {% if no_students %}
+        <!-- No Children Linked -->
+        <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 60px; text-align: center;">
+            <i class="fas fa-user-plus" style="font-size: 64px; color: #d4d4d4; margin-bottom: 20px;"></i>
+            <h4 style="color: #1a202c; margin-bottom: 15px;">No Students Linked</h4>
+            <p style="color: #4a5568; margin-bottom: 25px;">
+                Link your child's student account to start monitoring their academic progress
+            </p>
+            <a href="{% url 'link_student' %}" class="btn btn-professional-primary">
+                <i class="fas fa-link me-2"></i>Link Student Account
+            </a>
+        </div>
+        {% else %}
+        <!-- Children Cards -->
+        {% for child in children_data %}
+        <div class="child-card">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: #003d82; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin-right: 15px;">
+                            {{ child.student.admin.first_name.0 }}{{ child.student.admin.last_name.0 }}
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; color: #1a202c; font-weight: 600;">
+                                {{ child.student.admin.first_name }} {{ child.student.admin.last_name }}
+                            </h4>
+                            <div style="font-size: 14px; color: #4a5568;">
+                                <code>{{ child.student.roll_number }}</code> • 
+                                {{ child.student.course.name }} • 
+                                {{ child.student.session }}
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <span class="status-badge {% if child.status == 'Good' %}status-good{% else %}status-attention{% endif %}">
+                                {{ child.status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Metrics -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="metric-box">
+                                <div class="metric-value">{{ child.attendance_percentage }}%</div>
+                                <div class="metric-label">Attendance</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-box">
+                                <div class="metric-value">{{ child.average_marks|floatformat:0 }}%</div>
+                                <div class="metric-label">Avg Marks</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-box">
+                                <div class="metric-value">{{ child.pending_assignments }}</div>
+                                <div class="metric-label">Pending Work</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-box">
+                                <div class="metric-value">{{ child.pending_fees }}</div>
+                                <div class="metric-label">Pending Fees</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div style="display: grid; gap: 8px;">
+                        <a href="{% url 'view_child_detail' child.student.id %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-eye me-2"></i>View Full Details
+                        </a>
+                        <a href="{% url 'view_child_attendance' child.student.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-calendar-check me-2"></i>View Attendance
+                        </a>
+                        <a href="{% url 'view_child_results' child.student.id %}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-chart-line me-2"></i>View Results
+                        </a>
+                        <a href="{% url 'view_child_assignments' child.student.id %}" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-tasks me-2"></i>View Assignments
+                        </a>
+                        <a href="{% url 'send_message_to_teacher' child.student.id %}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-envelope me-2"></i>Contact Teacher
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Link More Students -->
+        <div class="text-center mt-4">
+            <a href="{% url 'link_student' %}" class="btn btn-outline-primary">
+                <i class="fas fa-plus me-2"></i>Link Another Student
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+
+
+
+

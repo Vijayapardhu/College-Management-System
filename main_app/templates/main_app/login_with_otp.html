@@ -132,6 +132,7 @@
         </div>
         
         <div class="auth-card">
+            {% csrf_token %}
             <div id="messages"></div>
             
             <!-- LOGIN SECTION -->
@@ -185,16 +186,55 @@
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
     <script>
         let timerInterval;
-        const csrfToken = '{{ csrf_token }}';
+        // Get CSRF token from cookie or meta tag
+        function getCSRFToken() {
+            // Try to get from cookie first
+            let token = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (!token) {
+                // Try to get from cookie
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'csrftoken') {
+                        token = value;
+                        break;
+                    }
+                }
+            }
+            return token || '';
+        }
+        
+        const csrfToken = getCSRFToken();
+        
+        // Debug CSRF token
+        console.log('CSRF Token:', csrfToken);
+        console.log('CSRF Token length:', csrfToken.length);
+        console.log('Available cookies:', document.cookie);
+        
+        // Setup AJAX with CSRF token
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                }
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            }
+        });
         
         // Show message
         function showMessage(msg, type='info') {
+            // Prevent undefined messages
+            if (msg === undefined || msg === null) {
+                msg = 'An error occurred';
+            }
+            
             const colors = {
                 success: 'alert-success',
                 danger: 'alert-danger',
-                warning: 'alert-warning'
+                warning: 'alert-warning',
+                info: 'alert-info'
             };
-            $('#messages').html(`<div class="alert ${colors[type]}">${msg}</div>`);
+            $('#messages').html(`<div class="alert ${colors[type] || 'alert-info'}">${msg}</div>`);
             setTimeout(() => $('#messages').html(''), 5000);
         }
         
@@ -214,19 +254,30 @@
                 return;
             }
             
+            // Ensure we have a CSRF token
+            const currentToken = getCSRFToken();
+            if (!currentToken) {
+                showMessage('CSRF token not found. Please refresh the page.', 'danger');
+                return;
+            }
+            
             $.ajax({
                 url: '{% url "login_with_otp" %}',
                 method: 'POST',
                 contentType: 'application/json',
-                headers: {'X-CSRFToken': csrfToken},
+                headers: {
+                    'X-CSRFToken': currentToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 data: JSON.stringify({
                     action: 'login',
                     email: email,
                     password: password
                 }),
                 success: function(res) {
-                    if (res.success) {
-                        $('#otpEmail').text('Code sent to ' + res.email);
+                    console.log('Login response:', res);
+                    if (res && res.success) {
+                        $('#otpEmail').text('Code sent to ' + (res.email || 'your email'));
                         
                         if (!res.otp_sent && res.otp_code) {
                             $('#displayedOTP').text(res.otp_code);
@@ -238,11 +289,19 @@
                         $('#otp1').focus();
                         startTimer();
                     } else {
-                        showMessage(res.message, 'danger');
+                        showMessage(res ? res.message : 'Login failed', 'danger');
                     }
                 },
-                error: function() {
-                    showMessage('Login failed', 'danger');
+                error: function(xhr, status, error) {
+                    console.log('Login error:', xhr, status, error);
+                    console.log('Response text:', xhr.responseText);
+                    console.log('Response status:', xhr.status);
+                    
+                    if (xhr.status === 403) {
+                        showMessage('Access denied. Please refresh the page and try again.', 'danger');
+                    } else {
+                        showMessage('Login failed: ' + (error || 'Unknown error'), 'danger');
+                    }
                 }
             });
         }
@@ -261,7 +320,10 @@
                 url: '{% url "login_with_otp" %}',
                 method: 'POST',
                 contentType: 'application/json',
-                headers: {'X-CSRFToken': csrfToken},
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 data: JSON.stringify({
                     action: 'verify_otp',
                     otp_code: otp
@@ -288,7 +350,10 @@
                 url: '{% url "login_with_otp" %}',
                 method: 'POST',
                 contentType: 'application/json',
-                headers: {'X-CSRFToken': csrfToken},
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 data: JSON.stringify({action: 'resend_otp'}),
                 success: function(res) {
                     if (res.success) {
@@ -358,4 +423,8 @@
     </script>
 </body>
 </html>
+
+
+
+
 

@@ -78,6 +78,292 @@ def staff_take_attendance(request):
     return render(request, 'staff_template/staff_take_attendance.html', context)
 
 
+@login_required(login_url='/')
+def bulk_attendance_import(request):
+    """Bulk import attendance from Excel/CSV file"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    
+    if request.method == 'POST' and request.FILES.get('attendance_file'):
+        import pandas as pd
+        from datetime import datetime
+        
+        try:
+            file = request.FILES['attendance_file']
+            subject_id = request.POST.get('subject')
+            session_id = request.POST.get('session')
+            attendance_date = request.POST.get('date')
+            
+            # Validate inputs
+            if not all([subject_id, session_id, attendance_date]):
+                messages.error(request, 'Please provide subject, session, and date')
+                return redirect('bulk_attendance_import')
+            
+            subject = get_object_or_404(Subject, id=subject_id)
+            session = get_object_or_404(Session, id=session_id)
+            
+            # Read Excel/CSV file
+            if file.name.endswith('.csv'):
+                df = pd.read_csv(file)
+            else:
+                df = pd.read_excel(file)
+            
+            # Expected columns: roll_number, status (Present/Absent or 1/0)
+            if 'roll_number' not in df.columns or 'status' not in df.columns:
+                messages.error(request, 'File must contain "roll_number" and "status" columns')
+                return redirect('bulk_attendance_import')
+            
+            # Create or get attendance record
+            attendance, created = Attendance.objects.get_or_create(
+                session=session,
+                subject=subject,
+                date=attendance_date
+            )
+            
+            # Process each row
+            success_count = 0
+            error_count = 0
+            
+            for _, row in df.iterrows():
+                try:
+                    student = Student.objects.get(
+                        roll_number=row['roll_number'],
+                        course=subject.course,
+                        session=session
+                    )
+                    
+                    # Parse status (Present/Absent or 1/0)
+                    status_value = str(row['status']).strip().lower()
+                    if status_value in ['present', '1', 'p', 'yes']:
+                        status = True
+                    elif status_value in ['absent', '0', 'a', 'no']:
+                        status = False
+                    else:
+                        error_count += 1
+                        continue
+                    
+                    # Create or update attendance report
+                    attendance_report, created = AttendanceReport.objects.update_or_create(
+                        student=student,
+                        attendance=attendance,
+                        defaults={'status': status}
+                    )
+                    success_count += 1
+                    
+                except Student.DoesNotExist:
+                    error_count += 1
+                    continue
+                except Exception as e:
+                    error_count += 1
+                    continue
+            
+            messages.success(request, f'Attendance imported successfully! {success_count} records processed, {error_count} errors')
+            return redirect('staff_take_attendance')
+            
+        except Exception as e:
+            messages.error(request, f'Error processing file: {str(e)}')
+            return redirect('bulk_attendance_import')
+    
+    # GET request - show form
+    subjects = Subject.objects.filter(staff_id=staff)
+    sessions = Session.objects.all()
+    context = {
+        'subjects': subjects,
+        'sessions': sessions,
+        'page_title': 'Bulk Import Attendance'
+    }
+    return render(request, 'staff_template/bulk_attendance_import.html', context)
+
+
+@login_required(login_url='/')
+def generate_attendance_qr(request):
+    """Generate QR code for attendance session"""
+    import qrcode
+    from io import BytesIO
+    import base64
+    from django.core.files.base import ContentFile
+    
+    staff = get_object_or_404(Staff, admin=request.user)
+    
+    if request.method == 'POST':
+        subject_id = request.POST.get('subject')
+        session_id = request.POST.get('session')
+        date = request.POST.get('date')
+        
+        try:
+            subject = get_object_or_404(Subject, id=subject_id)
+            session = get_object_or_404(Session, id=session_id)
+            
+            # Create or get attendance record
+            attendance, created = Attendance.objects.get_or_create(
+                session=session,
+                subject=subject,
+                date=date
+            )
+            
+            # Generate QR code data (attendance ID + verification code)
+            import hashlib
+            verification_code = hashlib.md5(f"{attendance.id}{date}{subject.id}".encode()).hexdigest()[:8]
+            qr_data = f"ATTENDANCE:{attendance.id}:{verification_code}"
+            
+            # Generate QR code
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(qr_data)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+            
+            # Convert to base64 for display
+            buffer = BytesIO()
+            img.save(buffer, format='PNG')
+            img_str = base64.b64encode(buffer.getvalue()).decode()
+            
+            context = {
+                'qr_code': img_str,
+                'attendance': attendance,
+                'subject': subject,
+                'date': date,
+                'verification_code': verification_code,
+                'page_title': 'Attendance QR Code'
+            }
+            return render(request, 'staff_template/attendance_qr.html', context)
+            
+        except Exception as e:
+            messages.error(request, f'Error generating QR code: {str(e)}')
+    
+    # GET request - show form
+    subjects = Subject.objects.filter(staff_id=staff)
+    sessions = Session.objects.all()
+    context = {
+        'subjects': subjects,
+        'sessions': sessions,
+        'page_title': 'Generate Attendance QR Code'
+    }
+    return render(request, 'staff_template/generate_qr.html', context)
+
+
+@login_required(login_url='/')
+def attendance_analytics(request):
+    """Comprehensive attendance analytics dashboard"""
+    from django.db.models import Count, Q, Avg
+    from datetime import datetime, timedelta
+    
+    staff = get_object_or_404(Staff, admin=request.user)
+    subjects = Subject.objects.filter(staff_id=staff)
+    
+    # Get selected filters
+    subject_id = request.GET.get('subject')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    
+    # Default to current month
+    if not start_date:
+        start_date = datetime.now().replace(day=1).strftime('%Y-%m-%d')
+    if not end_date:
+        end_date = datetime.now().strftime('%Y-%m-%d')
+    
+    # Build query
+    attendance_query = AttendanceReport.objects.all()
+    
+    if subject_id:
+        attendance_query = attendance_query.filter(attendance__subject_id=subject_id)
+    else:
+        # Filter by staff's subjects
+        attendance_query = attendance_query.filter(attendance__subject__in=subjects)
+    
+    attendance_query = attendance_query.filter(
+        attendance__date__gte=start_date,
+        attendance__date__lte=end_date
+    )
+    
+    # Calculate statistics
+    total_classes = attendance_query.values('attendance').distinct().count()
+    total_records = attendance_query.count()
+    present_count = attendance_query.filter(status=True).count()
+    absent_count = total_records - present_count
+    attendance_percentage = round((present_count / total_records * 100), 2) if total_records > 0 else 0
+    
+    # Subject-wise breakdown
+    subject_stats = []
+    for subject in subjects:
+        subject_attendance = AttendanceReport.objects.filter(
+            attendance__subject=subject,
+            attendance__date__gte=start_date,
+            attendance__date__lte=end_date
+        )
+        total = subject_attendance.count()
+        present = subject_attendance.filter(status=True).count()
+        percentage = round((present / total * 100), 2) if total > 0 else 0
+        
+        subject_stats.append({
+            'subject': subject.name,
+            'total_classes': subject_attendance.values('attendance').distinct().count(),
+            'total_records': total,
+            'present': present,
+            'absent': total - present,
+            'percentage': percentage
+        })
+    
+    # Low attendance students (<75%)
+    low_attendance_students = []
+    all_students = Student.objects.filter(course__in=subjects.values_list('course', flat=True).distinct())
+    
+    for student in all_students[:50]:  # Limit to 50 for performance
+        student_attendance = AttendanceReport.objects.filter(
+            student=student,
+            attendance__date__gte=start_date,
+            attendance__date__lte=end_date
+        )
+        total = student_attendance.count()
+        if total > 0:
+            present = student_attendance.filter(status=True).count()
+            percentage = round((present / total * 100), 2)
+            if percentage < 75:
+                low_attendance_students.append({
+                    'student': student,
+                    'percentage': percentage,
+                    'total': total,
+                    'present': present,
+                    'absent': total - present
+                })
+    
+    # Sort by percentage (lowest first)
+    low_attendance_students = sorted(low_attendance_students, key=lambda x: x['percentage'])
+    
+    # Daily attendance trend (last 30 days)
+    daily_trend = []
+    for i in range(30):
+        date = (datetime.now() - timedelta(days=29-i)).date()
+        day_attendance = AttendanceReport.objects.filter(
+            attendance__subject__in=subjects,
+            attendance__date=date
+        )
+        total = day_attendance.count()
+        present = day_attendance.filter(status=True).count()
+        percentage = round((present / total * 100), 2) if total > 0 else 0
+        
+        daily_trend.append({
+            'date': date.strftime('%Y-%m-%d'),
+            'percentage': percentage
+        })
+    
+    context = {
+        'subjects': subjects,
+        'selected_subject': subject_id,
+        'start_date': start_date,
+        'end_date': end_date,
+        'total_classes': total_classes,
+        'total_records': total_records,
+        'present_count': present_count,
+        'absent_count': absent_count,
+        'attendance_percentage': attendance_percentage,
+        'subject_stats': subject_stats,
+        'low_attendance_students': low_attendance_students,
+        'daily_trend': daily_trend,
+        'page_title': 'Attendance Analytics'
+    }
+    
+    return render(request, 'staff_template/attendance_analytics.html', context)
+
+
 @csrf_exempt
 def get_students(request):
     subject_id = request.POST.get('subject')
@@ -296,22 +582,142 @@ def staff_add_result(request):
             subject_id = request.POST.get('subject')
             test = request.POST.get('test')
             exam = request.POST.get('exam')
+            
+            # Validate marks
+            try:
+                test_marks = float(test) if test else 0
+                exam_marks = float(exam) if exam else 0
+                
+                if test_marks < 0 or test_marks > 30:
+                    messages.error(request, "Internal marks must be between 0 and 30")
+                    return render(request, "staff_template/staff_add_result.html", context)
+                
+                if exam_marks < 0 or exam_marks > 70:
+                    messages.error(request, "External marks must be between 0 and 70")
+                    return render(request, "staff_template/staff_add_result.html", context)
+                    
+            except ValueError:
+                messages.error(request, "Please enter valid numbers for marks")
+                return render(request, "staff_template/staff_add_result.html", context)
+            
             student = get_object_or_404(Student, id=student_id)
             subject = get_object_or_404(Subject, id=subject_id)
+            
             try:
                 data = StudentResult.objects.get(
                     student=student, subject=subject)
-                data.exam = exam
-                data.test = test
+                data.exam = exam_marks
+                data.test = test_marks
                 data.save()
-                messages.success(request, "Scores Updated")
+                messages.success(request, f"Scores Updated for {student.admin.first_name} {student.admin.last_name}")
             except:
-                result = StudentResult(student=student, subject=subject, test=test, exam=exam)
+                result = StudentResult(student=student, subject=subject, test=test_marks, exam=exam_marks)
                 result.save()
-                messages.success(request, "Scores Saved")
+                messages.success(request, f"Scores Saved for {student.admin.first_name} {student.admin.last_name}")
         except Exception as e:
-            messages.warning(request, "Error Occured While Processing Form")
+            messages.error(request, f"Error occurred while processing form: {str(e)}")
     return render(request, "staff_template/staff_add_result.html", context)
+
+
+@login_required(login_url='/')
+def bulk_marks_import(request):
+    """Bulk import marks from Excel/CSV file"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    
+    if request.method == 'POST' and request.FILES.get('marks_file'):
+        import pandas as pd
+        
+        try:
+            file = request.FILES['marks_file']
+            subject_id = request.POST.get('subject')
+            exam_type = request.POST.get('exam_type')  # internal or external
+            
+            if not all([subject_id, exam_type]):
+                messages.error(request, 'Please provide subject and exam type')
+                return redirect('bulk_marks_import')
+            
+            subject = get_object_or_404(Subject, id=subject_id, staff=staff)
+            
+            # Read file
+            if file.name.endswith('.csv'):
+                df = pd.read_csv(file)
+            else:
+                df = pd.read_excel(file)
+            
+            # Expected columns: roll_number, marks
+            if 'roll_number' not in df.columns or 'marks' not in df.columns:
+                messages.error(request, 'File must contain "roll_number" and "marks" columns')
+                return redirect('bulk_marks_import')
+            
+            # Process each row
+            success_count = 0
+            error_count = 0
+            errors_list = []
+            
+            for _, row in df.iterrows():
+                try:
+                    student = Student.objects.get(
+                        roll_number=row['roll_number'],
+                        course=subject.course
+                    )
+                    
+                    marks = float(row['marks'])
+                    
+                    # Validate marks based on exam type
+                    if exam_type == 'internal' and (marks < 0 or marks > 30):
+                        errors_list.append(f"{row['roll_number']}: Internal marks must be 0-30")
+                        error_count += 1
+                        continue
+                    elif exam_type == 'external' and (marks < 0 or marks > 70):
+                        errors_list.append(f"{row['roll_number']}: External marks must be 0-70")
+                        error_count += 1
+                        continue
+                    
+                    # Update or create result
+                    result, created = StudentResult.objects.get_or_create(
+                        student=student,
+                        subject=subject
+                    )
+                    
+                    if exam_type == 'internal':
+                        result.test = marks
+                    else:
+                        result.exam = marks
+                    
+                    result.save()
+                    success_count += 1
+                    
+                except Student.DoesNotExist:
+                    errors_list.append(f"{row['roll_number']}: Student not found")
+                    error_count += 1
+                except ValueError:
+                    errors_list.append(f"{row['roll_number']}: Invalid marks value")
+                    error_count += 1
+                except Exception as e:
+                    errors_list.append(f"{row['roll_number']}: {str(e)}")
+                    error_count += 1
+            
+            if errors_list:
+                error_msg = f'{success_count} marks imported. {error_count} errors: ' + '; '.join(errors_list[:5])
+                if len(errors_list) > 5:
+                    error_msg += f' ...and {len(errors_list) - 5} more'
+                messages.warning(request, error_msg)
+            else:
+                messages.success(request, f'All marks imported successfully! {success_count} records processed')
+            
+            return redirect('staff_add_result')
+            
+        except Exception as e:
+            messages.error(request, f'Error processing file: {str(e)}')
+            return redirect('bulk_marks_import')
+    
+    # GET request
+    subjects = Subject.objects.filter(staff=staff)
+    context = {
+        'subjects': subjects,
+        'page_title': 'Bulk Import Marks'
+    }
+    return render(request, 'staff_template/bulk_marks_import.html', context)
 
 
 @csrf_exempt
@@ -324,11 +730,336 @@ def fetch_student_result(request):
         result = StudentResult.objects.get(student=student, subject=subject)
         result_data = {
             'exam': result.exam,
-            'test': result.test
+            'test': result.test,
+            'total': result.test + result.exam,
+            'grade': calculate_grade(result.test + result.exam)
         }
         return HttpResponse(json.dumps(result_data))
     except Exception as e:
         return HttpResponse('False')
+
+
+def calculate_grade(marks):
+    """Calculate grade based on marks"""
+    if marks >= 90:
+        return 'A+'
+    elif marks >= 80:
+        return 'A'
+    elif marks >= 70:
+        return 'B+'
+    elif marks >= 60:
+        return 'B'
+    elif marks >= 50:
+        return 'C+'
+    elif marks >= 40:
+        return 'C'
+    else:
+        return 'F'
+
+
+def calculate_grade_point(marks):
+    """Calculate grade point for CGPA calculation"""
+    if marks >= 90:
+        return 10.0
+    elif marks >= 80:
+        return 9.0
+    elif marks >= 70:
+        return 8.0
+    elif marks >= 60:
+        return 7.0
+    elif marks >= 50:
+        return 6.0
+    elif marks >= 40:
+        return 5.0
+    else:
+        return 0.0
+
+
+@login_required(login_url='/')
+def calculate_student_cgpa(request, student_id):
+    """Calculate and display student CGPA"""
+    student = get_object_or_404(Student, id=student_id)
+    
+    # Get all results for student
+    results = StudentResult.objects.filter(student=student).select_related('subject')
+    
+    if not results.exists():
+        messages.warning(request, 'No results found for CGPA calculation')
+        return redirect('staff_view_results')
+    
+    # Calculate semester-wise and overall CGPA
+    semester_data = {}
+    total_credits = 0
+    total_grade_points = 0
+    
+    for result in results:
+        total_marks = result.test + result.exam
+        grade = calculate_grade(total_marks)
+        grade_point = calculate_grade_point(total_marks)
+        
+        # Assume 3 credits per subject (can be made configurable)
+        credits = getattr(result.subject, 'credits', 3)
+        
+        semester = getattr(result, 'semester', 1)
+        if semester not in semester_data:
+            semester_data[semester] = {
+                'results': [],
+                'total_credits': 0,
+                'total_points': 0
+            }
+        
+        semester_data[semester]['results'].append({
+            'subject': result.subject,
+            'internal': result.test,
+            'external': result.exam,
+            'total': total_marks,
+            'grade': grade,
+            'grade_point': grade_point,
+            'credits': credits
+        })
+        
+        semester_data[semester]['total_credits'] += credits
+        semester_data[semester]['total_points'] += (grade_point * credits)
+        total_credits += credits
+        total_grade_points += (grade_point * credits)
+    
+    # Calculate SGPA for each semester
+    for semester in semester_data:
+        if semester_data[semester]['total_credits'] > 0:
+            semester_data[semester]['sgpa'] = round(
+                semester_data[semester]['total_points'] / semester_data[semester]['total_credits'], 2
+            )
+        else:
+            semester_data[semester]['sgpa'] = 0.0
+    
+    # Calculate overall CGPA
+    cgpa = round(total_grade_points / total_credits, 2) if total_credits > 0 else 0.0
+    
+    context = {
+        'student': student,
+        'semester_data': semester_data,
+        'cgpa': cgpa,
+        'total_credits': total_credits,
+        'page_title': f'CGPA Report - {student.admin.first_name} {student.admin.last_name}'
+    }
+    
+    return render(request, 'staff_template/student_cgpa.html', context)
+
+
+@login_required(login_url='/')
+def generate_marksheet_pdf(request, student_id):
+    """Generate digital marksheet PDF"""
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter, A4
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+    from io import BytesIO
+    from django.http import HttpResponse
+    from datetime import datetime
+    
+    student = get_object_or_404(Student, id=student_id)
+    results = StudentResult.objects.filter(student=student).select_related('subject')
+    
+    if not results.exists():
+        messages.error(request, 'No results found to generate marksheet')
+        return redirect('staff_view_results')
+    
+    # Create PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                           rightMargin=30, leftMargin=30,
+                           topMargin=30, bottomMargin=18)
+    
+    # Container for elements
+    elements = []
+    
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#003d82'),
+        spaceAfter=12,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold'
+    )
+    
+    heading_style = ParagraphStyle(
+        'CustomHeading',
+        parent=styles['Heading2'],
+        fontSize=16,
+        textColor=colors.HexColor('#1a202c'),
+        spaceAfter=12,
+        alignment=TA_CENTER
+    )
+    
+    normal_style = ParagraphStyle(
+        'CustomNormal',
+        parent=styles['Normal'],
+        fontSize=10,
+        alignment=TA_LEFT
+    )
+    
+    # Header
+    elements.append(Paragraph("EDUVISION COLLEGE", title_style))
+    elements.append(Paragraph("DIGITAL MARKSHEET", heading_style))
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Student Details
+    student_data = [
+        ['Student Name:', f"{student.admin.first_name} {student.admin.last_name}"],
+        ['Roll Number:', student.roll_number],
+        ['Course:', student.course.name if student.course else 'N/A'],
+        ['Session:', str(student.session) if student.session else 'N/A'],
+        ['Date of Issue:', datetime.now().strftime('%d-%m-%Y')]
+    ]
+    
+    student_table = Table(student_data, colWidths=[2*inch, 4*inch])
+    student_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
+    ]))
+    
+    elements.append(student_table)
+    elements.append(Spacer(1, 0.4*inch))
+    
+    # Results Table
+    elements.append(Paragraph("Academic Performance", heading_style))
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Calculate results with grades
+    results_data = [['S.No', 'Subject', 'Internal (30)', 'External (70)', 'Total (100)', 'Grade']]
+    
+    total_credits = 0
+    total_grade_points = 0
+    
+    for idx, result in enumerate(results, 1):
+        total_marks = result.test + result.exam
+        grade = calculate_grade(total_marks)
+        grade_point = calculate_grade_point(total_marks)
+        credits = getattr(result.subject, 'credits', 3)
+        
+        results_data.append([
+            str(idx),
+            result.subject.name,
+            f"{result.test:.1f}",
+            f"{result.exam:.1f}",
+            f"{total_marks:.1f}",
+            grade
+        ])
+        
+        total_credits += credits
+        total_grade_points += (grade_point * credits)
+    
+    # Calculate CGPA
+    cgpa = round(total_grade_points / total_credits, 2) if total_credits > 0 else 0.0
+    
+    results_table = Table(results_data, colWidths=[0.5*inch, 2.5*inch, 1*inch, 1*inch, 1*inch, 0.8*inch])
+    results_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#003d82')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('TOPPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+        ('ALIGN', (1, 1), (1, -1), 'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9fafb')])
+    ]))
+    
+    elements.append(results_table)
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # CGPA Section
+    cgpa_data = [
+        ['Total Credits Earned:', str(total_credits)],
+        ['Cumulative Grade Point Average (CGPA):', f"{cgpa:.2f}"]
+    ]
+    
+    cgpa_table = Table(cgpa_data, colWidths=[3.5*inch, 2*inch])
+    cgpa_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#e6f2ff')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (0, -1), 'RIGHT'),
+        ('ALIGN', (1, 0), (1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
+    ]))
+    
+    elements.append(cgpa_table)
+    elements.append(Spacer(1, 0.5*inch))
+    
+    # Grade Scale
+    elements.append(Paragraph("Grading Scale", normal_style))
+    elements.append(Spacer(1, 0.1*inch))
+    
+    grade_scale_data = [
+        ['Grade', 'Marks Range', 'Grade Point'],
+        ['A+', '90-100', '10.0'],
+        ['A', '80-89', '9.0'],
+        ['B+', '70-79', '8.0'],
+        ['B', '60-69', '7.0'],
+        ['C+', '50-59', '6.0'],
+        ['C', '40-49', '5.0'],
+        ['F', 'Below 40', '0.0']
+    ]
+    
+    grade_table = Table(grade_scale_data, colWidths=[1*inch, 1.5*inch, 1.5*inch])
+    grade_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f5f5f5')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9fafb')])
+    ]))
+    
+    elements.append(grade_table)
+    elements.append(Spacer(1, 0.7*inch))
+    
+    # Footer
+    footer_data = [
+        ['Date: ' + datetime.now().strftime('%d-%m-%Y'), 'Authorized Signatory']
+    ]
+    footer_table = Table(footer_data, colWidths=[3*inch, 3*inch])
+    footer_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+        ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ('TOPPADDING', (0, 0), (-1, -1), 15)
+    ]))
+    
+    elements.append(footer_table)
+    
+    # Build PDF
+    doc.build(elements)
+    
+    # Return PDF response
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Marksheet_{student.roll_number}.pdf"'
+    
+    return response
 
 
 # ==================== FACULTY TIMETABLE ====================
@@ -689,3 +1420,129 @@ def staff_gate_pass_approvals(request):
         'gate_passes': GatePass.objects.filter(status='pending').select_related('student').order_by('-created_at')
     }
     return render(request, 'staff_template/gate_pass_approvals.html', context)
+
+@login_required(login_url='login')
+def upload_material(request):
+    """Staff upload study material"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    if request.method == 'POST':
+        form = StudyMaterialForm(request.POST, request.FILES)
+        if form.is_valid():
+            material = form.save(commit=False)
+            material.uploaded_by = staff
+            material.save()
+            messages.success(request, "Study material uploaded successfully!")
+            return redirect('view_materials')
+    else:
+        form = StudyMaterialForm()
+    
+    context = {
+        'page_title': 'Upload Study Material',
+        'form': form,
+        'staff': staff
+    }
+    return render(request, 'staff_template/upload_material.html', context)
+
+
+@login_required(login_url='login')
+def view_materials(request):
+    """Staff view study materials"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    materials = StudyMaterial.objects.filter(uploaded_by=staff).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Study Materials',
+        'materials': materials,
+        'staff': staff
+    }
+    return render(request, 'staff_template/view_materials.html', context)
+
+
+@login_required(login_url='login')
+def create_assignment(request):
+    """Staff create assignment"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            assignment = form.save(commit=False)
+            assignment.staff = staff
+            assignment.save()
+            messages.success(request, "Assignment created successfully!")
+            return redirect('view_assignments')
+    else:
+        form = AssignmentForm()
+    
+    context = {
+        'page_title': 'Create Assignment',
+        'form': form,
+        'staff': staff
+    }
+    return render(request, 'staff_template/create_assignment.html', context)
+
+
+@login_required(login_url='login')
+def view_assignments(request):
+    """Staff view assignments"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    assignments = Assignment.objects.filter(staff=staff).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Assignments',
+        'assignments': assignments,
+        'staff': staff
+    }
+    return render(request, 'staff_template/view_assignments.html', context)
+
+
+@login_required(login_url='login')
+def view_submissions(request):
+    """Staff view assignment submissions"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    submissions = AssignmentSubmission.objects.filter(assignment__staff=staff).order_by('-submitted_at')
+    
+    context = {
+        'page_title': 'Assignment Submissions',
+        'submissions': submissions,
+        'staff': staff
+    }
+    return render(request, 'staff_template/view_submissions.html', context)
+
+
+@login_required(login_url='login')
+def create_online_exam(request):
+    """Staff create online exam"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    if request.method == 'POST':
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            quiz = form.save(commit=False)
+            quiz.created_by = staff
+            quiz.save()
+            messages.success(request, "Online exam created successfully!")
+            return redirect('my_online_exams')
+    else:
+        form = QuizForm()
+    
+    context = {
+        'page_title': 'Create Online Exam',
+        'form': form,
+        'staff': staff
+    }
+    return render(request, 'staff_template/create_online_exam.html', context)
+
+
+@login_required(login_url='login')
+def my_online_exams(request):
+    """Staff view their online exams"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    from main_app.models import Quiz
+    quizzes = Quiz.objects.filter(created_by=staff).order_by('-created_at')
+    
+    context = {
+        'page_title': 'My Online Exams',
+        'quizzes': quizzes,
+        'staff': staff
+    }
+    return render(request, 'staff_template/my_online_exams.html', context)
+

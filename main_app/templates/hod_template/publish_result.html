@@ -1,25 +1,68 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-chart-line me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-primary">
                 <h3 class="card-title"><i class="fas fa-paper-plane"></i> {{ page_title }}</h3>
             </div>
-            <div class="card-body">
-                <div class="alert alert-warning">
+            <div class="card-body-professional" style="padding: 10px;">
+                <div class="alert-professional-warning">
                     <h5><i class="fas fa-exclamation-triangle"></i> Confirm Result Publication</h5>
                     <p class="mb-0">Once published, students will be able to view their results. This action cannot be undone.</p>
                 </div>
                 
-                <div class="card">
+                <div class="card-professional">
                     <div class="card-header bg-info">
                         <h3 class="card-title">Result Details</h3>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-professional" style="padding: 10px;">
                         <div class="row">
                             <div class="col-md-6">
                                 <p><strong>Student:</strong> {{ result.student.admin.first_name }} {{ result.student.admin.last_name }}</p>
@@ -70,13 +113,13 @@
                     </div>
                 </div>
                 
-                <form method="post" class="mt-3">
+                <form method="post" class="mt-3" class="compact-form">
                     {% csrf_token %}
-                    <div class="card">
-                        <div class="card-body">
+                    <div class="card-professional">
+                        <div class="card-body-professional" style="padding: 10px;">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="confirmPublish" name="confirm" required>
-                                <label class="custom-control-label" for="confirmPublish">
+                                <label class="custom-control-label" for="confirmPublish"> style="font-size: 12px; margin-bottom: 2px;">
                                     I confirm that all results are verified and ready to be published
                                 </label>
                             </div>
@@ -85,7 +128,7 @@
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-paper-plane"></i> Publish Result
                             </button>
-                            <a href="{% url 'manage_results' %}" class="btn btn-secondary">
+                            <a href="{% url 'manage_results' %}" class="btn btn-professional-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
                         </div>

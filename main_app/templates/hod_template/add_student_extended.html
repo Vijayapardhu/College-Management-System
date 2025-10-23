@@ -1,18 +1,61 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}Add New Student - Comprehensive Form{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-user-graduate me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-primary">
-            <div class="card-header">
+        <div class="card-professional">
+            <div class="card-header-professional">
                 <h3 class="card-title"><i class="fas fa-user-graduate"></i> Student Admission Form</h3>
             </div>
             
-            <form method="POST" enctype="multipart/form-data" id="studentAdmissionForm">
+            <form method="POST" enctype="multipart/form-data" id="studentAdmissionForm" class="compact-form">
                 {% csrf_token %}
-                <div class="card-body">
+                <div class="card-body-professional" style="padding: 10px;">
                     
                     <!-- Tab Navigation -->
                     <ul class="nav nav-tabs" id="studentFormTabs" role="tablist">
@@ -79,7 +122,7 @@
                                     <input type="date" class="form-control" name="date_of_birth" required>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Blood Group</label>
+                                    <label style="font-size: 12px; margin-bottom: 2px;">Blood Group</label>
                                     <select class="form-control" name="blood_group">
                                         <option value="">Select</option>
                                         <option>A+</option>
@@ -93,11 +136,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Nationality</label>
+                                    <label style="font-size: 12px; margin-bottom: 2px;">Nationality</label>
                                     <input type="text" class="form-control" name="nationality" value="Indian">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Religion</label>
+                                    <label style="font-size: 12px; margin-bottom: 2px;">Religion</label>
                                     <input type="text" class="form-control" name="religion">
                                 </div>
                                 <div class="form-group col-md-3">
@@ -105,11 +148,11 @@
                                     <input type="tel" class="form-control" name="mobile_number" pattern="[0-9]{10}" required>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Alternate Mobile</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Alternate Mobile</label>
                                     <input type="tel" class="form-control" name="alternate_mobile" pattern="[0-9]{10}">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Aadhaar Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Aadhaar Number</label>
                                     <input type="text" class="form-control" name="aadhaar_number" pattern="[0-9]{12}" maxlength="12">
                                 </div>
                             </div>
@@ -135,23 +178,23 @@
                                 <div class="form-group col-md-12">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="sameAddress">
-                                        <label class="custom-control-label" for="sameAddress">Current Address same as Permanent</label>
+                                        <label class="custom-control-label" for="sameAddress"> style="font-size: 12px; margin-bottom: 2px;">Current Address same as Permanent</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12" id="currentAddressSection">
-                                    <label>Current Address</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Current Address</label>
                                     <textarea class="form-control" name="current_address" rows="2"></textarea>
                                 </div>
                                 <div class="form-group col-md-4" id="currentCitySection">
-                                    <label>City</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">City</label>
                                     <input type="text" class="form-control" name="current_city">
                                 </div>
                                 <div class="form-group col-md-4" id="currentStateSection">
-                                    <label>State</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">State</label>
                                     <input type="text" class="form-control" name="current_state">
                                 </div>
                                 <div class="form-group col-md-4" id="currentPincodeSection">
-                                    <label>Pincode</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Pincode</label>
                                     <input type="text" class="form-control" name="current_pincode" pattern="[0-9]{6}">
                                 </div>
                             </div>
@@ -190,7 +233,7 @@
                                     <input type="number" class="form-control" name="admission_year" value="2024" min="2000" max="2099" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Roll Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Roll Number</label>
                                     <input type="text" class="form-control" name="roll_number">
                                 </div>
                                 <div class="form-group col-md-4">
@@ -198,7 +241,7 @@
                                     <input type="text" class="form-control" name="admission_number" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Current Semester</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Current Semester</label>
                                     <input type="number" class="form-control" name="current_semester" value="1" min="1" max="10">
                                 </div>
                                 <div class="form-group col-md-4">
@@ -212,21 +255,21 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Annual Family Income</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Annual Family Income</label>
                                     <input type="number" class="form-control" name="annual_family_income" step="0.01">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Income Certificate Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Income Certificate Number</label>
                                     <input type="text" class="form-control" name="income_certificate_number">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="is_disabled" name="is_disabled">
-                                        <label class="custom-control-label" for="is_disabled">Person with Disability (PWD)</label>
+                                        <label class="custom-control-label" for="is_disabled"> style="font-size: 12px; margin-bottom: 2px;">Person with Disability (PWD)</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6" id="disabilityPercentageSection" style="display:none;">
-                                    <label>Disability Percentage</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Disability Percentage</label>
                                     <input type="number" class="form-control" name="disability_percentage" step="0.01" min="0" max="100">
                                 </div>
                             </div>
@@ -249,19 +292,19 @@
                                     <input type="number" class="form-control" name="tenth_year" min="2000" max="2099" required>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Total Marks</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Total Marks</label>
                                     <input type="number" class="form-control" name="tenth_marks_total" step="0.01">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Marks Obtained</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Marks Obtained</label>
                                     <input type="number" class="form-control" name="tenth_marks_obtained" step="0.01">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Percentage</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Percentage</label>
                                     <input type="number" class="form-control" name="tenth_percentage" step="0.01" max="100">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>CGPA</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">CGPA</label>
                                     <input type="number" class="form-control" name="tenth_cgpa" step="0.01" max="10">
                                 </div>
                             </div>
@@ -269,31 +312,31 @@
                             <h5 class="mt-4 mb-3">12th Standard / Intermediate Details</h5>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label>Board</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Board</label>
                                     <input type="text" class="form-control" name="twelfth_board" placeholder="e.g., CBSE, State Board">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>School Name</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">School Name</label>
                                     <input type="text" class="form-control" name="twelfth_school">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Passing Year</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Passing Year</label>
                                     <input type="number" class="form-control" name="twelfth_year" min="2000" max="2099">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Total Marks</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Total Marks</label>
                                     <input type="number" class="form-control" name="twelfth_marks_total" step="0.01">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Marks Obtained</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Marks Obtained</label>
                                     <input type="number" class="form-control" name="twelfth_marks_obtained" step="0.01">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>Percentage</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Percentage</label>
                                     <input type="number" class="form-control" name="twelfth_percentage" step="0.01" max="100">
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label>CGPA</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">CGPA</label>
                                     <input type="number" class="form-control" name="twelfth_cgpa" step="0.01" max="10">
                                 </div>
                             </div>
@@ -301,23 +344,23 @@
                             <h5 class="mt-4 mb-3">Diploma Details (For Lateral Entry)</h5>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>Diploma College</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Diploma College</label>
                                     <input type="text" class="form-control" name="diploma_college">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Branch</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Branch</label>
                                     <input type="text" class="form-control" name="diploma_branch">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Passing Year</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Passing Year</label>
                                     <input type="number" class="form-control" name="diploma_year" min="2000" max="2099">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Percentage</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Percentage</label>
                                     <input type="number" class="form-control" name="diploma_percentage" step="0.01" max="100">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>CGPA</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">CGPA</label>
                                     <input type="number" class="form-control" name="diploma_cgpa" step="0.01" max="10">
                                 </div>
                             </div>
@@ -328,23 +371,23 @@
                             <h5 class="mb-3">Entrance Examination Details</h5>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>Entrance Exam Name</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Entrance Exam Name</label>
                                     <input type="text" class="form-control" name="entrance_exam_name" placeholder="e.g., JEE Main, EAMCET, GATE">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Exam Year</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Exam Year</label>
                                     <input type="number" class="form-control" name="entrance_exam_year" min="2000" max="2099">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Overall Rank</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Overall Rank</label>
                                     <input type="number" class="form-control" name="entrance_exam_rank">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Category Rank</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Category Rank</label>
                                     <input type="number" class="form-control" name="entrance_category_rank">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Score/Percentile</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Score/Percentile</label>
                                     <input type="number" class="form-control" name="entrance_exam_score" step="0.01">
                                 </div>
                             </div>
@@ -359,11 +402,11 @@
                                     <input type="text" class="form-control" name="father_name" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Occupation</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Occupation</label>
                                     <input type="text" class="form-control" name="father_occupation">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Mobile Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Mobile Number</label>
                                     <input type="tel" class="form-control" name="father_mobile" pattern="[0-9]{10}">
                                 </div>
                             </div>
@@ -375,11 +418,11 @@
                                     <input type="text" class="form-control" name="mother_name" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Occupation</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Occupation</label>
                                     <input type="text" class="form-control" name="mother_occupation">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Mobile Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Mobile Number</label>
                                     <input type="tel" class="form-control" name="mother_mobile" pattern="[0-9]{10}">
                                 </div>
                             </div>
@@ -387,15 +430,15 @@
                             <h5 class="mt-4 mb-3">Guardian Details (If Applicable)</h5>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label>Guardian's Name</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Guardian's Name</label>
                                     <input type="text" class="form-control" name="guardian_name">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Relation</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Relation</label>
                                     <input type="text" class="form-control" name="guardian_relation">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Mobile Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Mobile Number</label>
                                     <input type="tel" class="form-control" name="guardian_mobile" pattern="[0-9]{10}">
                                 </div>
                             </div>
@@ -403,15 +446,15 @@
                             <h5 class="mt-4 mb-3">Emergency Contact</h5>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label>Contact Person Name</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Contact Person Name</label>
                                     <input type="text" class="form-control" name="emergency_contact_name">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Relation</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Relation</label>
                                     <input type="text" class="form-control" name="emergency_contact_relation">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Mobile Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Mobile Number</label>
                                     <input type="tel" class="form-control" name="emergency_contact_mobile" pattern="[0-9]{10}">
                                 </div>
                             </div>
@@ -422,80 +465,80 @@
                             <h5 class="mb-3">Upload Documents (PDF/Image, Max 2MB each)</h5>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label>Passport Size Photo</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Passport Size Photo</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="photo" accept="image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Student Signature</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Student Signature</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="signature" accept="image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>10th Certificate <span class="text-danger">*</span></label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="tenth_certificate" accept=".pdf,image/*" required>
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>12th Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">12th Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="twelfth_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Diploma Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Diploma Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="diploma_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Transfer Certificate (TC)</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Transfer Certificate (TC)</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="transfer_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Migration Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Migration Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="migration_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Character/Conduct Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Character/Conduct Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="character_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Caste Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Caste Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="caste_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Income Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Income Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="income_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label>Disability Certificate</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Disability Certificate</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="disability_certificate" accept=".pdf,image/*">
-                                        <label class="custom-file-label">Choose file...</label>
+                                        <label class="custom-file-label"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
                                     </div>
                                 </div>
                             </div>
@@ -508,23 +551,23 @@
                                 <div class="form-group col-md-6">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="hostel_required" name="hostel_required">
-                                        <label class="custom-control-label" for="hostel_required">Hostel Accommodation Required</label>
+                                        <label class="custom-control-label" for="hostel_required"> style="font-size: 12px; margin-bottom: 2px;">Hostel Accommodation Required</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="transport_required" name="transport_required">
-                                        <label class="custom-control-label" for="transport_required">Transport Facility Required</label>
+                                        <label class="custom-control-label" for="transport_required"> style="font-size: 12px; margin-bottom: 2px;">Transport Facility Required</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="scholarship_applied" name="scholarship_applied">
-                                        <label class="custom-control-label" for="scholarship_applied">Scholarship Applied</label>
+                                        <label class="custom-control-label" for="scholarship_applied"> style="font-size: 12px; margin-bottom: 2px;">Scholarship Applied</label>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6" id="scholarshipNameSection" style="display:none;">
-                                    <label>Scholarship Name</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Scholarship Name</label>
                                     <input type="text" class="form-control" name="scholarship_name">
                                 </div>
                             </div>
@@ -532,22 +575,22 @@
                             <h5 class="mt-4 mb-3">Bank Details (For Scholarship/Refund)</h5>
                             <div class="row">
                                 <div class="form-group col-md-4">
-                                    <label>Bank Name</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Bank Name</label>
                                     <input type="text" class="form-control" name="bank_name">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>Account Number</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Account Number</label>
                                     <input type="text" class="form-control" name="bank_account_number">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>IFSC Code</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">IFSC Code</label>
                                     <input type="text" class="form-control" name="bank_ifsc_code" pattern="[A-Z]{4}0[A-Z0-9]{6}">
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label>Remarks / Special Instructions</label>
+                                    <label> style="font-size: 12px; margin-bottom: 2px;">Remarks / Special Instructions</label>
                                     <textarea class="form-control" name="remarks" rows="3"></textarea>
                                 </div>
                             </div>
@@ -557,10 +600,10 @@
                 </div>
                 
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-professional-success">
                         <i class="fas fa-save"></i> Submit Admission Form
                     </button>
-                    <a href="{% url 'manage_student' %}" class="btn btn-secondary">
+                    <a href="{% url 'manage_student' %}" class="btn btn-professional-secondary">
                         <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>
@@ -605,6 +648,10 @@ document.getElementById('studentAdmissionForm').addEventListener('submit', funct
 });
 </script>
 {% endblock content %}
+
+
+
+
 
 
 

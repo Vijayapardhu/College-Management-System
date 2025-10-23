@@ -1,0 +1,511 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}HOD Department Dashboard{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 24px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(30px, -30px);
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .metric-label {
+        font-size: 0.875rem;
+        opacity: 0.9;
+        margin: 8px 0 0 0;
+    }
+    
+    .metric-trend {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+        font-size: 0.75rem;
+    }
+    
+    .trend-up {
+        color: #10b981;
+    }
+    
+    .trend-down {
+        color: #ef4444;
+    }
+    
+    .chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+    
+    .action-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 16px;
+    }
+    
+    .recent-activity {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .quick-action-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 20px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -3px rgba(102, 126, 234, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-6">
+        <div class="col-12">
+            <div class="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl p-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">Welcome back, {{ request.user.first_name }}!</h1>
+                        <p class="text-primary-100 text-lg">Here's what's happening at your college today.</p>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="text-right">
+                            <div class="text-2xl font-semibold">{{ current_date|date:"F d, Y" }}</div>
+                            <div class="text-primary-100">{{ current_date|date:"l" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row mb-6">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="metric-value">{{ total_students }}</div>
+                        <div class="metric-label">Total Students</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            <span>+12% from last month</span>
+                        </div>
+                    </div>
+                    <div class="text-4xl opacity-20">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="metric-value">{{ total_staff }}</div>
+                        <div class="metric-label">Total Staff</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            <span>+5% from last month</span>
+                        </div>
+                    </div>
+                    <div class="text-4xl opacity-20">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="metric-value">{{ total_course }}</div>
+                        <div class="metric-label">Total Courses</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            <span>+3 new courses</span>
+                        </div>
+                    </div>
+                    <div class="text-4xl opacity-20">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="metric-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="metric-value">{{ total_subject }}</div>
+                        <div class="metric-label">Total Subjects</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up mr-1"></i>
+                            <span>+8% from last month</span>
+                        </div>
+                    </div>
+                    <div class="text-4xl opacity-20">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Analytics -->
+    <div class="row mb-6">
+        <!-- Attendance Trends Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="chart-container">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Attendance Trends</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-xs bg-primary-100 text-primary-700 rounded-full">7 Days</button>
+                        <button class="px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded-full">30 Days</button>
+                        <button class="px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded-full">90 Days</button>
+                    </div>
+                </div>
+                <canvas id="attendanceChart" height="300"></canvas>
+            </div>
+        </div>
+        
+        <!-- Department Performance -->
+        <div class="col-lg-4 mb-4">
+            <div class="chart-container">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Department Performance</h3>
+                <canvas id="departmentChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions and Recent Activity -->
+    <div class="row mb-6">
+        <!-- Quick Actions -->
+        <div class="col-lg-6 mb-4">
+            <div class="action-card">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="{% url 'add_student' %}" class="quick-action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Student</span>
+                    </a>
+                    <a href="{% url 'add_staff' %}" class="quick-action-btn">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Add Staff</span>
+                    </a>
+                    <a href="{% url 'staff_take_attendance' %}" class="quick-action-btn">
+                        <i class="fas fa-user-check"></i>
+                        <span>Take Attendance</span>
+                    </a>
+                    <a href="{% url 'analytics_dashboard' %}" class="quick-action-btn">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>View Analytics</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="col-lg-6 mb-4">
+            <div class="action-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                    <a href="#" class="text-primary-600 hover:text-primary-700 text-sm font-medium">View All</a>
+                </div>
+                <div class="recent-activity">
+                    <div class="activity-item">
+                        <div class="activity-icon bg-green-100 text-green-600">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">New student registered</div>
+                            <div class="text-xs text-gray-500">John Doe - Computer Science</div>
+                        </div>
+                        <div class="text-xs text-gray-400">2 min ago</div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-blue-100 text-blue-600">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">Staff member added</div>
+                            <div class="text-xs text-gray-500">Dr. Jane Smith - Mathematics</div>
+                        </div>
+                        <div class="text-xs text-gray-400">15 min ago</div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-yellow-100 text-yellow-600">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">Low attendance alert</div>
+                            <div class="text-xs text-gray-500">Physics Class - 45% attendance</div>
+                        </div>
+                        <div class="text-xs text-gray-400">1 hour ago</div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon bg-purple-100 text-purple-600">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">New course created</div>
+                            <div class="text-xs text-gray-500">Data Science - B.Tech</div>
+                        </div>
+                        <div class="text-xs text-gray-400">2 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Approvals and Upcoming Events -->
+    <div class="row">
+        <!-- Pending Approvals -->
+        <div class="col-lg-6 mb-4">
+            <div class="action-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Pending Approvals</h3>
+                    <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">5</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-times text-yellow-600 mr-3"></i>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">Leave Applications</div>
+                                <div class="text-xs text-gray-500">3 pending requests</div>
+                            </div>
+                        </div>
+                        <button class="text-primary-600 hover:text-primary-700 text-sm font-medium">Review</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-alt text-blue-600 mr-3"></i>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">Admission Applications</div>
+                                <div class="text-xs text-gray-500">2 pending reviews</div>
+                            </div>
+                        </div>
+                        <button class="text-primary-600 hover:text-primary-700 text-sm font-medium">Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Events -->
+        <div class="col-lg-6 mb-4">
+            <div class="action-card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Upcoming Events</h3>
+                    <a href="#" class="text-primary-600 hover:text-primary-700 text-sm font-medium">View All</a>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-calendar-check text-green-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">Faculty Meeting</div>
+                            <div class="text-xs text-gray-500">Tomorrow, 10:00 AM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center p-3 bg-purple-50 rounded-lg">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-graduation-cap text-purple-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-gray-900">Exam Schedule Release</div>
+                            <div class="text-xs text-gray-500">Friday, 2:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Attendance Trends Chart
+    const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(attendanceCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Attendance %',
+                data: [85, 92, 78, 88, 95, 82, 90],
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: '#f3f4f6'
+                    },
+                    ticks: {
+                        color: '#6b7280'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#6b7280'
+                    }
+                }
+            }
+        }
+    });
+
+    // Department Performance Chart
+    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+    new Chart(departmentCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology'],
+            datasets: [{
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: [
+                    '#667eea',
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock content %}
+

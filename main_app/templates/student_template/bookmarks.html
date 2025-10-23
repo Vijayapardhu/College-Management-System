@@ -3,18 +3,28 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card-professional">
+                    <div class="card-header-professional">
                         <h3 class="card-title"><i class="fas fa-bookmark text-warning"></i> My Bookmarked Resources</h3>
                         <div class="card-tools">
                             <span class="badge badge-info">{{ bookmarks.count }} bookmarks</span>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-professional">
                         {% if bookmarks %}
                         <div class="list-group">
                             {% for bookmark in bookmarks %}
@@ -45,15 +55,15 @@
                                     <div class="col-md-4 text-right">
                                         <div class="btn-group-vertical btn-group-sm">
                                             {% if bookmark.material.material_type == 'document' %}
-                                                <a href="{% url 'download_material' bookmark.material.id %}" class="btn btn-primary">
+                                                <a href="{% url 'download_material' bookmark.material.id %}" class="btn btn-professional-primary">
                                                     <i class="fas fa-download"></i> Download
                                                 </a>
                                             {% elif bookmark.material.material_type == 'video' %}
-                                                <a href="{{ bookmark.material.url }}" target="_blank" class="btn btn-danger">
+                                                <a href="{{ bookmark.material.url }}" target="_blank" class="btn btn-professional-danger">
                                                     <i class="fab fa-youtube"></i> Watch
                                                 </a>
                                             {% else %}
-                                                <a href="{{ bookmark.material.url }}" target="_blank" class="btn btn-success">
+                                                <a href="{{ bookmark.material.url }}" target="_blank" class="btn btn-professional-success">
                                                     <i class="fas fa-external-link-alt"></i> Open
                                                 </a>
                                             {% endif %}
@@ -71,7 +81,7 @@
                             <i class="far fa-bookmark fa-4x text-muted mb-3"></i>
                             <h4 class="text-muted">No Bookmarks Yet</h4>
                             <p>Start bookmarking your favorite study materials for quick access!</p>
-                            <a href="{% url 'student_view_resources' %}" class="btn btn-primary">
+                            <a href="{% url 'student_view_resources' %}" class="btn btn-professional-primary">
                                 <i class="fas fa-book-open"></i> Browse Resource Library
                             </a>
                         </div>

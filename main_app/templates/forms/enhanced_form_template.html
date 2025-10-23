@@ -1,0 +1,883 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% load form_extras %}
+{% block page_title %}{{ form_title }}{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-section {
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .form-section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .form-section-icon {
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-group-inline {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    
+    .form-group-triple {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+    
+    .form-label.required::after {
+        content: ' *';
+        color: #ef4444;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-input.error {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+    
+    .form-input.success {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .form-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        background: white;
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    .form-textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        background: white;
+        cursor: pointer;
+    }
+    
+    .form-select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    
+    .form-checkbox input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: #667eea;
+    }
+    
+    .form-checkbox label {
+        font-size: 0.875rem;
+        color: #374151;
+        cursor: pointer;
+    }
+    
+    .form-radio-group {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .form-radio {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .form-radio input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        accent-color: #667eea;
+    }
+    
+    .form-radio label {
+        font-size: 0.875rem;
+        color: #374151;
+        cursor: pointer;
+    }
+    
+    .form-file-upload {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .form-file-upload input[type="file"] {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .form-file-upload-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 16px;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        background: #f9fafb;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+    
+    .form-file-upload-label:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+    
+    .form-file-upload-label.dragover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+    
+    .form-error {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .form-help {
+        color: #6b7280;
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px -3px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+        background: white;
+        color: #374151;
+        border: 1px solid #d1d5db;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-secondary:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+    }
+    
+    .form-progress {
+        background: #f3f4f6;
+        border-radius: 8px;
+        height: 8px;
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+    
+    .form-progress-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+    
+    .form-step {
+        display: none;
+    }
+    
+    .form-step.active {
+        display: block;
+    }
+    
+    .form-step-nav {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 32px;
+    }
+    
+    .form-step-nav button {
+        background: white;
+        border: 1px solid #d1d5db;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .form-step-nav button:hover:not(:disabled) {
+        background: #f9fafb;
+    }
+    
+    .form-step-nav button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .form-step-nav button.active {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .character-count {
+        font-size: 0.75rem;
+        color: #6b7280;
+        text-align: right;
+        margin-top: 4px;
+    }
+    
+    .character-count.warning {
+        color: #f59e0b;
+    }
+    
+    .character-count.error {
+        color: #ef4444;
+    }
+    
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 20px;
+            margin: 16px;
+        }
+        
+        .form-group-inline,
+        .form-group-triple {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .form-radio-group {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="form-container">
+                <!-- Form Header -->
+                <div class="text-center mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ form_title }}</h1>
+                    <p class="text-gray-600">{{ form_description }}</p>
+                </div>
+
+                <!-- Progress Bar (for multi-step forms) -->
+                {% if show_progress %}
+                <div class="form-progress">
+                    <div class="form-progress-bar" style="width: {{ progress_percentage }}%"></div>
+                </div>
+                {% endif %}
+
+                <!-- Form Steps Navigation (for multi-step forms) -->
+                {% if is_multi_step %}
+                <div class="form-step-nav">
+                    <button type="button" class="step-btn" data-step="1" {% if current_step == 1 %}class="active"{% endif %}>Personal Info</button>
+                    <button type="button" class="step-btn" data-step="2" {% if current_step == 2 %}class="active"{% endif %}>Academic Info</button>
+                    <button type="button" class="step-btn" data-step="3" {% if current_step == 3 %}class="active"{% endif %}>Contact Info</button>
+                    <button type="button" class="step-btn" data-step="4" {% if current_step == 4 %}class="active"{% endif %}>Review</button>
+                </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" id="enhanced-form" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step {% if current_step == 1 or not is_multi_step %}active{% endif %}" data-step="1">
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <div class="form-section-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                Personal Information
+                            </div>
+                            
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label required">First Name</label>
+                                    {{ form.first_name|add_class:"form-input" }}
+                                    {% if form.first_name.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.first_name.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label required">Last Name</label>
+                                    {{ form.last_name|add_class:"form-input" }}
+                                    {% if form.last_name.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.last_name.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label required">Email Address</label>
+                                    {{ form.email|add_class:"form-input" }}
+                                    {% if form.email.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.email.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-help">We'll use this email for communication</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number</label>
+                                    {{ form.phone|add_class:"form-input" }}
+                                    {% if form.phone.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.phone.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="{{ form.gender.id_for_label }}" class="form-label required">Gender</label>
+                                    {{ form.gender|add_class:"form-select" }}
+                                    {% if form.gender.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.gender.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Date of Birth</label>
+                                    {{ form.date_of_birth|add_class:"form-input" }}
+                                    {% if form.date_of_birth.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.date_of_birth.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+                                {{ form.address|add_class:"form-textarea" }}
+                                {% if form.address.errors %}
+                                    <div class="form-error">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        {{ form.address.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Academic Information -->
+                    <div class="form-step {% if current_step == 2 %}active{% endif %}" data-step="2">
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <div class="form-section-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                Academic Information
+                            </div>
+                            
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="{{ form.roll_number.id_for_label }}" class="form-label required">Roll Number</label>
+                                    {{ form.roll_number|add_class:"form-input" }}
+                                    {% if form.roll_number.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.roll_number.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.course.id_for_label }}" class="form-label required">Course</label>
+                                    {{ form.course|add_class:"form-select" }}
+                                    {% if form.course.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.course.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group-inline">
+                                <div class="form-group">
+                                    <label for="{{ form.session.id_for_label }}" class="form-label required">Session</label>
+                                    {{ form.session|add_class:"form-select" }}
+                                    {% if form.session.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.session.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.year.id_for_label }}" class="form-label">Academic Year</label>
+                                    {{ form.year|add_class:"form-input" }}
+                                    {% if form.year.errors %}
+                                        <div class="form-error">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ form.year.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Documents and Additional Info -->
+                    <div class="form-step {% if current_step == 3 %}active{% endif %}" data-step="3">
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <div class="form-section-icon">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                Documents & Additional Information
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                                <div class="form-file-upload">
+                                    <input type="file" id="{{ form.profile_picture.id_for_label }}" name="{{ form.profile_picture.name }}" accept="image/*">
+                                    <label for="{{ form.profile_picture.id_for_label }}" class="form-file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 mb-2"></i>
+                                        <div class="text-sm font-medium text-gray-900">Click to upload or drag and drop</div>
+                                        <div class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</div>
+                                    </label>
+                                </div>
+                                {% if form.profile_picture.errors %}
+                                    <div class="form-error">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        {{ form.profile_picture.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.notes.id_for_label }}" class="form-label">Additional Notes</label>
+                                {{ form.notes|add_class:"form-textarea" }}
+                                <div class="character-count" id="notes-count">0 / 500 characters</div>
+                                {% if form.notes.errors %}
+                                    <div class="form-error">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        {{ form.notes.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        {% if is_multi_step %}
+                        <button type="button" class="btn-secondary" id="prev-step" {% if current_step == 1 %}disabled{% endif %}>
+                            <i class="fas fa-arrow-left"></i>
+                            Previous
+                        </button>
+                        {% endif %}
+                        
+                        <a href="{% url 'manage_student' %}" class="btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </a>
+                        
+                        <button type="submit" class="btn-primary" id="submit-btn">
+                            <i class="fas fa-save"></i>
+                            {% if is_multi_step and current_step < total_steps %}Next{% else %}Save{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.getElementById('enhanced-form');
+    const inputs = form.querySelectorAll('.form-input, .form-textarea, .form-select');
+    
+    // Real-time validation
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                validateField(this);
+            }
+        });
+    });
+    
+    // Character count for textarea
+    const notesTextarea = document.getElementById('{{ form.notes.id_for_label }}');
+    const notesCount = document.getElementById('notes-count');
+    
+    if (notesTextarea && notesCount) {
+        notesTextarea.addEventListener('input', function() {
+            const count = this.value.length;
+            notesCount.textContent = `${count} / 500 characters`;
+            
+            if (count > 450) {
+                notesCount.classList.add('warning');
+            } else if (count > 500) {
+                notesCount.classList.add('error');
+            } else {
+                notesCount.classList.remove('warning', 'error');
+            }
+        });
+    }
+    
+    // File upload drag and drop
+    const fileUpload = document.querySelector('.form-file-upload');
+    if (fileUpload) {
+        const label = fileUpload.querySelector('.form-file-upload-label');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            label.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            label.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            label.addEventListener(eventName, unhighlight, false);
+        });
+        
+        label.addEventListener('drop', handleDrop, false);
+    }
+    
+    // Multi-step form navigation
+    if (document.querySelector('.form-step-nav')) {
+        const steps = document.querySelectorAll('.form-step');
+        const stepButtons = document.querySelectorAll('.step-btn');
+        const prevBtn = document.getElementById('prev-step');
+        const nextBtn = document.getElementById('submit-btn');
+        let currentStep = 1;
+        
+        stepButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const step = parseInt(this.dataset.step);
+                showStep(step);
+            });
+        });
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                if (currentStep > 1) {
+                    showStep(currentStep - 1);
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function(e) {
+                if (currentStep < steps.length) {
+                    e.preventDefault();
+                    if (validateCurrentStep()) {
+                        showStep(currentStep + 1);
+                    }
+                }
+            });
+        }
+        
+        function showStep(step) {
+            steps.forEach((s, index) => {
+                s.classList.toggle('active', index + 1 === step);
+            });
+            
+            stepButtons.forEach((btn, index) => {
+                btn.classList.toggle('active', index + 1 === step);
+            });
+            
+            currentStep = step;
+            
+            if (prevBtn) {
+                prevBtn.disabled = step === 1;
+            }
+            
+            if (nextBtn) {
+                nextBtn.innerHTML = step === steps.length ? 
+                    '<i class="fas fa-save"></i> Save' : 
+                    '<i class="fas fa-arrow-right"></i> Next';
+            }
+        }
+        
+        function validateCurrentStep() {
+            const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+    }
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            showNotification('Please fix the errors before submitting.', 'error');
+        }
+    });
+    
+    function validateField(field) {
+        const value = field.value.trim();
+        const isRequired = field.hasAttribute('required');
+        const fieldType = field.type;
+        let isValid = true;
+        let errorMessage = '';
+        
+        // Clear previous error state
+        field.classList.remove('error', 'success');
+        const errorElement = field.parentNode.querySelector('.form-error');
+        if (errorElement) {
+            errorElement.remove();
+        }
+        
+        // Required field validation
+        if (isRequired && !value) {
+            isValid = false;
+            errorMessage = 'This field is required.';
+        }
+        
+        // Email validation
+        if (fieldType === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid email address.';
+            }
+        }
+        
+        // Phone validation
+        if (fieldType === 'tel' && value) {
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            if (!phoneRegex.test(value.replace(/\s/g, ''))) {
+                isValid = false;
+                errorMessage = 'Please enter a valid phone number.';
+            }
+        }
+        
+        // Show validation result
+        if (isValid) {
+            field.classList.add('success');
+        } else {
+            field.classList.add('error');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'form-error';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
+            field.parentNode.appendChild(errorDiv);
+        }
+        
+        return isValid;
+    }
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function highlight(e) {
+        e.currentTarget.classList.add('dragover');
+    }
+    
+    function unhighlight(e) {
+        e.currentTarget.classList.remove('dragover');
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            const fileInput = e.currentTarget.parentNode.querySelector('input[type="file"]');
+            fileInput.files = files;
+            
+            // Update label text
+            const label = e.currentTarget;
+            label.innerHTML = `
+                <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
+                <div class="text-sm font-medium text-gray-900">${files[0].name}</div>
+                <div class="text-xs text-gray-500">Click to change</div>
+            `;
+        }
+    }
+    
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+            type === 'error' ? 'bg-red-500 text-white' : 
+            type === 'success' ? 'bg-green-500 text-white' : 
+            'bg-blue-500 text-white'
+        }`;
+        notification.innerHTML = `
+            <div class="flex items-center gap-2">
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 5 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+});
+</script>
+{% endblock content %}
+
+

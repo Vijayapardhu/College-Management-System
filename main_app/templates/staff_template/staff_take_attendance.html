@@ -1,65 +1,159 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    .page-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 20px 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .attendance-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: #003d82;
+        color: white;
+        padding: 20px 25px;
+        border: none;
+    }
+
+    .student-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .student-checkbox {
+        background: #f5f5f5;
+        border: 2px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 15px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .student-checkbox:hover {
+        border-color: #003d82;
+        background: white;
+    }
+
+    .student-checkbox input:checked + label {
+        color: #003d82;
+        font-weight: 600;
+    }
+
+    .quick-actions {
+        background: #e6f2ff;
+        border-left: 4px solid #0369a1;
+        padding: 15px 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-user-tie me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0;">
+                        <i class="fas fa-user-check me-2"></i>{{page_title}}
+                    </h2>
+                    <p style="font-size: 14px; color: #4a5568; margin: 5px 0 0 0;">
+                        Mark student attendance for today's classes
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'bulk_attendance_import' %}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-file-upload me-1"></i>Bulk Import
+                    </a>
+                    <a href="{% url 'generate_attendance_qr' %}" class="btn btn-outline-success">
+                        <i class="fas fa-qrcode me-1"></i>QR Code
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <strong><i class="fas fa-lightbulb me-2"></i>Quick Actions:</strong>
+            <a href="{% url 'staff_update_attendance' %}" class="text-primary ms-3">
+                <i class="fas fa-edit me-1"></i>Update Previous Attendance
+            </a>
+            <a href="{% url 'staff_attendance_analytics' %}" class="text-primary ms-3">
+                <i class="fas fa-chart-bar me-1"></i>View Analytics
+            </a>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
+                <div class="attendance-card">
+                    <div class="card-header-custom">
+                        <h3 style="font-size: 18px; font-weight: 600; margin: 0;">Select Subject and Session</h3>
                     </div>
 
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
+                    <div style="padding: 25px;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                    Subject <span class="text-danger">*</span>
+                                </label>
+                                <select name="subject" class="form-select" id='subject'>
+                                    <option value="">Select Subject</option>
+                                    {% for subject in subjects %}
+                                    <option value="{{subject.id}}">{{subject.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-
-
-                        <div class="form-group">
-                            <label>Subject</label>
-                            <select name="subject" class="form-control" id='subject'>
-                                <option value="">----</option>
-                                {% for subject in subjects  %}
-                                <option value="{{subject.id}}">{{subject.name}}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" style="font-weight: 600; color: #1a202c;">
+                                    Session Year <span class="text-danger">*</span>
+                                </label>
+                                <select name="session" id='session' class="form-select">
+                                    <option value="">Select Session</option>
+                                    {% for session in sessions %}
+                                    <option value="{{session.id}}">{{session}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
 
-
-                        <div class="form-group">
-                            <label>Session Year</label>
-                            <select name="session" id='session' class="form-control">
-                                <option value="">----</option>
-                                {% for session in sessions  %}
-                                <option value="{{session.id}}">{{session}} </option>
-                                {% endfor %}
-                            </select>
+                        <div class="text-center">
+                            <button type="button" id='fetch_student' class="btn btn-professional-primary">
+                                <i class="fas fa-users me-2"></i>Fetch Students
+                            </button>
                         </div>
-                        {% comment %}
 
-                        <div>
-                            <label>Attendance Date</label>
-                            <input type="date" class='form-control' name="attendance_date" id='attendance_date' id="">
-                        </div>
-                        {% endcomment %}
-
-                    </div>
-                    <!-- /.card-body -->
-
-                    <div class="card-footer">
-                        <button type="button" id='fetch_student' class="btn btn-primary btn-block">Fetch
-                            Students</button>
-                        <div class="form-group" id="student_data">
-
-                        </div>
+                        <div id="student_data"></div>
                     </div>
                 </div>
-                <!-- /.card -->
-
             </div>
         </div>
     </div>
@@ -70,16 +164,18 @@
 {% block custom_js %}
 <script>
     $(document).ready(function () {
-
-       
         $("#fetch_student").click(function () {
-            var subject = $("#subject").val()
-            var session = $("#session").val()
-            $("#student_data").html(null)
-if (subject.length  == 0 || session.length == 0){
-    alert("Please select session and subject");
-    return false;
-}
+            var subject = $("#subject").val();
+            var session = $("#session").val();
+            $("#student_data").html('');
+            
+            if (subject.length == 0 || session.length == 0){
+                window.toast.error("Please select both subject and session");
+                return false;
+            }
+            
+            window.loader.showPageLoader('Loading students...');
+            
             $.ajax({
                 url: "{% url 'get_students' %}",
                 type: 'POST',
@@ -88,67 +184,108 @@ if (subject.length  == 0 || session.length == 0){
                     session: session
                 }
             }).done(function (response) {
-                var json_data = JSON.parse(response)
+                window.loader.hidePageLoader();
+                var json_data = JSON.parse(response);
+                
                 if (json_data.length < 1) {
-                    alert("No data to display")
+                    window.toast.error("No students found for this combination");
                 } else {
-                    var div_data = "<hr/><div class='form-group'></div><div class='form-group'> <label>Attendance Date</label><input type='date' class='form-control' name='attendance_date' id='attendance_date' ><div class='row'>"
+                    // Professional student selection UI
+                    var div_data = "<div style='margin-top: 30px;'>";
+                    div_data += "<div style='background: #f5f5f5; padding: 15px; border-radius: 4px; margin-bottom: 20px;'>";
+                    div_data += "<label class='form-label' style='font-weight: 600; color: #1a202c; margin-bottom: 10px;'>Attendance Date <span class='text-danger'>*</span></label>";
+                    div_data += "<input type='date' class='form-control' name='attendance_date' id='attendance_date' value='" + new Date().toISOString().split('T')[0] + "' max='" + new Date().toISOString().split('T')[0] + "'>";
+                    div_data += "</div>";
+                    
+                    div_data += "<h6 style='margin: 20px 0 15px 0; color: #1a202c; font-weight: 600;'><i class='fas fa-users me-2'></i>Students (" + json_data.length + ") - Check Present</h6>";
+                    div_data += "<div class='student-grid'>";
 
                     for (key in json_data) {
-                        div_data += "<div class='col-lg-3'><div class='form-check custom-control custom-checkbox'><input type='checkbox' class='custom-control-input' checked='checked' name='student_data[]' value=" + json_data[key]['id'] + " id='checkbox" + json_data[key]['id'] + "' /> <label for='checkbox" + json_data[key]['id'] + "' class='custom-control-label'>" + json_data[key]['name'] + "</label></div> </div>"
+                        div_data += "<div class='student-checkbox'>";
+                        div_data += "<input type='checkbox' class='form-check-input me-2' checked='checked' name='student_data[]' value='" + json_data[key]['id'] + "' id='checkbox" + json_data[key]['id'] + "' />";
+                        div_data += "<label for='checkbox" + json_data[key]['id'] + "' class='form-check-label' style='cursor: pointer;'>" + json_data[key]['name'] + "</label>";
+                        div_data += "</div>";
                     }
-                    div_data += "</div></div>"
-                    div_data += "<div class='form-group'><button id='save_attendance' class='btn btn-success' type='button'>Save Attendance</button></div>"
-                    $("#student_data").html(div_data)
+                    
+                    div_data += "</div>";
+                    div_data += "<div class='text-center mt-4'>";
+                    div_data += "<button id='select_all' class='btn btn-outline-primary me-2' type='button'><i class='fas fa-check-double me-1'></i>Select All</button>";
+                    div_data += "<button id='deselect_all' class='btn btn-outline-secondary me-2' type='button'><i class='fas fa-times me-1'></i>Deselect All</button>";
+                    div_data += "<button id='save_attendance' class='btn btn-success btn-lg' type='button'><i class='fas fa-save me-2'></i>Save Attendance</button>";
+                    div_data += "</div></div>";
+                    
+                    $("#student_data").html(div_data);
+                    window.toast.success(json_data.length + ' students loaded');
                 }
             }).fail(function (response) {
-                alert("Error in fetching students")
-            })
+                window.loader.hidePageLoader();
+                window.toast.error("Error fetching students");
+            });
+        });
 
+        // Select/Deselect all
+        $(document).on('click', '#select_all', function () {
+            $("input[name='student_data[]']").prop('checked', true);
+            window.toast.info('All students marked present');
+        });
 
-            $(document).on('click', '#save_attendance', function () {
-                $(this).attr("disabled","disabled")
-                $(this).text("Saving Attendance Data...")
-                var student_data = $("input[name='student_data[]']").map(function () {
-                    if ($(this).is(":checked")){
-                    return {'id':$(this).val(), 'status': 1};
-    
-                    }
-                    return {'id':$(this).val(), 'status': 0};
-    
-                }).get()
-                var attendance_date = $('#attendance_date').val()
-                if (attendance_date.length < 10){
-                    alert("Select date")
-                    return false;
-                }
-                student_data = JSON.stringify(student_data)
-                $.ajax({
-                    url: "{% url 'save_attendance' %}",
-                    type: 'POST',
-                    data: {
-                        date: attendance_date,
-                        student_ids: student_data,
-                        subject: subject,
-                        session: session
+        $(document).on('click', '#deselect_all', function () {
+            $("input[name='student_data[]']").prop('checked', false);
+            window.toast.info('All students marked absent');
+        });
+
+        // Save attendance
+        $(document).on('click', '#save_attendance', function () {
+            var attendance_date = $('#attendance_date').val();
             
-                    }
-                }).done(function (response) {
-                    if (response == 'OK'){
-                        alert("Saved")
-                    }else{
-                        alert("Error. Please try again")
-                    }
-                    location.reload()
-                    
-                }).fail(function (response) {
-                    alert("Error in saving attendance")
-                })
-    
-            })
-
-
-        })
-    })
+            if (attendance_date.length < 10){
+                window.toast.error("Please select attendance date");
+                return false;
+            }
+            
+            var subject = $("#subject").val();
+            var session = $("#session").val();
+            
+            var student_data = $("input[name='student_data[]']").map(function () {
+                return {
+                    'id': $(this).val(), 
+                    'status': $(this).is(":checked") ? 1 : 0
+                };
+            }).get();
+            
+            var present_count = student_data.filter(s => s.status == 1).length;
+            
+            if (!confirm('Mark attendance for ' + present_count + ' present and ' + (student_data.length - present_count) + ' absent students?')) {
+                return;
+            }
+            
+            $(this).attr("disabled", "disabled");
+            $(this).html('<i class="fas fa-spinner fa-spin me-2"></i>Saving...');
+            
+            student_data = JSON.stringify(student_data);
+            
+            $.ajax({
+                url: "{% url 'save_attendance' %}",
+                type: 'POST',
+                data: {
+                    date: attendance_date,
+                    student_ids: student_data,
+                    subject: subject,
+                    session: session
+                }
+            }).done(function (response) {
+                if (response == 'OK'){
+                    window.toast.success("Attendance saved successfully!");
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    window.toast.error("Error saving attendance. Please try again");
+                    $('#save_attendance').removeAttr("disabled").html('<i class="fas fa-save me-2"></i>Save Attendance');
+                }
+            }).fail(function (response) {
+                window.toast.error("Error saving attendance");
+                $('#save_attendance').removeAttr("disabled").html('<i class="fas fa-save me-2"></i>Save Attendance');
+            });
+        });
+    });
 </script>
 {% endblock custom_js %}

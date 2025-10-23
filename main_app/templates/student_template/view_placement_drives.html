@@ -1,99 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}Placement Drives{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-info">
-                <h3 class="card-title"><i class="fas fa-briefcase"></i> Placement Drives</h3>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-handshake me-2"></i>Placement Drives
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View available placement opportunities
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <div class="card-body">
-                {% if eligible_drives %}
-                <div class="row">
-                    {% for item in eligible_drives %}
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100 {% if not item.is_eligible %}border-danger{% elif item.has_applied %}border-success{% else %}border-primary{% endif %}">
-                            <div class="card-header {% if not item.is_eligible %}bg-danger text-white{% elif item.has_applied %}bg-success text-white{% else %}bg-primary text-white{% endif %}">
-                                <h5 class="mb-0">{{ item.drive.company.name }}</h5>
-                                <small>{{ item.drive.get_drive_type_display }}</small>
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-subtitle mb-3 text-muted">{{ item.drive.job_title }}</h6>
-                                <p class="card-text">{{ item.drive.job_description|truncatewords:30 }}</p>
-                                
-                                <hr>
-                                
-                                <div class="row small mb-2">
-                                    <div class="col-6">
-                                        <i class="fas fa-money-bill-wave text-success"></i>
-                                        <strong>Package:</strong> ₹{{ item.drive.salary_package }} LPA
-                                    </div>
-                                    <div class="col-6">
-                                        <i class="fas fa-users"></i>
-                                        <strong>Openings:</strong> {{ item.drive.number_of_openings }}
-                                    </div>
-                                </div>
-                                
-                                <div class="row small mb-2">
-                                    <div class="col-6">
-                                        <i class="fas fa-chart-line"></i>
-                                        <strong>Min CGPA:</strong> {{ item.drive.min_cgpa }}
-                                    </div>
-                                    <div class="col-6">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <strong>Max Backlogs:</strong> {{ item.drive.allowed_backlogs }}
-                                    </div>
-                                </div>
-                                
-                                <hr>
-                                
-                                <div class="small">
-                                    <strong><i class="fas fa-clock"></i> Registration Deadline:</strong><br>
-                                    {{ item.drive.registration_deadline|date:"d M Y, h:i A" }}
-                                </div>
-                                
-                                {% if not item.is_eligible %}
-                                <div class="alert alert-danger mt-3 mb-0 p-2">
-                                    <strong><i class="fas fa-times-circle"></i> Not Eligible</strong>
-                                    <ul class="mb-0 mt-1">
-                                        {% for reason in item.reasons %}
-                                        <li>{{ reason }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="card-footer">
-                                {% if item.has_applied %}
-                                <button class="btn btn-success btn-block" disabled>
-                                    <i class="fas fa-check-circle"></i> Already Applied
-                                </button>
-                                {% elif item.is_eligible %}
-                                <a href="{% url 'student_apply_placement' item.drive.id %}" class="btn btn-primary btn-block">
-                                    <i class="fas fa-paper-plane"></i> Apply Now
-                                </a>
-                                {% else %}
-                                <button class="btn btn-secondary btn-block" disabled>
-                                    <i class="fas fa-ban"></i> Not Eligible
-                                </button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-handshake"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No active placement drives available at the moment. Check back later!
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

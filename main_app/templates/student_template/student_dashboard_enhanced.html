@@ -1,181 +1,242 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}My Dashboard{% endblock page_title %}
+{% block page_title %}Enhanced Student Dashboard{% endblock %}
 
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <!-- Academic Progress Overview -->
-        <div class="row">
+        <!-- Welcome Header -->
+        <div class="welcome-header">
+            <h2 style="font-size: 28px; font-weight: 700; color: #003d82; margin: 0 0 10px 0;">
+                Welcome back, {{ user.first_name }} {{ user.last_name }}!
+            </h2>
+            <p style="font-size: 16px; color: #4a5568; margin: 0 0 20px 0;">
+                Here's your comprehensive academic overview and quick access to all features
+            </p>
+            
+            <div class="student-info-grid">
+                <div class="info-item">
+                    <i class="fas fa-id-card text-primary"></i>
+                    <span><strong>Roll No:</strong> {{ student.roll_number|default:"Not Assigned" }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-graduation-cap text-success"></i>
+                    <span><strong>Course:</strong> {{ student.course.name|default:"Not Enrolled" }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar text-info"></i>
+                    <span><strong>Session:</strong> {{ student.session.session_start_year|default:"Not Assigned" }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope text-warning"></i>
+                    <span><strong>Email:</strong> {{ user.email }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
             <div class="col-md-3">
-                <div class="info-box bg-gradient-info">
-                    <span class="info-box-icon"><i class="fas fa-percentage"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Overall Attendance</span>
-                        <span class="info-box-number">{{ attendance_percentage }}%</span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ attendance_percentage }}%"></div>
-                        </div>
+                <div class="metric-card primary">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>{{ overall_attendance_percentage|default:"0" }}%</h3>
+                        <p>Overall Attendance</p>
                     </div>
                 </div>
             </div>
-            
             <div class="col-md-3">
-                <div class="info-box bg-gradient-success">
-                    <span class="info-box-icon"><i class="fas fa-star"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Current CGPA</span>
-                        <span class="info-box-number">{{ current_cgpa|default:"N/A" }}</span>
-                        <span class="progress-description">Out of 10.0</span>
+                <div class="metric-card success">
+                    <div class="metric-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>{{ cgpa|default:"0.0" }}</h3>
+                        <p>Current CGPA</p>
                     </div>
                 </div>
             </div>
-            
             <div class="col-md-3">
-                <div class="info-box bg-gradient-warning">
-                    <span class="info-box-icon"><i class="fas fa-tasks"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Pending Tasks</span>
-                        <span class="info-box-number">{{ pending_assignments }}</span>
-                        <span class="progress-description">Assignments Due</span>
+                <div class="metric-card warning">
+                    <div class="metric-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>{{ total_subjects|default:"0" }}</h3>
+                        <p>Enrolled Subjects</p>
                     </div>
                 </div>
             </div>
-            
             <div class="col-md-3">
-                <div class="info-box bg-gradient-danger">
-                    <span class="info-box-icon"><i class="fas fa-rupee-sign"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Fee Status</span>
-                        <span class="info-box-number">₹{{ pending_fees|default:"0" }}</span>
-                        <span class="progress-description">Pending</span>
+                <div class="metric-card info">
+                    <div class="metric-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>{{ upcoming_exams|default:"0" }}</h3>
+                        <p>Upcoming Exams</p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Upcoming Events & Deadlines -->
+
+        <!-- Main Content Grid -->
         <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title"><i class="fas fa-calendar-alt"></i> Upcoming This Week</h3>
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Recent Activities -->
+                <div class="card-professional mb-4">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-history me-2"></i>Recent Activities
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        <div class="timeline">
-                            {% if upcoming_exams %}
-                            <div class="time-label">
-                                <span class="bg-red">Exams</span>
-                            </div>
-                            {% for exam in upcoming_exams %}
-                            <div>
-                                <i class="fas fa-exam bg-red"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> {{ exam.exam_date|date:"M d, Y" }}</span>
-                                    <h3 class="timeline-header">{{ exam.subject.name }}</h3>
-                                    <div class="timeline-body">
-                                        {{ exam.exam_type }} Examination
-                                    </div>
+                    <div style="padding: 0;">
+                        <div class="activity-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <h6>Assignment Submitted</h6>
+                                    <p>Mathematics Assignment #3 submitted successfully</p>
+                                    <small class="text-muted">2 hours ago</small>
                                 </div>
                             </div>
-                            {% endfor %}
-                            {% endif %}
-                            
-                            {% if upcoming_assignments %}
-                            <div class="time-label">
-                                <span class="bg-yellow">Assignments</span>
-                            </div>
-                            {% for assignment in upcoming_assignments %}
-                            <div>
-                                <i class="fas fa-tasks bg-yellow"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> Due: {{ assignment.due_date|date:"M d, Y" }}</span>
-                                    <h3 class="timeline-header">{{ assignment.title }}</h3>
-                                    <div class="timeline-body">
-                                        Subject: {{ assignment.subject.name }}
-                                    </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker info"></div>
+                                <div class="timeline-content">
+                                    <h6>Exam Result Published</h6>
+                                    <p>Physics Mid-term exam results are now available</p>
+                                    <small class="text-muted">1 day ago</small>
                                 </div>
                             </div>
-                            {% endfor %}
-                            {% endif %}
-                            
-                            <div>
-                                <i class="fas fa-clock bg-gray"></i>
+                            <div class="timeline-item">
+                                <div class="timeline-marker warning"></div>
+                                <div class="timeline-content">
+                                    <h6>Attendance Marked</h6>
+                                    <p>Present in Chemistry lab session</p>
+                                    <small class="text-muted">2 days ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-bolt me-2"></i>Quick Actions
+                        </h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'student_view_attendance' %}" class="quick-action-btn">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>View Attendance</span>
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'student_view_result' %}" class="quick-action-btn">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <span>View Results</span>
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'student_view_resources' %}" class="quick-action-btn">
+                                    <i class="fas fa-book-open"></i>
+                                    <span>Study Materials</span>
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'student_apply_leave' %}" class="quick-action-btn">
+                                    <i class="fas fa-calendar-times"></i>
+                                    <span>Apply Leave</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-4">
-                <!-- Today's Timetable -->
-                <div class="card">
-                    <div class="card-header bg-success">
-                        <h3 class="card-title"><i class="fas fa-clock"></i> Today's Classes</h3>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Upcoming Events -->
+                <div class="card-professional mb-4">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-calendar-alt me-2"></i>Upcoming Events
+                        </h3>
                     </div>
-                    <div class="card-body p-0">
-                        {% if today_classes %}
-                        <ul class="list-group list-group-flush">
-                            {% for class in today_classes %}
-                            <li class="list-group-item">
-                                <strong>{{ class.start_time|time:"H:i" }} - {{ class.end_time|time:"H:i" }}</strong><br>
-                                {{ class.subject.name }}<br>
-                                <small class="text-muted">{{ class.room_number|default:"TBA" }}</small>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                        <div class="p-3 text-muted text-center">
-                            <i class="fas fa-calendar-times"></i> No classes today
+                    <div style="padding: 0;">
+                        <div class="event-list">
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="day">15</span>
+                                    <span class="month">Dec</span>
+                                </div>
+                                <div class="event-details">
+                                    <h6>Mathematics Mid-term Exam</h6>
+                                    <p>10:00 AM - 12:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="day">18</span>
+                                    <span class="month">Dec</span>
+                                </div>
+                                <div class="event-details">
+                                    <h6>Physics Lab Session</h6>
+                                    <p>2:00 PM - 4:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="day">20</span>
+                                    <span class="month">Dec</span>
+                                </div>
+                                <div class="event-details">
+                                    <h6>Chemistry Assignment Due</h6>
+                                    <p>11:59 PM</p>
+                                </div>
+                            </div>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
-                
-                <!-- Recent Announcements -->
-                <div class="card mt-3">
-                    <div class="card-header bg-info">
-                        <h3 class="card-title"><i class="fas fa-bullhorn"></i> Announcements</h3>
+
+                <!-- Notifications -->
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        {% if announcements %}
-                        {% for announcement in announcements|slice:":3" %}
-                        <div class="mb-3">
-                            <strong>{{ announcement.title }}</strong><br>
-                            <small class="text-muted">{{ announcement.message|truncatewords:15 }}</small>
+                    <div style="padding: 0;">
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <i class="fas fa-info-circle text-info"></i>
+                                <div class="notification-content">
+                                    <p>New study material uploaded for Mathematics</p>
+                                    <small>5 minutes ago</small>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                                <div class="notification-content">
+                                    <p>Low attendance warning for Physics</p>
+                                    <small>1 hour ago</small>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <div class="notification-content">
+                                    <p>Leave application approved</p>
+                                    <small>2 hours ago</small>
+                                </div>
+                            </div>
                         </div>
-                        {% endfor %}
-                        <a href="{% url 'student_announcements' %}" class="btn btn-info btn-sm btn-block">
-                            View All Announcements
-                        </a>
-                        {% else %}
-                        <p class="text-muted text-center">No recent announcements</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Performance Charts -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-primary">
-                        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Attendance Trend</h3>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="attendanceChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-success">
-                        <h3 class="card-title"><i class="fas fa-chart-line"></i> CGPA Progress</h3>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="cgpaChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -183,57 +244,232 @@
     </div>
 </section>
 
-<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
-<script>
-// Attendance Chart
-var attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
-var attendanceChart = new Chart(attendanceCtx, {
-    type: 'line',
-    data: {
-        labels: {{ attendance_months|safe }},
-        datasets: [{
-            label: 'Attendance %',
-            data: {{ attendance_data|safe }},
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 2
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 100
-            }
-        }
-    }
-});
+<style>
+.welcome-header {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-left: 4px solid #003d82;
+    border-radius: 4px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
 
-// CGPA Chart
-var cgpaCtx = document.getElementById('cgpaChart').getContext('2d');
-var cgpaChart = new Chart(cgpaCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ semester_labels|safe }},
-        datasets: [{
-            label: 'SGPA',
-            data: {{ sgpa_data|safe }},
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 10
-            }
-        }
-    }
-});
-</script>
+.student-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.info-item i {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.metric-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-left: 4px solid;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    text-align: center;
+    height: 100%;
+}
+
+.metric-card.primary { border-left-color: #003d82; }
+.metric-card.success { border-left-color: #0f7c4f; }
+.metric-card.warning { border-left-color: #b45309; }
+.metric-card.info { border-left-color: #0369a1; }
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.metric-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.metric-content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    color: #1a202c;
+}
+
+.metric-content p {
+    font-size: 14px;
+    color: #4a5568;
+    margin: 0;
+}
+
+.activity-timeline {
+    padding: 20px;
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.timeline-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 15px;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.timeline-marker.success { background: #0f7c4f; }
+.timeline-marker.info { background: #0369a1; }
+.timeline-marker.warning { background: #b45309; }
+
+.timeline-content h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #1a202c;
+}
+
+.timeline-content p {
+    font-size: 13px;
+    color: #4a5568;
+    margin: 0 0 5px 0;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #4a5568;
+    transition: all 0.2s ease;
+    height: 100%;
+}
+
+.quick-action-btn:hover {
+    background: #003d82;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.quick-action-btn i {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.quick-action-btn span {
+    font-weight: 500;
+}
+
+.event-list {
+    padding: 20px;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.event-date {
+    text-align: center;
+    margin-right: 15px;
+    min-width: 50px;
+}
+
+.event-date .day {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #003d82;
+    line-height: 1;
+}
+
+.event-date .month {
+    display: block;
+    font-size: 12px;
+    color: #4a5568;
+    text-transform: uppercase;
+}
+
+.event-details h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #1a202c;
+}
+
+.event-details p {
+    font-size: 12px;
+    color: #4a5568;
+    margin: 0;
+}
+
+.notification-list {
+    padding: 20px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item i {
+    margin-right: 10px;
+    margin-top: 2px;
+    font-size: 16px;
+}
+
+.notification-content p {
+    font-size: 13px;
+    color: #1a202c;
+    margin: 0 0 5px 0;
+}
+
+.notification-content small {
+    color: #4a5568;
+    font-size: 11px;
+}
+</style>
 {% endblock content %}
+
+
+
+
+
 
 
 

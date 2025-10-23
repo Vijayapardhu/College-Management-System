@@ -13,19 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import path, include
 
 from main_app.EditResultView import EditResultView
 
-from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views
+from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views
 
 urlpatterns = [
     # New Clean Auth System (Single-Page Login with OTP)
     path("", auth_views.login_with_otp, name='login_with_otp'),
     path("login/", auth_views.login_with_otp, name='login_page'),  # Alias for compatibility
     path("user_login/", auth_views.login_with_otp, name='user_login'),  # Alias for old templates
+    path("verify_otp/", views.verify_otp, name='verify_otp'),  # OTP verification endpoint
     path("logout/", auth_views.logout_view, name='logout'),
     path("logout_user/", auth_views.logout_view, name='user_logout'),  # Alias
+    path("admin/logout/", auth_views.logout_view, name='admin_logout'),  # Alias for HOD navigation
+    path("student/logout/", auth_views.logout_view, name='student_logout'),  # Alias for student navigation
+    path("staff/logout/", auth_views.logout_view, name='staff_logout'),  # Alias for staff navigation
+    
+    # Action button URLs
+    path("admin/student/<int:student_id>/view/", hod_views.view_student_detail, name='view_student_detail'),
+    path("admin/student/<int:student_id>/edit/", hod_views.edit_student, name='edit_student'),
+    path("admin/staff/<int:staff_id>/view/", hod_views.view_staff_detail, name='view_staff_detail'),
+    path("admin/staff/<int:staff_id>/edit/", hod_views.edit_staff, name='edit_staff'),
     
     # Public Data Access (No authentication required)
     path("public/", views.public_data, name='public_data'),
@@ -33,7 +43,7 @@ urlpatterns = [
     # Utility endpoints
     path("get_attendance", views.get_attendance, name='get_attendance'),
     path("firebase-messaging-sw.js", views.showFirebaseJS, name='showFirebaseJS'),
-    path("admin/home/", hod_views.admin_home, name='admin_home'),
+    path("admin/home/", hod_views.admin_home, name='hod_home'),
     path("staff/add", hod_views.add_staff, name='add_staff'),
     path("course/add", hod_views.add_course, name='add_course'),
     path("send_student_notification/", hod_views.send_student_notification,
@@ -47,6 +57,8 @@ urlpatterns = [
          name='admin_notify_staff'),
     path("admin_view_profile", hod_views.admin_view_profile,
          name='admin_view_profile'),
+    path("profile/view/", hod_views.admin_view_profile, name="view_profile"),  # Alias
+    path("profile/edit/", hod_views.admin_view_profile, name="edit_profile"),  # Alias (same view for now)
     path("check_email_availability", hod_views.check_email_availability,
          name="check_email_availability"),
     path("session/manage/", hod_views.manage_session, name='manage_session'),
@@ -59,8 +71,12 @@ urlpatterns = [
     path("student/view/leave/", hod_views.view_student_leave,
          name="view_student_leave",),
     path("staff/view/leave/", hod_views.view_staff_leave, name="view_staff_leave",),
+    # URL aliases for navigation consistency
+    path("student/leave/view/", hod_views.view_student_leave, name="student_leave_view"),  # Alias
+    path("staff/leave/view/", hod_views.view_staff_leave, name="staff_leave_view"),  # Alias
     path("attendance/view/", hod_views.admin_view_attendance,
          name="admin_view_attendance",),
+    path("student/attendance/view/", hod_views.admin_view_attendance, name="student_attendance_view"),  # Alias
     path("attendance/fetch/", hod_views.get_admin_attendance,
          name='get_admin_attendance'),
     path("student/add/", hod_views.add_student, name='add_student'),
@@ -105,6 +121,12 @@ urlpatterns = [
          name='staff_view_profile'),
     path("staff/attendance/take/", staff_views.staff_take_attendance,
          name='staff_take_attendance'),
+    path("staff/attendance/bulk-import/", staff_views.bulk_attendance_import,
+         name='bulk_attendance_import'),
+    path("staff/attendance/qr-generate/", staff_views.generate_attendance_qr,
+         name='generate_attendance_qr'),
+    path("staff/attendance/analytics/", staff_views.attendance_analytics,
+         name='staff_attendance_analytics'),
     path("staff/attendance/update/", staff_views.staff_update_attendance,
          name='staff_update_attendance'),
     path("staff/get_students/", staff_views.get_students, name='get_students'),
@@ -118,6 +140,9 @@ urlpatterns = [
     path("staff/view/notification/", staff_views.staff_view_notification,
          name="staff_view_notification"),
     path("staff/result/add/", staff_views.staff_add_result, name='staff_add_result'),
+    path("staff/result/bulk-import/", staff_views.bulk_marks_import, name='bulk_marks_import'),
+    path("staff/result/cgpa/<int:student_id>/", staff_views.calculate_student_cgpa, name='calculate_student_cgpa'),
+    path("staff/result/marksheet/<int:student_id>/", staff_views.generate_marksheet_pdf, name='generate_marksheet_pdf'),
     path("staff/result/edit/", EditResultView.as_view(),
          name='edit_student_result'),
     path('staff/result/fetch/', staff_views.fetch_student_result,
@@ -141,6 +166,13 @@ urlpatterns = [
          name="student_view_notification"),
     path('student/view/result/', student_views.student_view_result,
          name='student_view_result'),
+    
+    # Additional Student URLs for navigation
+    path("student/materials/", student_views.view_materials, name='view_materials'),
+    path("student/assignments/", student_views.view_assignments, name='view_assignments'),
+    path("student/submissions/", student_views.view_submissions, name='view_submissions'),
+    path("student/online-exam/", student_views.view_online_exam, name='view_online_exam'),
+    path("student/events/", student_views.view_events, name='view_events'),
     
     # Proctor URLs
     path("proctor/home/", proctor_views.proctor_home, name='proctor_home'),
@@ -193,6 +225,7 @@ urlpatterns = [
     path("student/resource/bookmark/", resource_views.toggle_bookmark, name='toggle_bookmark'),
     path("student/resource/rate/", resource_views.rate_material, name='rate_material'),
     path("resource/download/<int:material_id>/", resource_views.download_material, name='download_material'),
+    path("student/resources/bulk-download/", resource_views.bulk_download_materials, name='bulk_download_materials'),
     
     # Study Materials - Admin
     path("admin/resources/", resource_views.admin_view_resources, name='admin_view_resources'),
@@ -273,6 +306,7 @@ urlpatterns = [
     # Fee Payments - HOD
     path("admin/fees/payments/", hod_views.view_fee_payments, name='view_fee_payments'),
     path("admin/fees/payment/record/", hod_views.record_fee_payment, name='record_fee_payment'),
+    path("admin/fees/receipt/<int:payment_id>/", hod_views.generate_fee_receipt, name='generate_fee_receipt'),
     path("admin/fees/defaulters/", hod_views.fee_defaulters, name='fee_defaulters'),
     
     # Fee - Student
@@ -294,6 +328,72 @@ urlpatterns = [
     path("admin/transport/manage/", hod_views.manage_transport, name='manage_transport'),
     path("admin/transport/add/", hod_views.add_transport, name='add_transport'),
     path("admin/transport/<int:transport_id>/edit/", hod_views.edit_transport, name='edit_transport'),
+
+    # ==================== ADMISSION MANAGEMENT PANEL ====================
+    # Admission Dashboard - HOD/Management
+    path("admin/admissions/", admission_views.admission_dashboard, name='admission_dashboard'),
+    path("admin/admissions/applications/", admission_views.review_applications, name='review_applications'),
+    path("admin/admissions/application/<int:application_id>/", admission_views.view_application, name='view_application'),
+    path("admin/admissions/application/<int:application_id>/decision/", admission_views.make_decision, name='make_decision'),
+    path("admin/admissions/document/<int:document_id>/verify/", admission_views.verify_documents, name='verify_documents'),
+    path("admin/admissions/analytics/", admission_views.admission_statistics, name='admission_analytics'),
+    path("admin/admissions/bulk-admit/", admission_views.bulk_admit_students, name='bulk_admit_students'),
+    
+    # Student Admission Application
+    path("student/admission/apply/", admission_views.apply_admission, name='apply_admission'),
+    path("student/admission/application/<int:application_id>/", admission_views.view_application, name='view_application'),
+    path("student/admission/application/<int:application_id>/documents/", admission_views.upload_documents, name='upload_documents'),
+    path("student/admission/track/", admission_views.track_application, name='track_application'),
+    
+    # AJAX Endpoints
+    path("api/admissions/programs/", admission_views.get_programs_for_session, name='get_programs_for_session'),
+    path("api/admissions/check-status/", admission_views.check_application_status, name='check_application_status'),
+
+    # ==================== PAYROLL & HR MANAGEMENT PANEL ====================
+    # Payroll Dashboard - HOD/Management
+    path("admin/payroll/", payroll_views.payroll_dashboard, name='payroll_dashboard'),
+    path("admin/payroll/salary-structure/", payroll_views.configure_salary_structure, name='configure_salary_structure'),
+    path("admin/payroll/employee-salary/", payroll_views.assign_employee_salary, name='assign_employee_salary'),
+    path("admin/payroll/process/", payroll_views.process_payroll, name='process_payroll'),
+    path("admin/payroll/payslips/", payroll_views.view_payslips, name='view_payslips'),
+    path("admin/payroll/payslip/<uuid:payslip_id>/", payroll_views.view_payslip_detail, name='view_payslip_detail'),
+    path("admin/payroll/tax-declarations/", payroll_views.tax_declaration_management, name='tax_declaration_management'),
+    path("admin/payroll/tax-document/<int:declaration_id>/verify/", payroll_views.verify_tax_document, name='verify_tax_document'),
+    path("admin/payroll/leave-balances/", payroll_views.leave_balance_management, name='leave_balance_management'),
+    path("admin/payroll/attendance/", payroll_views.attendance_register, name='attendance_register'),
+    path("admin/payroll/bonuses/", payroll_views.bonus_management, name='bonus_management'),
+    path("admin/payroll/loans/", payroll_views.loan_management, name='loan_management'),
+    path("admin/payroll/loan/<int:loan_id>/approve/", payroll_views.approve_loan, name='approve_loan'),
+    path("admin/payroll/analytics/", payroll_views.payroll_analytics, name='payroll_analytics'),
+    
+    # Employee Self-Service
+    path("staff/payroll/", payroll_views.employee_self_service, name='employee_self_service'),
+    
+    # AJAX Endpoints for Payroll
+    path("api/payroll/employee-salary/<int:employee_id>/", payroll_views.get_employee_salary_ajax, name='get_employee_salary_ajax'),
+    path("api/payroll/calculate-salary/", payroll_views.calculate_salary_ajax, name='calculate_salary_ajax'),
+    path("api/payroll/summary/", payroll_views.payroll_summary_ajax, name='payroll_summary_ajax'),
+
+    # ==================== ALUMNI MANAGEMENT PANEL ====================
+    # Alumni Dashboard - HOD/Management
+    path("admin/alumni/", alumni_views.alumni_dashboard, name='alumni_dashboard'),
+    path("admin/alumni/directory/", alumni_views.alumni_directory, name='alumni_directory'),
+    path("admin/alumni/profile/<int:alumni_id>/", alumni_views.alumni_profile, name='alumni_profile'),
+    path("admin/alumni/events/", alumni_views.alumni_events, name='alumni_events'),
+    path("admin/alumni/event/<uuid:event_id>/", alumni_views.alumni_event_detail, name='alumni_event_detail'),
+    path("admin/alumni/donations/", alumni_views.alumni_donations, name='alumni_donations'),
+    path("admin/alumni/donation/<uuid:campaign_id>/", alumni_views.alumni_donation_detail, name='alumni_donation_detail'),
+    path("admin/alumni/mentorship/", alumni_views.alumni_mentorship, name='alumni_mentorship'),
+    path("admin/alumni/newsletter/", alumni_views.alumni_newsletter, name='alumni_newsletter'),
+    path("admin/alumni/analytics/", alumni_views.alumni_analytics, name='alumni_analytics'),
+    
+    # Student/Alumni Access
+    path("student/mentorship/request/", alumni_views.mentorship_request, name='mentorship_request'),
+    path("alumni/jobs/", alumni_views.alumni_jobs, name='alumni_jobs'),
+    
+    # AJAX Endpoints for Alumni
+    path("api/alumni/mentors/", alumni_views.get_available_mentors_ajax, name='get_available_mentors_ajax'),
+    path("api/alumni/stats/", alumni_views.alumni_stats_ajax, name='alumni_stats_ajax'),
     path("admin/transport/allocations/", hod_views.transport_allocations, name='transport_allocations'),
     path("admin/transport/allocate/", hod_views.allocate_transport, name='allocate_transport'),
     
@@ -323,6 +423,23 @@ urlpatterns = [
     
     # Student Hostel
     path("student/hostel/my-details/", student_views.student_my_hostel, name='student_my_hostel'),
+    
+    # ==================== DIGITAL LOCKER SYSTEM ====================
+    # Student Document Locker
+    path("student/documents/", document_views.student_document_locker, name='student_document_locker'),
+    path("student/documents/category/<str:category>/", document_views.view_documents_by_category, name='view_documents_by_category'),
+    path("student/documents/upload/", document_views.upload_document, name='upload_document'),
+    path("student/documents/<int:document_id>/", document_views.view_document_detail, name='view_document_detail'),
+    path("student/documents/<int:document_id>/download/", document_views.download_document, name='download_document'),
+    path("student/documents/<int:document_id>/delete/", document_views.delete_document, name='delete_document'),
+    path("student/documents/search/", document_views.search_my_documents, name='search_my_documents'),
+    path("student/documents/important/", document_views.view_important_documents, name='view_important_documents'),
+    path("student/documents/bulk-download/", document_views.bulk_download_my_documents, name='bulk_download_my_documents'),
+    path("student/documents/<int:document_id>/toggle-important/", document_views.toggle_important, name='toggle_important'),
+    
+    # Admin Document Management
+    path("admin/documents/all/", document_views.admin_view_all_documents, name='admin_view_all_documents'),
+    path("admin/documents/statistics/", document_views.admin_document_statistics, name='admin_document_statistics'),
     
     # ==================== SCHOLARSHIP MANAGEMENT ====================
     # HOD Scholarship Management
@@ -362,6 +479,10 @@ urlpatterns = [
     # Analytics Dashboard
     path("admin/analytics/", hod_views.admin_analytics_dashboard, name='admin_analytics_dashboard'),
     
+    # AI-Powered Analytics
+    path("admin/ai-insights/", hod_views.ai_student_insights, name='ai_student_insights'),
+    path("admin/ai-report/generate/", hod_views.generate_ai_report, name='generate_ai_report'),
+    
     # ==================== STAFF/FACULTY PANEL FEATURES ====================
     # Staff Timetable
     path("staff/my-timetable/", staff_views.staff_view_timetable, name='staff_view_timetable'),
@@ -374,6 +495,15 @@ urlpatterns = [
     # Staff Result Entry
     path("staff/marks/enter/", staff_views.staff_enter_marks, name='staff_enter_marks'),
     path("staff/results/view/", staff_views.staff_view_results, name='staff_view_results'),
+    
+    # Additional Staff URLs for navigation
+    path("staff/materials/upload/", staff_views.upload_material, name='upload_material'),
+    path("staff/materials/", staff_views.view_materials, name='view_materials'),
+    path("staff/assignments/create/", staff_views.create_assignment, name='create_assignment'),
+    path("staff/assignments/", staff_views.view_assignments, name='view_assignments'),
+    path("staff/submissions/", staff_views.view_submissions, name='view_submissions'),
+    path("staff/exams/create/", staff_views.create_online_exam, name='create_online_exam'),
+    path("staff/exams/", staff_views.my_online_exams, name='my_online_exams'),
     
     # Staff Library (for Librarians)
     path("staff/library/issue-return/", staff_views.staff_library_issue_return, name='staff_library_issue_return'),
@@ -395,6 +525,18 @@ urlpatterns = [
     # Transport & Hostel - Student
     path("student/my-transport/", student_views.student_my_transport, name='student_transport_details'),
     path("student/my-hostel/", student_views.student_my_hostel, name='student_hostel_details'),
+    
+    # ==================== PARENT PORTAL ====================
+    # Parent Dashboard
+    path("parent/home/", parent_views.parent_home, name='parent_home'),
+    path("parent/profile/", parent_views.parent_view_profile, name='parent_view_profile'),
+    path("parent/link-student/", parent_views.link_student, name='link_student'),
+    path("parent/child/<int:student_id>/", parent_views.view_child_detail, name='view_child_detail'),
+    path("parent/child/<int:student_id>/attendance/", parent_views.view_child_attendance, name='view_child_attendance'),
+    path("parent/child/<int:student_id>/results/", parent_views.view_child_results, name='view_child_results'),
+    path("parent/child/<int:student_id>/assignments/", parent_views.view_child_assignments, name='view_child_assignments'),
+    path("parent/child/<int:student_id>/fees/", parent_views.view_child_fees, name='view_child_fees'),
+    path("parent/child/<int:student_id>/message-teacher/", parent_views.send_message_to_teacher, name='send_message_to_teacher'),
     
     # ==================== MANAGEMENT PANEL ====================
     # Management Dashboard
@@ -539,4 +681,186 @@ urlpatterns = [
     
     # Anti-Ragging
     path('student/ragging/report/', student_views.student_report_ragging, name='student_report_ragging'),
+    
+    # ============================================================================
+    # REAL-TIME CHAT SYSTEM URLs
+    # ============================================================================
+    
+    # Main Chat Interface
+    path('chat/', chat_views.chat_interface, name='chat_interface'),
+    path('chat/room/<int:room_id>/', chat_views.chat_room, name='chat_room'),
+    path('chat/start/<int:user_id>/', chat_views.start_private_chat, name='start_private_chat'),
+    
+    # AJAX Endpoints
+    path('chat/rooms/', chat_views.get_chat_rooms, name='get_chat_rooms'),
+    path('chat/room/<int:room_id>/messages/', chat_views.get_chat_messages, name='get_chat_messages'),
+    path('chat/send/', chat_views.send_chat_message, name='send_chat_message'),
+    path('chat/upload/', chat_views.upload_chat_file, name='upload_chat_file'),
+    path('chat/read/', chat_views.mark_messages_read, name='mark_messages_read'),
+    path('chat/search/', chat_views.search_messages, name='search_messages'),
+    path('chat/online-users/', chat_views.get_online_users, name='get_online_users'),
+    path('chat/notifications/', chat_views.chat_notifications, name='chat_notifications'),
+    
+    # Room Management
+    path('chat/room/create/', chat_views.create_chat_room, name='create_chat_room'),
+    path('chat/room/<int:room_id>/add-participants/', chat_views.add_room_participants, name='add_room_participants'),
+    
+    # ============================================================================
+    # PLACEMENT & CAREER PORTAL URLs
+    # ============================================================================
+    
+    # HOD/Admin Placement Management
+    path('admin/placement/dashboard/', placement_views.placement_dashboard, name='placement_dashboard'),
+    path('admin/placement/companies/', placement_views.manage_companies, name='manage_companies'),
+    path('admin/placement/company/add/', placement_views.add_company, name='add_company'),
+    path('admin/placement/company/<int:company_id>/edit/', placement_views.edit_company, name='edit_company'),
+    path('admin/placement/drives/', placement_views.manage_placement_drives, name='manage_placement_drives'),
+    path('admin/placement/drive/add/', placement_views.add_placement_drive, name='add_placement_drive'),
+    path('admin/placement/drive/<int:drive_id>/edit/', placement_views.edit_placement_drive, name='edit_placement_drive'),
+    path('admin/placement/drive/<int:drive_id>/', placement_views.view_placement_drive, name='view_placement_drive'),
+    path('admin/placement/drive/<int:drive_id>/rounds/', placement_views.manage_interview_rounds, name='manage_interview_rounds'),
+    path('admin/placement/drive/<int:drive_id>/round/add/', placement_views.add_interview_round, name='add_interview_round'),
+    path('admin/placement/round/<int:round_id>/slots/', placement_views.manage_interview_slots, name='manage_interview_slots'),
+    path('admin/placement/round/<int:round_id>/slots/bulk/', placement_views.create_bulk_slots, name='create_bulk_slots'),
+    path('admin/placement/analytics/', placement_views.placement_analytics, name='placement_analytics'),
+    
+    # Student Placement Portal
+    path('student/placement/', placement_views.student_placement_dashboard, name='student_placement_dashboard'),
+    path('student/placement/profile/', placement_views.student_placement_profile, name='student_placement_profile'),
+    path('student/placement/apply/<int:drive_id>/', placement_views.apply_placement, name='apply_placement'),
+    path('student/placement/application/<int:application_id>/', placement_views.view_application_status, name='view_application_status'),
+    path('student/placement/interview/<int:round_id>/book/', placement_views.book_interview_slot, name='book_interview_slot'),
+    
+    # AJAX Endpoints
+    path('placement/application/status/update/', placement_views.update_application_status, name='update_application_status'),
+    path('placement/offer/respond/', placement_views.respond_to_offer, name='respond_to_offer'),
+    
+    # ============================================================================
+    # LEARNING MANAGEMENT SYSTEM (LMS) URLs
+    # ============================================================================
+    
+    # HOD/Admin LMS Management
+    path('admin/lms/dashboard/', lms_views.lms_dashboard, name='lms_dashboard'),
+    path('admin/lms/modules/', lms_views.manage_course_modules, name='manage_course_modules'),
+    path('admin/lms/module/add/', lms_views.add_course_module, name='add_course_module'),
+    path('admin/lms/module/<int:module_id>/edit/', lms_views.edit_course_module, name='edit_course_module'),
+    path('admin/lms/quizzes/', lms_views.manage_quizzes, name='manage_quizzes'),
+    path('admin/lms/module/<int:module_id>/quiz/add/', lms_views.add_quiz, name='add_quiz'),
+    path('admin/lms/quiz/<int:quiz_id>/questions/', lms_views.manage_quiz_questions, name='manage_quiz_questions'),
+    path('admin/lms/quiz/<int:quiz_id>/question/add/', lms_views.add_quiz_question, name='add_quiz_question'),
+    path('admin/lms/question/<int:question_id>/options/', lms_views.manage_question_options, name='manage_question_options'),
+    path('admin/lms/assignments/', lms_views.manage_assignments, name='manage_assignments'),
+    path('admin/lms/assignment/add/', lms_views.add_assignment, name='add_assignment'),
+    path('admin/lms/assignment/<int:assignment_id>/submissions/', lms_views.view_assignment_submissions, name='view_assignment_submissions'),
+    path('admin/lms/submission/<int:submission_id>/grade/', lms_views.grade_assignment, name='grade_assignment'),
+    path('admin/lms/enrollments/', lms_views.manage_course_enrollments, name='manage_course_enrollments'),
+    path('admin/lms/enrollments/bulk/', lms_views.bulk_enroll_students, name='bulk_enroll_students'),
+    
+    # Staff LMS Views
+    path('staff/lms/dashboard/', lms_views.staff_lms_dashboard, name='staff_lms_dashboard'),
+    path('staff/lms/modules/', lms_views.staff_view_modules, name='staff_view_modules'),
+    path('staff/lms/assignments/', lms_views.staff_view_assignments, name='staff_view_assignments'),
+    
+    # Student LMS Views
+    path('student/lms/dashboard/', lms_views.student_lms_dashboard, name='student_lms_dashboard'),
+    path('student/lms/course/<int:course_id>/modules/', lms_views.student_view_course_modules, name='student_view_course_modules'),
+    path('student/lms/module/<int:module_id>/', lms_views.student_view_module, name='student_view_module'),
+    path('student/lms/quiz/<int:quiz_id>/take/', lms_views.student_take_quiz, name='student_take_quiz'),
+    path('student/lms/quiz/attempt/<int:attempt_id>/result/', lms_views.student_quiz_result, name='student_quiz_result'),
+    path('student/lms/assignments/', lms_views.student_view_assignments, name='student_view_assignments'),
+    path('student/lms/assignment/<int:assignment_id>/submit/', lms_views.student_submit_assignment, name='student_submit_assignment'),
+    
+    # LMS AJAX Endpoints
+    path('lms/module/complete/', lms_views.mark_module_complete, name='mark_module_complete'),
+    path('lms/module/bookmark/', lms_views.toggle_bookmark, name='toggle_bookmark'),
+    
+    # Analytics URLs
+    path("analytics/", analytics_views.analytics_dashboard, name='analytics_dashboard'),
+    path("analytics/attendance/", analytics_views.attendance_analytics, name='attendance_analytics'),
+    path("analytics/academic-performance/", analytics_views.academic_performance_analytics, name='academic_performance_analytics'),
+    path("analytics/financial/", analytics_views.financial_analytics, name='financial_analytics'),
+    path("analytics/report-builder/", analytics_views.custom_report_builder, name='custom_report_builder'),
+    path("analytics/reports/", analytics_views.report_builder, name='report_builder'),  # Alias for navigation
+    path("analytics/export/", analytics_views.export_report, name='export_report'),
+    
+    # API URLs
+    path("api/", include('main_app.api_urls')),
+    
+    # Performance Monitoring URLs
+    path("performance/", performance_views.performance_dashboard, name='performance_dashboard'),
+    path("performance/api/", performance_views.performance_api, name='performance_api'),
+    path("performance/clear-cache/", performance_views.clear_cache, name='clear_cache'),
+    path("performance/optimize-static/", performance_views.optimize_static, name='optimize_static'),
+    path("performance/slow-queries/", performance_views.slow_queries, name='slow_queries'),
+    path("performance/error-logs/", performance_views.error_logs, name='error_logs'),
+    path("performance/system-resources/", performance_views.system_resources, name='system_resources'),
+    path("performance/export-data/", performance_views.export_performance_data, name='export_performance_data'),
+    path("performance/database-analysis/", performance_views.database_analysis, name='database_analysis'),
+    path("performance/cache-analysis/", performance_views.cache_analysis, name='cache_analysis'),
+    path("performance/recommendations/", performance_views.optimization_recommendations, name='optimization_recommendations'),
+    
+    # Public Links Management URLs
+    path("manage-public-links/", hod_views.manage_public_links, name='manage_public_links'),
+    path("add-public-link/", hod_views.add_public_link, name='add_public_link'),
+    path("edit-public-link/<int:link_id>/", hod_views.edit_public_link, name='edit_public_link'),
+    path("delete-public-link/<int:link_id>/", hod_views.delete_public_link, name='delete_public_link'),
+    path("toggle-link-status/<int:link_id>/", hod_views.toggle_link_status, name='toggle_link_status'),
+    path("reorder-public-links/", hod_views.reorder_public_links, name='reorder_public_links'),
+    
+    # Comprehensive HOD Dashboard URLs
+    path("hod-dashboard/", hod_views.hod_comprehensive_dashboard, name='hod_comprehensive_dashboard'),
+    path("user-management-hub/", hod_views.user_management_hub, name='user_management_hub'),
+    path("academic-operations/", hod_views.academic_operations, name='academic_operations'),
+    path("reports-hub/", hod_views.reports_hub, name='reports_hub'),
+    
+    # Timetable Management URLs
+    path("timetable-dashboard/", hod_views.timetable_dashboard, name='timetable_dashboard'),
+    path("create-timetable/", hod_views.create_timetable, name='create_timetable'),
+    path("edit-timetable/<int:timetable_id>/", hod_views.edit_timetable, name='edit_timetable'),
+    path("delete-timetable/<int:timetable_id>/", hod_views.delete_timetable, name='delete_timetable'),
+    path("view-timetable/<int:timetable_id>/", hod_views.view_timetable, name='view_timetable'),
+    path("auto-schedule/", hod_views.auto_schedule, name='auto_schedule'),
+    path("check-conflicts/", hod_views.check_conflicts, name='check_conflicts'),
+    path("timetable-export/<int:timetable_id>/<str:format>/", hod_views.timetable_export, name='timetable_export'),
+    path("faculty-availability/<int:faculty_id>/", hod_views.faculty_availability, name='faculty_availability'),
+    path("classroom-availability/<int:classroom_id>/<str:date>/", hod_views.classroom_availability, name='classroom_availability'),
+    path("timetable-statistics/", hod_views.timetable_statistics, name='timetable_statistics'),
+    path("check-timetable-conflicts/", hod_views.check_timetable_conflicts, name='check_timetable_conflicts'),
+    
+    # Department Management URLs
+    path("department-analytics/", hod_views.department_analytics, name='department_analytics'),
+    path("department-management/", hod_views.department_management, name='department_management'),
+    path("add-department/", hod_views.add_department, name='add_department'),
+    path("edit-department/<int:department_id>/", hod_views.edit_department, name='edit_department'),
+    path("delete-department/<int:department_id>/", hod_views.delete_department, name='delete_department'),
+    path("add-program/", hod_views.add_program, name='add_program'),
+    path("edit-program/<int:program_id>/", hod_views.edit_program, name='edit_program'),
+    path("delete-program/<int:program_id>/", hod_views.delete_program, name='delete_program'),
+    path("department-performance/<int:department_id>/", hod_views.department_performance, name='department_performance'),
+    path("department-export/<int:department_id>/<str:format>/", hod_views.department_export, name='department_export'),
+    path("department-statistics-api/", hod_views.department_statistics_api, name='department_statistics_api'),
+    path("department-analytics-api/", hod_views.department_analytics_api, name='department_analytics_api'),
+    path("department-comparison/", hod_views.department_comparison, name='department_comparison'),
+    
+    # Approval Center URLs
+    path("approval-center/", hod_views.approval_center, name='approval_center'),
+    path("student-leave-approvals/", hod_views.student_leave_approvals, name='student_leave_approvals'),
+    path("staff-leave-approvals/", hod_views.staff_leave_approvals, name='staff_leave_approvals'),
+    path("approve-leave/<int:leave_id>/<str:leave_type>/", hod_views.approve_leave, name='approve_leave'),
+    path("reject-leave/<int:leave_id>/<str:leave_type>/", hod_views.reject_leave, name='reject_leave'),
+    path("bulk-approve-leaves/", hod_views.bulk_approve_leaves, name='bulk_approve_leaves'),
+    path("classroom-booking-approvals/", hod_views.classroom_booking_approvals, name='classroom_booking_approvals'),
+    path("approve-classroom-booking/<int:booking_id>/", hod_views.approve_classroom_booking, name='approve_classroom_booking'),
+    path("reject-classroom-booking/<int:booking_id>/", hod_views.reject_classroom_booking, name='reject_classroom_booking'),
+    path("approval-statistics/", hod_views.approval_statistics, name='approval_statistics'),
+    path("approval-timeline/", hod_views.approval_timeline, name='approval_timeline'),
+    
+    # Gemini AI Integration URLs
+    path("ai/insights/enhanced/", gemini_views.ai_student_insights_enhanced, name='ai_student_insights_enhanced'),
+    path("ai/chatbot/api/", gemini_views.ai_chatbot_api, name='ai_chatbot_api'),
+    path("ai/chatbot/", gemini_views.ai_chatbot_interface, name='ai_chatbot'),
+    path("ai/generate-content/", gemini_views.ai_generate_study_material, name='ai_generate_content'),
+    path("ai/compose-email/", gemini_views.ai_compose_email, name='ai_compose_email'),
+    path("ai/generate-questions/", gemini_views.ai_generate_questions, name='ai_generate_questions'),
+    path("ai/career-counseling/", gemini_views.ai_career_counseling, name='ai_career_counseling'),
 ]

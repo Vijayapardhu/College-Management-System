@@ -1,96 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}Available Scholarships{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-warning">
-                <h3 class="card-title"><i class="fas fa-award"></i> Available Scholarship Programs</h3>
-                <div class="card-tools">
-                    <a href="{% url 'student_my_scholarship_applications' %}" class="btn btn-dark btn-sm">
-                        <i class="fas fa-file-alt"></i> My Applications
-                    </a>
-                </div>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-hand-holding-usd me-2"></i>Available Scholarships
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Browse and apply for scholarships
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <div class="card-body">
-                {% if scholarships %}
-                <div class="row">
-                    {% for scholarship in scholarships %}
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100 {% if scholarship.id in applied_ids %}border-success{% else %}border-warning{% endif %}">
-                            <div class="card-header {% if scholarship.id in applied_ids %}bg-success text-white{% else %}bg-warning{% endif %}">
-                                <h5 class="mb-0">
-                                    {{ scholarship.name }}
-                                    {% if scholarship.id in applied_ids %}
-                                    <span class="badge badge-light float-right">
-                                        <i class="fas fa-check"></i> Applied
-                                    </span>
-                                    {% endif %}
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <span class="badge badge-primary">{{ scholarship.get_scholarship_type_display }}</span>
-                                </div>
-                                
-                                <p class="card-text">{{ scholarship.description|truncatewords:30 }}</p>
-                                
-                                <hr>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <i class="fas fa-money-bill-wave text-success"></i>
-                                        <strong>Amount:</strong><br>
-                                        <h4 class="text-success mb-0">₹{{ scholarship.amount }}</h4>
-                                    </div>
-                                    <div class="col-6">
-                                        <i class="fas fa-users"></i>
-                                        <strong>Max Recipients:</strong><br>
-                                        <h4 class="text-info mb-0">{{ scholarship.max_recipients }}</h4>
-                                    </div>
-                                </div>
-                                
-                                <div class="alert alert-info p-2 mb-2">
-                                    <strong><i class="fas fa-calendar-times"></i> Application Deadline:</strong><br>
-                                    <strong class="text-danger">{{ scholarship.application_deadline|date:"d M Y" }}</strong>
-                                </div>
-                                
-                                <button class="btn btn-link p-0 mb-2" data-toggle="collapse" data-target="#eligibility{{ scholarship.id }}">
-                                    <i class="fas fa-info-circle"></i> View Eligibility Criteria
-                                </button>
-                                <div class="collapse" id="eligibility{{ scholarship.id }}">
-                                    <div class="bg-light p-2 rounded small">
-                                        {{ scholarship.eligibility_criteria }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                {% if scholarship.id in applied_ids %}
-                                <button class="btn btn-success btn-block" disabled>
-                                    <i class="fas fa-check-circle"></i> Already Applied
-                                </button>
-                                {% else %}
-                                <a href="{% url 'student_apply_scholarship' scholarship.id %}" class="btn btn-warning btn-block">
-                                    <i class="fas fa-paper-plane"></i> Apply Now
-                                </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No scholarships available at the moment. Check back later for new scholarship programs.
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

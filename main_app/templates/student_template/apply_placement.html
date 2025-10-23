@@ -1,89 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}Apply for Placement{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <!-- Drive Details -->
-                <div class="card card-primary mb-3">
-                    <div class="card-header">
-                        <h4 class="mb-0"><i class="fas fa-building"></i> {{ drive.company.name }}</h4>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="text-primary">{{ drive.job_title }}</h5>
-                        <p>{{ drive.job_description }}</p>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li><strong><i class="fas fa-money-bill-wave"></i> Package:</strong> ₹{{ drive.salary_package }} LPA</li>
-                                    <li><strong><i class="fas fa-handshake"></i> Bond:</strong> {{ drive.bond_years }} years</li>
-                                    <li><strong><i class="fas fa-chart-line"></i> Min CGPA:</strong> {{ drive.min_cgpa }}</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled">
-                                    <li><strong><i class="fas fa-users"></i> Openings:</strong> {{ drive.number_of_openings }}</li>
-                                    <li><strong><i class="fas fa-exclamation-triangle"></i> Max Backlogs:</strong> {{ drive.allowed_backlogs }}</li>
-                                    <li><strong><i class="fas fa-calendar-times"></i> Deadline:</strong> {{ drive.registration_deadline|date:"d M Y, h:i A" }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-warning">
-                            <strong><i class="fas fa-route"></i> Selection Process:</strong><br>
-                            {{ drive.selection_process }}
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Application Form -->
-                <div class="card card-success">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-paper-plane"></i> Submit Your Application</h3>
-                    </div>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>Upload Resume (PDF) <span class="text-danger">*</span></label>
-                                {{ form.resume }}
-                                <small class="form-text text-muted">Upload your latest resume in PDF format (Max 5MB)</small>
-                                {% if form.resume.errors %}
-                                <span class="text-danger">{{ form.resume.errors }}</span>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Cover Letter / Why should we hire you? <span class="text-danger">*</span></label>
-                                {{ form.cover_letter }}
-                                {% if form.cover_letter.errors %}
-                                <span class="text-danger">{{ form.cover_letter.errors }}</span>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> <strong>Note:</strong> Once submitted, you cannot edit your application. Please review carefully before submitting.
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-check"></i> Submit Application
-                            </button>
-                            <a href="{% url 'student_view_placement_drives' %}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Cancel
-                            </a>
-                        </div>
-                    </form>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-briefcase me-2"></i>Apply for Placement
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Apply for company placement drive
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
+            </div>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-briefcase"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

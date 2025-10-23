@@ -1,11 +1,54 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-dark">
                 <h3 class="card-title"><i class="fas fa-user-shield"></i> HOD/Admin User Management</h3>
                 <div class="card-tools">
@@ -14,10 +57,10 @@
                     </a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body-professional" style="padding: 10px;">
                 {% if admins %}
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="adminsTable">
+                    <table class="table table-professional" id="adminsTable">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Name</th>
@@ -79,7 +122,7 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="alert alert-info">
+                <div class="alert-professional-info">
                     <i class="fas fa-info-circle"></i> No admin users found. Click "Add New Admin" to create one.
                 </div>
                 {% endif %}
@@ -103,10 +146,10 @@
                 <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone!</p>
             </div>
             <div class="modal-footer">
-                <form id="deleteForm" method="POST">
+                <form id="deleteForm" method="POST" class="compact-form">
                     {% csrf_token %}
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-professional-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-professional-danger">Delete</button>
                 </form>
             </div>
         </div>

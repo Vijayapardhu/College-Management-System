@@ -3,9 +3,19 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-primary">
                 <h3 class="card-title"><i class="fas fa-building"></i> {{ page_title }}</h3>
                 <div class="card-tools">
@@ -14,10 +24,10 @@
                     </a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body-professional">
                 {% if departments %}
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" id="departmentTable">
+                    <table class="table table-professional" id="departmentTable">
                         <thead class="thead-dark">
                             <tr>
                                 <th>#</th>
@@ -73,7 +83,7 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="alert alert-info">
+                <div class="alert-professional-info">
                     <h5><i class="fas fa-info-circle"></i> No Departments Found</h5>
                     <p class="mb-0">No departments have been created yet. <a href="{% url 'add_department' %}">Add your first department</a></p>
                 </div>
@@ -92,3 +102,5 @@ $(document).ready(function() {
 });
 </script>
 {% endblock content %}
+
+

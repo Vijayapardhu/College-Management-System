@@ -1,84 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}My Activities{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-warning">
-                <h3 class="card-title"><i class="fas fa-award"></i> {{ page_title }}</h3>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-trophy me-2"></i>My Activities
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Track your participation in activities
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
             </div>
-            <div class="card-body">
-                {% if participations %}
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Activity</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Achievement</th>
-                                <th>Certificate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for participation in participations %}
-                            <tr>
-                                <td><strong>{{ participation.activity.name }}</strong></td>
-                                <td><span class="badge badge-info">{{ participation.activity.get_activity_type_display }}</span></td>
-                                <td>{{ participation.activity.start_date|date:"Y-m-d" }}</td>
-                                <td>
-                                    {% if participation.achievement_level == 'winner' %}
-                                    <span class="badge badge-success"><i class="fas fa-trophy"></i> 1st Place</span>
-                                    {% elif participation.achievement_level == 'runner_up' %}
-                                    <span class="badge badge-info"><i class="fas fa-medal"></i> 2nd Place</span>
-                                    {% elif participation.achievement_level == 'third' %}
-                                    <span class="badge badge-warning"><i class="fas fa-medal"></i> 3rd Place</span>
-                                    {% elif participation.achievement_level == 'consolation' %}
-                                    <span class="badge badge-secondary">Consolation</span>
-                                    {% else %}
-                                    <span class="badge badge-primary">Participated</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if participation.certificate_issued %}
-                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Issued</span>
-                                    {% if participation.certificate_number %}
-                                    <br><small class="text-muted">{{ participation.certificate_number }}</small>
-                                    {% endif %}
-                                    {% else %}
-                                    <span class="badge badge-warning"><i class="fas fa-clock"></i> Pending</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-trophy"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
-                
-                <div class="alert alert-success mt-3">
-                    <h6><i class="fas fa-info-circle"></i> Your Activity Summary:</h6>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <strong>Total Participations:</strong> {{ participations.count }}
-                        </div>
-                        <div class="col-md-3">
-                            <strong>Certificates Issued:</strong> {{ participations|length }}
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <h5><i class="fas fa-info-circle"></i> No Participations Yet</h5>
-                    <p class="mb-0">You haven't participated in any activities yet. <a href="{% url 'student_sports_activities' %}">Browse available activities</a></p>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

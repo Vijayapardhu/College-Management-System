@@ -3,12 +3,22 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card-professional">
+                    <div class="card-header-professional">
                         <h3 class="card-title"><i class="fas fa-book"></i> My Uploaded Materials</h3>
                         <div class="card-tools">
                             <a href="{% url 'staff_upload_material' %}" class="btn btn-success btn-sm">
@@ -16,13 +26,13 @@
                             </a>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-professional">
                         {% if materials %}
                         <div class="row">
                             {% for material in materials %}
                             <div class="col-md-4">
                                 <div class="card card-outline {% if material.material_type == 'document' %}card-primary{% elif material.material_type == 'video' %}card-danger{% else %}card-success{% endif %}">
-                                    <div class="card-header">
+                                    <div class="card-header-professional">
                                         <h5 class="card-title">
                                             {% if material.material_type == 'document' %}
                                             <i class="fas fa-file-pdf"></i>
@@ -34,7 +44,7 @@
                                             {{ material.title|truncatewords:4 }}
                                         </h5>
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body-professional">
                                         <p class="mb-2"><small>{{ material.description|truncatewords:15 }}</small></p>
                                         <p class="mb-1">
                                             <span class="badge badge-info">{{ material.subject.name }}</span>
@@ -67,7 +77,7 @@
                             <i class="fas fa-upload fa-4x text-muted mb-3"></i>
                             <h4 class="text-muted">No Materials Uploaded Yet</h4>
                             <p>Start sharing study materials with your students!</p>
-                            <a href="{% url 'staff_upload_material' %}" class="btn btn-success">
+                            <a href="{% url 'staff_upload_material' %}" class="btn btn-professional-success">
                                 <i class="fas fa-plus"></i> Upload Your First Material
                             </a>
                         </div>

@@ -1,8 +1,51 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -39,68 +82,68 @@
             </div>
             
             <div class="col-md-8">
-                <div class="card">
+                <div class="card-professional">
                     <div class="card-header bg-primary">
                         <h3 class="card-title"><i class="fas fa-user"></i> Profile Information</h3>
                     </div>
-                    <div class="card-body">
-                        <form method="post" enctype="multipart/form-data">
+                    <div class="card-body-professional" style="padding: 10px;">
+                        <form method="post" enctype="multipart/form-data" class="compact-form">
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>First Name</label>
+                                    <div class="form-group" mb-2>
+                                        <label> style="font-size: 12px; margin-bottom: 2px;">First Name</label>
                                         <input type="text" name="first_name" value="{{ request.user.first_name }}" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Last Name</label>
+                                    <div class="form-group" mb-2>
+                                        <label> style="font-size: 12px; margin-bottom: 2px;">Last Name</label>
                                         <input type="text" name="last_name" value="{{ request.user.last_name }}" class="form-control">
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label>Email</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Email</label>
                                 <input type="email" name="email" value="{{ request.user.email }}" class="form-control" readonly>
-                                <small class="form-text text-muted">Email cannot be changed</small>
+                                <small class="form-text text-muted" style="font-size: 11px;">Email cannot be changed</small>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Designation</label>
+                                    <div class="form-group" mb-2>
+                                        <label> style="font-size: 12px; margin-bottom: 2px;">Designation</label>
                                         <input type="text" name="designation" value="{{ management.designation }}" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Department</label>
+                                    <div class="form-group" mb-2>
+                                        <label> style="font-size: 12px; margin-bottom: 2px;">Department</label>
                                         <input type="text" name="department" value="{{ management.department }}" class="form-control">
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label>Mobile Number</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Mobile Number</label>
                                 <input type="text" name="mobile_number" value="{{ management.mobile_number }}" class="form-control">
                             </div>
                             
-                            <div class="form-group">
-                                <label>Profile Picture</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Profile Picture</label>
                                 <input type="file" name="profile_pic" class="form-control" accept="image/*">
                             </div>
                             
-                            <div class="form-group">
-                                <label>Address</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Address</label>
                                 <textarea name="address" class="form-control" rows="3">{{ request.user.address }}</textarea>
                             </div>
                             
                             <hr>
                             <h5>Change Password</h5>
-                            <div class="form-group">
-                                <label>New Password</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">New Password</label>
                                 <input type="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
                             </div>
                             

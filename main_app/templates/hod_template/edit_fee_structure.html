@@ -1,27 +1,70 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-money-bill-wave me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-warning">
                 <h3 class="card-title"><i class="fas fa-edit"></i> {{ page_title }}</h3>
             </div>
-            <form method="post">
+            <form method="post" class="compact-form">
                 {% csrf_token %}
-                <div class="card-body">
+                <div class="card-body-professional" style="padding: 10px;">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Course *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Course *</label>
                                 {{ form.course }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Academic Year *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Academic Year *</label>
                                 {{ form.academic_year }}
                             </div>
                         </div>
@@ -29,14 +72,14 @@
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Semester *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Semester *</label>
                                 {{ form.semester }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Total Fee (₹) *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Total Fee (₹) *</label>
                                 {{ form.total_fee }}
                             </div>
                         </div>
@@ -45,14 +88,14 @@
                     <h5 class="mt-3 mb-3">Fee Breakdown</h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Tuition Fee (₹)</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Tuition Fee (₹)</label>
                                 {{ form.tuition_fee }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Exam Fee (₹)</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Exam Fee (₹)</label>
                                 {{ form.exam_fee }}
                             </div>
                         </div>
@@ -60,21 +103,21 @@
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Library Fee (₹)</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Library Fee (₹)</label>
                                 {{ form.library_fee }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Other Fees (₹)</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Other Fees (₹)</label>
                                 {{ form.other_fees }}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Due Date *</label>
+                    <div class="form-group" mb-2>
+                        <label> style="font-size: 12px; margin-bottom: 2px;">Due Date *</label>
                         {{ form.due_date }}
                     </div>
                 </div>
@@ -82,7 +125,7 @@
                     <button type="submit" class="btn btn-warning btn-lg">
                         <i class="fas fa-save"></i> Update Fee Structure
                     </button>
-                    <a href="{% url 'manage_fee_structure' %}" class="btn btn-secondary">
+                    <a href="{% url 'manage_fee_structure' %}" class="btn btn-professional-secondary">
                         <i class="fas fa-arrow-left"></i> Back
                     </a>
                 </div>

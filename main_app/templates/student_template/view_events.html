@@ -3,6 +3,16 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
         <!-- Tabs for different event views -->
@@ -31,13 +41,13 @@
                     {% for data in event_data %}
                     <div class="col-md-6 col-lg-4">
                         <div class="card card-outline card-primary event-card">
-                            <div class="card-header">
+                    <div class="card-header-professional">
                                 <h5 class="card-title mb-0">{{ data.event.title }}</h5>
                                 {% if data.event.status == 'approved' %}
                                 <span class="badge badge-success float-right">Approved</span>
                                 {% endif %}
-                            </div>
-                            <div class="card-body">
+                    </div>
+                    <div class="card-body-professional">
                                 <p>{{ data.event.description|truncatewords:20 }}</p>
                                 <p class="event-meta mb-1">
                                     <i class="far fa-calendar"></i> {{ data.event.event_date|date:"M d, Y" }}<br>
@@ -73,7 +83,7 @@
                     </div>
                     {% empty %}
                     <div class="col-12">
-                        <div class="card">
+                        <div class="card-professional">
                             <div class="card-body text-center py-5">
                                 <i class="far fa-calendar-times fa-4x text-muted mb-3"></i>
                                 <h4 class="text-muted">No Upcoming Events</h4>
@@ -83,19 +93,19 @@
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-
+                        </div>
+                        
             <!-- My Registrations -->
             <div class="tab-pane fade" id="registered" role="tabpanel">
                 <div class="row mt-3">
                     {% for registration in registered_events %}
                     <div class="col-md-6">
                         <div class="card card-success">
-                            <div class="card-header">
+                            <div class="card-header-professional">
                                 <h5 class="card-title mb-0">{{ registration.event.title }}</h5>
                                 <span class="badge badge-light float-right">Registered</span>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body-professional">
                                 <p>{{ registration.event.description|truncatewords:15 }}</p>
                                 <p class="mb-1">
                                     <i class="far fa-calendar"></i> {{ registration.event.event_date|date:"M d, Y h:i A" }}<br>
@@ -112,7 +122,7 @@
                     </div>
                     {% empty %}
                     <div class="col-12">
-                        <div class="card">
+                        <div class="card-professional">
                             <div class="card-body text-center py-5">
                                 <i class="far fa-calendar-check fa-4x text-muted mb-3"></i>
                                 <h4 class="text-muted">No Registrations Yet</h4>
@@ -129,11 +139,11 @@
                 <div class="row mt-3">
                     {% for participation in past_participations %}
                     <div class="col-md-6">
-                        <div class="card">
+                        <div class="card-professional">
                             <div class="card-header bg-secondary">
                                 <h5 class="card-title mb-0 text-white">{{ participation.event.title }}</h5>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body-professional">
                                 <p>{{ participation.event.description|truncatewords:15 }}</p>
                                 <p class="mb-0">
                                     <i class="far fa-calendar"></i> {{ participation.event.event_date|date:"M d, Y" }}<br>
@@ -149,7 +159,7 @@
                     </div>
                     {% empty %}
                     <div class="col-12">
-                        <div class="card">
+                        <div class="card-professional">
                             <div class="card-body text-center py-5">
                                 <i class="far fa-calendar-times fa-4x text-muted mb-3"></i>
                                 <h4 class="text-muted">No Past Events</h4>

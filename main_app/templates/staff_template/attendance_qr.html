@@ -1,0 +1,165 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .qr-display-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .qr-code-container {
+        background: white;
+        padding: 30px;
+        border: 3px solid #003d82;
+        border-radius: 8px;
+        display: inline-block;
+        margin: 30px 0;
+    }
+
+    .attendance-info {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 25px;
+        text-align: left;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #1a202c;
+    }
+
+    .info-value {
+        color: #4a5568;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-calendar-check me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="qr-display-card">
+                    <h3 style="color: #003d82; margin-bottom: 10px;">Attendance QR Code</h3>
+                    <p style="color: #4a5568; margin-bottom: 25px;">Display this QR code for students to scan</p>
+
+                    <!-- Attendance Details -->
+                    <div class="attendance-info">
+                        <div class="info-item">
+                            <span class="info-label">Subject:</span>
+                            <span class="info-value">{{ subject.name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Date:</span>
+                            <span class="info-value">{{ date }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Verification Code:</span>
+                            <span class="info-value"><code>{{ verification_code }}</code></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Attendance ID:</span>
+                            <span class="info-value">#{{ attendance.id }}</span>
+                        </div>
+                    </div>
+
+                    <!-- QR Code -->
+                    <div class="qr-code-container">
+                        <img src="data:image/png;base64,{{ qr_code }}" 
+                             alt="Attendance QR Code" 
+                             style="width: 300px; height: 300px;">
+                    </div>
+
+                    <div class="alert alert-info text-start">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Instructions:</strong><br>
+                        1. Display this QR code to students in class<br>
+                        2. Students scan using mobile app or camera<br>
+                        3. System automatically marks them present<br>
+                        4. QR code is valid only for this date and subject
+                    </div>
+
+                    <div class="mt-4">
+                        <button class="btn btn-professional-success" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i>Print QR Code
+                        </button>
+                        <a href="{% url 'staff_take_attendance' %}" class="btn btn-professional-primary">
+                            <i class="fas fa-check me-2"></i>Done
+                        </a>
+                        <button class="btn btn-outline-primary" onclick="downloadQRCode()">
+                            <i class="fas fa-download me-2"></i>Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function downloadQRCode() {
+    const qrImage = document.querySelector('.qr-code-container img');
+    const link = document.createElement('a');
+    link.download = 'attendance_qr_{{ date }}_{{ subject.id }}.png';
+    link.href = qrImage.src;
+    link.click();
+    window.toast.success('QR code downloaded');
+}
+
+// Auto-refresh every 5 minutes to keep QR active
+setTimeout(function() {
+    window.toast.info('QR code session active. Page will refresh in 5 minutes.');
+}, 4 * 60 * 1000);
+</script>
+
+<style media="print">
+    .btn, .alert, .attendance-info {
+        display: none !important;
+    }
+    .qr-display-card {
+        box-shadow: none;
+        border: none;
+    }
+</style>
+{% endblock %}
+
+
+
+
+
+
+
+
+

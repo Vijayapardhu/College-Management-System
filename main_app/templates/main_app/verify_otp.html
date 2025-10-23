@@ -163,7 +163,7 @@
                 <h1><i class="fas fa-shield-alt"></i> Verify OTP</h1>
                 <p class="mb-0">Enter the verification code sent to your email</p>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 10px;">
                 {% if messages %}
                     {% for message in messages %}
                     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -183,13 +183,13 @@
                     </p>
                 </div>
 
-                <form action="{% url 'verify_otp' %}" method="POST" id="otpForm">
+                <form action="{% url 'verify_otp' %}" method="POST" id="otpForm" class="compact-form">
                     {% csrf_token %}
                     
                     <!-- Hidden input for actual OTP submission -->
                     <input type="hidden" name="otp_code" id="otp_code_hidden">
                     
-                    <div class="form-group">
+                    <div class="form-group" mb-2>
                         <label for="otp_1" class="text-center d-block mb-3">
                             <strong>Enter 6-Digit OTP Code</strong>
                         </label>
@@ -460,6 +460,23 @@
         
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer(); // Initial call
+    </script>
+</body>
+</html>
+
+
+        // Add keyboard shortcut (Enter key)
+        otpInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.length === 6) {
+                e.preventDefault();
+                verifyButton.click();
+            }
+        });
+
+        // Focus on input on page load
+        window.addEventListener('load', function() {
+            otpInput.focus();
+        });
     </script>
 </body>
 </html>

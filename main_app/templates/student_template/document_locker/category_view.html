@@ -1,0 +1,276 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .category-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .document-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .document-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .document-card:hover {
+        border-color: #003d82;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .document-card.important {
+        border-left: 4px solid #ffc107;
+    }
+
+    .doc-icon-large {
+        font-size: 48px;
+        color: #003d82;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .doc-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 8px;
+        min-height: 40px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .doc-meta {
+        font-size: 12px;
+        color: #4a5568;
+        margin-bottom: 15px;
+    }
+
+    .doc-actions {
+        display: flex;
+        gap: 5px;
+    }
+
+    .doc-actions .btn {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .important-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffc107;
+        color: #856404;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-state i {
+        font-size: 64px;
+        color: #d4d4d4;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Category Header -->
+        <div class="category-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-2">
+                        <a href="{% url 'student_document_locker' %}" class="btn btn-sm btn-outline-secondary me-3">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <div>
+                            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0;">
+                                <i class="{{ category_info.icon }} me-2"></i>{{ category_info.name }}
+                            </h2>
+                            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                                {{ total_docs }} document{{ total_docs|pluralize }} in this category
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'upload_document' %}" class="btn btn-professional-primary">
+                        <i class="fas fa-upload me-2"></i>Upload Document
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Grid -->
+        {% if documents %}
+        <div class="document-grid">
+            {% for doc in documents %}
+            <div class="document-card {% if doc.is_important %}important{% endif %}">
+                {% if doc.is_important %}
+                <div class="important-badge">
+                    <i class="fas fa-star"></i> Important
+                </div>
+                {% endif %}
+                
+                <div class="doc-icon-large">
+                    <i class="{{ category_info.icon }}"></i>
+                </div>
+                
+                <div class="doc-title" title="{{ doc.title }}">
+                    {{ doc.title }}
+                </div>
+                
+                <div class="doc-meta">
+                    <div><i class="fas fa-calendar me-1"></i>{{ doc.uploaded_at|date:"d M Y, h:i A" }}</div>
+                    <div><i class="fas fa-file me-1"></i>{{ doc.file.size|filesizeformat }}</div>
+                    {% if doc.tags %}
+                    <div><i class="fas fa-tags me-1"></i>{{ doc.tags|truncatewords:3 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="doc-actions">
+                    <a href="{% url 'view_document_detail' doc.id %}" class="btn btn-sm btn-outline-primary" title="View Details">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'download_document' doc.id %}" class="btn btn-sm btn-success" title="Download">
+                        <i class="fas fa-download"></i>
+                    </a>
+                    <button onclick="toggleImportant({{ doc.id }}, this)" 
+                            class="btn btn-sm btn-outline-warning" 
+                            title="Toggle Important">
+                        <i class="fas fa-star {% if not doc.is_important %}far{% endif %}"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if documents.has_other_pages %}
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {% if documents.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ documents.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in documents.paginator.page_range %}
+                        <li class="page-item {% if documents.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if documents.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ documents.next_page_number }}">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <i class="{{ category_info.icon }}"></i>
+            <h4 style="color: #1a202c; margin-bottom: 10px;">No Documents Yet</h4>
+            <p class="text-muted mb-4">You haven't uploaded any {{ category_info.name|lower }} yet</p>
+            <a href="{% url 'upload_document' %}" class="btn btn-professional-primary">
+                <i class="fas fa-upload me-2"></i>Upload Your First Document
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function toggleImportant(docId, button) {
+    $.ajax({
+        url: `/student/documents/${docId}/toggle-important/`,
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            if (response.success) {
+                const icon = button.querySelector('i');
+                if (response.is_important) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    button.closest('.document-card').classList.add('important');
+                    window.toast.success('Marked as important');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    button.closest('.document-card').classList.remove('important');
+                    window.toast.success('Removed from important');
+                }
+            }
+        },
+        error: function() {
+            window.toast.error('Failed to update');
+        }
+    });
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

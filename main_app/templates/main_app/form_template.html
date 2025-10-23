@@ -1,19 +1,358 @@
-<form role="form" method="POST" enctype="multipart/form-data">
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+
+<form role="form" method="POST" enctype="multipart/form-data" class="compact-form">
     {% csrf_token %}
-    <div class="card-body">
-
-
-        {% for field in form  %}
-        <div class="form-group">
-            {{field.errors}}
-            {{field.label_tag}}
-            {{field}}
-
+    <div class="card-body" style="padding: 10px;">
+        
+        <!-- Basic Information Section -->
+        <div class="section-header text-primary">
+            <i class="fas fa-user"></i> Basic Information
         </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.first_name.errors}}
+                    <label for="{{form.first_name.id_for_label}}">{{form.first_name.label}}</label>
+                    {{form.first_name}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.last_name.errors}}
+                    <label for="{{form.last_name.id_for_label}}">{{form.last_name.label}}</label>
+                    {{form.last_name}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.email.errors}}
+                    <label for="{{form.email.id_for_label}}">{{form.email.label}}</label>
+                    {{form.email}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.gender.errors}}
+                    <label for="{{form.gender.id_for_label}}">{{form.gender.label}}</label>
+                    {{form.gender}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.password.errors}}
+                    <label for="{{form.password.id_for_label}}">{{form.password.label}}</label>
+                    {{form.password}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.address.errors}}
+                    <label for="{{form.address.id_for_label}}">{{form.address.label}}</label>
+                    {{form.address}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Information Section -->
+        <div class="section-header text-primary">
+            <i class="fas fa-graduation-cap"></i> Academic Information
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.course.errors}}
+                    <label for="{{form.course.id_for_label}}">{{form.course.label}}</label>
+                    {{form.course}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.session.errors}}
+                    <label for="{{form.session.id_for_label}}">{{form.session.label}}</label>
+                    {{form.session}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.course_type.errors}}
+                    <label for="{{form.course_type.id_for_label}}">{{form.course_type.label}}</label>
+                    {{form.course_type}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.admission_year.errors}}
+                    <label for="{{form.admission_year.id_for_label}}">{{form.admission_year.label}}</label>
+                    {{form.admission_year}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.roll_number.errors}}
+                    <label for="{{form.roll_number.id_for_label}}">{{form.roll_number.label}}</label>
+                    {{form.roll_number}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.admission_number.errors}}
+                    <label for="{{form.admission_number.id_for_label}}">{{form.admission_number.label}}</label>
+                    {{form.admission_number}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Details Section -->
+        <div class="section-header text-primary">
+            <i class="fas fa-id-card"></i> Personal Details
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.date_of_birth.errors}}
+                    <label for="{{form.date_of_birth.id_for_label}}">{{form.date_of_birth.label}}</label>
+                    {{form.date_of_birth}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.nationality.errors}}
+                    <label for="{{form.nationality.id_for_label}}">{{form.nationality.label}}</label>
+                    {{form.nationality}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.religion.errors}}
+                    <label for="{{form.religion.id_for_label}}">{{form.religion.label}}</label>
+                    {{form.religion}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.blood_group.errors}}
+                    <label for="{{form.blood_group.id_for_label}}">{{form.blood_group.label}}</label>
+                    {{form.blood_group}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.mobile_number.errors}}
+                    <label for="{{form.mobile_number.id_for_label}}">{{form.mobile_number.label}}</label>
+                    {{form.mobile_number}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.alternate_mobile.errors}}
+                    <label for="{{form.alternate_mobile.id_for_label}}">{{form.alternate_mobile.label}}</label>
+                    {{form.alternate_mobile}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.aadhaar_number.errors}}
+                    <label for="{{form.aadhaar_number.id_for_label}}">{{form.aadhaar_number.label}}</label>
+                    {{form.aadhaar_number}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.pan_number.errors}}
+                    <label for="{{form.pan_number.id_for_label}}">{{form.pan_number.label}}</label>
+                    {{form.pan_number}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Background Section -->
+        <div class="section-header text-primary">
+            <i class="fas fa-book"></i> Academic Background (10th Standard)
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.tenth_board.errors}}
+                    <label for="{{form.tenth_board.id_for_label}}">{{form.tenth_board.label}}</label>
+                    {{form.tenth_board}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.tenth_school.errors}}
+                    <label for="{{form.tenth_school.id_for_label}}">{{form.tenth_school.label}}</label>
+                    {{form.tenth_school}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group mb-2">
+                    {{form.tenth_year.errors}}
+                    <label for="{{form.tenth_year.id_for_label}}">{{form.tenth_year.label}}</label>
+                    {{form.tenth_year}}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-2">
+                    {{form.tenth_marks_total.errors}}
+                    <label for="{{form.tenth_marks_total.id_for_label}}">{{form.tenth_marks_total.label}}</label>
+                    {{form.tenth_marks_total}}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-2">
+                    {{form.tenth_marks_obtained.errors}}
+                    <label for="{{form.tenth_marks_obtained.id_for_label}}">{{form.tenth_marks_obtained.label}}</label>
+                    {{form.tenth_marks_obtained}}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-2">
+                    {{form.tenth_percentage.errors}}
+                    <label for="{{form.tenth_percentage.id_for_label}}">{{form.tenth_percentage.label}}</label>
+                    {{form.tenth_percentage}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Entrance Exam Details Section -->
+        <div class="section-header text-primary">
+            <i class="fas fa-clipboard-check"></i> Entrance Exam Details
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.entrance_exam_name.errors}}
+                    <label for="{{form.entrance_exam_name.id_for_label}}">{{form.entrance_exam_name.label}}</label>
+                    {{form.entrance_exam_name}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.entrance_exam_year.errors}}
+                    <label for="{{form.entrance_exam_year.id_for_label}}">{{form.entrance_exam_year.label}}</label>
+                    {{form.entrance_exam_year}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.entrance_exam_rank.errors}}
+                    <label for="{{form.entrance_exam_rank.id_for_label}}">{{form.entrance_exam_rank.label}}</label>
+                    {{form.entrance_exam_rank}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2">
+                    {{form.entrance_exam_score.errors}}
+                    <label for="{{form.entrance_exam_score.id_for_label}}">{{form.entrance_exam_score.label}}</label>
+                    {{form.entrance_exam_score}}
+                </div>
+            </div>
+            <div class="col-md-6">
+        <div class="form-group mb-2">
+                    {{form.entrance_category_rank.errors}}
+                    <label for="{{form.entrance_category_rank.id_for_label}}">{{form.entrance_category_rank.label}}</label>
+                    {{form.entrance_category_rank}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="section-header text-primary">
+            <i class="fas fa-file-upload"></i> Documents
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.photo.errors}}
+                    <label for="{{form.photo.id_for_label}}">{{form.photo.label}}</label>
+                    {{form.photo}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.signature.errors}}
+                    <label for="{{form.signature.id_for_label}}">{{form.signature.label}}</label>
+                    {{form.signature}}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-2">
+                    {{form.tenth_certificate.errors}}
+                    <label for="{{form.tenth_certificate.id_for_label}}">{{form.tenth_certificate.label}}</label>
+                    {{form.tenth_certificate}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Fields (if any remaining) -->
+        {% for field in form %}
+            {% if field.name not in 'first_name,last_name,email,gender,password,address,course,session,course_type,admission_year,roll_number,admission_number,date_of_birth,nationality,religion,blood_group,mobile_number,alternate_mobile,aadhaar_number,pan_number,tenth_board,tenth_school,tenth_year,tenth_marks_total,tenth_marks_obtained,tenth_percentage,entrance_exam_name,entrance_exam_year,entrance_exam_rank,entrance_exam_score,entrance_category_rank,photo,signature,tenth_certificate' %}
+            <div class="row">
+                <div class="col-md-6">
+        <div class="form-group mb-2">
+            {{field.errors}}
+                        <label for="{{field.id_for_label}}">{{field.label}}</label>
+            {{field}}
+                    </div>
+                </div>
+        </div>
+            {% endif %}
         {% endfor %}
-
-
-
 
     </div>
     <!-- /.card-body -->
@@ -25,7 +364,6 @@
             {% else %}
             Submit
             {% endif %}
-
         </button>
     </div>
 </form>

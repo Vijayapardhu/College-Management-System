@@ -1,55 +1,31 @@
-{% extends 'main_app/base.html' %}
-{% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{%extends 'main_app/base.html' %}
+{%load static %}
+{%block page_title %}Submit Grievance{%endblock %}
 
-{% block content %}
+{%block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="card card-danger">
-                    <div class="card-header">
-                        <h3 class="card-title"><i class="fas fa-exclamation-circle"></i> Submit Grievance/Complaint</h3>
-                    </div>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="card-body">
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> <strong>Note:</strong> Your grievance will be reviewed and assigned to the appropriate department. You'll receive updates on the resolution.
-                            </div>
-                            
-                            {% for field in form %}
-                            <div class="form-group">
-                                <label>{{ field.label }} {% if field.field.required %}<span class="text-danger">*</span>{% endif %}</label>
-                                {{ field }}
-                                {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
-                                {% endif %}
-                                {% if field.errors %}
-                                <span class="text-danger">{{ field.errors }}</span>
-                                {% endif %}
-                            </div>
-                            {% endfor %}
-                            
-                            <div class="alert alert-warning">
-                                <i class="fas fa-shield-alt"></i> <strong>Privacy:</strong> Your identity is protected. Grievances are handled confidentially.
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-paper-plane"></i> Submit Grievance
-                            </button>
-                            <a href="{% url 'student_my_grievances' %}" class="btn btn-secondary">
-                                <i class="fas fa-list"></i> My Grievances
-                            </a>
-                        </div>
-                    </form>
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file-alt me-2"></i>Submit Grievance
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Submit a new grievance or complaint
+            </p>
+        </div>
+
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Information</h3>
+            </div>
+            <div class="card-body-professional">
+                <div class="empty-state-professional">
+                    <i class="fas fa-file-alt"></i>
+                    <h4>Content Not Available</h4>
+                    <p>This feature is being developed. Please check back later.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock content %}
-
-
-
+{%endblock %}

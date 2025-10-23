@@ -1,0 +1,304 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header-professional mb-4">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-building me-2"></i> {{ page_title }}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Comprehensive department management and analytics
+            </p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ departments.count }}</h3>
+                        <p>Total Departments</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <a href="{% url 'manage_departments' %}" class="small-box-footer">
+                        View All <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ departments|length }}</h3>
+                        <p>Active Departments</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <a href="{% url 'add_department' %}" class="small-box-footer">
+                        Add New <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{ departments|length }}</h3>
+                        <p>Programs Offered</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <a href="{% url 'manage_programs' %}" class="small-box-footer">
+                        View Programs <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>Analytics</h3>
+                        <p>Department Reports</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <a href="{% url 'department_analytics' %}" class="small-box-footer">
+                        View Analytics <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department List -->
+        <div class="card card-professional">
+            <div class="card-header bg-primary">
+                <h3 class="card-title">
+                    <i class="fas fa-list"></i> Department Overview
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if departments %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped" id="departmentTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th width="5%">#</th>
+                                <th width="20%">Department</th>
+                                <th width="10%">Code</th>
+                                <th width="20%">HOD</th>
+                                <th width="15%">Contact</th>
+                                <th width="10%">Established</th>
+                                <th width="10%">Programs</th>
+                                <th width="10%">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dept in departments %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td>
+                                    <strong class="text-primary">
+                                        <i class="fas fa-building text-info mr-1"></i>
+                                        {{ dept.name }}
+                                    </strong>
+                                    {% if dept.description %}
+                                    <br>
+                                    <small class="text-muted">{{ dept.description|truncatewords:10 }}</small>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-info badge-lg">{{ dept.code }}</span>
+                                </td>
+                                <td>
+                                    {% if dept.hod %}
+                                    <i class="fas fa-user-tie text-success mr-1"></i>
+                                    {{ dept.hod.admin.first_name }} {{ dept.hod.admin.last_name }}
+                                    <br>
+                                    <small class="text-muted">{{ dept.hod.designation|title }}</small>
+                                    {% else %}
+                                    <span class="text-warning">
+                                        <i class="fas fa-user-slash"></i> Not Assigned
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if dept.contact_email %}
+                                    <i class="fas fa-envelope text-primary mr-1"></i>
+                                    <small>{{ dept.contact_email }}</small>
+                                    <br>
+                                    {% endif %}
+                                    {% if dept.contact_number %}
+                                    <i class="fas fa-phone text-success mr-1"></i>
+                                    <small>{{ dept.contact_number }}</small>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if dept.established_year %}
+                                    <span class="badge badge-secondary">{{ dept.established_year }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-success badge-pill">
+                                        {{ dept.programs.count }} Programs
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'edit_department' dept.id %}" 
+                                           class="btn btn-sm btn-warning" 
+                                           title="Edit Department">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-info" 
+                                                title="View Details"
+                                                data-toggle="modal" 
+                                                data-target="#deptModal{{ dept.id }}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Department Details Modal -->
+                            <div class="modal fade" id="deptModal{{ dept.id }}" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary">
+                                            <h5 class="modal-title">
+                                                <i class="fas fa-building"></i> {{ dept.name }}
+                                            </h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal">
+                                                <span>&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6><strong>Department Information</strong></h6>
+                                                    <table class="table table-sm">
+                                                        <tr>
+                                                            <th width="40%">Code:</th>
+                                                            <td>{{ dept.code }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Established:</th>
+                                                            <td>{{ dept.established_year|default:"-" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Programs:</th>
+                                                            <td>{{ dept.programs.count }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6><strong>Contact Information</strong></h6>
+                                                    <table class="table table-sm">
+                                                        <tr>
+                                                            <th width="40%">Email:</th>
+                                                            <td>{{ dept.contact_email|default:"-" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Phone:</th>
+                                                            <td>{{ dept.contact_number|default:"-" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>HOD:</th>
+                                                            <td>
+                                                                {% if dept.hod %}
+                                                                {{ dept.hod.admin.first_name }} {{ dept.hod.admin.last_name }}
+                                                                {% else %}
+                                                                Not Assigned
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            {% if dept.description %}
+                                            <hr>
+                                            <h6><strong>Description</strong></h6>
+                                            <p>{{ dept.description }}</p>
+                                            {% endif %}
+                                            
+                                            <hr>
+                                            <h6><strong>Programs Offered</strong></h6>
+                                            <ul class="list-group">
+                                                {% for program in dept.programs.all %}
+                                                <li class="list-group-item">
+                                                    <i class="fas fa-graduation-cap text-primary mr-2"></i>
+                                                    <strong>{{ program.name }}</strong>
+                                                    <span class="badge badge-info float-right">{{ program.code }}</span>
+                                                </li>
+                                                {% empty %}
+                                                <li class="list-group-item text-muted">No programs available</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <a href="{% url 'edit_department' dept.id %}" class="btn btn-primary">
+                                                <i class="fas fa-edit"></i> Edit Department
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>No departments found!</strong> 
+                    <a href="{% url 'add_department' %}" class="alert-link">Add your first department</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function() {
+        $('#departmentTable').DataTable({
+            "responsive": true,
+            "lengthChange": true,
+            "autoWidth": false,
+            "ordering": true,
+            "info": true,
+            "paging": true,
+            "searching": true,
+            "pageLength": 10,
+            "language": {
+                "search": "Search departments:",
+                "lengthMenu": "Show _MENU_ departments per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ departments",
+                "infoEmpty": "No departments available",
+                "infoFiltered": "(filtered from _MAX_ total departments)"
+            },
+            "order": [[1, 'asc']],
+            "columnDefs": [
+                { "orderable": false, "targets": [7] }
+            ]
+        });
+    });
+</script>
+{% endblock custom_js %}

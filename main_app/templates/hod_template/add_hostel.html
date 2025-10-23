@@ -1,53 +1,96 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block custom_css %}
+<style>
+.compact-form .form-group {
+    margin-bottom: 8px !important;
+}
+.compact-form label {
+    font-size: 12px !important;
+    margin-bottom: 2px !important;
+    font-weight: 500;
+}
+.compact-form input, .compact-form select, .compact-form textarea {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 32px !important;
+}
+.compact-form .form-control {
+    border-radius: 4px !important;
+}
+.compact-form .section-header {
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+    margin-top: 15px !important;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e9ecef;
+}
+.compact-form .row {
+    margin-bottom: 0 !important;
+}
+</style>
+{% endblock custom_css %}
+
+
 
 {% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
+        <div class="card-professional">
             <div class="card-header bg-success">
                 <h3 class="card-title"><i class="fas fa-plus"></i> {{ page_title }}</h3>
             </div>
-            <form method="post">
+            <form method="post" class="compact-form">
                 {% csrf_token %}
-                <div class="card-body">
+                <div class="card-body-professional" style="padding: 10px;">
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="form-group">
-                                <label>Hostel Name *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Hostel Name *</label>
                                 {{ form.name }}
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Hostel Type *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Hostel Type *</label>
                                 {{ form.hostel_type }}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Address *</label>
+                    <div class="form-group" mb-2>
+                        <label> style="font-size: 12px; margin-bottom: 2px;">Address *</label>
                         {{ form.address }}
                     </div>
                     
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Total Rooms *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Total Rooms *</label>
                                 {{ form.total_rooms }}
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Rooms Per Floor</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Rooms Per Floor</label>
                                 {{ form.rooms_per_floor }}
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Total Capacity *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Total Capacity *</label>
                                 {{ form.capacity }}
                             </div>
                         </div>
@@ -55,30 +98,30 @@
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Warden *</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Warden *</label>
                                 {{ form.warden }}
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Contact Number</label>
+                            <div class="form-group" mb-2>
+                                <label> style="font-size: 12px; margin-bottom: 2px;">Contact Number</label>
                                 {{ form.contact_number }}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Facilities</label>
+                    <div class="form-group" mb-2>
+                        <label> style="font-size: 12px; margin-bottom: 2px;">Facilities</label>
                         {{ form.facilities }}
-                        <small class="form-text text-muted">WiFi, Gym, Mess, Library, etc.</small>
+                        <small class="form-text text-muted" style="font-size: 11px;">WiFi, Gym, Mess, Library, etc.</small>
                     </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-success btn-lg">
                         <i class="fas fa-save"></i> Add Hostel
                     </button>
-                    <a href="{% url 'manage_hostels' %}" class="btn btn-secondary">
+                    <a href="{% url 'manage_hostels' %}" class="btn btn-professional-secondary">
                         <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>

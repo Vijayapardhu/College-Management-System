@@ -3,50 +3,80 @@
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block content %}
-
 <section class="content">
     <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-comment-dots me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Share your feedback and suggestions with the management
+            </p>
+        </div>
+
         <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
+            <!-- Feedback Form -->
+            <div class="col-lg-5">
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">Submit New Feedback</h3>
                     </div>
-
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Submit Feedback"%}
+                    <div class="card-body-professional">
+                        {% include "main_app/form_template.html" with messages=messages form=form button_text="Submit Feedback"%}
+                    </div>
                 </div>
-                <!-- /.card -->
-<div class="card card-primary">
-    <div class="card-header"><h3 class="card-title">{{page_title}}</h3>
-    </div>
-   <div class="table p-2">
+            </div>
 
-       <table class="table table-bordered">
-           <tr>
-               <th>ID</th>
-               <th>Feedback</th>
-               <th>Reply</th>
-            <th>Created At</th>
-        </tr>
-        {% for feedback in feedbacks %}
-        <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{feedback.feedback}}</td>
-            <td>
-                  
-                {% if feedback.reply == "" %}
-                    <p class="badge badge-warning">No Response Yet</p>
-                    {% else %}
-                    {{feedback.reply}}
-                {% endif %}
-                    
-            </td>              <td>{{feedback.created_at}}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    </div>
+            <!-- Feedback History -->
+            <div class="col-lg-7">
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">My Feedback History</h3>
+                    </div>
+                    <div style="padding: 0;">
+                        {% if feedbacks %}
+                        <div class="table-responsive">
+                            <table class="table table-professional mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Feedback</th>
+                                        <th>Reply</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for feedback in feedbacks %}
+                                    <tr>
+                                        <td><strong>{{forloop.counter}}</strong></td>
+                                        <td>{{feedback.feedback|truncatewords:15}}</td>
+                                        <td>
+                                            {% if feedback.reply %}
+                                            <div style="color: #0f7c4f;">
+                                                <i class="fas fa-check-circle me-1"></i>{{feedback.reply|truncatewords:10}}
+                                            </div>
+                                            {% else %}
+                                            <span class="badge-professional-warning">
+                                                <i class="fas fa-clock me-1"></i>Pending
+                                            </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{feedback.created_at|date:"d M Y"}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="empty-state-professional">
+                            <i class="fas fa-comment-dots"></i>
+                            <h4>No Feedback Yet</h4>
+                            <p>Submit your first feedback using the form</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

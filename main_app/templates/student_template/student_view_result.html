@@ -2,42 +2,184 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
-{% block content %}
+{% block custom_css %}
+<style>
+    .results-summary {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
 
+    .grade-card {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .cgpa-display {
+        font-size: 48px;
+        font-weight: 700;
+        color: #003d82;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-       
-                <!-- /.card -->
-<div class="card card-primary">
-    <div class="card-header"><h3 class="card-title">{{page_title}}</h3>
-    </div>
-   <div class="table p-2">
-
-       <table class="table table-bordered">
-           <tr>
-               <th>ID</th>
-               <th>Subject</th>
-               <th>Test</th>
-               <th>Exam</th>
-               <th>Total</th>
-        </tr>
-        {% for result in results %}
-        <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{ result.subject }}</td>
-            <td>{{ result.test }}</td>
-            <td>{{ result.exam }}</td>
-            <td>{{ result.test|add:result.exam }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    </div>
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                        <i class="fas fa-chart-line me-2"></i>{{page_title}}
+                    </h2>
+                    <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                        View your academic performance and results
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-professional-success" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Print Results
+                    </button>
+                </div>
             </div>
         </div>
+
+        <!-- CGPA Summary -->
+        {% if results %}
+        <div class="results-summary">
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 style="color: #1a202c; font-weight: 600; margin-bottom: 15px;">Academic Summary</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <div style="font-size: 13px; color: #4a5568;">Total Subjects</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #003d82;">{{ results|length }}</div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div style="font-size: 13px; color: #4a5568;">Average Marks</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #0f7c4f;">
+                                {% widthratio results|length 1 results|length as total %}
+                                {% for result in results %}
+                                    {% if forloop.first %}{% widthratio result.test|add:result.exam 1 1 as sum %}{% endif %}
+                                {% endfor %}
+                                {{ sum|default:"N/A" }}%
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <div style="font-size: 13px; color: #4a5568;">Status</div>
+                            <div style="font-size: 16px; font-weight: 600; color: #0f7c4f;">
+                                <i class="fas fa-check-circle me-1"></i>View Only
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="grade-card">
+                        <div style="font-size: 13px; color: #4a5568; margin-bottom: 10px;">Overall Performance</div>
+                        <div style="font-size: 14px; color: #1a202c; font-weight: 600;">Check with HOD for CGPA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Results Table -->
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3 style="font-size: 18px;">Subject-wise Results</h3>
+            </div>
+            <div style="padding: 0;">
+                {% if results %}
+                <div class="table-responsive">
+                    <table class="table table-professional mb-0">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Subject</th>
+                                <th>Internal (30)</th>
+                                <th>External (70)</th>
+                                <th>Total (100)</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td><strong>{{forloop.counter}}</strong></td>
+                                <td>
+                                    <div style="font-weight: 600; color: #1a202c;">{{ result.subject }}</div>
+                                </td>
+                                <td>{{ result.test }}</td>
+                                <td>{{ result.exam }}</td>
+                                <td><strong>{{ result.test|add:result.exam }}</strong></td>
+                                <td>
+                                    {% with total=result.test|add:result.exam %}
+                                        {% if total >= 90 %}
+                                        <span class="badge-professional-success">A+</span>
+                                        {% elif total >= 80 %}
+                                        <span class="badge-professional-success">A</span>
+                                        {% elif total >= 70 %}
+                                        <span class="badge-professional-primary">B+</span>
+                                        {% elif total >= 60 %}
+                                        <span class="badge-professional-primary">B</span>
+                                        {% elif total >= 50 %}
+                                        <span class="badge-professional-warning">C+</span>
+                                        {% elif total >= 40 %}
+                                        <span class="badge-professional-warning">C</span>
+                                        {% else %}
+                                        <span class="badge-professional-danger">F</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {% with total=result.test|add:result.exam %}
+                                        {% if total >= 40 %}
+                                        <span style="color: #0f7c4f;"><i class="fas fa-check-circle me-1"></i>Pass</span>
+                                        {% else %}
+                                        <span style="color: #b91c1c;"><i class="fas fa-times-circle me-1"></i>Fail</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state-professional">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>No Results Available</h4>
+                    <p>Your results will appear here once they are published by faculty</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Grading Scale -->
+        {% if results %}
+        <div class="alert-professional-info mt-4">
+            <h6 style="color: #0369a1; font-weight: 600; margin-bottom: 10px;">
+                <i class="fas fa-info-circle me-2"></i>Grading Scale
+            </h6>
+            <div style="font-size: 13px;">
+                <strong>A+:</strong> 90-100 (Excellent) | 
+                <strong>A:</strong> 80-89 (Very Good) | 
+                <strong>B+:</strong> 70-79 (Good) | 
+                <strong>B:</strong> 60-69 (Above Average) | 
+                <strong>C+:</strong> 50-59 (Average) | 
+                <strong>C:</strong> 40-49 (Pass) | 
+                <strong>F:</strong> Below 40 (Fail)
+            </div>
+        </div>
+        {% endif %}
     </div>
 </section>
 {% endblock content %}

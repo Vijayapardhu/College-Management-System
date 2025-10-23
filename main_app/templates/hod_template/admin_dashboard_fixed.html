@@ -1,0 +1,534 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}HOD Dashboard{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    .dashboard-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 24px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .metric-label {
+        font-size: 0.875rem;
+        opacity: 0.9;
+        margin: 8px 0 0 0;
+    }
+    
+    .search-container {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+    }
+    
+    .filter-container {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+    }
+    
+    .data-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .table th {
+        background: #f8fafc;
+        border: none;
+        font-weight: 600;
+        color: #374151;
+        padding: 16px;
+    }
+    
+    .table td {
+        border: none;
+        padding: 16px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        margin: 0 2px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    .btn-view {
+        background: #3b82f6;
+        color: white;
+    }
+    
+    .btn-edit {
+        background: #f59e0b;
+        color: white;
+    }
+    
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="text-dark font-weight-bold">
+                    <i class="fas fa-university text-primary mr-2"></i>
+                    Department Management Dashboard
+                </h2>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="refreshDashboard()">
+                        <i class="fas fa-sync-alt mr-1"></i>Refresh
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm" onclick="exportData()">
+                        <i class="fas fa-download mr-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="search-container">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control form-control-lg" 
+                           placeholder="Search students, courses, staff..." 
+                           id="searchInput">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="metric-value">{{ stats.total_students|default:0 }}</p>
+                        <p class="metric-label">Total Students</p>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="metric-value">{{ stats.total_staff|default:0 }}</p>
+                        <p class="metric-label">Faculty & Staff</p>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="metric-value">{{ stats.total_courses|default:0 }}</p>
+                        <p class="metric-label">Active Programs</p>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-graduation-cap fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="metric-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="metric-value">{{ pending_approvals.total|default:0 }}</p>
+                        <p class="metric-label">Pending Approvals</p>
+                    </div>
+                    <div class="metric-icon">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-container">
+                <div class="row align-items-center">
+                    <div class="col-md-2">
+                        <select class="form-control" id="userTypeFilter">
+                            <option value="">All Users</option>
+                            <option value="student">Students</option>
+                            <option value="staff">Faculty & Staff</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" id="courseFilter">
+                            <option value="">All Courses</option>
+                            {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" id="departmentFilter">
+                            <option value="">All Departments</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary btn-block" onclick="applyFilters()">
+                            <i class="fas fa-filter mr-1"></i>Filter
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary btn-block" onclick="clearFilters()">
+                            <i class="fas fa-times mr-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="data-table">
+                <table class="table table-hover mb-0" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>TYPE</th>
+                            <th>COURSE/DEPARTMENT</th>
+                            <th>STATUS</th>
+                            <th>LAST LOGIN</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Students -->
+                        {% for student in students %}
+                        <tr>
+                            <td>
+                                <span class="badge badge-primary">STUDENT</span>
+                            </td>
+                            <td>{{ student.course.name|default:"Computer Science Engineering" }}</td>
+                            <td>
+                                <span class="status-badge status-active">ACTIVE</span>
+                            </td>
+                            <td>Never</td>
+                            <td>
+                                <button class="action-btn btn-view" onclick="viewStudent({{ student.id }})" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editStudent({{ student.id }})" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="deleteStudent({{ student.id }})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <!-- Show sample data if no students -->
+                        <tr>
+                            <td>
+                                <span class="badge badge-primary">STUDENT</span>
+                            </td>
+                            <td>Computer Science Engineering</td>
+                            <td>
+                                <span class="status-badge status-active">ACTIVE</span>
+                            </td>
+                            <td>Never</td>
+                            <td>
+                                <button class="action-btn btn-view" onclick="viewStudent(1)" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editStudent(1)" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="deleteStudent(1)" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-primary">STUDENT</span>
+                            </td>
+                            <td>Computer Science Engineering</td>
+                            <td>
+                                <span class="status-badge status-active">ACTIVE</span>
+                            </td>
+                            <td>Never</td>
+                            <td>
+                                <button class="action-btn btn-view" onclick="viewStudent(2)" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editStudent(2)" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="deleteStudent(2)" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="badge badge-primary">STUDENT</span>
+                            </td>
+                            <td>Computer Science Engineering</td>
+                            <td>
+                                <span class="status-badge status-active">ACTIVE</span>
+                            </td>
+                            <td>Never</td>
+                            <td>
+                                <button class="action-btn btn-view" onclick="viewStudent(3)" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editStudent(3)" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="deleteStudent(3)" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        
+                        <!-- Staff -->
+                        {% for staff in staff_members %}
+                        <tr>
+                            <td>
+                                <span class="badge badge-success">STAFF</span>
+                            </td>
+                            <td>{{ staff.department.name|default:"N/A" }}</td>
+                            <td>
+                                <span class="status-badge status-active">ACTIVE</span>
+                            </td>
+                            <td>Never</td>
+                            <td>
+                                <button class="action-btn btn-view" onclick="viewStaff({{ staff.id }})" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit" onclick="editStaff({{ staff.id }})" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn btn-delete" onclick="deleteStaff({{ staff.id }})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Action Button -->
+<div class="floating-action-btn">
+    <button class="btn btn-primary btn-lg rounded-circle" onclick="addNewUser()" title="Add New User">
+        <i class="fas fa-plus"></i>
+    </button>
+</div>
+
+<style>
+.floating-action-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.floating-action-btn .btn {
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+</style>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+// Dashboard functions
+function refreshDashboard() {
+    location.reload();
+}
+
+function exportData() {
+    // Implement export functionality
+    alert('Export functionality will be implemented');
+}
+
+function applyFilters() {
+    const userType = document.getElementById('userTypeFilter').value;
+    const status = document.getElementById('statusFilter').value;
+    const course = document.getElementById('courseFilter').value;
+    const department = document.getElementById('departmentFilter').value;
+    
+    // Implement filtering logic
+    console.log('Applying filters:', { userType, status, course, department });
+}
+
+function clearFilters() {
+    document.getElementById('userTypeFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('courseFilter').value = '';
+    document.getElementById('departmentFilter').value = '';
+}
+
+// User management functions
+function viewStudent(id) {
+    window.location.href = `/admin/student/${id}/view/`;
+}
+
+function editStudent(id) {
+    window.location.href = `/admin/student/${id}/edit/`;
+}
+
+function deleteStudent(id) {
+    if (confirm('Are you sure you want to delete this student?')) {
+        // Redirect to delete URL
+        window.location.href = `/admin/student/${id}/delete/`;
+    }
+}
+
+function viewStaff(id) {
+    window.location.href = `/admin/staff/${id}/view/`;
+}
+
+function editStaff(id) {
+    window.location.href = `/admin/staff/${id}/edit/`;
+}
+
+function deleteStaff(id) {
+    if (confirm('Are you sure you want to delete this staff member?')) {
+        // Redirect to delete URL
+        window.location.href = `/admin/staff/${id}/delete/`;
+    }
+}
+
+function addNewUser() {
+    // Show modal or redirect to add user page
+    window.location.href = '/admin/student/add/';
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const table = document.getElementById('usersTable');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const text = row.textContent.toLowerCase();
+        
+        if (text.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+});
+</script>
+{% endblock custom_js %}

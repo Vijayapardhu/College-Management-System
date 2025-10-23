@@ -34,14 +34,297 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        },
+                        secondary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7c3aed',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                            950: '#3b0764',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        'display': ['Poppins', 'Inter', 'sans-serif'],
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                        '88': '22rem',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'bounce-in': 'bounceIn 0.6s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Design Tokens -->
+    <link rel="stylesheet" href="{% static 'css/design-tokens.css'%} ">
+    <!-- Component Library -->
+    <link rel="stylesheet" href="{% static 'css/components.css'%} ">
+    <!-- Accessibility Compliance -->
+    <link rel="stylesheet" href="{% static 'css/accessibility.css'%} ">
     <!-- Mobile Responsive CSS -->
     <link rel="stylesheet" href="{% static 'css/mobile-responsive.css'%} ">
     <!-- Custom Enhanced Styles -->
     <link rel="stylesheet" href="{% static 'css/custom-styles.css'%} ">
+    <!-- Design System -->
+    <link rel="stylesheet" href="{% static 'css/design-system.css'%} ">
+    <!-- Professional Forms CSS -->
+    <link rel="stylesheet" href="{% static 'css/professional-forms.css'%} ">
+    
+    <!-- Fix Cut-off Issues -->
+    <style>
+        /* Fix sidebar cut-off issues and enable auto-hide */
+        .main-sidebar {
+            height: 100vh !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            min-width: 280px !important;
+            width: 280px !important;
+            flex-shrink: 0 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 1000 !important;
+            transition: transform 0.3s ease-in-out !important;
+        }
+        
+        /* Sidebar auto-hide functionality */
+        .sidebar-collapsed .main-sidebar {
+            transform: translateX(-100%) !important;
+        }
+        
+        .sidebar-toggle {
+            position: fixed !important;
+            top: 20px !important;
+            left: 20px !important;
+            z-index: 1001 !important;
+            background: #007bff !important;
+            color: white !important;
+            border: none !important;
+            padding: 10px !important;
+            border-radius: 5px !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+        }
+        
+        .sidebar-toggle:hover {
+            background: #0056b3 !important;
+        }
+        
+        .main-sidebar .nav-sidebar {
+            height: calc(100vh - 120px) !important;
+            overflow-y: auto !important;
+        }
+        
+        /* Fix main content centering */
+        .content-wrapper {
+            overflow-x: auto;
+            min-height: calc(100vh - 56px);
+            margin-left: 280px !important;
+            width: calc(100% - 280px) !important;
+            max-width: calc(100vw - 280px) !important;
+            padding: 20px !important;
+            transition: margin-left 0.3s ease-in-out !important;
+        }
+        
+        /* When sidebar is collapsed */
+        .sidebar-collapsed .content-wrapper {
+            margin-left: 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+        
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Fix badge cut-off */
+        .badge {
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: unset;
+        }
+        
+        /* Fix navigation item text */
+        .nav-item {
+            white-space: nowrap;
+            overflow: visible;
+            min-width: 0;
+        }
+        
+        .nav-text {
+            flex: 1;
+            min-width: 0;
+            overflow: visible;
+            white-space: nowrap;
+        }
+        
+        /* Fix navigation section headers */
+        .nav-section-header {
+            white-space: nowrap;
+            overflow: visible;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Fix chart containers */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            overflow: visible;
+        }
+        
+        .chart-container canvas {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* Fix card layouts */
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        /* Fix small box layouts */
+        .small-box {
+            position: relative;
+            display: block;
+            border-radius: 0.25rem;
+            margin-bottom: 20px;
+            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        }
+        
+        .small-box .inner h3 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            white-space: nowrap;
+        }
+        
+        .small-box .inner p {
+            font-size: 1rem;
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        /* Fix breadcrumb */
+        .breadcrumb {
+            background: transparent;
+            padding: 0.5rem 0;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .breadcrumb-item {
+            display: inline-block;
+        }
+        
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            padding: 0 0.5rem;
+            color: #6c757d;
+        }
+        
+        /* Responsive fixes */
+        @media (max-width: 768px) {
+            .main-sidebar {
+                height: auto !important;
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+            
+            .main-sidebar .nav-sidebar {
+                height: auto !important;
+            }
+            
+            .content-wrapper {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+        
+        /* Fix floating action buttons */
+        .floating-action-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .floating-action-btn .btn {
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+    </style>
     <!-- PWA Manifest -->
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <!-- iOS Icons -->
     <link rel="apple-touch-icon" href="{% static 'dist/img/AdminLTELogo.png' %}">
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="EduVision">
+    <meta name="msapplication-TileColor" content="#007bff">
+    <meta name="msapplication-config" content="{% static 'browserconfig.xml' %}">
     {% block custom_css %}
 
     {% endblock custom_css %}
@@ -49,49 +332,143 @@
 
 <body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
     <div class="wrapper">
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Enhanced Navbar -->
+        <nav class="main-header navbar navbar-expand-lg navbar-white navbar-light shadow-sm border-b border-gray-200 dark:border-gray-700">
             <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button" aria-label="Toggle navigation">
-                        <i class="fas fa-bars"></i>
+            <div class="flex items-center">
+                <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
+                        data-widget="pushmenu" 
+                        role="button" 
+                        aria-label="Toggle navigation">
+                    <i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>
+                </button>
+                
+                <!-- Breadcrumb -->
+                <nav class="ml-4 flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
+                    <a href="{% url 'hod_home' %}" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fas fa-home"></i>
                     </a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">{{ page_title }}</a>
-                </li>
-            </ul>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                    <span class="text-gray-900 dark:text-gray-100 font-medium">{{ page_title }}</span>
+                </nav>
+            </div>
+
+            <!-- Center - Global Search -->
+            <div class="flex-1 max-w-md mx-4">
+                <div class="relative">
+                    <input type="text" 
+                           placeholder="Search students, courses, staff..." 
+                           class="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                           id="global-search">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <kbd class="px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded dark:bg-gray-700 dark:text-gray-400">⌘K</kbd>
+                    </div>
+                </div>
+            </div>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+            <div class="flex items-center space-x-2">
+                <!-- Quick Actions Dropdown -->
+                <div class="relative dropdown">
+                    <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
+                            data-toggle="dropdown" 
+                            title="Quick Actions">
+                        <i class="fas fa-bolt text-gray-600 dark:text-gray-300"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="{% url 'add_student' %}" class="dropdown-item">
+                            <i class="fas fa-user-plus mr-2"></i>Add Student
+                        </a>
+                        <a href="{% url 'add_staff' %}" class="dropdown-item">
+                            <i class="fas fa-user-tie mr-2"></i>Add Staff
+                        </a>
+                        <a href="{% url 'staff_take_attendance' %}" class="dropdown-item">
+                            <i class="fas fa-user-check mr-2"></i>Take Attendance
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'analytics_dashboard' %}" class="dropdown-item">
+                            <i class="fas fa-chart-pie mr-2"></i>View Analytics
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Messages Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="{% url 'view_messages' %}" title="Messages">
-                        <i class="far fa-envelope"></i>
-                        <span class="badge badge-danger navbar-badge" id="unread-count" style="display: none;">0</span>
+                <div class="relative dropdown">
+                    <a href="{% url 'view_messages' %}" 
+                       class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative" 
+                       title="Messages">
+                        <i class="far fa-envelope text-gray-600 dark:text-gray-300"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" 
+                              id="unread-count" 
+                              style="display: none;">0</span>
                     </a>
-                </li>
+                </div>
                 
                 <!-- Notifications Dropdown -->
-                <li class="nav-item dropdown">
+                <div class="relative dropdown">
                     {% if request.user.user_type == '2' %}
-                        <a class="nav-link" href="{% url 'staff_view_notification' %}" title="Notifications">
-                            <i class="far fa-bell"></i>
+                        <a href="{% url 'staff_view_notification' %}" 
+                           class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative" 
+                           title="Notifications">
+                            <i class="far fa-bell text-gray-600 dark:text-gray-300"></i>
+                            <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
                         </a>
                     {% elif request.user.user_type == '3' %}
-                        <a class="nav-link" href="{% url 'student_view_notification' %}" title="Notifications">
-                            <i class="far fa-bell"></i>
+                        <a href="{% url 'student_view_notification' %}" 
+                           class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative" 
+                           title="Notifications">
+                            <i class="far fa-bell text-gray-600 dark:text-gray-300"></i>
+                            <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
                         </a>
                     {% endif %}
-                </li>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
+                        id="theme-toggle" 
+                        title="Toggle Theme">
+                    <i class="fas fa-moon text-gray-600 dark:text-gray-300" id="theme-icon"></i>
+                </button>
+                
+                <!-- Fullscreen toggle -->
+                <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
+                        data-widget="fullscreen" 
+                        title="Fullscreen">
+                    <i class="fas fa-expand-arrows-alt text-gray-600 dark:text-gray-300"></i>
+                </button>
                 
                 <!-- User dropdown -->
-                <li class="nav-item dropdown d-none d-md-block">
-                    <a class="nav-link" data-toggle="dropdown" href="#" title="Profile">
-                        <i class="far fa-user"></i>
-                    </a>
+                <div class="relative dropdown">
+                    <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
+                            data-toggle="dropdown" 
+                            title="Profile">
+                        <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">
+                                {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+                            </span>
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {{ request.user.first_name }} {{ request.user.last_name }}
+                            </div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                {% if request.user.user_type == '1' %}HOD/Admin
+                                {% elif request.user.user_type == '2' %}Faculty
+                                {% elif request.user.user_type == '3' %}Student
+                                {% elif request.user.user_type == '4' %}Management
+                                {% endif %}
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                    </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         {% if request.user.user_type == '1' %}
                             <a href="{% url 'admin_view_profile' %}" class="dropdown-item">
@@ -106,85 +483,114 @@
                                 <i class="fas fa-user mr-2"></i> Profile
                             </a>
                         {% endif %}
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog mr-2"></i> Settings
+                        </a>
                         <div class="dropdown-divider"></div>
-                        <a href="{% url 'user_logout' %}" class="dropdown-item" onclick="return confirm('Logout?')">
+                        <a href="{% url 'user_logout' %}" class="dropdown-item text-red-600 hover:bg-red-50" onclick="return confirm('Logout?')">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                     </div>
-                </li>
-                
-                <!-- Fullscreen toggle -->
-                <li class="nav-item d-none d-md-block">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button" title="Fullscreen">
-                        <i class="fas fa-expand-arrows-alt"></i>
-                    </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </nav>
         <!-- /.navbar -->
 
-        <!-- Main Sidebar Container -->
-          
- 
-        {% include "main_app/sidebar_template.html" with user=user %}
+        <!-- Enhanced Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="{% url 'hod_home' %}" class="brand-link">
+                <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="EduVision Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">EduVision</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Role-based Navigation -->
+                {% if request.user.user_type == '1' %}
+                    {% include "navigation/hod_nav.html" %}
+                {% elif request.user.user_type == '2' %}
+                    {% include "navigation/staff_nav.html" %}
+                {% elif request.user.user_type == '3' %}
+                    {% include "navigation/student_nav.html" %}
+                {% elif request.user.user_type == '4' %}
+                    {% include "navigation/management_nav.html" %}
+                {% else %}
+                    <!-- Default navigation for unauthenticated users -->
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <li class="nav-item">
+                                <a href="{% url 'login' %}" class="nav-link">
+                                    <i class="nav-icon fas fa-sign-in-alt"></i>
+                                    <p>Login</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+            <!-- /.sidebar -->
+        </aside>
 
       
         <div class="content-wrapper">
-
             <!-- Content Wrapper. Contains page content -->
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">{% block page_title %}{% endblock page_title %}</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">{{ page_title }}</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-            <div class="form-group">
-                {% if messages %}
-                {% for message in messages  %}
-    
-                {% if message.tags == 'success' %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="icon fas fa-check-circle"></i> {{message}}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="main-content">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0 text-dark">{% block page_title %}{% endblock page_title %}</h1>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="{% url 'hod_home' %}">Home</a></li>
+                                    <li class="breadcrumb-item active">{{ page_title }}</li>
+                                </ol>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
                 </div>
-                {% else %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="icon fas fa-exclamation-triangle"></i> {{message}}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endif %}
-    
-                {% endfor %}
-                {% endif %}
-            </div>
-            </div></div></div></section>
-            {% block content %}
+                <!-- /.content-header -->
 
-            {% endblock content %}
-            <!-- /.content -->
+                <!-- Main content -->
+                <section class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {% if messages %}
+                                    {% for message in messages  %}
+                                    
+                                    {% if message.tags == 'success' %}
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <i class="icon fas fa-check-circle"></i> {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <i class="icon fas fa-exclamation-triangle"></i> {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                {% block content %}
+                {% endblock content %}
+                <!-- /.content -->
+            </div>
         </div>
         <!-- /.content-wrapper -->
         {% include "main_app/footer.html" %}
@@ -243,6 +649,322 @@
             }
         });
     </script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{% static "js/sw.js" %}')
+                    .then(function(registration) {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', function() {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New content is available, show update notification
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+        
+        // Show install button
+        function showInstallButton() {
+            const installButton = document.createElement('button');
+            installButton.className = 'btn btn-primary mobile-fab';
+            installButton.innerHTML = '<i class="fas fa-download"></i>';
+            installButton.title = 'Install EduVision App';
+            installButton.onclick = installApp;
+            document.body.appendChild(installButton);
+        }
+        
+        // Install app
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function(choiceResult) {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+        
+        // Show update notification
+        function showUpdateNotification() {
+            if (confirm('A new version of EduVision is available. Would you like to update?')) {
+                window.location.reload();
+            }
+        }
+        
+        // PWA Lifecycle Events
+        window.addEventListener('appinstalled', function() {
+            console.log('EduVision app was installed');
+        });
+        
+        // Handle online/offline status
+        window.addEventListener('online', function() {
+            console.log('App is online');
+            showStatusMessage('You are back online', 'success');
+        });
+        
+        window.addEventListener('offline', function() {
+            console.log('App is offline');
+            showStatusMessage('You are offline. Some features may be limited.', 'warning');
+        });
+        
+        // Show status message
+        function showStatusMessage(message, type) {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            statusDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+            statusDiv.innerHTML = `
+                ${message}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            `;
+            document.body.appendChild(statusDiv);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (statusDiv.parentNode) {
+                    statusDiv.parentNode.removeChild(statusDiv);
+                }
+            }, 5000);
+        }
+        
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const sidebar = document.querySelector('.main-sidebar');
+            const overlay = document.querySelector('.mobile-nav-overlay');
+            
+            if (sidebar && overlay) {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            }
+        }
+        
+        // Close mobile nav when clicking overlay
+        document.addEventListener('click', function(e) {
+            const sidebar = document.querySelector('.main-sidebar');
+            const overlay = document.querySelector('.mobile-nav-overlay');
+            const toggle = document.querySelector('.mobile-nav-toggle');
+            
+            if (overlay && overlay.classList.contains('show') && 
+                !sidebar.contains(e.target) && 
+                !toggle.contains(e.target)) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        });
+        
+        // Add mobile nav toggle button
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.main-header');
+            if (header && window.innerWidth <= 768) {
+                const toggleButton = document.createElement('button');
+                toggleButton.className = 'mobile-nav-toggle';
+                toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+                toggleButton.onclick = toggleMobileNav;
+                header.appendChild(toggleButton);
+                
+                // Add overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'mobile-nav-overlay';
+                overlay.onclick = toggleMobileNav;
+                document.body.appendChild(overlay);
+            }
+        });
+
+        // Enhanced Navigation JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global search functionality
+            const globalSearch = document.getElementById('global-search');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    if (searchTerm.length > 2) {
+                        // Implement search functionality here
+                        console.log('Searching for:', searchTerm);
+                    }
+                });
+
+                // Keyboard shortcut for search
+                document.addEventListener('keydown', function(e) {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                        e.preventDefault();
+                        globalSearch.focus();
+                    }
+                });
+            }
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const body = document.body;
+
+            if (themeToggle && themeIcon) {
+                // Check for saved theme preference or default to 'light'
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                body.classList.toggle('dark', currentTheme === 'dark');
+                themeIcon.classList.toggle('fa-moon', currentTheme === 'light');
+                themeIcon.classList.toggle('fa-sun', currentTheme === 'dark');
+
+                themeToggle.addEventListener('click', function() {
+                    const isDark = body.classList.contains('dark');
+                    body.classList.toggle('dark');
+                    themeIcon.classList.toggle('fa-moon');
+                    themeIcon.classList.toggle('fa-sun');
+                    
+                    // Save theme preference
+                    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+                });
+            }
+
+            // Dropdown functionality
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('[data-toggle="dropdown"]');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                if (toggle && menu) {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Close other dropdowns
+                        dropdowns.forEach(otherDropdown => {
+                            if (otherDropdown !== dropdown) {
+                                otherDropdown.querySelector('.dropdown-menu').classList.remove('show');
+                            }
+                        });
+                        
+                        // Toggle current dropdown
+                        menu.classList.toggle('show');
+                    });
+                }
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdowns.forEach(dropdown => {
+                        dropdown.querySelector('.dropdown-menu').classList.remove('show');
+                    });
+                }
+            });
+
+            // Sidebar collapse functionality
+            const sidebarToggle = document.querySelector('[data-widget="pushmenu"]');
+            const sidebar = document.querySelector('.main-sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sidebar.classList.toggle('sidebar-collapse');
+                    localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('sidebar-collapse'));
+                });
+
+                // Restore sidebar state
+                const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+                if (isCollapsed) {
+                    sidebar.classList.add('sidebar-collapse');
+                }
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Loading states for buttons
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.type === 'submit' && this.form) {
+                        this.classList.add('btn-loading');
+                        this.disabled = true;
+                    }
+                });
+            });
+
+            // Auto-hide alerts after 5 seconds
+            document.querySelectorAll('.alert').forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+    
+    <!-- Sidebar Toggle JavaScript -->
+    <script>
+        function toggleSidebar() {
+            const wrapper = document.querySelector('.wrapper');
+            const sidebar = document.querySelector('.main-sidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            
+            if (wrapper.classList.contains('sidebar-collapsed')) {
+                // Show sidebar
+                wrapper.classList.remove('sidebar-collapsed');
+                sidebar.style.transform = 'translateX(0)';
+                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            } else {
+                // Hide sidebar
+                wrapper.classList.add('sidebar-collapsed');
+                sidebar.style.transform = 'translateX(-100%)';
+                toggleBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
+            }
+        }
+        
+        // Auto-hide sidebar on mobile
+        function handleResize() {
+            const wrapper = document.querySelector('.wrapper');
+            if (window.innerWidth < 768) {
+                wrapper.classList.add('sidebar-collapsed');
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            handleResize();
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
+    
+    <!-- Floating AI Assistant for Students -->
+    {% if user.is_authenticated and user.user_type == '3' %}
+        {% include "includes/floating_ai_assistant.html" %}
+    {% endif %}
 </body>
 
 </html>

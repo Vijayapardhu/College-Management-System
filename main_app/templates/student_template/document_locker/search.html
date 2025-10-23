@@ -1,0 +1,268 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .search-header {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-left: 4px solid #003d82;
+        border-radius: 4px;
+        padding: 25px 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-filters {
+        background: #f5f5f5;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .results-summary {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .document-list-item {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .document-list-item:hover {
+        border-color: #003d82;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .document-list-item.important {
+        border-left: 4px solid #ffc107;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-file me-2"></i>{{page_title}}
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                Manage and organize your data efficiently
+            </p>
+        </div>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Search Header -->
+        <div class="search-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin-bottom: 5px;">
+                        <i class="fas fa-search me-2"></i>Search Documents
+                    </h2>
+                    <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                        Find documents by name, category, date, or tags
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="{% url 'student_document_locker' %}" class="btn btn-professional-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Locker
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Filters -->
+        <div class="search-filters">
+            <form method="GET" class="row g-3">
+                <!-- Search Query -->
+                <div class="col-md-4">
+                    <label class="form-label">Search Keywords</label>
+                    <input type="text" 
+                           name="q" 
+                           class="form-control" 
+                           placeholder="Search by title, description, or tags"
+                           value="{{ query }}">
+                </div>
+
+                <!-- Category Filter -->
+                <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for category_key, category_info in categories.items %}
+                        <option value="{{ category_key }}" {% if category_key == selected_category %}selected{% endif %}>
+                            {{ category_info.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Date From -->
+                <div class="col-md-2">
+                    <label class="form-label">From Date</label>
+                    <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+                </div>
+
+                <!-- Date To -->
+                <div class="col-md-2">
+                    <label class="form-label">To Date</label>
+                    <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Summary -->
+        {% if query or selected_category or date_from or date_to %}
+        <div class="results-summary">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ total_results }}</strong> document{{ total_results|pluralize }} found
+                    {% if query %}
+                    for "<strong>{{ query }}</strong>"
+                    {% endif %}
+                </div>
+                <a href="{% url 'search_my_documents' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-times me-1"></i>Clear Filters
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Search Results -->
+        {% if documents %}
+        <div>
+            {% for doc in documents %}
+            <div class="document-list-item {% if doc.is_important %}important{% endif %}">
+                <div class="row align-items-center">
+                    <div class="col-md-1 text-center">
+                        <i class="{{ categories|dict_get:doc.category|dict_get:'icon'|default:'fas fa-file' }}" 
+                           style="font-size: 36px; color: #003d82;"></i>
+                    </div>
+                    
+                    <div class="col-md-7">
+                        <div class="d-flex align-items-center mb-1">
+                            <h6 style="margin: 0; color: #1a202c; font-weight: 600;">
+                                {{ doc.title }}
+                            </h6>
+                            {% if doc.is_important %}
+                            <i class="fas fa-star text-warning ms-2" title="Important"></i>
+                            {% endif %}
+                        </div>
+                        <div style="font-size: 13px; color: #4a5568;">
+                            <span class="badge bg-secondary me-2">{{ doc.category|title }}</span>
+                            <i class="fas fa-calendar me-1"></i>{{ doc.uploaded_at|date:"d M Y" }}
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-file me-1"></i>{{ doc.file.size|filesizeformat }}
+                        </div>
+                        {% if doc.description %}
+                        <p style="font-size: 13px; color: #4a5568; margin: 8px 0 0 0;">
+                            {{ doc.description|truncatewords:20 }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4 text-end">
+                        <a href="{% url 'view_document_detail' doc.id %}" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="fas fa-eye me-1"></i>View
+                        </a>
+                        <a href="{% url 'download_document' doc.id %}" class="btn btn-sm btn-success">
+                            <i class="fas fa-download me-1"></i>Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if documents.has_other_pages %}
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {% if documents.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ documents.previous_page_number }}&q={{ query }}&category={{ selected_category }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                                Previous
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">
+                                Page {{ documents.number }} of {{ documents.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if documents.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ documents.next_page_number }}&q={{ query }}&category={{ selected_category }}&date_from={{ date_from }}&date_to={{ date_to }}">
+                                Next
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- No Results -->
+        <div style="text-align: center; padding: 60px 20px; background: white; border: 1px solid #e5e5e5; border-radius: 4px;">
+            <i class="fas fa-search" style="font-size: 64px; color: #d4d4d4; margin-bottom: 20px;"></i>
+            <h4 style="color: #1a202c; margin-bottom: 10px;">No Documents Found</h4>
+            <p class="text-muted mb-4">
+                {% if query or selected_category or date_from or date_to %}
+                Try adjusting your search filters
+                {% else %}
+                Start by uploading your first document
+                {% endif %}
+            </p>
+            <a href="{% url 'upload_document' %}" class="btn btn-professional-primary">
+                <i class="fas fa-upload me-2"></i>Upload Document
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+// Auto-submit on filter change
+$('select[name="category"]').on('change', function() {
+    $(this).closest('form').submit();
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+

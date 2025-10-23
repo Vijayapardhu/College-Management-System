@@ -1,158 +1,325 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}Semester Details{% endblock %}
 
 {% block content %}
 <section class="content">
     <div class="container-fluid">
-        <div class="card">
-            <div class="card-header bg-primary">
-                <h3 class="card-title">
-                    <i class="fas fa-file-alt"></i> Detailed Marksheet - Semester {{ semester_result.semester }}
-                </h3>
-                <div class="card-tools">
-                    <button class="btn btn-light btn-sm" onclick="window.print()">
-                        <i class="fas fa-print"></i> Print
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <!-- Student Info -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <p><strong>Student Name:</strong> {{ student.admin.first_name }} {{ student.admin.last_name }}</p>
-                        <p><strong>Roll Number:</strong> {{ student.roll_number|default:"N/A" }}</p>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <p><strong>Course:</strong> {{ student.course.name }}</p>
-                        <p><strong>Session:</strong> {{ semester_result.session }}</p>
-                    </div>
-                </div>
-                
-                <!-- Overall Performance -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="info-box bg-info">
-                            <span class="info-box-icon"><i class="fas fa-graduation-cap"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">SGPA</span>
-                                <span class="info-box-number">{{ semester_result.sgpa|default:"N/A" }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="info-box bg-success">
-                            <span class="info-box-icon"><i class="fas fa-chart-line"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">CGPA</span>
-                                <span class="info-box-number">{{ semester_result.cgpa|default:"N/A" }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="info-box bg-warning">
-                            <span class="info-box-icon"><i class="fas fa-percent"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Percentage</span>
-                                <span class="info-box-number">{{ semester_result.percentage|default:"N/A" }}%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="info-box {% if semester_result.has_backlogs %}bg-danger{% else %}bg-success{% endif %}">
-                            <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Backlogs</span>
-                                <span class="info-box-number">{{ semester_result.number_of_backlogs }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Subject-wise Results -->
-                <h5 class="mb-3">Subject-wise Performance</h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Subject</th>
-                                <th>Credits</th>
-                                <th>Internal</th>
-                                <th>External</th>
-                                <th>Total</th>
-                                <th>Max Marks</th>
-                                <th>Grade</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for subject_result in subject_results %}
-                            <tr {% if not subject_result.is_pass %}class="table-danger"{% endif %}>
-                                <td><strong>{{ subject_result.subject.name }}</strong></td>
-                                <td class="text-center">{{ subject_result.credits }}</td>
-                                <td class="text-center">{{ subject_result.internal_marks }}</td>
-                                <td class="text-center">{{ subject_result.external_marks }}</td>
-                                <td class="text-center"><strong>{{ subject_result.total_marks }}</strong></td>
-                                <td class="text-center">{{ subject_result.max_marks }}</td>
-                                <td class="text-center">
-                                    <span class="badge {% if subject_result.grade == 'O' %}badge-success{% elif subject_result.grade == 'F' %}badge-danger{% else %}badge-primary{% endif %}">
-                                        {{ subject_result.grade }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    {% if subject_result.is_pass %}
-                                        <span class="badge badge-success">PASS</span>
-                                    {% else %}
-                                        <span class="badge badge-danger">FAIL</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot class="font-weight-bold bg-light">
-                            <tr>
-                                <td colspan="2">TOTAL</td>
-                                <td colspan="2" class="text-center">{{ semester_result.credits_earned }} / {{ semester_result.total_credits }} Credits</td>
-                                <td class="text-center">{{ semester_result.marks_obtained }}</td>
-                                <td class="text-center">{{ semester_result.total_marks }}</td>
-                                <td colspan="2"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                
-                {% if semester_result.remarks %}
-                <div class="alert alert-warning mt-3">
-                    <strong>Remarks:</strong> {{ semester_result.remarks }}
-                </div>
-                {% endif %}
-                
-                <div class="text-muted small text-center mt-4">
-                    Published on: {{ semester_result.published_date|date:"d M Y" }}
-                </div>
-            </div>
-            <div class="card-footer no-print">
-                <button class="btn btn-primary" onclick="window.print()">
-                    <i class="fas fa-print"></i> Print Marksheet
-                </button>
-                <a href="{% url 'student_view_semester_results' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Results
-                </a>
-            </div>
+        <!-- Page Header -->
+        <div class="page-header-professional">
+            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
+                <i class="fas fa-graduation-cap me-2"></i>Semester Details
+            </h2>
+            <p style="font-size: 14px; color: #4a5568; margin: 0;">
+                View detailed information about your current semester
+            </p>
         </div>
+
+        <div class="row">
+            <!-- Semester Overview -->
+            <div class="col-lg-8">
+                <div class="card-professional mb-4">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-info-circle me-2"></i>Semester Overview
+                        </h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="semester-info-grid">
+                            <div class="info-card">
+                                <i class="fas fa-calendar-alt text-primary"></i>
+                                <div>
+                                    <h6>Semester Period</h6>
+                                    <p>Aug 2024 - Dec 2024</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <i class="fas fa-book text-success"></i>
+                                <div>
+                                    <h6>Total Subjects</h6>
+                                    <p>6 Subjects</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <i class="fas fa-credit-card text-info"></i>
+                                <div>
+                                    <h6>Total Credits</h6>
+                                    <p>24 Credits</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <i class="fas fa-chart-line text-warning"></i>
+                                <div>
+                                    <h6>Current CGPA</h6>
+                                    <p>8.5/10.0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Details -->
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-list me-2"></i>Subject Details
+                        </h3>
+                    </div>
+                    <div style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="table table-professional mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Subject Code</th>
+                                        <th>Subject Name</th>
+                                        <th>Credits</th>
+                                        <th>Faculty</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>MATH101</strong></td>
+                                        <td>Calculus and Linear Algebra</td>
+                                        <td>4</td>
+                                        <td>Dr. John Smith</td>
+                                        <td><span class="badge-professional-success">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PHYS101</strong></td>
+                                        <td>Physics I</td>
+                                        <td>4</td>
+                                        <td>Dr. Sarah Johnson</td>
+                                        <td><span class="badge-professional-success">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CHEM101</strong></td>
+                                        <td>Chemistry I</td>
+                                        <td>3</td>
+                                        <td>Dr. Michael Brown</td>
+                                        <td><span class="badge-professional-success">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CS101</strong></td>
+                                        <td>Programming Fundamentals</td>
+                                        <td>4</td>
+                                        <td>Dr. Emily Davis</td>
+                                        <td><span class="badge-professional-success">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ENG101</strong></td>
+                                        <td>Technical Communication</td>
+                                        <td>3</td>
+                                        <td>Prof. Lisa Wilson</td>
+                                        <td><span class="badge-professional-success">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>HUM101</strong></td>
+                                        <td>Humanities and Social Sciences</td>
+                                        <td>3</td>
+                                        <td>Dr. Robert Taylor</td>
+                                        <td><span class="badge-professional-success">Active</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="col-lg-4">
+                <!-- Academic Progress -->
+                <div class="card-professional mb-4">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-chart-pie me-2"></i>Academic Progress
+                        </h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Overall Attendance</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Assignments Completed</span>
+                                <span>12/15</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-info" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Exams Taken</span>
+                                <span>3/6</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Dates -->
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 style="font-size: 18px;">
+                            <i class="fas fa-calendar-check me-2"></i>Important Dates
+                        </h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="date-item">
+                            <div class="date-marker warning"></div>
+                            <div class="date-content">
+                                <h6>Mid-term Exams</h6>
+                                <p>Dec 15 - Dec 20, 2024</p>
+                            </div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-marker info"></div>
+                            <div class="date-content">
+                                <h6>Assignment Submission</h6>
+                                <p>Dec 25, 2024</p>
+                            </div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-marker success"></div>
+                            <div class="date-content">
+                                <h6>Final Exams</h6>
+                                <p>Jan 15 - Jan 25, 2025</p>
+                            </div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-marker primary"></div>
+                            <div class="date-content">
+                                <h6>Results Declaration</h6>
+                                <p>Feb 5, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <style>
-@media print {
-    .no-print, .main-sidebar, .main-header, .content-header {
-        display: none !important;
-    }
+.semester-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #003d82;
+}
+
+.info-card i {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.info-card h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #1a202c;
+}
+
+.info-card p {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+    color: #003d82;
+}
+
+.progress-item {
+    margin-bottom: 20px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background: #e5e5e5;
+}
+
+.progress-bar {
+    border-radius: 4px;
+}
+
+.date-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.date-item:last-child {
+    border-bottom: none;
+}
+
+.date-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.date-marker.warning { background: #b45309; }
+.date-marker.info { background: #0369a1; }
+.date-marker.success { background: #0f7c4f; }
+.date-marker.primary { background: #003d82; }
+
+.date-content h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #1a202c;
+}
+
+.date-content p {
+    font-size: 12px;
+    color: #4a5568;
+    margin: 0;
+}
+
+.badge-professional-success {
+    background: #0f7c4f;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
 }
 </style>
 {% endblock content %}
+
+
+
+
+
 
 
 

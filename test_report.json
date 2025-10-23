@@ -1,0 +1,88 @@
+{
+  "timestamp": "2025-10-23T01:08:59.835369",
+  "summary": {
+    "total_tests": 9,
+    "successful": 9,
+    "warnings": 1,
+    "errors": 2
+  },
+  "errors": [
+    {
+      "page": "Login Page",
+      "type": "Form Error",
+      "message": "Email input not found",
+      "details": null,
+      "timestamp": "2025-10-23T01:08:58.387291"
+    },
+    {
+      "page": "Broken Links",
+      "type": "Dead link (405)",
+      "message": "URL: /public/",
+      "details": null,
+      "timestamp": "2025-10-23T01:08:59.577328"
+    }
+  ],
+  "warnings": [
+    {
+      "page": "Landing Page",
+      "message": "No login form found",
+      "timestamp": "2025-10-23T01:08:56.724010"
+    }
+  ],
+  "test_results": [
+    {
+      "page": "Landing Page",
+      "status": "success",
+      "message": "Page loaded without errors",
+      "timestamp": "2025-10-23T01:08:56.720342"
+    },
+    {
+      "page": "Public Info",
+      "status": "success",
+      "message": "Page loaded successfully",
+      "timestamp": "2025-10-23T01:08:57.559779"
+    },
+    {
+      "page": "/admin/home/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.698919"
+    },
+    {
+      "page": "/hod-dashboard/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.746797"
+    },
+    {
+      "page": "/department-management/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.783735"
+    },
+    {
+      "page": "/department-analytics/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.831626"
+    },
+    {
+      "page": "/user-management-hub/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.882742"
+    },
+    {
+      "page": "/academic-operations/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.930407"
+    },
+    {
+      "page": "/timetable-dashboard/",
+      "status": "success",
+      "message": "Auth protection working - redirected to login",
+      "timestamp": "2025-10-23T01:08:58.970854"
+    }
+  ]
+}

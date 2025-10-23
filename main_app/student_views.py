@@ -14,6 +14,7 @@ from django.db.models import Q
 
 from .forms import *
 from .models import *
+from collections import defaultdict
 
 
 def student_home(request):
@@ -39,6 +40,15 @@ def student_home(request):
         subject_name.append(subject.name)
         data_present.append(present_count)
         data_absent.append(absent_count)
+    # Get public links for dashboard
+    public_links = PublicLink.objects.filter(is_active=True).order_by('display_order', 'title')
+    featured_links = public_links.filter(is_featured=True)
+    
+    # Categorize links
+    categorized_links = defaultdict(list)
+    for link in public_links:
+        categorized_links[link.category].append(link)
+    
     context = {
         'total_attendance': total_attendance,
         'percent_present': percent_present,
@@ -48,10 +58,13 @@ def student_home(request):
         'data_present': data_present,
         'data_absent': data_absent,
         'data_name': subject_name,
+        'public_links': public_links,
+        'featured_links': featured_links,
+        'categorized_links': dict(categorized_links),
+        'current_date': datetime.now(),
         'page_title': 'Student Homepage'
-
     }
-    return render(request, 'student_template/home_content.html', context)
+    return render(request, 'student_template/enhanced_dashboard.html', context)
 
 
 @ csrf_exempt
@@ -207,7 +220,6 @@ def student_view_result(request):
         'page_title': "View Results"
     }
     return render(request, "student_template/student_view_result.html", context)
-
 
 # ==================== NEW STUDENT PORTAL VIEWS ====================
 
@@ -959,3 +971,74 @@ def student_report_ragging(request):
         'form': form
     }
     return render(request, 'student_template/report_ragging.html', context)
+
+
+@login_required(login_url='login')
+def view_materials(request):
+    """Student view study materials"""
+    student = get_object_or_404(Student, admin=request.user)
+    materials = StudyMaterial.objects.filter(subject__course=student.course).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Study Materials',
+        'materials': materials,
+        'student': student
+    }
+    return render(request, 'student_template/view_materials.html', context)
+
+
+@login_required(login_url='login')
+def view_assignments(request):
+    """Student view assignments"""
+    student = get_object_or_404(Student, admin=request.user)
+    assignments = Assignment.objects.filter(subject__course=student.course).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Assignments',
+        'assignments': assignments,
+        'student': student
+    }
+    return render(request, 'student_template/view_assignments.html', context)
+
+
+@login_required(login_url='login')
+def view_submissions(request):
+    """Student view their assignment submissions"""
+    student = get_object_or_404(Student, admin=request.user)
+    submissions = AssignmentSubmission.objects.filter(student=student).order_by('-submitted_at')
+    
+    context = {
+        'page_title': 'My Submissions',
+        'submissions': submissions,
+        'student': student
+    }
+    return render(request, 'student_template/view_submissions.html', context)
+
+
+@login_required(login_url='login')
+def view_online_exam(request):
+    """Student view online exams"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import Quiz
+    quizzes = Quiz.objects.filter(subject__course=student.course, is_active=True).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Online Exams',
+        'quizzes': quizzes,
+        'student': student
+    }
+    return render(request, 'student_template/view_online_exam.html', context)
+
+
+@login_required(login_url='login')
+def view_events(request):
+    """Student view events"""
+    student = get_object_or_404(Student, admin=request.user)
+    events = Event.objects.filter(is_approved=True).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Events',
+        'events': events,
+        'student': student
+    }
+    return render(request, 'student_template/view_events.html', context)
