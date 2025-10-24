@@ -1,183 +1,257 @@
-<!-- Staff Navigation -->
-<li class="nav-item">
-    <a href="{% url 'staff_home' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-tachometer-alt"></i>
-        <p>Dashboard</p>
-    </a>
-</li>
+<!-- Staff/Faculty Navigation -->
+<nav class="sidebar-nav">
+    <!-- Navigation Menu -->
+    <ul class="space-y-1 px-3">
+        <!-- Dashboard Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-tachometer-alt mr-2"></i>
+                Dashboard
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'staff_home' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <span class="nav-text">Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_modern_dashboard' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<!-- Teaching Section -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">TEACHING</li>
+        <!-- Teaching Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-chalkboard-teacher mr-2"></i>
+                Teaching
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'staff_take_attendance' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-user-check"></i>
+                        <span class="nav-text">Take Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_update_attendance' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <span class="nav-text">Update Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'enter_marks' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <span class="nav-text">Enter Marks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'upload_material' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-upload"></i>
+                        <span class="nav-text">Upload Materials</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'create_assignment' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <span class="nav-text">Create Assignment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_submissions' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <span class="nav-text">View Submissions</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'staff_take_attendance' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-user-check"></i>
-        <p>Take Attendance</p>
-    </a>
-</li>
+        <!-- Academic Management -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Academic Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'view_timetable' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <span class="nav-text">Timetable</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_results' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <span class="nav-text">Results</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'create_online_exam' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-laptop"></i>
+                        <span class="nav-text">Online Exams</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'my_online_exams' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-list"></i>
+                        <span class="nav-text">My Exams</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'staff_update_attendance' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-edit"></i>
-        <p>Update Attendance</p>
-    </a>
-</li>
+        <!-- Student Management -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-user-graduate mr-2"></i>
+                Student Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'view_assignments' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <span class="nav-text">Assignments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_materials' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-book"></i>
+                        <span class="nav-text">Study Materials</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'gate_pass_approvals' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-door-open"></i>
+                        <span class="nav-text">Gate Pass Approvals</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'enter_marks' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-chart-line"></i>
-        <p>Enter Marks</p>
-    </a>
-</li>
+        <!-- Communication -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-comments mr-2"></i>
+                Communication
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'view_messages' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-envelope"></i>
+                        <span class="nav-text">Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_view_notification' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-bell"></i>
+                        <span class="nav-text">Notifications</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'discussions' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-comments"></i>
+                        <span class="nav-text">Discussions</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'upload_material' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-upload"></i>
-        <p>Upload Materials</p>
-    </a>
-</li>
+        <!-- Personal -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-user mr-2"></i>
+                Personal
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'staff_view_profile' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-user"></i>
+                        <span class="nav-text">My Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_apply_leave' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-calendar-times"></i>
+                        <span class="nav-text">Apply Leave</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'staff_feedback' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-comment-dots"></i>
+                        <span class="nav-text">Feedback</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'create_assignment' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-tasks"></i>
-        <p>Create Assignment</p>
-    </a>
-</li>
+        <!-- Research -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-microscope mr-2"></i>
+                Research
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'add_research' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-plus"></i>
+                        <span class="nav-text">Add Research</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'my_research' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-microscope"></i>
+                        <span class="nav-text">My Research</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'view_submissions' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-file-alt"></i>
-        <p>View Submissions</p>
-    </a>
-</li>
-
-<!-- Academic Management -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">ACADEMIC MANAGEMENT</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_timetable' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-calendar-alt"></i>
-        <p>Timetable</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_results' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-chart-bar"></i>
-        <p>Results</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'create_online_exam' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-laptop"></i>
-        <p>Online Exams</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'my_online_exams' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-list"></i>
-        <p>My Exams</p>
-    </a>
-</li>
-
-<!-- Student Management -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">STUDENT MANAGEMENT</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_assignments' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-tasks"></i>
-        <p>Assignments</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_materials' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-book"></i>
-        <p>Study Materials</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'gate_pass_approvals' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-door-open"></i>
-        <p>Gate Pass Approvals</p>
-    </a>
-</li>
-
-<!-- Communication -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">COMMUNICATION</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_messages' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-envelope"></i>
-        <p>Messages</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'staff_view_notification' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-bell"></i>
-        <p>Notifications</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'discussions' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-comments"></i>
-        <p>Discussions</p>
-    </a>
-</li>
-
-<!-- Personal -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">PERSONAL</li>
-
-<li class="nav-item">
-    <a href="{% url 'staff_view_profile' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-user"></i>
-        <p>My Profile</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'staff_apply_leave' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-calendar-times"></i>
-        <p>Apply Leave</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'staff_feedback' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-comment-dots"></i>
-        <p>Feedback</p>
-    </a>
-</li>
-
-<!-- Research -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">RESEARCH</li>
-
-<li class="nav-item">
-    <a href="{% url 'add_research' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-plus"></i>
-        <p>Add Research</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'my_research' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-microscope"></i>
-        <p>My Research</p>
-    </a>
-</li>
-
-<!-- Logout -->
-<li class="nav-item mt-3">
-    <a href="{% url 'user_logout' %}" class="nav-link text-danger" onclick="return confirm('Are you sure you want to logout?')">
-        <i class="nav-icon fas fa-sign-out-alt"></i>
-        <p>Logout</p>
-    </a>
-</li>
+        <!-- Logout -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Account
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'user_logout' %}" 
+                       class="nav-item nav-item-inactive group text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" 
+                       onclick="return confirm('Are you sure you want to logout?')">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
 
 
 

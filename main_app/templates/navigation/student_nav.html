@@ -1,128 +1,181 @@
 <!-- Student Navigation -->
-<li class="nav-item">
-    <a href="{% url 'student_home' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-tachometer-alt"></i>
-        <p>Dashboard</p>
-    </a>
-</li>
+<nav class="sidebar-nav">
+    <!-- Navigation Menu -->
+    <ul class="space-y-1 px-3">
+        <!-- Dashboard Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-tachometer-alt mr-2"></i>
+                Dashboard
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'student_home' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <span class="nav-text">Overview</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<!-- Academic Section -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">ACADEMIC</li>
+        <!-- Academic Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Academic
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'student_view_attendance' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-user-check"></i>
+                        <span class="nav-text">Attendance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'student_view_result' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <span class="nav-text">Results</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_timetable' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <span class="nav-text">Timetable</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_assignments' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-tasks"></i>
+                        <span class="nav-text">Assignments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_materials' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-book"></i>
+                        <span class="nav-text">Study Materials</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'student_view_attendance' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-user-check"></i>
-        <p>Attendance</p>
-    </a>
-</li>
+        <!-- Services Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-concierge-bell mr-2"></i>
+                Services
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'student_apply_leave' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-calendar-times"></i>
+                        <span class="nav-text">Apply Leave</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'gate_pass' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-door-open"></i>
+                        <span class="nav-text">Gate Pass</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'request_certificate' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-certificate"></i>
+                        <span class="nav-text">Certificates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'view_fee_structure' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-credit-card"></i>
+                        <span class="nav-text">Fee Structure</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'student_view_result' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-chart-line"></i>
-        <p>Results</p>
-    </a>
-</li>
+        <!-- Communication Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-comments mr-2"></i>
+                Communication
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'view_messages' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-envelope"></i>
+                        <span class="nav-text">Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'student_view_notification' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-bell"></i>
+                        <span class="nav-text">Notifications</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'discussions' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-comments"></i>
+                        <span class="nav-text">Discussions</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'view_timetable' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-calendar-alt"></i>
-        <p>Timetable</p>
-    </a>
-</li>
+        <!-- Profile Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-user mr-2"></i>
+                Profile
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'student_view_profile' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-user"></i>
+                        <span class="nav-text">My Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'student_feedback' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-comment-dots"></i>
+                        <span class="nav-text">Feedback</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-<li class="nav-item">
-    <a href="{% url 'view_assignments' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-tasks"></i>
-        <p>Assignments</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_materials' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-book"></i>
-        <p>Study Materials</p>
-    </a>
-</li>
-
-<!-- Services Section -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">SERVICES</li>
-
-<li class="nav-item">
-    <a href="{% url 'student_apply_leave' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-calendar-times"></i>
-        <p>Apply Leave</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'gate_pass' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-door-open"></i>
-        <p>Gate Pass</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'request_certificate' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-certificate"></i>
-        <p>Certificates</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_fee_structure' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-credit-card"></i>
-        <p>Fee Structure</p>
-    </a>
-</li>
-
-<!-- Communication Section -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">COMMUNICATION</li>
-
-<li class="nav-item">
-    <a href="{% url 'view_messages' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-envelope"></i>
-        <p>Messages</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'student_view_notification' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-bell"></i>
-        <p>Notifications</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'discussions' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-comments"></i>
-        <p>Discussions</p>
-    </a>
-</li>
-
-<!-- Profile Section -->
-<li class="nav-header text-light opacity-75 mt-3 mb-2">PROFILE</li>
-
-<li class="nav-item">
-    <a href="{% url 'student_view_profile' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-user"></i>
-        <p>My Profile</p>
-    </a>
-</li>
-
-<li class="nav-item">
-    <a href="{% url 'student_feedback' %}" class="nav-link text-white">
-        <i class="nav-icon fas fa-comment-dots"></i>
-        <p>Feedback</p>
-    </a>
-</li>
-
-<!-- Logout -->
-<li class="nav-item mt-3">
-    <a href="{% url 'user_logout' %}" class="nav-link text-danger" onclick="return confirm('Are you sure you want to logout?')">
-        <i class="nav-icon fas fa-sign-out-alt"></i>
-        <p>Logout</p>
-    </a>
-</li>
+        <!-- Logout -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Account
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'user_logout' %}" 
+                       class="nav-item nav-item-inactive group text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" 
+                       onclick="return confirm('Are you sure you want to logout?')">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
 
 
 

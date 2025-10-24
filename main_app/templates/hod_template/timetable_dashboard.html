@@ -1,0 +1,271 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block content %}
+<!-- Timetable Dashboard -->
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    Timetable Dashboard
+                </h2>
+                <p class="text-gray-600">Manage and organize class schedules</p>
+            </div>
+            <div class="flex space-x-3">
+                <a href="{% url 'create_timetable' %}" class="btn btn-primary">
+                    <i class="fas fa-plus mr-2"></i>
+                    Create Timetable
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary">
+            <div class="metric-icon metric-icon-primary">
+                <i class="fas fa-calendar"></i>
+            </div>
+            <div class="metric-value" data-count="{{total_timetables}}">0</div>
+            <div class="metric-label">Total Timetables</div>
+        </div>
+
+        <div class="metric-card metric-card-success">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="metric-value">5</div>
+            <div class="metric-label">Days/Week</div>
+        </div>
+
+        <div class="metric-card metric-card-warning">
+            <div class="metric-icon metric-icon-warning">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="metric-value">8</div>
+            <div class="metric-label">Periods/Day</div>
+        </div>
+
+        <div class="metric-card metric-card-info">
+            <div class="metric-icon metric-icon-info">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="metric-value">{{timetables.count}}</div>
+            <div class="metric-label">Active Schedules</div>
+        </div>
+    </div>
+
+    <!-- Timetables List -->
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">
+                <i class="fas fa-list mr-2"></i>
+                Recent Timetables
+            </h3>
+            <div class="flex items-center space-x-2">
+                <input type="text" 
+                       placeholder="Search timetables..." 
+                       class="form-input text-sm"
+                       id="search-timetable">
+                <button class="btn btn-outline btn-sm">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
+        <div class="dashboard-card-body p-0">
+            {% if timetables %}
+            <div class="overflow-x-auto">
+                <table class="modern-table w-full" id="timetableTable">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left">ID</th>
+                            <th class="px-6 py-3 text-left">Course/Class</th>
+                            <th class="px-6 py-3 text-left">Semester</th>
+                            <th class="px-6 py-3 text-left">Academic Year</th>
+                            <th class="px-6 py-3 text-left">Created Date</th>
+                            <th class="px-6 py-3 text-left">Status</th>
+                            <th class="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for timetable in timetables %}
+                        <tr>
+                            <td class="px-6 py-4">#{{timetable.id}}</td>
+                            <td class="px-6 py-4">
+                                <div class="font-semibold text-gray-900">
+                                    {{timetable.course.name|default:"N/A"}}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="badge badge-primary">
+                                    Semester {{timetable.semester|default:"1"}}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{timetable.academic_year|default:"2024-25"}}</td>
+                            <td class="px-6 py-4">{{timetable.created_at|date:"M d, Y"}}</td>
+                            <td class="px-6 py-4">
+                                <span class="badge badge-success">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    Active
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end space-x-2">
+                                    <a href="{% url 'view_timetable' timetable.id %}" 
+                                       class="btn btn-sm btn-outline"
+                                       title="View Timetable">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'edit_timetable' timetable.id %}" 
+                                       class="btn btn-sm btn-primary"
+                                       title="Edit Timetable">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button onclick="deleteTimetable({{timetable.id}})" 
+                                            class="btn btn-sm bg-red-500 hover:bg-red-600 text-white"
+                                            title="Delete Timetable">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
+                <h4 class="text-xl font-semibold text-gray-900 mb-2">No Timetables Found</h4>
+                <p class="text-gray-600 mb-4">Get started by creating your first timetable</p>
+                <a href="{% url 'create_timetable' %}" class="btn btn-primary">
+                    <i class="fas fa-plus mr-2"></i>
+                    Create First Timetable
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="{% url 'create_timetable' %}" class="action-card group">
+            <div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200">
+                <span class="text-3xl">📅</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Create Timetable</h3>
+            <p class="text-sm text-gray-600">Set up a new class schedule</p>
+            <div class="mt-4">
+                <span class="text-xs font-semibold text-blue-600 group-hover:text-blue-700">
+                    Get Started →
+                </span>
+            </div>
+        </a>
+
+        <a href="#" class="action-card group">
+            <div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200">
+                <span class="text-3xl">📊</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">View Reports</h3>
+            <p class="text-sm text-gray-600">Analyze schedule efficiency</p>
+            <div class="mt-4">
+                <span class="text-xs font-semibold text-green-600 group-hover:text-green-700">
+                    View Reports →
+                </span>
+            </div>
+        </a>
+
+        <a href="#" class="action-card group">
+            <div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200">
+                <span class="text-3xl">⚙️</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Settings</h3>
+            <p class="text-sm text-gray-600">Configure timetable options</p>
+            <div class="mt-4">
+                <span class="text-xs font-semibold text-purple-600 group-hover:text-purple-700">
+                    Configure →
+                </span>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DataTable if available
+    if (typeof safeDataTable !== 'undefined') {
+        safeDataTable('#timetableTable', {
+            order: [[4, 'desc']],
+            pageLength: 10
+        });
+    }
+    
+    // Counter animation
+    document.querySelectorAll('[data-count]').forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        const duration = 1000;
+        const increment = target / (duration / 16);
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                counter.textContent = Math.floor(current);
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target;
+            }
+        };
+        
+        updateCounter();
+    });
+    
+    // Search functionality
+    const searchInput = document.getElementById('search-timetable');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#timetableTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+});
+
+function deleteTimetable(id) {
+    if (confirm('Are you sure you want to delete this timetable? This action cannot be undone.')) {
+        // Add AJAX delete functionality here
+        fetch(`/timetable/delete/${id}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error deleting timetable');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting timetable');
+        });
+    }
+}
+</script>
+{% endblock custom_js %}
+
+

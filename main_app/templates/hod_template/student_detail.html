@@ -1,0 +1,168 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Student Details{% endblock page_title %}
+
+{% block content %}
+<!-- Student Detail -->
+<div class="space-y-6">
+    <!-- Student Profile Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-8 text-white">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
+                    {% if student.admin.profile_pic %}
+                        <img src="{{ student.admin.profile_pic.url }}" alt="{{ student.admin.first_name }}" class="w-24 h-24 rounded-2xl object-cover">
+                    {% else %}
+                        <span class="text-4xl font-bold">
+                            {{ student.admin.first_name|first|default:"S"|upper }}{{ student.admin.last_name|first|default:"T"|upper }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">{{ student.admin.first_name|default:"Student" }} {{ student.admin.last_name|default:"Name" }}</h1>
+                    <p class="text-blue-100 mb-3">{{ student.admin.email|default:"student@example.com" }}</p>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-id-card mr-1"></i> Roll: {{ student.roll_number|default:"Not Assigned" }}
+                        </span>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-graduation-cap mr-1"></i> {{ student.course.name|default:"No Course" }}
+                        </span>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-calendar mr-1"></i> {{ student.session_year_id.session_start_year|default:"2024" }}-{{ student.session_year_id.session_end_year|default:"2025" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <a href="{% url 'edit_student' student.id %}" class="btn bg-white text-blue-600 hover:bg-blue-50">
+                    <i class="fas fa-edit mr-2"></i>Edit Profile
+                </a>
+                <button onclick="exportStudentData()" class="btn bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30">
+                    <i class="fas fa-download mr-2"></i>Export Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic Performance -->
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-success">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="metric-value">{{ attendance_percentage|default:"85" }}%</div>
+            <div class="metric-label">Attendance</div>
+        </div>
+
+        <div class="metric-card metric-card-primary">
+            <div class="metric-icon metric-icon-primary">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="metric-value">{{ average_marks|default:"78.5" }}</div>
+            <div class="metric-label">Average Marks</div>
+        </div>
+
+        <div class="metric-card metric-card-info">
+            <div class="metric-icon metric-icon-info">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="metric-value">{{ assignments_completed|default:"12" }}/{{ total_assignments|default:"15" }}</div>
+            <div class="metric-label">Assignments</div>
+        </div>
+
+        <div class="metric-card metric-card-warning">
+            <div class="metric-icon metric-icon-warning">
+                <i class="fas fa-coins"></i>
+            </div>
+            <div class="metric-value">₹{{ fees_pending|default:"5000" }}</div>
+            <div class="metric-label">Fees Pending</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="border-b border-gray-200">
+            <nav class="flex space-x-4 p-4">
+                <button class="tab-item tab-item-active" onclick="showTab('overview')">Overview</button>
+                <button class="tab-item" onclick="showTab('attendance')">Attendance</button>
+                <button class="tab-item" onclick="showTab('results')">Results</button>
+                <button class="tab-item" onclick="showTab('fees')">Fees</button>
+                <button class="tab-item" onclick="showTab('activities')">Activities</button>
+            </nav>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-6">
+            <div id="tab-overview">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Student Overview</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Personal Information</h4>
+                        <dl class="space-y-2">
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Full Name</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.admin.first_name }} {{ student.admin.last_name }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Email</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.admin.email }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Gender</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.gender|default:"Not Specified" }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Date of Birth</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.date_of_birth|default:"Not Specified" }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Academic Information</h4>
+                        <dl class="space-y-2">
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Course</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.course.name }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Roll Number</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.roll_number }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Session</dt>
+                                <dd class="font-semibold text-gray-900">{{ student.session_year_id.session_start_year }}-{{ student.session_year_id.session_end_year }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Status</dt>
+                                <dd><span class="badge badge-success">Active</span></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+function showTab(tabName) {
+    // Update active tab
+    document.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('tab-item-active');
+    });
+    event.target.classList.add('tab-item-active');
+    
+    // Show/hide content
+    console.log('Showing tab:', tabName);
+}
+
+function exportStudentData() {
+    alert('Exporting student data...');
+}
+</script>
+{% endblock custom_js %}
+
+

@@ -1,0 +1,68 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Base Form Template -->
+<div class="max-w-4xl mx-auto">
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="form-title">
+                <i class="{% block form_icon %}fas fa-edit{% endblock %} mr-2"></i>
+                {% block form_title %}Form{% endblock %}
+            </h2>
+            <p class="form-subtitle">{% block form_subtitle %}Fill in the required information{% endblock %}</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+                    <div class="flex items-center">
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle mr-2"></i>
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Form Content -->
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            {% block form_content %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}form-label-required{% endif %}">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <p class="form-help">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="invalid-feedback">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endblock form_content %}
+
+            <div class="form-actions">
+                <a href="{% block cancel_url %}{% url 'hod_home' %}{% endblock %}" class="btn btn-outline">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-2"></i>
+                    {% block submit_text %}Save{% endblock %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+

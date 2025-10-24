@@ -1,0 +1,191 @@
+/* Global Overrides - Ensure Tailwind Takes Precedence */
+
+/* Reset AdminLTE conflicts */
+.wrapper,
+.content-wrapper,
+.main-sidebar,
+.main-header {
+    background: transparent !important;
+}
+
+/* Ensure smooth transitions globally */
+* {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Remove focus outline from non-keyboard interactions */
+*:focus:not(:focus-visible) {
+    outline: none !important;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent layout shift */
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Card shadows */
+.card,
+.dashboard-card,
+.metric-card,
+.form-container,
+.table-container {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Hover lift for interactive cards */
+.dashboard-card:hover,
+.metric-card:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Button consistency */
+.btn,
+button[type="submit"],
+button[type="button"] {
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Link styling */
+a {
+    color: #6366f1;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #4f46e5;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    color: #1f2937;
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: #f9fafb;
+}
+
+/* Image optimization */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* List styling */
+ul, ol {
+    padding-left: 1.5rem;
+}
+
+/* Table improvements */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Form spacing */
+form > * + * {
+    margin-top: 1.5rem;
+}
+
+/* Tooltip base */
+[title] {
+    cursor: help;
+    position: relative;
+}
+
+/* Code blocks */
+code, pre {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+[data-theme="dark"] code,
+[data-theme="dark"] pre {
+    background-color: #374151;
+    color: #e5e7eb;
+}
+
+/* Selection */
+::selection {
+    background-color: #c7d2fe;
+    color: #1e1b4b;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+/* Ensure responsive images */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Print optimizations */
+@media print {
+    @page {
+        margin: 2cm;
+    }
+    
+    body {
+        background: white !important;
+    }
+    
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+}
+
+

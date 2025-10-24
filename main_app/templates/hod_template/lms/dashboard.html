@@ -1,0 +1,43 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}LMS Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="gradient-header">
+        <h2 class="text-3xl font-bold mb-2">Learning Management System 📚</h2>
+        <p class="text-white/90 text-lg">Comprehensive digital learning platform</p>
+    </div>
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary"><div class="metric-value" data-count="45">0</div><div class="metric-label">Active Courses</div></div>
+        <div class="metric-card metric-card-success"><div class="metric-value" data-count="1250">0</div><div class="metric-label">Enrolled Students</div></div>
+        <div class="metric-card metric-card-info"><div class="metric-value" data-count="320">0</div><div class="metric-label">Study Materials</div></div>
+        <div class="metric-card metric-card-warning"><div class="metric-value" data-count="85">0</div><div class="metric-label">Active Instructors</div></div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="#" class="action-card"><div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200"><span class="text-3xl">📖</span></div><h3 class="text-lg font-bold">Courses</h3><p class="text-sm text-gray-600">Manage course content</p></a>
+        <a href="#" class="action-card"><div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200"><span class="text-3xl">📝</span></div><h3 class="text-lg font-bold">Assignments</h3><p class="text-sm text-gray-600">Track submissions</p></a>
+        <a href="#" class="action-card"><div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200"><span class="text-3xl">📊</span></div><h3 class="text-lg font-bold">Analytics</h3><p class="text-sm text-gray-600">Learning insights</p></a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+document.querySelectorAll('[data-count]').forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'));
+    let current = 0;
+    const timer = setInterval(() => {
+        current += target / 60;
+        if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current);
+        }
+    }, 16);
+});
+</script>
+{% endblock custom_js %}
+
+

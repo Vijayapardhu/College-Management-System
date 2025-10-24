@@ -2,254 +2,224 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
-{% block custom_css %}
-<style>
-    .page-header-professional {
-        background: white;
-        border: 1px solid #e5e5e5;
-        border-left: 4px solid #003d82;
-        border-radius: 4px;
-        padding: 20px 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .attendance-present {
-        background: #d1fae5;
-        border: 1px solid #86efac;
-        border-left: 4px solid #0f7c4f;
-        padding: 15px;
-        border-radius: 4px;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .attendance-absent {
-        background: #fee2e2;
-        border: 1px solid #fca5a5;
-        border-left: 4px solid #b91c1c;
-        padding: 15px;
-        border-radius: 4px;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .summary-card {
-        background: white;
-        border: 1px solid #e5e5e5;
-        border-left: 4px solid;
-        border-radius: 4px;
-        padding: 20px;
-        text-align: center;
-        margin-bottom: 20px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .summary-card.total { border-left-color: #003d82; }
-    .summary-card.present { border-left-color: #0f7c4f; }
-    .summary-card.absent { border-left-color: #b91c1c; }
-    .summary-card.percentage { border-left-color: #0369a1; }
-
-    .stat-number {
-        font-size: 42px;
-        font-weight: 700;
-        margin: 10px 0;
-    }
-</style>
-{% endblock custom_css %}
-
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-calendar-check me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                View your attendance records by subject and date range
-            </p>
-        </div>
-
-        <!-- Filter Card -->
-        <div class="card-professional">
-            <div class="card-header-professional">
-                <h3 style="font-size: 18px;">Select Filters</h3>
-            </div>
-            <div class="card-body-professional">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label-professional">
-                            Select Subject <span class="text-danger">*</span>
-                        </label>
-                        <select id="subject" class="form-select">
-                            <option value="">Choose subject...</option>
-                            {% for subject in subjects %}
-                            <option value="{{subject.id}}">{{subject.name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label-professional">
-                            Start Date <span class="text-danger">*</span>
-                        </label>
-                        <input type="date" class="form-control" id="start_date">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label-professional">
-                            End Date <span class="text-danger">*</span>
-                        </label>
-                        <input type="date" class="form-control" id="end_date">
-                    </div>
-                    <div class="col-md-2 mb-3 d-flex align-items-end">
-                        <button type="button" id="fetch_attendance" class="btn btn-professional-primary w-100">
-                            <i class="fas fa-search me-2"></i>Fetch
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Summary Statistics -->
-        <div id="summary_stats" style="display: none;">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="summary-card total">
-                        <i class="fas fa-calendar-alt" style="font-size: 36px; opacity: 0.15; color: #003d82;"></i>
-                        <div class="stat-number" style="color: #003d82;" id="total_classes">0</div>
-                        <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Total Classes</div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="summary-card present">
-                        <i class="fas fa-check-circle" style="font-size: 36px; opacity: 0.15; color: #0f7c4f;"></i>
-                        <div class="stat-number" style="color: #0f7c4f;" id="present_count">0</div>
-                        <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Present</div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="summary-card absent">
-                        <i class="fas fa-times-circle" style="font-size: 36px; opacity: 0.15; color: #b91c1c;"></i>
-                        <div class="stat-number" style="color: #b91c1c;" id="absent_count">0</div>
-                        <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Absent</div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="summary-card percentage">
-                        <i class="fas fa-percentage" style="font-size: 36px; opacity: 0.15; color: #0369a1;"></i>
-                        <div class="stat-number" style="color: #0369a1;" id="attendance_pct">0%</div>
-                        <div style="font-size: 13px; color: #4a5568; font-weight: 500; text-transform: uppercase;">Attendance</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Attendance Records -->
-        <div id="attendance_data"></div>
+<!-- Student Attendance View -->
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-calendar-check mr-2"></i>
+            My Attendance
+        </h2>
+        <p class="text-gray-600">View your attendance records by subject and date range</p>
     </div>
-</section>
+
+    <!-- Filter Card -->
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">
+                <i class="fas fa-filter mr-2"></i>
+                Filter Attendance
+            </h3>
+        </div>
+        <div class="dashboard-card-body">
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="form-group">
+                    <label for="subject" class="form-label form-label-required">Select Subject</label>
+                    <select id="subject" class="form-select">
+                        <option value="">Choose subject...</option>
+                        {% for subject in subjects %}
+                        <option value="{{subject.id}}">{{subject.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="start_date" class="form-label form-label-required">Start Date</label>
+                    <input type="date" class="form-input" id="start_date">
+                </div>
+                <div class="form-group">
+                    <label for="end_date" class="form-label form-label-required">End Date</label>
+                    <input type="date" class="form-input" id="end_date">
+                </div>
+                <div class="form-group flex items-end">
+                    <button type="button" id="fetch_attendance" class="btn btn-primary w-full">
+                        <i class="fas fa-search mr-2"></i>
+                        Fetch Records
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Statistics -->
+    <div id="summary_stats" style="display: none;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="metric-card metric-card-primary">
+                <div class="metric-icon metric-icon-primary">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="metric-value" id="total_classes">0</div>
+                <div class="metric-label">Total Classes</div>
+            </div>
+            <div class="metric-card metric-card-success">
+                <div class="metric-icon metric-icon-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="metric-value" id="present_count">0</div>
+                <div class="metric-label">Present</div>
+            </div>
+            <div class="metric-card metric-card-error">
+                <div class="metric-icon metric-icon-error">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="metric-value" id="absent_count">0</div>
+                <div class="metric-label">Absent</div>
+            </div>
+            <div class="metric-card metric-card-info">
+                <div class="metric-icon metric-icon-info">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="metric-value" id="attendance_pct">0%</div>
+                <div class="metric-label">Attendance Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Records -->
+    <div id="attendance_data"></div>
+</div>
 {% endblock content %}
 
 {% block custom_js %}
 <script>
-$(document).ready(function () {
-    $("#fetch_attendance").click(function () {
-        var subject = $("#subject").val();
-        var start_date = $("#start_date").val();
-        var end_date = $("#end_date").val();
+document.addEventListener('DOMContentLoaded', function() {
+    const fetchBtn = document.getElementById('fetch_attendance');
+    
+    fetchBtn.addEventListener('click', function() {
+        const subject = document.getElementById('subject').value;
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
         
-        if (!subject || !start_date || !end_date){
-            window.toast.error("Please select subject and date range");
+        if (!subject || !startDate || !endDate) {
+            showAlert('Please select subject and date range', 'error');
             return false;
         }
         
-        window.loader.showPageLoader('Loading attendance...');
-        $("#attendance_data").html('');
+        // Show loading state
+        fetchBtn.classList.add('loading');
+        fetchBtn.disabled = true;
+        document.getElementById('attendance_data').innerHTML = '';
         
         $.ajax({
             url: "{% url 'student_view_attendance' %}",
             type: 'POST',
             data: {
                 subject: subject,
-                start_date: start_date,
-                end_date: end_date
+                start_date: startDate,
+                end_date: endDate
             }
-        }).done(function (response) {
-            window.loader.hidePageLoader();
-            var json_data = JSON.parse(response);
+        }).done(function(response) {
+            fetchBtn.classList.remove('loading');
+            fetchBtn.disabled = false;
             
-            if (json_data.length < 1) {
-                $("#attendance_data").html(`
-                    <div class="empty-state-professional">
-                        <i class="fas fa-calendar-times"></i>
-                        <h4>No Attendance Records</h4>
-                        <p>No attendance data found for the selected period</p>
+            const jsonData = JSON.parse(response);
+            
+            if (jsonData.length < 1) {
+                document.getElementById('attendance_data').innerHTML = `
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-body text-center py-12">
+                            <i class="fas fa-calendar-times text-6xl text-gray-400 mb-4"></i>
+                            <h4 class="text-xl font-semibold text-gray-900 mb-2">No Attendance Records</h4>
+                            <p class="text-gray-600">No attendance data found for the selected period</p>
+                        </div>
                     </div>
-                `);
-                $("#summary_stats").hide();
+                `;
+                document.getElementById('summary_stats').style.display = 'none';
             } else {
                 // Calculate statistics
-                var total = json_data.length;
-                var present = json_data.filter(d => d.status).length;
-                var absent = total - present;
-                var percentage = Math.round((present / total) * 100);
+                const total = jsonData.length;
+                const present = jsonData.filter(d => d.status).length;
+                const absent = total - present;
+                const percentage = Math.round((present / total) * 100);
                 
-                // Update summary
-                $("#total_classes").text(total);
-                $("#present_count").text(present);
-                $("#absent_count").text(absent);
-                $("#attendance_pct").text(percentage + '%');
-                $("#summary_stats").show();
+                // Update summary with animation
+                setTimeout(() => {
+                    document.getElementById('total_classes').textContent = total;
+                    document.getElementById('present_count').textContent = present;
+                    document.getElementById('absent_count').textContent = absent;
+                    document.getElementById('attendance_pct').textContent = percentage + '%';
+                }, 100);
+                
+                document.getElementById('summary_stats').style.display = 'block';
                 
                 // Build attendance grid
-                var div_data = `
-                    <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 25px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
-                        <h5 style="color: #1a202c; font-weight: 600; margin-bottom: 20px;">
-                            <i class="fas fa-list me-2"></i>Attendance Details
-                        </h5>
-                        <div class="row">
+                let divData = `
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-header">
+                            <h3 class="dashboard-card-title">
+                                <i class="fas fa-list mr-2"></i>
+                                Attendance Details
+                            </h3>
+                        </div>
+                        <div class="dashboard-card-body">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 `;
                 
-                for (key in json_data) {
-                    var record = json_data[key];
+                jsonData.forEach(record => {
                     if (record.status) {
-                        div_data += `
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="attendance-present">
-                                    <div style="font-weight: 600; color: #065f46; margin-bottom: 5px;">
-                                        ${record.date}
-                                    </div>
-                                    <div style="font-size: 13px; color: #065f46;">
-                                        <i class="fas fa-check-circle me-1"></i>Present
-                                    </div>
+                        divData += `
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
+                                <div class="font-semibold text-green-700 mb-1">${record.date}</div>
+                                <div class="text-sm text-green-600">
+                                    <i class="fas fa-check-circle mr-1"></i>Present
                                 </div>
                             </div>
                         `;
                     } else {
-                        div_data += `
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="attendance-absent">
-                                    <div style="font-weight: 600; color: #991b1b; margin-bottom: 5px;">
-                                        ${record.date}
-                                    </div>
-                                    <div style="font-size: 13px; color: #991b1b;">
-                                        <i class="fas fa-times-circle me-1"></i>Absent
-                                    </div>
+                        divData += `
+                            <div class="p-4 bg-red-50 border border-red-200 rounded-lg text-center">
+                                <div class="font-semibold text-red-700 mb-1">${record.date}</div>
+                                <div class="text-sm text-red-600">
+                                    <i class="fas fa-times-circle mr-1"></i>Absent
                                 </div>
                             </div>
                         `;
                     }
-                }
+                });
                 
-                div_data += `</div></div>`;
-                $("#attendance_data").html(div_data);
-                window.toast.success(`${total} attendance records loaded`);
+                divData += `</div></div></div>`;
+                document.getElementById('attendance_data').innerHTML = divData;
+                
+                showAlert(`${total} attendance records loaded successfully`, 'success');
             }
-        }).fail(function (response) {
-            window.loader.hidePageLoader();
-            window.toast.error("Error fetching attendance data");
+        }).fail(function() {
+            fetchBtn.classList.remove('loading');
+            fetchBtn.disabled = false;
+            showAlert('Error fetching attendance data', 'error');
         });
     });
+    
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} mb-4`;
+        alertDiv.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'} mr-2"></i>
+                ${message}
+            </div>
+        `;
+        
+        const container = document.querySelector('.space-y-6');
+        if (container) {
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 5000);
+        }
+    }
 });
 </script>
 {% endblock custom_js %}
+

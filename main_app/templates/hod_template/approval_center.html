@@ -1,0 +1,210 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Approval Center{% endblock page_title %}
+
+{% block content %}
+<!-- Approval Center -->
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-clipboard-check mr-2"></i>
+                    Approval Center
+                </h2>
+                <p class="text-gray-600">Review and approve pending requests</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="badge badge-warning text-lg px-4 py-2">
+                    15 Pending
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Filters -->
+    <div class="flex flex-wrap gap-3">
+        <button class="btn btn-primary btn-sm" onclick="filterApprovals('all')">
+            All <span class="ml-2 badge bg-white/30">15</span>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="filterApprovals('leave')">
+            Leave Requests <span class="ml-2 badge badge-primary">8</span>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="filterApprovals('certificates')">
+            Certificates <span class="ml-2 badge badge-success">3</span>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="filterApprovals('documents')">
+            Documents <span class="ml-2 badge badge-info">4</span>
+        </button>
+    </div>
+
+    <!-- Pending Approvals -->
+    <div class="space-y-4" id="approvalsList">
+        <!-- Leave Request -->
+        <div class="dashboard-card approval-card" data-type="leave">
+            <div class="dashboard-card-body">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start space-x-4 flex-1">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-calendar-times text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-bold text-gray-900">Leave Application</h4>
+                                <span class="badge badge-warning">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <strong>Student:</strong> John Doe (Roll: CS2024001)<br>
+                                <strong>Duration:</strong> Oct 25 - Oct 27, 2024 (3 days)<br>
+                                <strong>Reason:</strong> Medical emergency
+                            </p>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i>Submitted 2 hours ago</span>
+                                <span><i class="fas fa-paperclip mr-1"></i>1 Attachment</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2 ml-4">
+                        <button onclick="approveRequest(1, 'leave')" class="btn btn-success btn-sm">
+                            <i class="fas fa-check mr-1"></i>Approve
+                        </button>
+                        <button onclick="rejectRequest(1, 'leave')" class="btn bg-red-500 hover:bg-red-600 text-white btn-sm">
+                            <i class="fas fa-times mr-1"></i>Reject
+                        </button>
+                        <button onclick="viewDetails(1)" class="btn btn-outline btn-sm">
+                            <i class="fas fa-eye mr-1"></i>Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate Request -->
+        <div class="dashboard-card approval-card" data-type="certificates">
+            <div class="dashboard-card-body">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start space-x-4 flex-1">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-certificate text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-bold text-gray-900">Bonafide Certificate Request</h4>
+                                <span class="badge badge-primary">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <strong>Student:</strong> Jane Smith (Roll: CS2024002)<br>
+                                <strong>Purpose:</strong> Bank account opening<br>
+                                <strong>Certificate Type:</strong> Bonafide Certificate
+                            </p>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i>Submitted 1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2 ml-4">
+                        <button onclick="approveRequest(2, 'certificate')" class="btn btn-success btn-sm">
+                            <i class="fas fa-check mr-1"></i>Approve
+                        </button>
+                        <button onclick="rejectRequest(2, 'certificate')" class="btn bg-red-500 hover:bg-red-600 text-white btn-sm">
+                            <i class="fas fa-times mr-1"></i>Reject
+                        </button>
+                        <button onclick="viewDetails(2)" class="btn btn-outline btn-sm">
+                            <i class="fas fa-eye mr-1"></i>Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Verification -->
+        <div class="dashboard-card approval-card" data-type="documents">
+            <div class="dashboard-card-body">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start space-x-4 flex-1">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-file-check text-green-600 text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h4 class="font-bold text-gray-900">Document Verification</h4>
+                                <span class="badge badge-success">Pending</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <strong>Student:</strong> Mike Wilson (Roll: CS2024003)<br>
+                                <strong>Documents:</strong> Transfer Certificate, Mark Sheets<br>
+                                <strong>Purpose:</strong> Admission verification
+                            </p>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i>Submitted 3 hours ago</span>
+                                <span><i class="fas fa-paperclip mr-1"></i>3 Attachments</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col space-y-2 ml-4">
+                        <button onclick="approveRequest(3, 'document')" class="btn btn-success btn-sm">
+                            <i class="fas fa-check mr-1"></i>Verify
+                        </button>
+                        <button onclick="rejectRequest(3, 'document')" class="btn bg-red-500 hover:bg-red-600 text-white btn-sm">
+                            <i class="fas fa-times mr-1"></i>Reject
+                        </button>
+                        <button onclick="viewDetails(3)" class="btn btn-outline btn-sm">
+                            <i class="fas fa-eye mr-1"></i>Review
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+function approveRequest(id, type) {
+    if (confirm(`Are you sure you want to approve this ${type} request?`)) {
+        alert(`Request #${id} approved! (Backend integration needed)`);
+        // Add AJAX call here
+    }
+}
+
+function rejectRequest(id, type) {
+    const reason = prompt(`Reason for rejecting this ${type} request:`);
+    if (reason) {
+        alert(`Request #${id} rejected with reason: ${reason} (Backend integration needed)`);
+        // Add AJAX call here
+    }
+}
+
+function viewDetails(id) {
+    alert(`Viewing details for request #${id} (Modal will open here)`);
+}
+
+function filterApprovals(type) {
+    const cards = document.querySelectorAll('.approval-card');
+    
+    // Update active button
+    document.querySelectorAll('button').forEach(btn => {
+        if (btn.textContent.includes('All') || btn.textContent.includes('Leave') || 
+            btn.textContent.includes('Certificates') || btn.textContent.includes('Documents')) {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline');
+        }
+    });
+    event.target.classList.remove('btn-outline');
+    event.target.classList.add('btn-primary');
+    
+    // Filter cards
+    if (type === 'all') {
+        cards.forEach(card => card.style.display = 'block');
+    } else {
+        cards.forEach(card => {
+            card.style.display = card.dataset.type === type ? 'block' : 'none';
+        });
+    }
+}
+</script>
+{% endblock custom_js %}
+
+

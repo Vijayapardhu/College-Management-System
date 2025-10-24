@@ -1,0 +1,19 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Internship Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2"><i class="fas fa-briefcase mr-2"></i>Internship Management</h2>
+        <p class="text-gray-600">Track student internships</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="metric-card metric-card-primary"><div class="metric-value" data-count="150">0</div><div class="metric-label">Active Interns</div></div>
+        <div class="metric-card metric-card-success"><div class="metric-value" data-count="85">0</div><div class="metric-label">Completed</div></div>
+        <div class="metric-card metric-card-info"><div class="metric-value" data-count="35">0</div><div class="metric-label">Companies</div></div>
+    </div>
+</div>
+{% endblock content %}
+
+

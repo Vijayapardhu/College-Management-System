@@ -1,0 +1,81 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Manage Exams{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-file-alt mr-2"></i>Exam Management
+                </h2>
+                <p class="text-gray-600">Create and manage examinations</p>
+            </div>
+            <a href="{% url 'add_exam' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>Create Exam
+            </a>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="{% url 'add_exam' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200">
+                <span class="text-3xl">📝</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Create Exam</h3>
+            <p class="text-sm text-gray-600">Set up new examination</p>
+        </a>
+
+        <a href="{% url 'manage_exam_schedule' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200">
+                <span class="text-3xl">📅</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Schedule Exams</h3>
+            <p class="text-sm text-gray-600">Manage exam timetable</p>
+        </a>
+
+        <a href="{% url 'exam_analytics' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200">
+                <span class="text-3xl">📊</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exam Analytics</h3>
+            <p class="text-sm text-gray-600">View performance stats</p>
+        </a>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Recent Exams</h3>
+        </div>
+        <div class="dashboard-card-body p-0">
+            <div class="overflow-x-auto">
+                <table class="modern-table w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3">Exam Name</th>
+                            <th class="px-6 py-3">Date</th>
+                            <th class="px-6 py-3">Course</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="px-6 py-4">Mid-Term Exam</td>
+                            <td class="px-6 py-4">Nov 15, 2024</td>
+                            <td class="px-6 py-4">B.Tech CSE</td>
+                            <td class="px-6 py-4"><span class="badge badge-success">Scheduled</span></td>
+                            <td class="px-6 py-4">
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

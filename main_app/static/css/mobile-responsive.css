@@ -1,909 +1,334 @@
-/**
- * ========================================================================
- * EduVision College Management System - Mobile Responsive CSS
- * Optimized for ALL devices: Mobile, Tablet, Desktop, 4K
- * Mobile-First Approach with Progressive Enhancement
- * ========================================================================
- */
+/* Mobile Responsive Enhancements */
 
-/* ========================================================================
-   MOBILE FIRST (Base Styles for Mobile < 576px)
-   ======================================================================== */
+/* Mobile Breakpoints */
+/* sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px */
 
-/* Touch-Friendly Targets */
-button,
-a,
-input[type="button"],
-input[type="submit"],
-.btn {
-    min-height: 44px;
-    min-width: 44px;
-    touch-action: manipulation;
-}
-
-/* Mobile Navigation */
-.mobile-nav-toggle {
-    display: block;
-    width: 44px;
-    height: 44px;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-/* Mobile-Optimized Cards */
-.card {
-    margin-bottom: 1rem;
-}
-
-.card-body {
-    padding: 1rem;
-}
-
-/* Mobile Tables */
-.table-mobile-responsive {
-    display: block;
-        width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.table-mobile-responsive thead {
-    display: none;
-}
-
-.table-mobile-responsive tr {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    background: white;
-    padding: 0.75rem;
-}
-
-.table-mobile-responsive td {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border-color-light);
-}
-
-.table-mobile-responsive td:last-child {
-    border-bottom: none;
-}
-
-.table-mobile-responsive td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    margin-right: 1rem;
-    color: var(--text-secondary);
-}
-
-/* Mobile Forms */
-.form-group {
-    margin-bottom: 1rem;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="tel"],
-input[type="date"],
-select,
-textarea {
-    font-size: 16px; /* Prevents zoom on iOS */
-}
-
-/* Mobile Button Groups */
-.btn-group-mobile {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.btn-group-mobile .btn {
-    width: 100%;
-}
-
-/* ========================================================================
-   SMALL DEVICES (Phones, ≥576px)
-   ======================================================================== */
-
-@media (min-width: 576px) {
-    /* Container adjustments */
-    .container {
-        max-width: 540px;
-    }
-
-    /* Card improvements */
-    .card-body {
-        padding: 1.25rem;
-    }
-
-    /* Button groups can be horizontal */
-    .btn-group-sm-horizontal {
-        flex-direction: row;
-    }
-
-    .btn-group-sm-horizontal .btn {
-        width: auto;
-    }
-
-    /* Typography */
-    h1 { font-size: 2.5rem; }
-    h2 { font-size: 2rem; }
-}
-
-/* ========================================================================
-   MEDIUM DEVICES (Tablets, ≥768px)
-   ======================================================================== */
-
-@media (min-width: 768px) {
-    /* Show/Hide Elements */
-    .mobile-only {
-        display: none !important;
-    }
-
-    .mobile-nav-toggle {
-        display: none;
-    }
-
-    /* Sidebar adjustments */
-    .main-sidebar {
-        width: 260px;
-    }
-
-    .content-wrapper {
-        margin-left: 260px;
-        width: calc(100% - 260px);
-    }
-
-    /* Tables - Show normal layout */
-    .table-mobile-responsive thead {
-        display: table-header-group;
-    }
-
-    .table-mobile-responsive tr {
-        display: table-row;
-        margin-bottom: 0;
-        border: none;
-        padding: 0;
-    }
-
-    .table-mobile-responsive td {
-        display: table-cell;
-        padding: 0.75rem;
-        border-bottom: 1px solid var(--border-color-light);
-        justify-content: flex-start;
-    }
-
-    .table-mobile-responsive td::before {
-        display: none;
-    }
-    
-    /* Card grid layouts */
-    .card-grid-md {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-
-    /* Form layouts */
-    .form-row-md {
-        display: flex;
-        gap: 1rem;
-    }
-
-    .form-row-md > * {
-        flex: 1;
-    }
-
-    /* Spacing improvements */
-    .card-body {
-        padding: 1.5rem;
-    }
-
-    .py-md-4 {
-        padding-top: 1.5rem !important;
-        padding-bottom: 1.5rem !important;
-    }
-
-    .px-md-4 {
-        padding-left: 1.5rem !important;
-        padding-right: 1.5rem !important;
-    }
-}
-
-/* ========================================================================
-   LARGE DEVICES (Desktops, ≥992px)
-   ======================================================================== */
-
-@media (min-width: 992px) {
-    /* Sidebar full width */
-    .main-sidebar {
-        width: 280px;
-    }
-
-    .content-wrapper {
-        margin-left: 280px;
-        width: calc(100% - 280px);
-        padding: 2rem;
-    }
-
-    /* Card grid layouts */
-    .card-grid-lg {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-    }
-
-    .card-grid-lg-4 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
-    }
-
-    /* Improved spacing */
-    .card-body {
-        padding: 2rem;
-    }
-
-    /* Better modals */
-    .modal-lg {
-        max-width: 900px;
-    }
-
-    /* Typography for large screens */
-    h1 { font-size: 3rem; }
-    h2 { font-size: 2.25rem; }
-
-    /* Hover effects more pronounced */
-    .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-}
-
-/* ========================================================================
-   EXTRA LARGE DEVICES (Large Desktops, ≥1200px)
-   ======================================================================== */
-
-@media (min-width: 1200px) {
-    /* Container maximum width */
-    .container-fluid {
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    /* Card grid with more columns */
-    .card-grid-xl-5 {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 1.5rem;
-    }
-
-    /* Larger spacing */
-    .content-wrapper {
-        padding: 2.5rem;
-    }
-
-    /* Modal sizes */
-    .modal-xl {
-        max-width: 1140px;
-    }
-}
-
-/* ========================================================================
-   EXTRA EXTRA LARGE DEVICES (4K & Ultra-wide, ≥1400px)
-   ======================================================================== */
-
-@media (min-width: 1400px) {
-    /* Container for ultra-wide screens */
-    .container-fluid {
-        max-width: 1600px;
-    }
-
-    /* Larger font sizes for 4K */
-    body {
-        font-size: 18px;
-    }
-
-    /* Card grid for ultra-wide */
-    .card-grid-xxl-6 {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 2rem;
-    }
-
-    /* Extra spacing */
-    .card-body {
-        padding: 2.5rem;
-    }
-
-    .content-wrapper {
-        padding: 3rem;
-    }
-}
-
-/* ========================================================================
-   LANDSCAPE ORIENTATION OPTIMIZATIONS
-   ======================================================================== */
-
-@media (max-height: 600px) and (orientation: landscape) {
-    /* Reduce vertical spacing in landscape */
-    .content-wrapper {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-    }
-
-    .card {
-        margin-bottom: 0.75rem;
-    }
-
-    .card-body {
-        padding: 0.75rem;
-    }
-
-    /* Smaller fonts in landscape mobile */
-    h1 { font-size: 1.75rem; }
-    h2 { font-size: 1.5rem; }
-}
-
-/* ========================================================================
-   TOUCH DEVICE OPTIMIZATIONS
-   ======================================================================== */
-
-@media (hover: none) and (pointer: coarse) {
-    /* Touch-specific styles */
-    
-    /* Larger tap targets */
-    .btn,
-    .nav-link,
-    .dropdown-item {
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Remove hover effects on touch devices */
-    .card:hover {
-        transform: none;
-    }
-
-    .table tbody tr:hover {
-        background-color: transparent;
-    }
-
-    /* Prevent text selection on buttons */
-    .btn {
-        -webkit-tap-highlight-color: transparent;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-    }
-
-    /* Swipe indicators for horizontal scrolling */
-    .table-responsive::after {
-        content: '← Swipe to see more →';
-        display: block;
-        text-align: center;
-        padding: 0.5rem;
-        font-size: var(--font-size-xs);
-        color: var(--text-muted);
-        background: var(--color-gray-50);
-        border-top: 1px solid var(--border-color);
-    }
-}
-
-/* ========================================================================
-   SPECIFIC MOBILE FIXES
-   ======================================================================== */
-
-@media (max-width: 575px) {
-    /* Full-width buttons on mobile */
-    .btn-mobile-block {
-        display: block;
-        width: 100%;
-    }
-
-    /* Stack action buttons */
-    .action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .action-buttons .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    /* Compact table headers */
-    .table thead th {
-        padding: 0.5rem;
-        font-size: 0.7rem;
-    }
-
-    .table tbody td {
-        padding: 0.5rem;
-        font-size: 0.875rem;
-    }
-
-    /* Modal full screen on mobile */
-    .modal-dialog {
-        margin: 0;
-        max-width: 100%;
-        height: 100%;
-    }
-    
-    .modal-content {
-        height: 100%;
-        border-radius: 0;
-    }
-
-    /* Navbar adjustments */
-    .navbar {
-        padding: 0.75rem 1rem;
-    }
-
-    /* Breadcrumb on mobile */
-    .breadcrumb {
-        font-size: var(--font-size-xs);
-    }
-
-    /* Card header mobile */
-    .card-header h3 {
-        font-size: 1rem;
-    }
-
-    /* Smaller gaps */
-    .row {
-        margin-right: -0.5rem;
-        margin-left: -0.5rem;
-    }
-
-    .row > * {
-        padding-right: 0.5rem;
-        padding-left: 0.5rem;
-    }
-
-    /* Form groups compact */
-    .form-group {
-        margin-bottom: 0.75rem;
-    }
-
-    /* Dropdown full width */
-    .dropdown-menu {
-        width: 100%;
-        left: 0 !important;
-        right: 0 !important;
-    }
-}
-
-/* ========================================================================
-   IPAD & TABLET SPECIFIC (768px - 1024px)
-   ======================================================================== */
-
-@media (min-width: 768px) and (max-width: 1024px) {
-    /* Optimized for tablet */
-    .sidebar-collapsed .main-sidebar {
-        width: 80px;
-    }
-
-    .sidebar-collapsed .content-wrapper {
-        margin-left: 80px;
-        width: calc(100% - 80px);
-    }
-
-    /* Two-column grid */
-    .card-grid-tablet {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
-    }
-
-    /* Tablet-optimized spacing */
-    .py-tablet-3 {
-        padding-top: 1rem !important;
-        padding-bottom: 1rem !important;
-    }
-}
-
-/* ========================================================================
-   RETINA & HIGH-DPI DISPLAYS
-   ======================================================================== */
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    /* Sharper borders on retina */
-    .card,
-    .btn,
-    .form-control,
-    .table {
-        border-width: 0.5px;
-    }
-
-    /* Crisp icons */
-    .fas,
-    .far,
-    .fab {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-}
-
-/* ========================================================================
-   PRINT-SPECIFIC RESPONSIVE RULES
-   ======================================================================== */
-
-@media print {
-    /* Force content to use full width */
-    .main-sidebar,
-    .navbar {
-        display: none !important;
-    }
-
-    .content-wrapper {
-        margin-left: 0 !important;
-        width: 100% !important;
-    }
-
-    /* Optimize for A4 */
-    body {
-        font-size: 12pt;
-    }
-
-    .card {
-        page-break-inside: avoid;
-    }
-
-    /* Hide interactive elements */
-    .btn,
-    .dropdown,
-    .modal {
-        display: none !important;
-    }
-}
-
-/* ========================================================================
-   SPECIFIC DEVICE OPTIMIZATIONS
-   ======================================================================== */
-
-/* iPhone SE & Small Phones (320px) */
-@media (max-width: 374px) {
+/* Global Mobile Fixes */
+@media (max-width: 768px) {
     body {
         font-size: 14px;
     }
-
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.25rem; }
-    h3 { font-size: 1.1rem; }
-
-    .card-body {
-        padding: 0.75rem;
+    
+    /* Prevent horizontal scroll */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
     }
-
-    .btn {
-        padding: 0.5rem 0.875rem;
-        font-size: 0.8rem;
-    }
-}
-
-/* iPhone 12/13/14 (390px) */
-@media (min-width: 375px) and (max-width: 414px) {
-    .card-grid-mobile-2 {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+    
+    /* Touch-friendly tap targets */
+    button, a, input, select, textarea {
+        min-height: 44px;
+        min-width: 44px;
     }
 }
 
-/* iPad Mini & Tablets (768px - 820px) */
-@media (min-width: 768px) and (max-width: 820px) {
-    .card-grid-ipad {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-
-    .main-sidebar {
-        width: 240px;
-    }
-
-    .content-wrapper {
-        margin-left: 240px;
-        width: calc(100% - 240px);
-    }
-}
-
-/* iPad Pro (1024px) */
-@media (min-width: 1024px) and (max-width: 1199px) {
-    .card-grid-ipad-pro {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.25rem;
-    }
-}
-
-/* ========================================================================
-   FLEXIBLE CONTENT SIZING
-   ======================================================================== */
-
-/* Responsive Images */
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-.img-responsive {
-    width: 100%;
-    height: auto;
-}
-
-/* Responsive Videos */
-.video-responsive {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-}
-
-.video-responsive iframe,
-.video-responsive object,
-.video-responsive embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* ========================================================================
-   MOBILE NAVIGATION MENU
-   ======================================================================== */
-
-@media (max-width: 991px) {
-    /* Mobile sidebar overlay */
-    .main-sidebar {
+/* Mobile Navigation */
+@media (max-width: 1024px) {
+    /* Sidebar hidden by default on mobile */
+    #sidebar {
         transform: translateX(-100%);
-        box-shadow: none;
     }
-
-    .sidebar-mobile-open .main-sidebar {
+    
+    #sidebar.sidebar-open {
         transform: translateX(0);
-        box-shadow: var(--shadow-2xl);
     }
-
-    /* Mobile overlay */
-    .sidebar-mobile-open::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-        animation: fadeIn 0.2s ease-out;
-    }
-
-    /* Content full width on mobile */
-    .content-wrapper {
-        margin-left: 0;
-        width: 100%;
-        padding: 1rem;
-    }
-
-    /* Mobile navbar */
-    .navbar {
-        position: sticky;
-        top: 0;
-        z-index: 1020;
+    
+    /* Content takes full width */
+    .lg\:pl-64 {
+        padding-left: 0;
     }
 }
 
-/* ========================================================================
-   ACCESSIBILITY FOR MOBILE
-   ======================================================================== */
-
-/* Larger focus indicators on mobile */
-@media (max-width: 767px) {
-    *:focus-visible {
-        outline: 3px solid var(--color-primary);
-        outline-offset: 3px;
+/* Mobile Header */
+@media (max-width: 768px) {
+    nav .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
-
-    /* Larger checkbox and radio buttons */
-    input[type="checkbox"],
-    input[type="radio"] {
-        width: 20px;
-        height: 20px;
+    
+    /* Hide desktop elements */
+    .mobile-hidden {
+        display: none !important;
     }
-
-    /* Better form spacing */
-    .form-check {
-        padding-left: 2rem;
-    }
-
-    .form-check-input {
-        margin-left: -2rem;
+    
+    /* Stack header elements */
+    nav .flex.justify-between {
+        flex-wrap: wrap;
     }
 }
 
-/* ========================================================================
-   PERFORMANCE OPTIMIZATIONS
-   ======================================================================== */
-
-/* Lazy Load Images on Mobile */
-@media (max-width: 767px) {
-    img[loading="lazy"] {
-        content-visibility: auto;
+/* Mobile Cards */
+@media (max-width: 640px) {
+    .metric-card {
+        padding: 1rem !important;
     }
-}
-
-/* Reduce animations on mobile for performance */
-@media (max-width: 767px) {
-    .card,
-    .btn {
-        transition-duration: 0.1s;
+    
+    .metric-value {
+        font-size: 2rem !important;
     }
-}
-
-/* ========================================================================
-   ORIENTATION-SPECIFIC STYLES
-   ======================================================================== */
-
-/* Portrait Mode Optimizations */
-@media (orientation: portrait) {
-    .portrait-stack {
-        flex-direction: column;
+    
+    .metric-icon {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        font-size: 1.25rem !important;
     }
-
-    .portrait-full-width {
-        width: 100%;
-    }
-}
-
-/* Landscape Mode Optimizations */
-@media (orientation: landscape) and (max-width: 991px) {
-    /* Reduce header height in landscape */
-    .page-header {
+    
+    .dashboard-card {
         margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
     }
+}
 
-    /* Compact cards */
-    .card-body {
+/* Mobile Forms */
+@media (max-width: 640px) {
+    .form-container {
         padding: 1rem;
     }
+    
+    .form-row,
+    .form-row-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .form-actions button {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+}
 
-    /* Side-by-side layout */
-    .landscape-row {
+/* Mobile Tables */
+@media (max-width: 768px) {
+    /* Transform table to cards */
+    .table-mobile-cards table {
+        display: block;
+    }
+    
+    .table-mobile-cards thead {
+        display: none;
+    }
+    
+    .table-mobile-cards tbody {
+        display: block;
+    }
+    
+    .table-mobile-cards tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        background: white;
+    }
+    
+    .table-mobile-cards td {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .table-mobile-cards td:last-child {
+        border-bottom: none;
+    }
+    
+    .table-mobile-cards td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #4b5563;
+        margin-right: 1rem;
+    }
+}
+
+/* Mobile Charts */
+@media (max-width: 640px) {
+    .chart-container {
+        height: 250px !important;
+    }
+    
+    .chart-container-lg {
+        height: 300px !important;
+    }
+    
+    canvas {
+        max-height: 300px !important;
+    }
+}
+
+/* Mobile Modals */
+@media (max-width: 640px) {
+    .modal {
+        width: 95%;
+        max-width: 95%;
+        margin: 0.5rem;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+}
+
+/* Mobile Pagination */
+@media (max-width: 640px) {
+    .pagination-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .pagination-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Mobile Grid Adjustments */
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .sm\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Mobile Spacing */
+@media (max-width: 640px) {
+    .space-y-6 > * + * {
+        margin-top: 1rem;
+    }
+    
+    .gap-6 {
         gap: 1rem;
     }
-
-    .landscape-row > * {
-        flex: 1;
+    
+    .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .py-8 {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
     }
 }
 
-/* ========================================================================
-   SAFE AREA INSETS (for notched devices like iPhone X+)
-   ======================================================================== */
+/* Mobile Text Sizes */
+@media (max-width: 640px) {
+    h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    h3 {
+        font-size: 1.25rem !important;
+    }
+    
+    .text-4xl {
+        font-size: 2rem !important;
+    }
+    
+    .text-3xl {
+        font-size: 1.75rem !important;
+    }
+    
+    .text-2xl {
+        font-size: 1.5rem !important;
+    }
+}
 
+/* Touch Gestures */
+@media (hover: none) and (pointer: coarse) {
+    /* Increase tap targets */
+    button,
+    a.btn,
+    .nav-item,
+    .table-action-btn {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    
+    /* Remove hover effects */
+    .hover\:shadow-xl:hover {
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    /* Reduce vertical padding */
+    .py-8 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .py-12 {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    
+    /* Adjust header height */
+    nav .h-16 {
+        height: 3rem;
+    }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* 2 column grids on tablet */
+    .lg\:grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+    
+    .lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Safe Area Insets (for notched devices) */
 @supports (padding: max(0px)) {
     body {
         padding-left: max(0px, env(safe-area-inset-left));
         padding-right: max(0px, env(safe-area-inset-right));
-    }
-
-    .navbar,
-    .main-sidebar {
-        padding-left: max(12px, env(safe-area-inset-left));
-        padding-right: max(12px, env(safe-area-inset-right));
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
     }
 }
 
-/* ========================================================================
-   RESPONSIVE TYPOGRAPHY
-   ======================================================================== */
-
-/* Fluid Typography */
-@media (min-width: 320px) and (max-width: 1200px) {
-    body {
-        font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1200 - 320)));
+/* Print Styles */
+@media print {
+    /* Hide navigation and controls */
+    nav,
+    #sidebar,
+    .btn,
+    .table-actions,
+    .pagination-controls {
+        display: none !important;
     }
-
-    h1 {
-        font-size: calc(24px + (48 - 24) * ((100vw - 320px) / (1200 - 320)));
+    
+    /* Expand content */
+    .lg\:pl-64 {
+        padding-left: 0 !important;
     }
-
-    h2 {
-        font-size: calc(20px + (36 - 20) * ((100vw - 320px) / (1200 - 320)));
+    
+    /* Optimize colors for print */
+    * {
+        color: #000 !important;
+        background: #fff !important;
     }
-
-    h3 {
-        font-size: calc(18px + (30 - 18) * ((100vw - 320px) / (1200 - 320)));
+    
+    /* Show borders */
+    .dashboard-card,
+    .metric-card,
+    table {
+        border: 1px solid #000 !important;
     }
-}
-
-/* ========================================================================
-   MOBILE MENU ANIMATION
-   ======================================================================== */
-
-@media (max-width: 991px) {
-    .nav-sidebar {
-        animation: slideIn 0.3s ease-out;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-}
-
-/* ========================================================================
-   RESPONSIVE GRID UTILITIES
-   ======================================================================== */
-
-.grid-auto-fit {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.grid-auto-fill {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-@media (max-width: 767px) {
-    .grid-auto-fit,
-    .grid-auto-fill {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ========================================================================
-   MOBILE FIRST COMPONENT VISIBILITY
-   ======================================================================== */
-
-/* Show only on mobile */
-.show-mobile {
-    display: block;
-}
-
-@media (min-width: 768px) {
-    .show-mobile {
-        display: none;
-    }
-}
-
-/* Hide on mobile */
-.hide-mobile {
-    display: none;
-}
-
-@media (min-width: 768px) {
-    .hide-mobile {
-        display: block;
-    }
-}
-
-/* ========================================================================
-   END OF MOBILE RESPONSIVE CSS
-   ======================================================================== */
-
-}
 }

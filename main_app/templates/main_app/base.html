@@ -1,39 +1,24 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>EduVision</title>
-    <!-- Tell the browser to be responsive to screen width -->
+    <title>{% block title %}EduVision - College Management System{% endblock %}</title>
+    
+    <!-- Responsive Meta Tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#007bff">
+    <meta name="theme-color" content="#6366f1">
+    
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css'%} ">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bbootstrap 4 -->
-    <link rel="stylesheet"
-        href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css'%} ">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css'%} ">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css'%} ">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css'%} ">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css'%} ">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css'%} ">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.css'%} ">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
@@ -74,14 +59,11 @@
                         'sans': ['Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
                         'display': ['Poppins', 'Inter', 'sans-serif'],
                     },
-                    spacing: {
-                        '18': '4.5rem',
-                        '88': '22rem',
-                    },
                     animation: {
                         'fade-in': 'fadeIn 0.5s ease-in-out',
                         'slide-in': 'slideIn 0.3s ease-out',
                         'bounce-in': 'bounceIn 0.6s ease-out',
+                        'slide-in-right': 'slideInRight 0.3s ease-out',
                     },
                     keyframes: {
                         fadeIn: {
@@ -91,6 +73,10 @@
                         slideIn: {
                             '0%': { transform: 'translateY(-10px)', opacity: '0' },
                             '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideInRight: {
+                            '0%': { transform: 'translateX(10px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
                         },
                         bounceIn: {
                             '0%': { transform: 'scale(0.3)', opacity: '0' },
@@ -104,409 +90,73 @@
         }
     </script>
     
-    <!-- Design Tokens -->
-    <link rel="stylesheet" href="{% static 'css/design-tokens.css'%} ">
-    <!-- Component Library -->
-    <link rel="stylesheet" href="{% static 'css/components.css'%} ">
-    <!-- Accessibility Compliance -->
-    <link rel="stylesheet" href="{% static 'css/accessibility.css'%} ">
-    <!-- Mobile Responsive CSS -->
-    <link rel="stylesheet" href="{% static 'css/mobile-responsive.css'%} ">
-    <!-- Custom Enhanced Styles -->
-    <link rel="stylesheet" href="{% static 'css/custom-styles.css'%} ">
-    <!-- Design System -->
-    <link rel="stylesheet" href="{% static 'css/design-system.css'%} ">
-    <!-- Professional Forms CSS -->
-    <link rel="stylesheet" href="{% static 'css/professional-forms.css'%} ">
+    <!-- AdminLTE (Minimal - Load First) -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
     
-    <!-- Fix Cut-off Issues -->
-    <style>
-        /* Fix sidebar cut-off issues and enable auto-hide */
-        .main-sidebar {
-            height: 100vh !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            min-width: 280px !important;
-            width: 280px !important;
-            flex-shrink: 0 !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            z-index: 1000 !important;
-            transition: transform 0.3s ease-in-out !important;
-        }
-        
-        /* Sidebar auto-hide functionality */
-        .sidebar-collapsed .main-sidebar {
-            transform: translateX(-100%) !important;
-        }
-        
-        .sidebar-toggle {
-            position: fixed !important;
-            top: 20px !important;
-            left: 20px !important;
-            z-index: 1001 !important;
-            background: #007bff !important;
-            color: white !important;
-            border: none !important;
-            padding: 10px !important;
-            border-radius: 5px !important;
-            cursor: pointer !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
-        }
-        
-        .sidebar-toggle:hover {
-            background: #0056b3 !important;
-        }
-        
-        .main-sidebar .nav-sidebar {
-            height: calc(100vh - 120px) !important;
-            overflow-y: auto !important;
-        }
-        
-        /* Fix main content centering */
-        .content-wrapper {
-            overflow-x: auto;
-            min-height: calc(100vh - 56px);
-            margin-left: 280px !important;
-            width: calc(100% - 280px) !important;
-            max-width: calc(100vw - 280px) !important;
-            padding: 20px !important;
-            transition: margin-left 0.3s ease-in-out !important;
-        }
-        
-        /* When sidebar is collapsed */
-        .sidebar-collapsed .content-wrapper {
-            margin-left: 0 !important;
-            width: 100% !important;
-            max-width: 100vw !important;
-        }
-        
-        .main-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Fix badge cut-off */
-        .badge {
-            white-space: nowrap;
-            overflow: visible;
-            text-overflow: unset;
-        }
-        
-        /* Fix navigation item text */
-        .nav-item {
-            white-space: nowrap;
-            overflow: visible;
-            min-width: 0;
-        }
-        
-        .nav-text {
-            flex: 1;
-            min-width: 0;
-            overflow: visible;
-            white-space: nowrap;
-        }
-        
-        /* Fix navigation section headers */
-        .nav-section-header {
-            white-space: nowrap;
-            overflow: visible;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        /* Fix chart containers */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            overflow: visible;
-        }
-        
-        .chart-container canvas {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-        
-        /* Fix card layouts */
-        .card {
-            margin-bottom: 20px;
-            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
-        }
-        
-        .card-body {
-            padding: 1.25rem;
-        }
-        
-        /* Fix small box layouts */
-        .small-box {
-            position: relative;
-            display: block;
-            border-radius: 0.25rem;
-            margin-bottom: 20px;
-            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
-        }
-        
-        .small-box .inner h3 {
-            font-size: 2.2rem;
-            font-weight: bold;
-            margin: 0 0 10px 0;
-            white-space: nowrap;
-        }
-        
-        .small-box .inner p {
-            font-size: 1rem;
-            margin: 0;
-            white-space: nowrap;
-        }
-        
-        /* Fix breadcrumb */
-        .breadcrumb {
-            background: transparent;
-            padding: 0.5rem 0;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-        
-        .breadcrumb-item {
-            display: inline-block;
-        }
-        
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: ">";
-            padding: 0 0.5rem;
-            color: #6c757d;
-        }
-        
-        /* Responsive fixes */
-        @media (max-width: 768px) {
-            .main-sidebar {
-                height: auto !important;
-                width: 100% !important;
-                min-width: 100% !important;
-            }
-            
-            .main-sidebar .nav-sidebar {
-                height: auto !important;
-            }
-            
-            .content-wrapper {
-                margin-left: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-        }
-        
-        /* Fix floating action buttons */
-        .floating-action-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-        }
-        
-        .floating-action-btn .btn {
-            width: 60px;
-            height: 60px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-    </style>
+    <!-- Design System & Components (Override AdminLTE) -->
+    <link rel="stylesheet" href="{% static 'css/design-system.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern-forms.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern-tables.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form-fields-override.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile-responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animations.css' %}">
+    <link rel="stylesheet" href="{% static 'css/accessibility.css' %}">
+    <link rel="stylesheet" href="{% static 'css/global-overrides.css' %}">
+    <link rel="stylesheet" href="{% static 'css/college-casual-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar-clean.css' %}">
+    
+    <!-- Additional Plugins -->
+    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="{% static 'manifest.json' %}">
-    <!-- iOS Icons -->
     <link rel="apple-touch-icon" href="{% static 'dist/img/AdminLTELogo.png' %}">
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#007bff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="EduVision">
-    <meta name="msapplication-TileColor" content="#007bff">
-    <meta name="msapplication-config" content="{% static 'browserconfig.xml' %}">
-    {% block custom_css %}
-
-    {% endblock custom_css %}
+    
+    {% block custom_css %}{% endblock %}
 </head>
 
-<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
-    <div class="wrapper">
-        <!-- Sidebar Toggle Button -->
-        <button class="sidebar-toggle" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <!-- Enhanced Navbar -->
-        <nav class="main-header navbar navbar-expand-lg navbar-white navbar-light shadow-sm border-b border-gray-200 dark:border-gray-700">
-            <!-- Left navbar links -->
-            <div class="flex items-center">
-                <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
-                        data-widget="pushmenu" 
-                        role="button" 
-                        aria-label="Toggle navigation">
-                    <i class="fas fa-bars text-gray-600 dark:text-gray-300"></i>
-                </button>
-                
-                <!-- Breadcrumb -->
-                <nav class="ml-4 flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
-                    <a href="{% url 'hod_home' %}" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fas fa-home"></i>
-                    </a>
-                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                    <span class="text-gray-900 dark:text-gray-100 font-medium">{{ page_title }}</span>
-                </nav>
-            </div>
-
-            <!-- Center - Global Search -->
-            <div class="flex-1 max-w-md mx-4">
-                <div class="relative">
-                    <input type="text" 
-                           placeholder="Search students, courses, staff..." 
-                           class="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                           id="global-search">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                        <kbd class="px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded dark:bg-gray-700 dark:text-gray-400">⌘K</kbd>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right navbar links -->
-            <div class="flex items-center space-x-2">
-                <!-- Quick Actions Dropdown -->
-                <div class="relative dropdown">
-                    <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
-                            data-toggle="dropdown" 
-                            title="Quick Actions">
-                        <i class="fas fa-bolt text-gray-600 dark:text-gray-300"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a href="{% url 'add_student' %}" class="dropdown-item">
-                            <i class="fas fa-user-plus mr-2"></i>Add Student
-                        </a>
-                        <a href="{% url 'add_staff' %}" class="dropdown-item">
-                            <i class="fas fa-user-tie mr-2"></i>Add Staff
-                        </a>
-                        <a href="{% url 'staff_take_attendance' %}" class="dropdown-item">
-                            <i class="fas fa-user-check mr-2"></i>Take Attendance
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="{% url 'analytics_dashboard' %}" class="dropdown-item">
-                            <i class="fas fa-chart-pie mr-2"></i>View Analytics
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Messages Dropdown -->
-                <div class="relative dropdown">
-                    <a href="{% url 'view_messages' %}" 
-                       class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative" 
-                       title="Messages">
-                        <i class="far fa-envelope text-gray-600 dark:text-gray-300"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" 
-                              id="unread-count" 
-                              style="display: none;">0</span>
-                    </a>
-                </div>
-                
-                <!-- Notifications Dropdown -->
-                <div class="relative dropdown">
-                    {% if request.user.user_type == '2' %}
-                        <a href="{% url 'staff_view_notification' %}" 
-                           class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative" 
-                           title="Notifications">
-                            <i class="far fa-bell text-gray-600 dark:text-gray-300"></i>
-                            <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-                        </a>
-                    {% elif request.user.user_type == '3' %}
-                        <a href="{% url 'student_view_notification' %}" 
-                           class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative" 
-                           title="Notifications">
-                            <i class="far fa-bell text-gray-600 dark:text-gray-300"></i>
-                            <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
-                        </a>
-                    {% endif %}
-                </div>
-                
-                <!-- Theme Toggle -->
-                <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
-                        id="theme-toggle" 
-                        title="Toggle Theme">
-                    <i class="fas fa-moon text-gray-600 dark:text-gray-300" id="theme-icon"></i>
-                </button>
-                
-                <!-- Fullscreen toggle -->
-                <button class="nav-link p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
-                        data-widget="fullscreen" 
-                        title="Fullscreen">
-                    <i class="fas fa-expand-arrows-alt text-gray-600 dark:text-gray-300"></i>
-                </button>
-                
-                <!-- User dropdown -->
-                <div class="relative dropdown">
-                    <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" 
-                            data-toggle="dropdown" 
-                            title="Profile">
-                        <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                            <span class="text-white text-sm font-medium">
-                                {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
-                            </span>
-                        </div>
-                        <div class="hidden md:block text-left">
-                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {{ request.user.first_name }} {{ request.user.last_name }}
-                            </div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">
-                                {% if request.user.user_type == '1' %}HOD/Admin
-                                {% elif request.user.user_type == '2' %}Faculty
-                                {% elif request.user.user_type == '3' %}Student
-                                {% elif request.user.user_type == '4' %}Management
-                                {% endif %}
-                            </div>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        {% if request.user.user_type == '1' %}
-                            <a href="{% url 'admin_view_profile' %}" class="dropdown-item">
-                                <i class="fas fa-user mr-2"></i> Profile
-                            </a>
-                        {% elif request.user.user_type == '2' %}
-                            <a href="{% url 'staff_view_profile' %}" class="dropdown-item">
-                                <i class="fas fa-user mr-2"></i> Profile
-                            </a>
-                        {% elif request.user.user_type == '3' %}
-                            <a href="{% url 'student_view_profile' %}" class="dropdown-item">
-                                <i class="fas fa-user mr-2"></i> Profile
-                            </a>
-                        {% endif %}
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-cog mr-2"></i> Settings
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="{% url 'user_logout' %}" class="dropdown-item text-red-600 hover:bg-red-50" onclick="return confirm('Logout?')">
-                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-        <!-- /.navbar -->
-
-        <!-- Enhanced Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+<body class="h-full bg-gray-50 dark:bg-gray-900" data-theme="light">
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+    
+    <!-- Live Region for Screen Readers -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="live-region"></div>
+    
+    <div class="min-h-full">
+        <!-- Mobile sidebar overlay -->
+        <div id="mobile-sidebar-overlay" 
+             class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden lg:hidden" 
+             aria-hidden="true"></div>
+        
+        <!-- Sidebar -->
+        <aside id="sidebar" 
+               role="navigation" 
+               aria-label="Main navigation"
+               class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0">
             <!-- Brand Logo -->
-            <a href="{% url 'hod_home' %}" class="brand-link">
-                <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="EduVision Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">EduVision</span>
-            </a>
+            <div class="sidebar-header">
+                <a href="{% url 'hod_home' %}" class="sidebar-logo" aria-label="EduVision home">
+                    <div class="sidebar-logo-icon">
+                        🎓
+                    </div>
+                    <div>
+                        <div class="sidebar-logo-text">EduVision</div>
+                        <div class="sidebar-logo-subtitle">College ERP</div>
+                    </div>
+                </a>
+                <button id="sidebar-close" 
+                        class="lg:hidden absolute top-6 right-6 p-2 rounded-md text-gray-400 hover:text-gray-600"
+                        aria-label="Close sidebar">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Role-based Navigation -->
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto" aria-label="Primary">
                 {% if request.user.user_type == '1' %}
                     {% include "navigation/hod_nav.html" %}
                 {% elif request.user.user_type == '2' %}
@@ -516,286 +166,370 @@
                 {% elif request.user.user_type == '4' %}
                     {% include "navigation/management_nav.html" %}
                 {% else %}
-                    <!-- Default navigation for unauthenticated users -->
-                    <nav class="mt-2">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <li class="nav-item">
-                                <a href="{% url 'login' %}" class="nav-link">
-                                    <i class="nav-icon fas fa-sign-in-alt"></i>
-                                    <p>Login</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div class="sidebar-nav">
+                        <a href="{% url 'login' %}" class="nav-item nav-item-inactive" aria-label="Login to your account">
+                            <i class="nav-icon fas fa-sign-in-alt" aria-hidden="true"></i>
+                            <span class="nav-text">Login</span>
+                        </a>
+                    </div>
                 {% endif %}
-            </div>
-            <!-- /.sidebar -->
+            </nav>
+            
+            <!-- User Profile -->
+            {% if request.user.is_authenticated %}
+                {% include "navigation/sidebar_user.html" %}
+            {% endif %}
         </aside>
 
-      
-        <div class="content-wrapper">
-            <!-- Content Wrapper. Contains page content -->
-            <div class="main-content">
-                <!-- Content Header (Page header) -->
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-6">
-                                <h1 class="m-0 text-dark">{% block page_title %}{% endblock page_title %}</h1>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="{% url 'hod_home' %}">Home</a></li>
-                                    <li class="breadcrumb-item active">{{ page_title }}</li>
-                                </ol>
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.container-fluid -->
-                </div>
-                <!-- /.content-header -->
+        <!-- Main content -->
+        <div class="lg:pl-64">
+            <!-- Top navigation -->
+            <header role="banner">
+                <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700" 
+                     aria-label="Top navigation">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between h-16">
+                        <div class="flex items-center">
+                            <!-- Mobile menu button -->
+                            <button id="sidebar-toggle" 
+                                    class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                    aria-label="Open sidebar menu"
+                                    aria-expanded="false"
+                                    aria-controls="sidebar">
+                                <i class="fas fa-bars" aria-hidden="true"></i>
+                            </button>
+                            
+                            <!-- Breadcrumb -->
+                            <nav class="ml-4 flex items-center space-x-2 text-sm" 
+                                 aria-label="Breadcrumb"
+                                 role="navigation">
+                                <a href="{% url 'hod_home' %}" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <i class="fas fa-home"></i>
+                                </a>
+                                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                                <span class="text-gray-900 dark:text-gray-100 font-medium">{% block page_title %}{% endblock %}</span>
+                            </nav>
+                        </div>
 
-                <!-- Main content -->
-                <section class="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    {% if messages %}
-                                    {% for message in messages  %}
-                                    
-                                    {% if message.tags == 'success' %}
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <i class="icon fas fa-check-circle"></i> {{message}}
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                        <div class="flex items-center space-x-4">
+                            <!-- Global Search -->
+                            <div class="hidden md:block">
+                                <div class="relative">
+                                    <label for="global-search" class="sr-only">Search</label>
+                                    <input type="text" 
+                                           placeholder="Search..." 
+                                           class="w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
+                                           id="global-search"
+                                           aria-label="Global search"
+                                           role="searchbox">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400" aria-hidden="true"></i>
                                     </div>
-                                    {% else %}
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <i class="icon fas fa-exclamation-triangle"></i> {{message}}
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="relative">
+                                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" 
+                                        aria-label="Quick Actions">
+                                    <i class="fas fa-bolt" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="relative">
+                                <a href="{% url 'view_messages' %}" 
+                                   class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 relative" 
+                                   aria-label="Messages">
+                                    <i class="far fa-envelope" aria-hidden="true"></i>
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden" 
+                                          id="unread-count"
+                                          role="status"
+                                          aria-label="Unread messages">0</span>
+                                </a>
+                            </div>
+
+                            <!-- Notifications -->
+                            <div class="relative">
+                                {% if request.user.user_type == '2' %}
+                                    <a href="{% url 'staff_view_notification' %}" 
+                                       class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 relative" 
+                                       aria-label="Notifications">
+                                        <i class="far fa-bell" aria-hidden="true"></i>
+                                        <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                                              role="status"
+                                              aria-label="3 unread notifications">3</span>
+                                    </a>
+                                {% elif request.user.user_type == '3' %}
+                                    <a href="{% url 'student_view_notification' %}" 
+                                       class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 relative" 
+                                       aria-label="Notifications">
+                                        <i class="far fa-bell" aria-hidden="true"></i>
+                                        <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                                              role="status"
+                                              aria-label="2 unread notifications">2</span>
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <!-- Theme Toggle -->
+                            <button id="theme-toggle" 
+                                    class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" 
+                                    aria-label="Toggle dark mode">
+                                <i class="fas fa-moon" id="theme-icon" aria-hidden="true"></i>
+                            </button>
+
+                            <!-- User Menu -->
+                            <div class="relative">
+                                <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" 
+                                        id="user-menu-button"
+                                        aria-label="User menu"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                    <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm font-medium">
+                                            {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+                                        </span>
                                     </div>
-                                    {% endif %}
-                                    
-                                    {% endfor %}
-                                    {% endif %}
+                                    <div class="hidden md:block text-left">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ request.user.first_name }} {{ request.user.last_name }}
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                                            {% if request.user.user_type == '1' %}HOD/Admin
+                                            {% elif request.user.user_type == '2' %}Faculty
+                                            {% elif request.user.user_type == '3' %}Student
+                                            {% elif request.user.user_type == '4' %}Management
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
+                                </button>
+                                
+                                <!-- User dropdown menu -->
+                                <div id="user-menu" 
+                                     class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                                     role="menu"
+                                     aria-labelledby="user-menu-button">
+                                    <div class="py-1">
+                                        {% if request.user.user_type == '1' %}
+                                            <a href="{% url 'admin_view_profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <i class="fas fa-user mr-3"></i> Profile
+                                            </a>
+                                        {% elif request.user.user_type == '2' %}
+                                            <a href="{% url 'staff_view_profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <i class="fas fa-user mr-3"></i> Profile
+                                            </a>
+                                        {% elif request.user.user_type == '3' %}
+                                            <a href="{% url 'student_view_profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <i class="fas fa-user mr-3"></i> Profile
+                                            </a>
+                                        {% endif %}
+                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                            <i class="fas fa-cog mr-3"></i> Settings
+                                        </a>
+                                        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                                        <a href="{% url 'user_logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" onclick="return confirm('Logout?')">
+                                            <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-                
-                {% block content %}
-                {% endblock content %}
-                <!-- /.content -->
-            </div>
+                </div>
+                </nav>
+            </header>
+
+            <!-- Page content -->
+            <main id="main-content" 
+                  class="flex-1" 
+                  role="main" 
+                  aria-label="Main content">
+                <!-- Messages -->
+                {% if messages %}
+                    <div class="px-4 sm:px-6 lg:px-8 py-4" role="alert" aria-live="polite">
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-4" role="alert">
+                                <div class="flex items-center">
+                                    {% if message.tags == 'success' %}
+                                        <i class="fas fa-check-circle mr-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                                    {% endif %}
+                                    {{ message }}
+                                </div>
+                                <button type="button" class="absolute top-0 right-0 p-2" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Main content area -->
+                <div class="px-4 sm:px-6 lg:px-8 py-8">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
         </div>
-        <!-- /.content-wrapper -->
-        {% include "main_app/footer.html" %}
-
-
     </div>
-    <!-- ./wrapper -->
-    <!-- jQuery -->
-    <script src="{% static 'plugins/jquery/jquery.min.js'%} "></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="{% static 'plugins/jquery-ui/jquery-ui.min.js'%} "></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js'%} "></script>
-    <!-- ChartJS -->
-    <script src="{% static 'plugins/chart.js/Chart.min.js'%} "></script>
-    <!-- Sparkline -->
-    <script src="{% static 'plugins/sparklines/sparkline.js'%} "></script>
-    <!-- JQVMap -->
-    <script src="{% static 'plugins/jqvmap/jquery.vmap.min.js'%} "></script>
-    <script src="{% static 'plugins/jqvmap/maps/jquery.vmap.usa.js'%} "></script>
-    <!-- jQuery Knob Chart -->
-    <script src="{% static 'plugins/jquery-knob/jquery.knob.min.js'%} "></script>
-    <!-- daterangepicker -->
-    <script src="{% static 'plugins/moment/moment.min.js'%} "></script>
-    <script src="{% static 'plugins/daterangepicker/daterangepicker.js'%} "></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'%} "></script>
-    <!-- Summernote -->
-    <script src="{% static 'plugins/summernote/summernote-bs4.min.js'%} "></script>
-    <!-- overlayScrollbars -->
-    <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'%} "></script>
-    <!-- AdminLTE App -->
-    <script src="{% static 'dist/js/adminlte.js'%} "></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{% static 'dist/js/pages/dashboard.js'%} "></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{% static 'dist/js/demo.js'%} "></script>
-    <!-- Mobile Enhancements -->
-    <script src="{% static 'js/mobile-enhancements.js'%} "></script>
-    {% block custom_js %}
 
-    {% endblock custom_js %}
+    <!-- Scripts -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
     
-    <!-- CSRF Token for AJAX requests -->
+    <!-- DataTables Helper (Must load after DataTables) -->
+    <script src="{% static 'js/datatables-helper.js' %}"></script>
+    
+    <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
+    
+    <!-- Performance Optimization -->
+    <script src="{% static 'js/performance-optimization.js' %}"></script>
+    
+    <!-- Application Utilities -->
+    <script src="{% static 'js/app-utilities.js' %}"></script>
+    
+    <!-- Casual Interactions -->
+    <script src="{% static 'js/casual-interactions.js' %}"></script>
+
+    <!-- Modern JavaScript -->
     <script>
-        // Set up CSRF token for all AJAX requests
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle functionality
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebarClose = document.getElementById('sidebar-close');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-sidebar-overlay');
+
+            function openSidebar() {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                overlay.setAttribute('aria-hidden', 'false');
+                sidebarToggle.setAttribute('aria-expanded', 'true');
+                
+                // Focus first focusable element in sidebar
+                const firstFocusable = sidebar.querySelector('a, button');
+                if (firstFocusable) {
+                    setTimeout(() => firstFocusable.focus(), 100);
                 }
             }
-        });
-    </script>
-    
-    <!-- PWA Service Worker Registration -->
-    <script>
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('{% static "js/sw.js" %}')
-                    .then(function(registration) {
-                        console.log('Service Worker registered successfully:', registration.scope);
-                        
-                        // Check for updates
-                        registration.addEventListener('updatefound', function() {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', function() {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // New content is available, show update notification
-                                    showUpdateNotification();
-                                }
-                            });
-                        });
-                    })
-                    .catch(function(error) {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
-        
-        // PWA Install Prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallButton();
-        });
-        
-        // Show install button
-        function showInstallButton() {
-            const installButton = document.createElement('button');
-            installButton.className = 'btn btn-primary mobile-fab';
-            installButton.innerHTML = '<i class="fas fa-download"></i>';
-            installButton.title = 'Install EduVision App';
-            installButton.onclick = installApp;
-            document.body.appendChild(installButton);
-        }
-        
-        // Install app
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(function(choiceResult) {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
+
+            function closeSidebar() {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                overlay.setAttribute('aria-hidden', 'true');
+                sidebarToggle.setAttribute('aria-expanded', 'false');
+                
+                // Return focus to toggle button
+                if (sidebarToggle) {
+                    sidebarToggle.focus();
+                }
+            }
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', openSidebar);
+            }
+
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', closeSidebar);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
+
+            // Keyboard navigation for sidebar
+            if (sidebar) {
+                sidebar.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        closeSidebar();
                     }
-                    deferredPrompt = null;
                 });
             }
-        }
-        
-        // Show update notification
-        function showUpdateNotification() {
-            if (confirm('A new version of EduVision is available. Would you like to update?')) {
-                window.location.reload();
-            }
-        }
-        
-        // PWA Lifecycle Events
-        window.addEventListener('appinstalled', function() {
-            console.log('EduVision app was installed');
-        });
-        
-        // Handle online/offline status
-        window.addEventListener('online', function() {
-            console.log('App is online');
-            showStatusMessage('You are back online', 'success');
-        });
-        
-        window.addEventListener('offline', function() {
-            console.log('App is offline');
-            showStatusMessage('You are offline. Some features may be limited.', 'warning');
-        });
-        
-        // Show status message
-        function showStatusMessage(message, type) {
-            const statusDiv = document.createElement('div');
-            statusDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            statusDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
-            statusDiv.innerHTML = `
-                ${message}
-                <button type="button" class="close" data-dismiss="alert">
-                    <span>&times;</span>
-                </button>
-            `;
-            document.body.appendChild(statusDiv);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                if (statusDiv.parentNode) {
-                    statusDiv.parentNode.removeChild(statusDiv);
-                }
-            }, 5000);
-        }
-        
-        // Mobile navigation toggle
-        function toggleMobileNav() {
-            const sidebar = document.querySelector('.main-sidebar');
-            const overlay = document.querySelector('.mobile-nav-overlay');
-            
-            if (sidebar && overlay) {
-                sidebar.classList.toggle('show');
-                overlay.classList.toggle('show');
-            }
-        }
-        
-        // Close mobile nav when clicking overlay
-        document.addEventListener('click', function(e) {
-            const sidebar = document.querySelector('.main-sidebar');
-            const overlay = document.querySelector('.mobile-nav-overlay');
-            const toggle = document.querySelector('.mobile-nav-toggle');
-            
-            if (overlay && overlay.classList.contains('show') && 
-                !sidebar.contains(e.target) && 
-                !toggle.contains(e.target)) {
-                sidebar.classList.remove('show');
-                overlay.classList.remove('show');
-            }
-        });
-        
-        // Add mobile nav toggle button
-        document.addEventListener('DOMContentLoaded', function() {
-            const header = document.querySelector('.main-header');
-            if (header && window.innerWidth <= 768) {
-                const toggleButton = document.createElement('button');
-                toggleButton.className = 'mobile-nav-toggle';
-                toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
-                toggleButton.onclick = toggleMobileNav;
-                header.appendChild(toggleButton);
-                
-                // Add overlay
-                const overlay = document.createElement('div');
-                overlay.className = 'mobile-nav-overlay';
-                overlay.onclick = toggleMobileNav;
-                document.body.appendChild(overlay);
-            }
-        });
 
-        // Enhanced Navigation JavaScript
-        document.addEventListener('DOMContentLoaded', function() {
+            // User menu toggle with accessibility
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+
+            if (userMenuButton && userMenu) {
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isHidden = userMenu.classList.contains('hidden');
+                    userMenu.classList.toggle('hidden');
+                    userMenuButton.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+                    
+                    // Focus first menu item when opening
+                    if (isHidden) {
+                        const firstItem = userMenu.querySelector('a');
+                        if (firstItem) {
+                            setTimeout(() => firstItem.focus(), 100);
+                        }
+                    }
+                });
+
+                // Close user menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                        userMenu.classList.add('hidden');
+                        userMenuButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Keyboard navigation in user menu
+                userMenu.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        userMenu.classList.add('hidden');
+                        userMenuButton.setAttribute('aria-expanded', 'false');
+                        userMenuButton.focus();
+                    }
+                    
+                    // Arrow key navigation
+                    const menuItems = Array.from(userMenu.querySelectorAll('a'));
+                    const currentIndex = menuItems.indexOf(document.activeElement);
+                    
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % menuItems.length;
+                        menuItems[nextIndex].focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prevIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
+                        menuItems[prevIndex].focus();
+                    }
+                });
+            }
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const body = document.body;
+
+            if (themeToggle && themeIcon) {
+                // Check for saved theme preference
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                if (currentTheme === 'dark') {
+                    body.setAttribute('data-theme', 'dark');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+
+                themeToggle.addEventListener('click', function() {
+                    const isDark = body.getAttribute('data-theme') === 'dark';
+                    const newTheme = isDark ? 'light' : 'dark';
+                    
+                    body.setAttribute('data-theme', newTheme);
+                    themeIcon.classList.toggle('fa-moon');
+                    themeIcon.classList.toggle('fa-sun');
+                    
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
+
             // Global search functionality
             const globalSearch = document.getElementById('global-search');
             if (globalSearch) {
@@ -807,7 +541,7 @@
                     }
                 });
 
-                // Keyboard shortcut for search
+                // Keyboard shortcut for search (Cmd/Ctrl + K)
                 document.addEventListener('keydown', function(e) {
                     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                         e.preventDefault();
@@ -816,79 +550,27 @@
                 });
             }
 
-            // Theme toggle functionality
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            const body = document.body;
-
-            if (themeToggle && themeIcon) {
-                // Check for saved theme preference or default to 'light'
-                const currentTheme = localStorage.getItem('theme') || 'light';
-                body.classList.toggle('dark', currentTheme === 'dark');
-                themeIcon.classList.toggle('fa-moon', currentTheme === 'light');
-                themeIcon.classList.toggle('fa-sun', currentTheme === 'dark');
-
-                themeToggle.addEventListener('click', function() {
-                    const isDark = body.classList.contains('dark');
-                    body.classList.toggle('dark');
-                    themeIcon.classList.toggle('fa-moon');
-                    themeIcon.classList.toggle('fa-sun');
-                    
-                    // Save theme preference
-                    localStorage.setItem('theme', isDark ? 'light' : 'dark');
-                });
-            }
-
-            // Dropdown functionality
-            const dropdowns = document.querySelectorAll('.dropdown');
-            dropdowns.forEach(dropdown => {
-                const toggle = dropdown.querySelector('[data-toggle="dropdown"]');
-                const menu = dropdown.querySelector('.dropdown-menu');
-                
-                if (toggle && menu) {
-                    toggle.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        // Close other dropdowns
-                        dropdowns.forEach(otherDropdown => {
-                            if (otherDropdown !== dropdown) {
-                                otherDropdown.querySelector('.dropdown-menu').classList.remove('show');
-                            }
-                        });
-                        
-                        // Toggle current dropdown
-                        menu.classList.toggle('show');
-                    });
-                }
+            // Auto-hide alerts after 5 seconds
+            document.querySelectorAll('.alert').forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 300);
+                }, 5000);
             });
 
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.dropdown')) {
-                    dropdowns.forEach(dropdown => {
-                        dropdown.querySelector('.dropdown-menu').classList.remove('show');
-                    });
-                }
-            });
-
-            // Sidebar collapse functionality
-            const sidebarToggle = document.querySelector('[data-widget="pushmenu"]');
-            const sidebar = document.querySelector('.main-sidebar');
-            
-            if (sidebarToggle && sidebar) {
-                sidebarToggle.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    sidebar.classList.toggle('sidebar-collapse');
-                    localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('sidebar-collapse'));
+            // Loading states for buttons
+            document.querySelectorAll('button[type="submit"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.form && this.form.checkValidity()) {
+                        this.classList.add('opacity-50', 'cursor-not-allowed');
+                        this.disabled = true;
+                    }
                 });
-
-                // Restore sidebar state
-                const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-                if (isCollapsed) {
-                    sidebar.classList.add('sidebar-collapse');
-                }
-            }
+            });
 
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -903,68 +585,37 @@
                     }
                 });
             });
+        });
 
-            // Loading states for buttons
-            document.querySelectorAll('.btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    if (this.type === 'submit' && this.form) {
-                        this.classList.add('btn-loading');
-                        this.disabled = true;
+        // CSRF Token for AJAX requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
                     }
-                });
-            });
+                }
+            }
+            return cookieValue;
+        }
 
-            // Auto-hide alerts after 5 seconds
-            document.querySelectorAll('.alert').forEach(alert => {
-                setTimeout(() => {
-                    alert.style.opacity = '0';
-                    setTimeout(() => {
-                        alert.remove();
-                    }, 300);
-                }, 5000);
+        // Set up CSRF token for all AJAX requests
+        const csrftoken = getCookie('csrftoken');
+        if (csrftoken) {
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
             });
-        });
-    </script>
-    
-    <!-- Sidebar Toggle JavaScript -->
-    <script>
-        function toggleSidebar() {
-            const wrapper = document.querySelector('.wrapper');
-            const sidebar = document.querySelector('.main-sidebar');
-            const toggleBtn = document.querySelector('.sidebar-toggle');
-            
-            if (wrapper.classList.contains('sidebar-collapsed')) {
-                // Show sidebar
-                wrapper.classList.remove('sidebar-collapsed');
-                sidebar.style.transform = 'translateX(0)';
-                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            } else {
-                // Hide sidebar
-                wrapper.classList.add('sidebar-collapsed');
-                sidebar.style.transform = 'translateX(-100%)';
-                toggleBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
-            }
         }
-        
-        // Auto-hide sidebar on mobile
-        function handleResize() {
-            const wrapper = document.querySelector('.wrapper');
-            if (window.innerWidth < 768) {
-                wrapper.classList.add('sidebar-collapsed');
-            }
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            handleResize();
-            window.addEventListener('resize', handleResize);
-        });
     </script>
-    
-    <!-- Floating AI Assistant for Students -->
-    {% if user.is_authenticated and user.user_type == '3' %}
-        {% include "includes/floating_ai_assistant.html" %}
-    {% endif %}
+
+    {% block custom_js %}{% endblock %}
 </body>
-
 </html>

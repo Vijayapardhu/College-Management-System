@@ -1,0 +1,314 @@
+/* Modern Form Styling - Tailwind Enhanced */
+
+/* Form Containers */
+.form-container {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6;
+}
+
+.form-header {
+    @apply pb-6 border-b border-gray-200;
+}
+
+.form-title {
+    @apply text-2xl font-bold text-gray-900 mb-2;
+}
+
+.form-subtitle {
+    @apply text-gray-600;
+}
+
+/* Form Groups */
+.form-group {
+    @apply space-y-2;
+}
+
+.form-row {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.form-row-3 {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+/* Form Labels */
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-label-required::after {
+    content: " *";
+    @apply text-red-500;
+}
+
+/* Form Inputs */
+.form-input,
+.form-select,
+.form-textarea {
+    @apply block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm 
+           placeholder-gray-400 
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           transition-all duration-200
+           dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+}
+
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+    @apply border-gray-400;
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    @apply bg-gray-100 cursor-not-allowed opacity-60;
+}
+
+.form-input-sm {
+    @apply px-3 py-2 text-sm;
+}
+
+.form-input-lg {
+    @apply px-5 py-3 text-lg;
+}
+
+/* Form Textarea */
+.form-textarea {
+    @apply resize-y min-h-[100px];
+}
+
+/* Input Groups */
+.input-group {
+    @apply relative flex items-stretch w-full;
+}
+
+.input-group-prepend,
+.input-group-append {
+    @apply absolute inset-y-0 flex items-center pointer-events-none z-10;
+}
+
+.input-group-prepend {
+    @apply left-0 pl-3;
+}
+
+.input-group-append {
+    @apply right-0 pr-3;
+}
+
+.input-group-text {
+    @apply text-gray-500 dark:text-gray-400;
+}
+
+.input-group .form-input {
+    @apply pl-10;
+}
+
+/* Validation States */
+.form-input.is-valid,
+.form-select.is-valid,
+.form-textarea.is-valid {
+    @apply border-green-500 focus:ring-green-500 focus:border-green-500;
+}
+
+.form-input.is-invalid,
+.form-select.is-invalid,
+.form-textarea.is-invalid {
+    @apply border-red-500 focus:ring-red-500 focus:border-red-500;
+}
+
+.valid-feedback {
+    @apply text-sm text-green-600 mt-1 flex items-center;
+}
+
+.invalid-feedback {
+    @apply text-sm text-red-600 mt-1 flex items-center;
+}
+
+.valid-feedback::before {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    @apply mr-2;
+}
+
+.invalid-feedback::before {
+    content: "\f06a";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    @apply mr-2;
+}
+
+/* Checkboxes and Radios */
+.form-check {
+    @apply flex items-center;
+}
+
+.form-check-input {
+    @apply h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded;
+}
+
+.form-check-label {
+    @apply ml-2 text-sm text-gray-700 cursor-pointer;
+}
+
+.form-radio {
+    @apply rounded-full;
+}
+
+/* Switch */
+.form-switch {
+    @apply relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+.form-switch input {
+    @apply sr-only;
+}
+
+.form-switch input:checked + .form-switch-slider {
+    @apply translate-x-6;
+}
+
+.form-switch-slider {
+    @apply inline-block w-4 h-4 bg-white rounded-full transition-transform transform;
+}
+
+/* File Upload */
+.file-upload-wrapper {
+    @apply relative block w-full;
+}
+
+.file-upload-input {
+    @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
+}
+
+.file-upload-label {
+    @apply flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg
+           cursor-pointer hover:border-primary-400 hover:bg-primary-50
+           transition-all duration-200;
+}
+
+.file-upload-label.drag-over {
+    @apply border-primary-500 bg-primary-50;
+}
+
+.file-upload-icon {
+    @apply w-8 h-8 text-gray-400 mb-2;
+}
+
+.file-upload-text {
+    @apply text-sm text-gray-600 font-medium;
+}
+
+.file-upload-hint {
+    @apply text-xs text-gray-500 mt-1;
+}
+
+/* File Preview */
+.file-preview {
+    @apply mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200;
+}
+
+.file-preview-item {
+    @apply flex items-center justify-between p-2;
+}
+
+.file-preview-name {
+    @apply text-sm text-gray-700 flex items-center;
+}
+
+.file-preview-size {
+    @apply text-xs text-gray-500;
+}
+
+.file-preview-remove {
+    @apply text-red-600 hover:text-red-700 cursor-pointer;
+}
+
+/* Form Actions */
+.form-actions {
+    @apply flex items-center justify-end space-x-3 pt-6 border-t border-gray-200;
+}
+
+.form-actions-start {
+    @apply justify-start;
+}
+
+.form-actions-between {
+    @apply justify-between;
+}
+
+/* Multi-step Forms */
+.form-steps {
+    @apply flex items-center justify-between mb-8;
+}
+
+.form-step {
+    @apply flex-1 flex items-center;
+}
+
+.form-step-number {
+    @apply w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm
+           bg-gray-200 text-gray-600;
+}
+
+.form-step.active .form-step-number {
+    @apply bg-primary-600 text-white;
+}
+
+.form-step.completed .form-step-number {
+    @apply bg-green-600 text-white;
+}
+
+.form-step-label {
+    @apply ml-3 text-sm font-medium text-gray-600;
+}
+
+.form-step.active .form-step-label {
+    @apply text-primary-600;
+}
+
+.form-step.completed .form-step-label {
+    @apply text-green-600;
+}
+
+.form-step-line {
+    @apply flex-1 h-0.5 bg-gray-200 mx-4;
+}
+
+.form-step.completed .form-step-line {
+    @apply bg-green-600;
+}
+
+/* Loading State */
+.form-loading {
+    @apply opacity-50 pointer-events-none;
+}
+
+.form-spinner {
+    @apply inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .form-row,
+    .form-row-3 {
+        @apply grid-cols-1;
+    }
+    
+    .form-actions {
+        @apply flex-col space-x-0 space-y-3 items-stretch;
+    }
+    
+    .form-steps {
+        @apply flex-col space-y-4;
+    }
+    
+    .form-step {
+        @apply flex-col items-start;
+    }
+    
+    .form-step-line {
+        @apply hidden;
+    }
+}
+
+

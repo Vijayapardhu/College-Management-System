@@ -1,0 +1,162 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Staff Details{% endblock page_title %}
+
+{% block content %}
+<!-- Staff Detail -->
+<div class="space-y-6">
+    <!-- Staff Profile Header -->
+    <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl shadow-lg p-8 text-white">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
+                    {% if staff.admin.profile_pic %}
+                        <img src="{{ staff.admin.profile_pic.url }}" alt="{{ staff.admin.first_name }}" class="w-24 h-24 rounded-2xl object-cover">
+                    {% else %}
+                        <span class="text-4xl font-bold">
+                            {{ staff.admin.first_name|first|default:"S"|upper }}{{ staff.admin.last_name|first|default:"T"|upper }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">{{ staff.admin.first_name|default:"Staff" }} {{ staff.admin.last_name|default:"Member" }}</h1>
+                    <p class="text-green-100 mb-3">{{ staff.admin.email|default:"staff@example.com" }}</p>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-id-badge mr-1"></i> ID: {{ staff.id|default:"Not Assigned" }}
+                        </span>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-building mr-1"></i> {{ staff.department.name|default:"No Department" }}
+                        </span>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-user-tie mr-1"></i> {{ staff.designation|default:"Faculty" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <a href="{% url 'edit_staff' staff.id %}" class="btn bg-white text-green-600 hover:bg-green-50">
+                    <i class="fas fa-edit mr-2"></i>Edit Profile
+                </a>
+                <button onclick="exportStaffData()" class="btn bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30">
+                    <i class="fas fa-download mr-2"></i>Export Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary">
+            <div class="metric-icon metric-icon-primary">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="metric-value">{{ subjects_assigned|default:"5" }}</div>
+            <div class="metric-label">Subjects Assigned</div>
+        </div>
+
+        <div class="metric-card metric-card-success">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="metric-value">{{ total_students|default:"120" }}</div>
+            <div class="metric-label">Students</div>
+        </div>
+
+        <div class="metric-card metric-card-info">
+            <div class="metric-icon metric-icon-info">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="metric-value">{{ attendance_rate|default:"92" }}%</div>
+            <div class="metric-label">Attendance Rate</div>
+        </div>
+
+        <div class="metric-card metric-card-warning">
+            <div class="metric-icon metric-icon-warning">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="metric-value">{{ rating|default:"4.5" }}/5</div>
+            <div class="metric-label">Student Rating</div>
+        </div>
+    </div>
+
+    <!-- Staff Information Tabs -->
+    <div class="dashboard-card">
+        <div class="border-b border-gray-200">
+            <nav class="flex space-x-4 p-4">
+                <button class="tab-item tab-item-active" onclick="showStaffTab('info')">Personal Info</button>
+                <button class="tab-item" onclick="showStaffTab('subjects')">Subjects</button>
+                <button class="tab-item" onclick="showStaffTab('performance')">Performance</button>
+                <button class="tab-item" onclick="showStaffTab('leaves')">Leave History</button>
+            </nav>
+        </div>
+
+        <div class="p-6">
+            <div id="staff-tab-info">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Personal Details</h4>
+                        <dl class="space-y-2">
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Full Name</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.admin.first_name }} {{ staff.admin.last_name }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Email</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.admin.email }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Phone</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.phone|default:"Not Provided" }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Address</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.address|default:"Not Provided" }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700 mb-3">Employment Details</h4>
+                        <dl class="space-y-2">
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Department</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.department.name }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Designation</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.designation|default:"Faculty" }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Join Date</dt>
+                                <dd class="font-semibold text-gray-900">{{ staff.created_at|date:"M d, Y"|default:"Not Available" }}</dd>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-gray-100">
+                                <dt class="text-gray-600">Status</dt>
+                                <dd><span class="badge badge-success">Active</span></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+function showStaffTab(tabName) {
+    document.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('tab-item-active');
+    });
+    event.target.classList.add('tab-item-active');
+    console.log('Showing tab:', tabName);
+}
+
+function exportStaffData() {
+    alert('Exporting staff data...');
+}
+</script>
+{% endblock custom_js %}
+
+

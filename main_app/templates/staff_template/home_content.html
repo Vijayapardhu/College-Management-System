@@ -2,413 +2,336 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
-{% block custom_css %}
-<style>
-    /* Professional Faculty Dashboard */
-    
-    /* Welcome Header - Professional */
-    .welcome-header {
-        background: white;
-        border: 1px solid #e5e5e5;
-        border-left: 4px solid #003d82;
-        border-radius: 4px;
-        padding: 25px 30px;
-        margin-bottom: 25px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .welcome-header h2 {
-        font-size: 24px;
-        font-weight: 600;
-        color: #003d82;
-        margin-bottom: 8px;
-    }
-
-    .welcome-header p {
-        font-size: 14px;
-        color: #4a5568;
-        margin: 0;
-    }
-
-    .staff-info {
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid #e5e5e5;
-    }
-
-    .staff-info-item {
-        display: inline-block;
-        margin-right: 25px;
-        font-size: 13px;
-        color: #718096;
-    }
-
-    .staff-info-item strong {
-        color: #1a202c;
-        font-weight: 600;
-    }
-
-    /* Professional Metric Cards */
-    .metric-card {
-        background: white;
-        border: 1px solid #e5e5e5;
-        border-left: 4px solid;
-        border-radius: 4px;
-        padding: 25px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
-        text-align: center;
-        height: 100%;
-    }
-
-    .metric-card:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .metric-card.info { border-left-color: #0369a1; }
-    .metric-card.success { border-left-color: #0f7c4f; }
-    .metric-card.warning { border-left-color: #b45309; }
-    .metric-card.danger { border-left-color: #b91c1c; }
-
-    .metric-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-        opacity: 0.15;
-    }
-
-    .metric-card.info .metric-icon { color: #0369a1; }
-    .metric-card.success .metric-icon { color: #0f7c4f; }
-    .metric-card.warning .metric-icon { color: #b45309; }
-    .metric-card.danger .metric-icon { color: #b91c1c; }
-
-    .metric-value {
-        font-size: 42px;
-        font-weight: 700;
-        margin: 10px 0;
-    }
-
-    .metric-card.info .metric-value { color: #0369a1; }
-    .metric-card.success .metric-value { color: #0f7c4f; }
-    .metric-card.warning .metric-value { color: #b45309; }
-    .metric-card.danger .metric-value { color: #b91c1c; }
-
-    .metric-label {
-        font-size: 14px;
-        color: #4a5568;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Professional Chart Cards */
-    .card-secondary {
-        border: 1px solid #e5e5e5;
-        border-radius: 4px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .card-secondary .card-header {
-        background: #f5f5f5;
-        border-bottom: 2px solid #e5e5e5;
-        padding: 15px 20px;
-    }
-
-    .card-secondary .card-title {
-        font-weight: 600;
-        color: #1a202c;
-        margin: 0;
-        font-size: 16px;
-    }
-
-    @media (max-width: 768px) {
-        .staff-info-item {
-            display: block;
-            margin: 5px 0;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-file me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Manage and organize your data efficiently
-            </p>
+<!-- Staff Dashboard -->
+<div class="space-y-6">
+    <!-- Welcome Header -->
+    <div class="gradient-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold mb-2">
+                    Hey Prof. {{ user.last_name }}! 👨‍🏫
+                </h2>
+                <p class="text-white/90 text-lg">Let's make learning awesome today!</p>
+            </div>
+            <div class="hidden md:flex space-x-3">
+                <a href="{% url 'staff_take_attendance' %}" class="btn bg-white text-blue-600 hover:bg-blue-50">
+                    <i class="fas fa-user-check mr-2"></i>
+                    Take Attendance
+                </a>
+            </div>
         </div>
-<section class="content">
-    <div class="container-fluid">
-        <!-- Professional Welcome Header -->
-        <div class="welcome-header">
-            <h2>Faculty Dashboard - {{ user.first_name }} {{ user.last_name }}</h2>
-            <p>Manage your classes, students, and academic activities</p>
-            <div class="staff-info">
-                <span class="staff-info-item">
-                    <i class="fas fa-user-tie me-1"></i>
-                    <strong>Designation:</strong> {{ staff.designation|default:"Faculty" }}
+        <div class="mt-6 pt-4 border-t border-white/20 flex flex-wrap gap-4 text-white/90 text-sm">
+            <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg">
+                <i class="fas fa-user-tie"></i>
+                <span>{{ staff.designation|default:"Faculty" }}</span>
+            </div>
+            <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg">
+                <i class="fas fa-building"></i>
+                <span>{{ staff.department.name|default:"Not Assigned" }}</span>
+            </div>
+            <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg">
+                <i class="fas fa-envelope"></i>
+                <span>{{ user.email }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Students -->
+        <div class="metric-card metric-card-info group">
+            <div class="metric-icon metric-icon-info">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="metric-value" data-count="{{total_students}}">0</div>
+            <div class="metric-label">Total Students</div>
+        </div>
+
+        <!-- Attendance Taken -->
+        <div class="metric-card metric-card-success group">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-check-square"></i>
+            </div>
+            <div class="metric-value" data-count="{{total_attendance}}">0</div>
+            <div class="metric-label">Attendance Taken</div>
+        </div>
+
+        <!-- Leave Applications -->
+        <div class="metric-card metric-card-warning group">
+            <div class="metric-icon metric-icon-warning">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <div class="metric-value" data-count="{{total_leave}}">0</div>
+            <div class="metric-label">Leave Applications</div>
+        </div>
+
+        <!-- Assigned Subjects -->
+        <div class="metric-card metric-card-error group">
+            <div class="metric-icon metric-icon-error">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="metric-value" data-count="{{total_subject}}">0</div>
+            <div class="metric-label">Assigned Subjects</div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Attendance/Leave Distribution -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <h3 class="dashboard-card-title">
+                    <i class="fas fa-chart-pie mr-2"></i>
+                    Attendance & Leave Overview
+                </h3>
+            </div>
+            <div class="dashboard-card-body">
+                <div class="chart-container chart-container-lg">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject-wise Attendance -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <h3 class="dashboard-card-title">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    Subject-wise Attendance
+                </h3>
+            </div>
+            <div class="dashboard-card-body">
+                <div class="chart-container chart-container-lg">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="{% url 'staff_take_attendance' %}" class="action-card group">
+            <div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200">
+                <span class="text-3xl">✅</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Take Attendance</h3>
+            <p class="text-sm text-gray-600">Mark today's attendance</p>
+            <div class="mt-4">
+                <span class="text-xs font-semibold text-blue-600 group-hover:text-blue-700">
+                    Let's Go →
                 </span>
-                <span class="staff-info-item">
-                    <i class="fas fa-building me-1"></i>
-                    <strong>Department:</strong> {{ staff.department.name|default:"Not Assigned" }}
+            </div>
+        </a>
+
+        <a href="{% url 'upload_material' %}" class="action-card group">
+            <div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200">
+                <span class="text-3xl">📚</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Upload Materials</h3>
+            <p class="text-sm text-gray-600">Share study resources</p>
+            <div class="mt-4">
+                <span class="text-xs font-semibold text-green-600 group-hover:text-green-700">
+                    Upload Now →
                 </span>
-                <span class="staff-info-item">
-                    <i class="fas fa-envelope me-1"></i>
-                    <strong>Email:</strong> {{ user.email }}
+            </div>
+        </a>
+
+        <a href="{% url 'create_assignment' %}" class="action-card group">
+            <div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200">
+                <span class="text-3xl">📝</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Create Assignment</h3>
+            <p class="text-sm text-gray-600">Assign tasks to students</p>
+            <div class="mt-4">
+                <span class="text-xs font-semibold text-purple-600 group-hover:text-purple-700">
+                    Create Now →
                 </span>
             </div>
-        </div>
-
-        <!-- Metric Cards -->
-        <div class="row g-3 mb-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="metric-card info">
-                    <div class="metric-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="metric-value">{{total_students}}</div>
-                    <div class="metric-label">Total Students</div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="metric-card success">
-                    <div class="metric-icon">
-                        <i class="fas fa-check-square"></i>
-                    </div>
-                    <div class="metric-value">{{total_attendance}}</div>
-                    <div class="metric-label">Attendance Taken</div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="metric-card warning">
-                    <div class="metric-icon">
-                        <i class="fas fa-calendar-times"></i>
-                    </div>
-                    <div class="metric-value">{{total_leave}}</div>
-                    <div class="metric-label">Leave Applications</div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="metric-card danger">
-                    <div class="metric-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <div class="metric-value">{{total_subject}}</div>
-                    <div class="metric-label">Assigned Subjects</div>
-                </div>
-            </div>
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-            <div class="col-md-6">
-                <!-- LINE CHART -->
-                <div class="card card-secondary">
-                  <div class="card-header-professional">
-                    <h3 class="card-title">{{page_title}}</h3>
-    
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                  </div>
-                  <div class="card-body-professional">
-                    <div class="chart">
-                      <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div></div>
-                  <!-- /.card-body -->
-                </div>
-                <div class="col-md-6">
-                    <div class="card card-secondary">
-              <div class="card-header-professional">
-                <h3 class="card-title">{{page_title}}</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                </div>
-              </div>
-              <div class="card-body-professional">
-                <div class="chart">
-                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-                </div>
-            <!-- right col -->
-        </div>
-        <!-- /.row (main row) -->
-    </div><!-- /.container-fluid -->
-</section>
+        </a>
+    </div>
+</div>
 {% endblock content %}
 
 {% block custom_js %}
-  <script>
-      $(document).ready(function(){
-        var donutData        = {
-            labels: ['Attendance', 'Leave'],
-            datasets: [
-              {
-                data:[{{total_attendance}}, {{total_leave}}],
-                backgroundColor : ['#00a65a', '#f39c12',],
-              }
-            ]
-          }
-        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-        var pieData        = donutData;
-        var pieOptions     = {
-          maintainAspectRatio : false,
-          responsive : true,
-        }
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        var pieChart = new Chart(pieChartCanvas, {
-          type: 'pie',
-          data: pieData,
-          options: pieOptions      
-        });
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter Animation
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-count'));
+        const duration = 1500;
+        const increment = target / (duration / 16);
+        let current = 0;
 
-        var subject_list = {{ subject_list|safe|escape }};
-        var attendance_list = {{ attendance_list }};
-  
-            var barChartData = {
-      labels  : subject_list,
-      datasets: [
-      {
-        label               : 'Attendance Per Subject',
-        backgroundColor     : '#6c757d',
-        borderColor         : 'rgba(60,141,188,0.8)',
-        pointRadius          : false,
-        pointColor          : '#3b8bba',
-        pointStrokeColor    : 'rgba(60,141,188,1)',
-        pointHighlightFill  : '#fff',
-        pointHighlightStroke: 'rgba(60,141,188,1)',
-        data                : attendance_list
-      }, 
-      
-      ]
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                element.textContent = Math.floor(current);
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target;
+            }
+        };
+
+        updateCounter();
     }
-        var barChartCanvas = $('#barChart').get(0).getContext('2d')
-        var temp0 = barChartData.datasets[0]
-        //var temp1 = areaChartData.datasets[1]
-        barChartData.datasets[0] = temp0
-       // barChartData.datasets[1] = temp0
-    
-    var stackedBarChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      scales: {
-        xAxes: [{
-          stacked: true,
-        }],
-        yAxes: [{
-          stacked: true
+
+    // Animate all counters
+    document.querySelectorAll('[data-count]').forEach(counter => {
+        animateCounter(counter);
+    });
+
+    // Modern Chart.js Configuration
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#6b7280';
+
+    // Pie Chart - Attendance vs Leave
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const pieData = {
+        labels: ['Attendance Taken', 'Leave Applications'],
+        datasets: [{
+            data: [{{total_attendance}}, {{total_leave}}],
+            backgroundColor: [
+                '#22c55e',
+                '#f59e0b'
+            ],
+            borderColor: [
+                '#ffffff',
+                '#ffffff'
+            ],
+            borderWidth: 3,
+            hoverOffset: 10
         }]
-      }
-    }
-    
-        var barChart = new Chart(barChartCanvas, {
-          type: 'bar', 
-          data: barChartData,
-          options: stackedBarChartOptions
-        })
-      })
+    };
 
-    
-  </script>
-      <!-- The core Firebase JS SDK is always required and must be listed first -->
-      <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+    const pieOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    font: {
+                        size: 14,
+                        weight: '500'
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                cornerRadius: 8
+            }
+        }
+    };
 
-      <!-- TODO: Add SDKs for Firebase products that you want to use
-       https://firebase.google.com/docs/web/setup#available-libraries -->
-      <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-analytics.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-messaging.js"></script>
-  
-  
-      <script>
-          // Your web app's Firebase configuration
-          // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-          var firebaseConfig = {
-              apiKey: "AIzaSyBarDWWHTfTMSrtc5Lj3Cdw5dEvjAkFwtM",
-              authDomain: "sms-with-django.firebaseapp.com",
-              databaseURL: "https://sms-with-django.firebaseio.com",
-              projectId: "sms-with-django",
-              storageBucket: "sms-with-django.appspot.com",
-              messagingSenderId: "945324593139",
-              appId: "1:945324593139:web:03fa99a8854bbd38420c86",
-              measurementId: "G-2F2RXTL9GT"
-          };
-          // Initialize Firebase
-          firebase.initializeApp(firebaseConfig)
-          const messaging = firebase.messaging();
-          function InitializeFireBaseMessaging() {
-              messaging
-                  .requestPermission()
-                  .then(function () {
-                      console.log("Notification Permission");
-                      return messaging.getToken();
-                  })
-                  .then(function (token) {
-                      console.log("Token : " + token);
-                      sendToServer(token);
-                  })
-                  .catch(function (reason) {
-                      console.log(reason)
-                  })
-          }
-          messaging.onMessage(function (payload) {
-              const notificationOption = {
-                  body: payload.notification.body,
-                  icon: payload.notification.icon,
-  
-              }
-              if (Notification.permission == 'granted') {
-                  var notification = new Notification(payload.notification.title, notificationOption);
-                  notification.onclick = function (event) {
-                      event.preventDefault();
-                      window.open(payload.notification.click_action, "_blank");
-                      notification.close();
-                  }
-              }
-              console.log(payload);
-          });
-          messaging.onTokenRefresh(function () {
-              messaging.getToken()
-                  .then(function (newToken) {
-                      console.log("New Token : " + newToken);
-                      sendToServer(newToken);
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: pieData,
+        options: pieOptions
+    });
 
-                  })
-                  .catch(function (reason) {
-                      console.log(reason)
-                  })
-          })
-  
-          function sendToServer(token){
-            $.ajax({
-              url: "{% url 'staff_fcmtoken' %}",
-              type: 'POST',
-              data: {
-                  token: token,
-              }
-          }).done(function (response) {
-   
-             
-          }).fail(function (response) {
-          })
+    // Bar Chart - Subject-wise Attendance
+    const subjectList = {{ subject_list|safe|escape }};
+    const attendanceList = {{ attendance_list }};
 
-          }
-          
-          InitializeFireBaseMessaging();
-      </script>
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    const barData = {
+        labels: subjectList.map(label => label.length > 15 ? label.substring(0, 15) + '...' : label),
+        datasets: [{
+            label: 'Attendance',
+            data: attendanceList,
+            backgroundColor: '#6366f1',
+            borderRadius: 8,
+            hoverBackgroundColor: '#4f46e5'
+        }]
+    };
+
+    const barOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                cornerRadius: 8,
+                callbacks: {
+                    title: function(context) {
+                        return subjectList[context[0].dataIndex];
+                    },
+                    label: function(context) {
+                        return 'Attendance: ' + context.parsed.y + ' students';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            }
+        }
+    };
+
+    new Chart(barCtx, {
+        type: 'bar',
+        data: barData,
+        options: barOptions
+    });
+});
+
+// Firebase Cloud Messaging (preserved from original)
+const firebaseConfig = {
+    apiKey: "AIzaSyBarDWWHTfTMSrtc5Lj3Cdw5dEvjAkFwtM",
+    authDomain: "sms-with-django.firebaseapp.com",
+    databaseURL: "https://sms-with-django.firebaseio.com",
+    projectId: "sms-with-django",
+    storageBucket: "sms-with-django.appspot.com",
+    messagingSenderId: "945324593139",
+    appId: "1:945324593139:web:03fa99a8854bbd38420c86",
+    measurementId: "G-2F2RXTL9GT"
+};
+
+// Load Firebase dynamically to avoid blocking
+setTimeout(() => {
+    const script1 = document.createElement('script');
+    script1.src = 'https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js';
+    script1.onload = () => {
+        const script2 = document.createElement('script');
+        script2.src = 'https://www.gstatic.com/firebasejs/7.22.1/firebase-messaging.js';
+        script2.onload = () => {
+            firebase.initializeApp(firebaseConfig);
+            const messaging = firebase.messaging();
+            
+            messaging.requestPermission()
+                .then(() => messaging.getToken())
+                .then(token => {
+                    console.log("FCM Token:", token);
+                    // Send token to server
+                    $.ajax({
+                        url: "{% url 'staff_fcmtoken' %}",
+                        type: 'POST',
+                        data: { token: token }
+                    });
+                })
+                .catch(err => console.log('FCM Error:', err));
+        };
+        document.head.appendChild(script2);
+    };
+    document.head.appendChild(script1);
+}, 1000);
+</script>
 {% endblock custom_js %}

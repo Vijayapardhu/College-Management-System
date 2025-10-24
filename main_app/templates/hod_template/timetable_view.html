@@ -1,0 +1,139 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}View Timetable{% endblock page_title %}
+
+{% block content %}
+<!-- Timetable View -->
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-calendar-week mr-2"></i>
+                    Class Timetable
+                </h2>
+                <p class="text-gray-600">{{ timetable.course.name|default:"Course Name" }} - {{ timetable.semester|default:"Semester 1" }}</p>
+            </div>
+            <div class="flex space-x-2">
+                <a href="{% url 'edit_timetable' timetable.id %}" class="btn btn-primary">
+                    <i class="fas fa-edit mr-2"></i>Edit
+                </a>
+                <button onclick="printTimetable()" class="btn btn-outline">
+                    <i class="fas fa-print mr-2"></i>Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timetable Grid -->
+    <div class="dashboard-card overflow-x-auto">
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gradient-to-r from-blue-50 to-blue-100">
+                    <th class="border border-gray-300 px-4 py-3 text-left font-bold text-gray-700">Time</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold text-gray-700">Monday</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold text-gray-700">Tuesday</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold text-gray-700">Wednesday</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold text-gray-700">Thursday</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold text-gray-700">Friday</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-3 font-semibold text-gray-700">9:00 - 10:00</td>
+                    <td class="border border-gray-300 px-4 py-3 bg-blue-50 hover:bg-blue-100 transition-colors">
+                        <div class="font-semibold text-blue-900">Mathematics</div>
+                        <div class="text-xs text-gray-600">Dr. Smith - Room 101</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-green-50 hover:bg-green-100 transition-colors">
+                        <div class="font-semibold text-green-900">Physics</div>
+                        <div class="text-xs text-gray-600">Dr. Johnson - Lab 2</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-purple-50 hover:bg-purple-100 transition-colors">
+                        <div class="font-semibold text-purple-900">Chemistry</div>
+                        <div class="text-xs text-gray-600">Dr. Williams - Lab 1</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                        <div class="font-semibold text-yellow-900">English</div>
+                        <div class="text-xs text-gray-600">Ms. Brown - Room 205</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-pink-50 hover:bg-pink-100 transition-colors">
+                        <div class="font-semibold text-pink-900">Computer Science</div>
+                        <div class="text-xs text-gray-600">Mr. Davis - Lab 3</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-3 font-semibold text-gray-700">10:00 - 11:00</td>
+                    <td class="border border-gray-300 px-4 py-3 bg-green-50 hover:bg-green-100 transition-colors">
+                        <div class="font-semibold text-green-900">Physics</div>
+                        <div class="text-xs text-gray-600">Dr. Johnson - Room 102</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-blue-50 hover:bg-blue-100 transition-colors">
+                        <div class="font-semibold text-blue-900">Mathematics</div>
+                        <div class="text-xs text-gray-600">Dr. Smith - Room 101</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                        <div class="font-semibold text-yellow-900">English</div>
+                        <div class="text-xs text-gray-600">Ms. Brown - Room 205</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-pink-50 hover:bg-pink-100 transition-colors">
+                        <div class="font-semibold text-pink-900">Computer Science</div>
+                        <div class="text-xs text-gray-600">Mr. Davis - Lab 3</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-purple-50 hover:bg-purple-100 transition-colors">
+                        <div class="font-semibold text-purple-900">Chemistry</div>
+                        <div class="text-xs text-gray-600">Dr. Williams - Lab 1</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-3 font-semibold text-gray-700 bg-gray-100" colspan="6">
+                        <div class="text-center">☕ Break (11:00 - 11:15)</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-3 font-semibold text-gray-700">11:15 - 12:15</td>
+                    <td class="border border-gray-300 px-4 py-3 bg-purple-50 hover:bg-purple-100 transition-colors">
+                        <div class="font-semibold text-purple-900">Chemistry</div>
+                        <div class="text-xs text-gray-600">Dr. Williams - Lab 1</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-pink-50 hover:bg-pink-100 transition-colors">
+                        <div class="font-semibold text-pink-900">Computer Science</div>
+                        <div class="text-xs text-gray-600">Mr. Davis - Lab 3</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-blue-50 hover:bg-blue-100 transition-colors">
+                        <div class="font-semibold text-blue-900">Mathematics</div>
+                        <div class="text-xs text-gray-600">Dr. Smith - Room 101</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-green-50 hover:bg-green-100 transition-colors">
+                        <div class="font-semibold text-green-900">Physics Lab</div>
+                        <div class="text-xs text-gray-600">Dr. Johnson - Lab 2</div>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-3 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                        <div class="font-semibold text-yellow-900">English</div>
+                        <div class="text-xs text-gray-600">Ms. Brown - Room 205</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+function printTimetable() {
+    window.print();
+}
+</script>
+
+<style>
+@media print {
+    .btn, .dashboard-card-header button {
+        display: none !important;
+    }
+}
+</style>
+{% endblock custom_js %}
+
+

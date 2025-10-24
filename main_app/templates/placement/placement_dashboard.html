@@ -1,0 +1,96 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Placement Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="gradient-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold mb-2">Placement Cell 💼</h2>
+                <p class="text-white/90 text-lg">Manage campus recruitment and placements</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary">
+            <div class="metric-icon metric-icon-primary">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="metric-value" data-count="45">0</div>
+            <div class="metric-label">Companies</div>
+        </div>
+
+        <div class="metric-card metric-card-success">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="metric-value" data-count="280">0</div>
+            <div class="metric-label">Placed Students</div>
+        </div>
+
+        <div class="metric-card metric-card-info">
+            <div class="metric-icon metric-icon-info">
+                <i class="fas fa-calendar"></i>
+            </div>
+            <div class="metric-value" data-count="12">0</div>
+            <div class="metric-label">Upcoming Drives</div>
+        </div>
+
+        <div class="metric-card metric-card-warning">
+            <div class="metric-icon metric-icon-warning">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="metric-value">75%</div>
+            <div class="metric-label">Placement Rate</div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="{% url 'manage_companies' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200">
+                <span class="text-3xl">🏢</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Manage Companies</h3>
+            <p class="text-sm text-gray-600">Partner companies database</p>
+        </a>
+
+        <a href="{% url 'manage_placement_drives' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200">
+                <span class="text-3xl">📅</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Placement Drives</h3>
+            <p class="text-sm text-gray-600">Schedule recruitment drives</p>
+        </a>
+
+        <a href="{% url 'view_placement_applications' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200">
+                <span class="text-3xl">📋</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Applications</h3>
+            <p class="text-sm text-gray-600">Student applications</p>
+        </a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+document.querySelectorAll('[data-count]').forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'));
+    let current = 0;
+    const timer = setInterval(() => {
+        current += target / 60;
+        if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current);
+        }
+    }, 16);
+});
+</script>
+{% endblock custom_js %}
+
+

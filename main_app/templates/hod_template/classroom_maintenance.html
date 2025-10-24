@@ -1,0 +1,31 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Classroom Maintenance{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-tools mr-2"></i>Classroom Maintenance
+        </h2>
+        <p class="text-gray-600">Track and manage maintenance requests</p>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Maintenance Log</h3>
+        </div>
+        <div class="dashboard-card-body">
+            <div class="space-y-3">
+                <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg">
+                    <h4 class="font-semibold text-gray-900">Room 205 - AC Repair</h4>
+                    <p class="text-sm text-gray-600">Reported on Oct 20, 2024</p>
+                    <span class="badge badge-warning">Pending</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

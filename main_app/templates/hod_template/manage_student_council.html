@@ -1,0 +1,25 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Student Council{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2"><i class="fas fa-users mr-2"></i>Student Council</h2>
+                <p class="text-gray-600">Manage student representatives</p>
+            </div>
+            <a href="{% url 'add_council_member' %}" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Add Member</a>
+        </div>
+    </div>
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="dashboard-card"><div class="dashboard-card-body text-center p-6"><div class="text-3xl mb-2">👑</div><h4 class="font-semibold">President</h4><p class="text-sm text-gray-600">John Doe</p></div></div>
+        <div class="dashboard-card"><div class="dashboard-card-body text-center p-6"><div class="text-3xl mb-2">🎯</div><h4 class="font-semibold">Vice President</h4><p class="text-sm text-gray-600">Jane Smith</p></div></div>
+        <div class="dashboard-card"><div class="dashboard-card-body text-center p-6"><div class="text-3xl mb-2">📝</div><h4 class="font-semibold">Secretary</h4><p class="text-sm text-gray-600">Mike Wilson</p></div></div>
+        <div class="dashboard-card"><div class="dashboard-card-body text-center p-6"><div class="text-3xl mb-2">💰</div><h4 class="font-semibold">Treasurer</h4><p class="text-sm text-gray-600">Sarah Lee</p></div></div>
+    </div>
+</div>
+{% endblock content %}
+
+

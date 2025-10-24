@@ -3,35 +3,83 @@
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block content %}
-
-
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-file me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Manage and organize your data efficiently
-            </p>
-        </div>
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Update Profile"%}
+<!-- HOD/Admin Profile -->
+<div class="space-y-6">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <div class="w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center">
+                    {% if user.profile_pic %}
+                        <img src="{{ user.profile_pic.url }}" alt="{{ user.first_name }}" class="w-20 h-20 rounded-full object-cover">
+                    {% else %}
+                        <span class="text-2xl font-bold text-white">
+                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </span>
+                    {% endif %}
                 </div>
-                <!-- /.card -->
-
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-1">{{ user.first_name }} {{ user.last_name }}</h1>
+                    <p class="text-gray-600">{{ user.email }}</p>
+                    <div class="mt-2">
+                        <span class="badge badge-primary">HOD / Administrator</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Profile Form -->
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="form-title">Profile Information</h2>
+            <p class="form-subtitle">Manage your account settings and personal information</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+                    <div class="flex items-center">
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle mr-2"></i>
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}form-label-required{% endif %}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <p class="form-help">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="invalid-feedback">{{ field.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <a href="{% url 'hod_home' %}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-2"></i>
+                    Update Profile
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}
 
 {% block custom_js %}

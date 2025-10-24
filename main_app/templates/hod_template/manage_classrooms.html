@@ -1,0 +1,97 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Manage Classrooms{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-door-open mr-2"></i>Classroom Management
+                </h2>
+                <p class="text-gray-600">Manage rooms and facilities</p>
+            </div>
+            <a href="{% url 'add_classroom' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>Add Classroom
+            </a>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary">
+            <div class="metric-icon metric-icon-primary">
+                <i class="fas fa-door-open"></i>
+            </div>
+            <div class="metric-value" data-count="45">0</div>
+            <div class="metric-label">Total Rooms</div>
+        </div>
+
+        <div class="metric-card metric-card-success">
+            <div class="metric-icon metric-icon-success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="metric-value" data-count="38">0</div>
+            <div class="metric-label">Available</div>
+        </div>
+
+        <div class="metric-card metric-card-warning">
+            <div class="metric-icon metric-icon-warning">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="metric-value" data-count="7">0</div>
+            <div class="metric-label">In Use</div>
+        </div>
+
+        <div class="metric-card metric-card-error">
+            <div class="metric-icon metric-icon-error">
+                <i class="fas fa-tools"></i>
+            </div>
+            <div class="metric-value" data-count="2">0</div>
+            <div class="metric-label">Maintenance</div>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Classrooms List</h3>
+        </div>
+        <div class="dashboard-card-body p-0">
+            <table class="modern-table w-full" id="classroomTable">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3">Room No</th>
+                        <th class="px-6 py-3">Building</th>
+                        <th class="px-6 py-3">Capacity</th>
+                        <th class="px-6 py-3">Type</th>
+                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="px-6 py-4 font-semibold">101</td>
+                        <td class="px-6 py-4">Main Block</td>
+                        <td class="px-6 py-4">60</td>
+                        <td class="px-6 py-4">Lecture Hall</td>
+                        <td class="px-6 py-4"><span class="badge badge-success">Available</span></td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'edit_classroom' 1 %}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+if (typeof safeDataTable !== 'undefined') {
+    safeDataTable('#classroomTable');
+}
+</script>
+{% endblock custom_js %}
+
+

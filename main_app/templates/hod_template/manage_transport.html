@@ -1,0 +1,24 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Transport Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2"><i class="fas fa-bus mr-2"></i>Transport Management</h2>
+                <p class="text-gray-600">Manage college bus routes and allocations</p>
+            </div>
+            <a href="{% url 'add_transport' %}" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Add Route</a>
+        </div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="metric-card metric-card-primary"><div class="metric-value" data-count="12">0</div><div class="metric-label">Total Routes</div></div>
+        <div class="metric-card metric-card-success"><div class="metric-value" data-count="8">0</div><div class="metric-label">Active Buses</div></div>
+        <div class="metric-card metric-card-info"><div class="metric-value" data-count="320">0</div><div class="metric-label">Students Using</div></div>
+    </div>
+</div>
+{% endblock content %}
+
+

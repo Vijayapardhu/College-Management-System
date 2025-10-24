@@ -1,0 +1,61 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Company Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-building mr-2"></i>Company Management
+                </h2>
+                <p class="text-gray-600">Manage placement partner companies</p>
+            </div>
+            <a href="{% url 'add_company' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>Add Company
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Partner Companies</h3>
+        </div>
+        <div class="dashboard-card-body p-0">
+            <table class="modern-table w-full" id="companyTable">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3">Company Name</th>
+                        <th class="px-6 py-3">Industry</th>
+                        <th class="px-6 py-3">Contact Person</th>
+                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="px-6 py-4 font-semibold">Tech Corp</td>
+                        <td class="px-6 py-4">IT Services</td>
+                        <td class="px-6 py-4">John Manager</td>
+                        <td class="px-6 py-4"><span class="badge badge-success">Active</span></td>
+                        <td class="px-6 py-4">
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+if (typeof safeDataTable !== 'undefined') {
+    safeDataTable('#companyTable');
+}
+</script>
+{% endblock custom_js %}
+
+

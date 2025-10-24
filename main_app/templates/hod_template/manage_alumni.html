@@ -1,0 +1,74 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Alumni Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2"><i class="fas fa-user-graduate mr-2"></i>Alumni Management</h2>
+                <p class="text-gray-600">Manage alumni database and network</p>
+            </div>
+            <button class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Add Alumni</button>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary"><div class="metric-value" data-count="2500">0</div><div class="metric-label">Total Alumni</div></div>
+        <div class="metric-card metric-card-success"><div class="metric-value" data-count="1850">0</div><div class="metric-label">Employed</div></div>
+        <div class="metric-card metric-card-info"><div class="metric-value">74%</div><div class="metric-label">Employment Rate</div></div>
+        <div class="metric-card metric-card-warning"><div class="metric-value" data-count="45">0</div><div class="metric-label">Entrepreneurs</div></div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header"><h3 class="dashboard-card-title">Recent Alumni</h3></div>
+        <div class="dashboard-card-body p-0">
+            <table class="modern-table w-full" id="alumniTable">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3">Name</th>
+                        <th class="px-6 py-3">Batch</th>
+                        <th class="px-6 py-3">Company</th>
+                        <th class="px-6 py-3">Position</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="px-6 py-4">John Doe</td>
+                        <td class="px-6 py-4">2020</td>
+                        <td class="px-6 py-4">Tech Corp</td>
+                        <td class="px-6 py-4">Software Engineer</td>
+                        <td class="px-6 py-4"><button class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+if (typeof safeDataTable !== 'undefined') {
+    safeDataTable('#alumniTable');
+}
+
+document.querySelectorAll('[data-count]').forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'));
+    let current = 0;
+    const timer = setInterval(() => {
+        current += target / 60;
+        if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current);
+        }
+    }, 16);
+});
+</script>
+{% endblock custom_js %}
+
+

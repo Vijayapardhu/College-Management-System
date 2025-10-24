@@ -1,0 +1,67 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}View Application{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-file-alt mr-2"></i>Application Details
+        </h2>
+        <p class="text-gray-600">Review application information</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title">Applicant Information</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    <dl class="space-y-3">
+                        <div class="flex justify-between py-2 border-b">
+                            <dt class="text-gray-600">Full Name</dt>
+                            <dd class="font-semibold">{{ application.name|default:"John Applicant" }}</dd>
+                        </div>
+                        <div class="flex justify-between py-2 border-b">
+                            <dt class="text-gray-600">Email</dt>
+                            <dd class="font-semibold">{{ application.email|default:"john@example.com" }}</dd>
+                        </div>
+                        <div class="flex justify-between py-2 border-b">
+                            <dt class="text-gray-600">Course Applied</dt>
+                            <dd class="font-semibold">{{ application.course|default:"B.Tech CSE" }}</dd>
+                        </div>
+                        <div class="flex justify-between py-2 border-b">
+                            <dt class="text-gray-600">Previous Education</dt>
+                            <dd class="font-semibold">{{ application.previous_education|default:"12th Grade - 85%" }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title">Decision</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="space-y-3">
+                        <a href="{% url 'make_decision' %}" class="btn btn-success w-full">
+                            <i class="fas fa-check mr-2"></i>Approve
+                        </a>
+                        <button class="btn bg-red-500 hover:bg-red-600 text-white w-full">
+                            <i class="fas fa-times mr-2"></i>Reject
+                        </button>
+                        <button class="btn btn-outline w-full">
+                            <i class="fas fa-clock mr-2"></i>Put on Hold
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

@@ -1,0 +1,42 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Reports Hub{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-chart-pie mr-2"></i>Reports Hub
+        </h2>
+        <p class="text-gray-600">Generate and download institutional reports</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="{% url 'report_builder' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200">
+                <span class="text-3xl">📊</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Custom Reports</h3>
+            <p class="text-sm text-gray-600">Build custom reports</p>
+        </a>
+
+        <a href="{% url 'attendance_analytics' %}" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200">
+                <span class="text-3xl">📅</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Attendance Reports</h3>
+            <p class="text-sm text-gray-600">View attendance analytics</p>
+        </a>
+
+        <a href="#" class="action-card">
+            <div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200">
+                <span class="text-3xl">💰</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Financial Reports</h3>
+            <p class="text-sm text-gray-600">Fee collection & expenses</p>
+        </a>
+    </div>
+</div>
+{% endblock content %}
+
+

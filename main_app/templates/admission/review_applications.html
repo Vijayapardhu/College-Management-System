@@ -1,0 +1,92 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Review Applications{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-clipboard-list mr-2"></i>Review Admissions
+        </h2>
+        <p class="text-gray-600">Review and process admission applications</p>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-primary">
+            <div class="metric-value" data-count="125">0</div>
+            <div class="metric-label">Total Applications</div>
+        </div>
+        <div class="metric-card metric-card-warning">
+            <div class="metric-value" data-count="45">0</div>
+            <div class="metric-label">Pending Review</div>
+        </div>
+        <div class="metric-card metric-card-success">
+            <div class="metric-value" data-count="70">0</div>
+            <div class="metric-label">Approved</div>
+        </div>
+        <div class="metric-card metric-card-error">
+            <div class="metric-value" data-count="10">0</div>
+            <div class="metric-label">Rejected</div>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Pending Applications</h3>
+        </div>
+        <div class="dashboard-card-body p-0">
+            <table class="modern-table w-full" id="applicationsTable">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3">Applicant</th>
+                        <th class="px-6 py-3">Course</th>
+                        <th class="px-6 py-3">Applied On</th>
+                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="px-6 py-4">
+                            <div class="font-semibold">John Applicant</div>
+                            <div class="text-xs text-gray-500">john@example.com</div>
+                        </td>
+                        <td class="px-6 py-4">B.Tech CSE</td>
+                        <td class="px-6 py-4">Oct 15, 2024</td>
+                        <td class="px-6 py-4"><span class="badge badge-warning">Pending</span></td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'view_application' 1 %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-eye mr-1"></i>Review
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+if (typeof safeDataTable !== 'undefined') {
+    safeDataTable('#applicationsTable');
+}
+
+document.querySelectorAll('[data-count]').forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'));
+    let current = 0;
+    const timer = setInterval(() => {
+        current += target / 60;
+        if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current);
+        }
+    }, 16);
+});
+</script>
+{% endblock custom_js %}
+
+

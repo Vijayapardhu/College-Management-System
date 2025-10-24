@@ -1,0 +1,10 @@
+{% extends 'forms/base_form.html' %}
+
+{% block form_icon %}fas fa-certificate{% endblock %}
+{% block form_title %}Issue Certificate{% endblock %}
+{% block form_subtitle %}Generate student certificate{% endblock %}
+
+{% block cancel_url %}{% url 'manage_certificates' %}{% endblock %}
+{% block submit_text %}Issue Certificate{% endblock %}
+
+

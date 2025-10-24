@@ -1,0 +1,61 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Process Payroll{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-money-check-alt mr-2"></i>Payroll Processing
+        </h2>
+        <p class="text-gray-600">Generate and process staff salaries</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="metric-card metric-card-primary">
+            <div class="metric-value" data-count="85">0</div>
+            <div class="metric-label">Staff Members</div>
+        </div>
+        <div class="metric-card metric-card-success">
+            <div class="metric-value">₹ 42.5L</div>
+            <div class="metric-label">Total Payroll</div>
+        </div>
+        <div class="metric-card metric-card-info">
+            <div class="metric-value">Oct 2024</div>
+            <div class="metric-label">Current Month</div>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <form class="space-y-6">
+            <div class="form-group">
+                <label class="form-label">Select Month</label>
+                <input type="month" class="form-input">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-cog mr-2"></i>Generate Payroll
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+document.querySelectorAll('[data-count]').forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'));
+    let current = 0;
+    const timer = setInterval(() => {
+        current += target / 60;
+        if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current);
+        }
+    }, 16);
+});
+</script>
+{% endblock custom_js %}
+
+

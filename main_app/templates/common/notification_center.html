@@ -1,0 +1,198 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Notification Center{% endblock page_title %}
+
+{% block content %}
+<!-- Notification Center -->
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-bell mr-2"></i>
+                    Notification Center
+                </h2>
+                <p class="text-gray-600">Manage your notifications and alerts</p>
+            </div>
+            <button onclick="markAllAsRead()" class="btn btn-outline">
+                <i class="fas fa-check-double mr-2"></i>
+                Mark All Read
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Tabs -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
+        <div class="flex space-x-2">
+            <button class="tab-item tab-item-active" onclick="filterNotifications('all')">
+                All <span class="ml-2 badge badge-primary">12</span>
+            </button>
+            <button class="tab-item" onclick="filterNotifications('unread')">
+                Unread <span class="ml-2 badge badge-error">5</span>
+            </button>
+            <button class="tab-item" onclick="filterNotifications('academic')">
+                Academic
+            </button>
+            <button class="tab-item" onclick="filterNotifications('system')">
+                System
+            </button>
+        </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="space-y-3" id="notificationsList">
+        <!-- Unread Notification -->
+        <div class="dashboard-card notification-unread">
+            <div class="dashboard-card-body">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-graduation-cap text-blue-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">New Assignment Posted</h4>
+                                <p class="text-sm text-gray-600">Dr. Smith posted a new assignment for Data Structures</p>
+                                <span class="text-xs text-gray-500 mt-2 flex items-center">
+                                    <i class="far fa-clock mr-1"></i>
+                                    5 minutes ago
+                                </span>
+                            </div>
+                            <button onclick="markAsRead(this)" class="btn btn-sm btn-outline">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Read Notification -->
+        <div class="dashboard-card notification-read">
+            <div class="dashboard-card-body opacity-75">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 mb-1">Attendance Marked</h4>
+                        <p class="text-sm text-gray-600">Your attendance has been marked for today's classes</p>
+                        <span class="text-xs text-gray-500 mt-2 flex items-center">
+                            <i class="far fa-clock mr-1"></i>
+                            2 hours ago
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card notification-unread">
+            <div class="dashboard-card-body">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Low Attendance Alert</h4>
+                                <p class="text-sm text-gray-600">Your attendance in Database Management is below 75%</p>
+                                <span class="text-xs text-gray-500 mt-2 flex items-center">
+                                    <i class="far fa-clock mr-1"></i>
+                                    1 day ago
+                                </span>
+                            </div>
+                            <button onclick="markAsRead(this)" class="btn btn-sm btn-outline">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card notification-read">
+            <div class="dashboard-card-body opacity-75">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-calendar text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 mb-1">Exam Schedule Released</h4>
+                        <p class="text-sm text-gray-600">Mid-term examination schedule is now available</p>
+                        <span class="text-xs text-gray-500 mt-2 flex items-center">
+                            <i class="far fa-clock mr-1"></i>
+                            2 days ago
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+        <span class="text-sm text-gray-600">Showing 1 to 10 of 48 notifications</span>
+        <div class="flex space-x-2">
+            <button class="btn btn-outline btn-sm" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="btn btn-primary btn-sm">1</button>
+            <button class="btn btn-outline btn-sm">2</button>
+            <button class="btn btn-outline btn-sm">3</button>
+            <button class="btn btn-outline btn-sm">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+function markAsRead(button) {
+    const notification = button.closest('.dashboard-card');
+    notification.classList.remove('notification-unread');
+    notification.classList.add('notification-read');
+    notification.querySelector('.dashboard-card-body').classList.add('opacity-75');
+    button.remove();
+}
+
+function markAllAsRead() {
+    const unreadNotifications = document.querySelectorAll('.notification-unread');
+    unreadNotifications.forEach(notification => {
+        notification.classList.remove('notification-unread');
+        notification.classList.add('notification-read');
+        notification.querySelector('.dashboard-card-body').classList.add('opacity-75');
+        const button = notification.querySelector('button');
+        if (button) button.remove();
+    });
+    
+    alert('All notifications marked as read!');
+}
+
+function filterNotifications(type) {
+    // Update active tab
+    document.querySelectorAll('.tab-item').forEach(tab => {
+        tab.classList.remove('tab-item-active');
+    });
+    event.target.classList.add('tab-item-active');
+    
+    // Filter logic would go here
+    console.log('Filtering by:', type);
+}
+</script>
+
+<style>
+.notification-unread {
+    border-left: 4px solid #3b82f6;
+}
+
+.notification-read {
+    border-left: 4px solid #e5e7eb;
+}
+</style>
+{% endblock custom_js %}
+
+

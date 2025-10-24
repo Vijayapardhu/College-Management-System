@@ -1,0 +1,196 @@
+/* Django Form Fields Override - Apply Tailwind Classes */
+
+/* Text Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+textarea,
+select {
+    display: block;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #1f2937;
+    background-color: #ffffff;
+    background-clip: padding-box;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Disabled Inputs */
+input:disabled,
+textarea:disabled,
+select:disabled {
+    background-color: #f3f4f6;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Select Dropdown */
+select {
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    appearance: none;
+}
+
+/* Textarea */
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: #6366f1;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #6366f1;
+    border-color: #6366f1;
+}
+
+/* Radio Buttons */
+input[type="radio"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: #6366f1;
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="radio"]:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+input[type="radio"]:checked {
+    background-color: #6366f1;
+    border-color: #6366f1;
+}
+
+/* File Input */
+input[type="file"] {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+input[type="file"]:focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+}
+
+/* Placeholder */
+::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+}
+
+/* Required Fields Indicator */
+input:required,
+textarea:required,
+select:required {
+    border-left: 3px solid #6366f1;
+}
+
+/* Error State */
+input.error,
+textarea.error,
+select.error,
+input:invalid:not(:focus):not(:placeholder-shown),
+textarea:invalid:not(:focus):not(:placeholder-shown),
+select:invalid:not(:focus) {
+    border-color: #ef4444;
+}
+
+input.error:focus,
+textarea.error:focus,
+select.error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Success State */
+input.success,
+textarea.success,
+select.success {
+    border-color: #22c55e;
+}
+
+input.success:focus,
+textarea.success:focus,
+select.success:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Dark Mode */
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] input[type="url"],
+[data-theme="dark"] input[type="search"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="time"],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #ffffff;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.1);
+}
+
+

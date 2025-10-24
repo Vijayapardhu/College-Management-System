@@ -1,0 +1,293 @@
+<!-- Management Navigation -->
+<nav class="sidebar-nav">
+    <!-- Navigation Menu -->
+    <ul class="space-y-1 px-3">
+        <!-- Dashboard Section -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-tachometer-alt mr-2"></i>
+                Dashboard
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_home' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <span class="nav-text">Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_analytics' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Administrative Management -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-building mr-2"></i>
+                Administrative Management
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_staff_overview' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-users"></i>
+                        <span class="nav-text">Staff Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_department_management' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-sitemap"></i>
+                        <span class="nav-text">Department Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_financial_overview' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <span class="nav-text">Financial Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_facility_management' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-building"></i>
+                        <span class="nav-text">Facility Management</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Human Resources -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-user-tie mr-2"></i>
+                Human Resources
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_hr_dashboard' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-users-cog"></i>
+                        <span class="nav-text">HR Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_leave_management' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-calendar-times"></i>
+                        <span class="nav-text">Leave Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_payroll' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <span class="nav-text">Payroll</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_performance_reviews' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-star"></i>
+                        <span class="nav-text">Performance Reviews</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Academic Oversight -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-graduation-cap mr-2"></i>
+                Academic Oversight
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_academic_overview' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <span class="nav-text">Academic Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_course_management' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-book"></i>
+                        <span class="nav-text">Course Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_quality_assurance' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-check-circle"></i>
+                        <span class="nav-text">Quality Assurance</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_accreditation' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-certificate"></i>
+                        <span class="nav-text">Accreditation</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Reports & Analytics -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-chart-line mr-2"></i>
+                Reports & Analytics
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_reports_hub' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <span class="nav-text">Reports Hub</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_financial_reports' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <span class="nav-text">Financial Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_academic_reports' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <span class="nav-text">Academic Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_hr_reports' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-users"></i>
+                        <span class="nav-text">HR Reports</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- System Administration -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-cogs mr-2"></i>
+                System Administration
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_system_settings' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-cog"></i>
+                        <span class="nav-text">System Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_user_management' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-user-cog"></i>
+                        <span class="nav-text">User Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_backup_restore' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-database"></i>
+                        <span class="nav-text">Backup & Restore</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_audit_logs' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-clipboard-list"></i>
+                        <span class="nav-text">Audit Logs</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Communication -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-comments mr-2"></i>
+                Communication
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_announcements' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-bullhorn"></i>
+                        <span class="nav-text">Announcements</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_messaging' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-envelope"></i>
+                        <span class="nav-text">Messaging</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_notifications' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-bell"></i>
+                        <span class="nav-text">Notifications</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Personal -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-user mr-2"></i>
+                Personal
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'management_view_profile' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-user"></i>
+                        <span class="nav-text">My Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_settings' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-cog"></i>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- Logout -->
+        <li class="nav-section">
+            <div class="nav-section-header">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Account
+            </div>
+            <ul class="ml-4 space-y-1">
+                <li>
+                    <a href="{% url 'user_logout' %}" 
+                       class="nav-item nav-item-inactive group text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" 
+                       onclick="return confirm('Are you sure you want to logout?')">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+

@@ -1,0 +1,53 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Alumni Profile{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg p-8 text-white">
+        <div class="flex items-center space-x-6">
+            <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
+                <span class="text-4xl">🎓</span>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold mb-2">{{ alumni.name|default:"Alumni Name" }}</h1>
+                <p class="text-purple-100 mb-3">{{ alumni.email|default:"alumni@example.com" }}</p>
+                <div class="flex items-center space-x-4 text-sm">
+                    <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                        <i class="fas fa-graduation-cap mr-1"></i> Batch {{ alumni.batch_year|default:"2020" }}
+                    </span>
+                    <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                        <i class="fas fa-building mr-1"></i> {{ alumni.company|default:"Tech Corp" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+        <div class="dashboard-card">
+            <div class="dashboard-card-header"><h3 class="dashboard-card-title">Academic Details</h3></div>
+            <div class="dashboard-card-body">
+                <dl class="space-y-2">
+                    <div class="flex justify-between py-2 border-b"><dt class="text-gray-600">Course</dt><dd class="font-semibold">{{ alumni.course|default:"B.Tech CSE" }}</dd></div>
+                    <div class="flex justify-between py-2 border-b"><dt class="text-gray-600">Batch</dt><dd class="font-semibold">{{ alumni.batch_year|default:"2020" }}</dd></div>
+                    <div class="flex justify-between py-2 border-b"><dt class="text-gray-600">CGPA</dt><dd class="font-semibold">{{ alumni.cgpa|default:"8.5" }}</dd></div>
+                </dl>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-header"><h3 class="dashboard-card-title">Professional Details</h3></div>
+            <div class="dashboard-card-body">
+                <dl class="space-y-2">
+                    <div class="flex justify-between py-2 border-b"><dt class="text-gray-600">Company</dt><dd class="font-semibold">{{ alumni.company|default:"Not Specified" }}</dd></div>
+                    <div class="flex justify-between py-2 border-b"><dt class="text-gray-600">Position</dt><dd class="font-semibold">{{ alumni.position|default:"Not Specified" }}</dd></div>
+                    <div class="flex justify-between py-2 border-b"><dt class="text-gray-600">Location</dt><dd class="font-semibold">{{ alumni.location|default:"Not Specified" }}</dd></div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

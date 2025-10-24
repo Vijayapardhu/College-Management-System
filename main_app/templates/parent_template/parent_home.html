@@ -1,0 +1,27 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Parent Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="gradient-header">
+        <h2 class="text-3xl font-bold mb-2">Parent Dashboard 👨‍👩‍👧‍👦</h2>
+        <p class="text-white/90 text-lg">Monitor your child's academic progress</p>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-success"><div class="metric-value">85%</div><div class="metric-label">Attendance</div></div>
+        <div class="metric-card metric-card-primary"><div class="metric-value">78.5</div><div class="metric-label">Average Marks</div></div>
+        <div class="metric-card metric-card-info"><div class="metric-value">12/15</div><div class="metric-label">Assignments</div></div>
+        <div class="metric-card metric-card-warning"><div class="metric-value">₹5,000</div><div class="metric-label">Fees Pending</div></div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <a href="#" class="action-card"><div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200"><span class="text-3xl">📊</span></div><h3 class="text-lg font-bold">Progress Report</h3><p class="text-sm text-gray-600">View academic performance</p></a>
+        <a href="#" class="action-card"><div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200"><span class="text-3xl">📅</span></div><h3 class="text-lg font-bold">Attendance</h3><p class="text-sm text-gray-600">Check attendance records</p></a>
+        <a href="#" class="action-card"><div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200"><span class="text-3xl">💬</span></div><h3 class="text-lg font-bold">Contact Teacher</h3><p class="text-sm text-gray-600">Send messages</p></a>
+    </div>
+</div>
+{% endblock content %}
+
+

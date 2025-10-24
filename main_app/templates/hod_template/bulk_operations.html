@@ -1,0 +1,221 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Bulk Operations{% endblock page_title %}
+
+{% block content %}
+<!-- Bulk Operations -->
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-layer-group mr-2"></i>
+            Bulk Operations
+        </h2>
+        <p class="text-gray-600">Perform batch actions on multiple records</p>
+    </div>
+
+    <!-- Operation Categories -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Bulk Student Operations -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header bg-gradient-to-r from-blue-50 to-blue-100">
+                <h3 class="dashboard-card-title text-blue-700">
+                    <i class="fas fa-user-graduate mr-2"></i>
+                    Student Operations
+                </h3>
+            </div>
+            <div class="dashboard-card-body">
+                <ul class="space-y-3">
+                    <li>
+                        <button onclick="showBulkUpload('students')" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-file-upload mr-2 text-blue-600"></i>
+                                Bulk Upload Students
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showBulkPromotion()" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-level-up-alt mr-2 text-green-600"></i>
+                                Promote to Next Year
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showBulkEmail('students')" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-envelope mr-2 text-purple-600"></i>
+                                Send Bulk Emails
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bulk Staff Operations -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header bg-gradient-to-r from-green-50 to-green-100">
+                <h3 class="dashboard-card-title text-green-700">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>
+                    Staff Operations
+                </h3>
+            </div>
+            <div class="dashboard-card-body">
+                <ul class="space-y-3">
+                    <li>
+                        <button onclick="showBulkUpload('staff')" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-file-upload mr-2 text-blue-600"></i>
+                                Bulk Upload Staff
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showSubjectAssignment()" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-book mr-2 text-green-600"></i>
+                                Assign Subjects
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showBulkEmail('staff')" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-envelope mr-2 text-purple-600"></i>
+                                Send Notifications
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header bg-gradient-to-r from-purple-50 to-purple-100">
+                <h3 class="dashboard-card-title text-purple-700">
+                    <i class="fas fa-database mr-2"></i>
+                    Data Management
+                </h3>
+            </div>
+            <div class="dashboard-card-body">
+                <ul class="space-y-3">
+                    <li>
+                        <button onclick="showExport()" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-download mr-2 text-blue-600"></i>
+                                Export Data
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showImport()" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-file-import mr-2 text-green-600"></i>
+                                Import Data
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showBackup()" class="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                            <span class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-hdd mr-2 text-purple-600"></i>
+                                Backup & Restore
+                            </span>
+                            <i class="fas fa-chevron-right text-xs text-gray-400"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Template -->
+    <div class="dashboard-card" id="uploadSection" style="display: none;">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">
+                <i class="fas fa-file-upload mr-2"></i>
+                Bulk Upload
+            </h3>
+        </div>
+        <div class="dashboard-card-body">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-4">Step 1: Download Template</h4>
+                    <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                        <i class="fas fa-file-excel text-5xl text-green-600 mb-4"></i>
+                        <p class="text-sm text-gray-600 mb-4">Download our Excel template with proper formatting</p>
+                        <button class="btn btn-success">
+                            <i class="fas fa-download mr-2"></i>
+                            Download Template
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-4">Step 2: Upload Filled Template</h4>
+                    <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                        <i class="fas fa-cloud-upload-alt text-5xl text-blue-600 mb-4"></i>
+                        <p class="text-sm text-gray-600 mb-4">Upload the completed Excel file</p>
+                        <input type="file" id="bulkFile" accept=".xlsx,.xls,.csv" class="hidden">
+                        <button onclick="document.getElementById('bulkFile').click()" class="btn btn-primary">
+                            <i class="fas fa-upload mr-2"></i>
+                            Choose File
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+function showBulkUpload(type) {
+    document.getElementById('uploadSection').style.display = 'block';
+    document.getElementById('uploadSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showBulkPromotion() {
+    alert('Bulk promotion feature (Backend integration needed)');
+}
+
+function showBulkEmail(type) {
+    alert(`Bulk email to ${type} (Backend integration needed)`);
+}
+
+function showSubjectAssignment() {
+    alert('Subject assignment feature (Backend integration needed)');
+}
+
+function showExport() {
+    alert('Export data feature (Backend integration needed)');
+}
+
+function showImport() {
+    alert('Import data feature (Backend integration needed)');
+}
+
+function showBackup() {
+    alert('Backup feature (Backend integration needed)');
+}
+
+document.getElementById('bulkFile').addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+        alert(`File selected: ${e.target.files[0].name}\n(Upload processing needs backend)`);
+    }
+});
+</script>
+{% endblock custom_js %}
+
+

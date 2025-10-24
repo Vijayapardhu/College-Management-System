@@ -1,0 +1,10 @@
+{% extends 'forms/base_form.html' %}
+
+{% block form_icon %}fas fa-gavel{% endblock %}
+{% block form_title %}Admission Decision{% endblock %}
+{% block form_subtitle %}Approve or reject application{% endblock %}
+
+{% block cancel_url %}{% url 'review_applications' %}{% endblock %}
+{% block submit_text %}Submit Decision{% endblock %}
+
+

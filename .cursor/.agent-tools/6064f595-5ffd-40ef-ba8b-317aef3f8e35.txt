@@ -1,0 +1,1786 @@
+[Terminal output truncated: ~378KB dropped from beginning]
+rrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+Get-Content : Cannot find path 'C:\Users\PARDHU\Desktop\projects\college\College-Management-System\.FullName' because 
+it does not exist.
+At line:1 char:103
++ ... | Where-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim() ...
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\PARDHU...ystem\.FullName:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+You cannot call a method on a null-valued expression.
+At line:1 char:84
++ ... ere-Object {.Length -eq 0 -or (Get-Content .FullName -Raw).Trim().Len ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 

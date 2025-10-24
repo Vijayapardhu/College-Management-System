@@ -1,0 +1,24 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Sports Activities{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2"><i class="fas fa-futbol mr-2"></i>Sports Activities</h2>
+                <p class="text-gray-600">Manage sports events and activities</p>
+            </div>
+            <a href="{% url 'create_activity' %}" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Create Activity</a>
+        </div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="action-card"><div class="action-card-icon bg-gradient-to-br from-blue-100 to-blue-200"><span class="text-3xl">⚽</span></div><h3 class="text-lg font-bold">Football</h3><p class="text-sm text-gray-600">Inter-college tournament</p></div>
+        <div class="action-card"><div class="action-card-icon bg-gradient-to-br from-green-100 to-green-200"><span class="text-3xl">🏀</span></div><h3 class="text-lg font-bold">Basketball</h3><p class="text-sm text-gray-600">Intramural league</p></div>
+        <div class="action-card"><div class="action-card-icon bg-gradient-to-br from-purple-100 to-purple-200"><span class="text-3xl">🏏</span></div><h3 class="text-lg font-bold">Cricket</h3><p class="text-sm text-gray-600">Annual tournament</p></div>
+    </div>
+</div>
+{% endblock content %}
+
+

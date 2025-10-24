@@ -1,0 +1,36 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Gate Pass Approvals{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-id-card mr-2"></i>Gate Pass Approvals
+        </h2>
+        <p class="text-gray-600">Review and approve student gate pass requests</p>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Pending Requests</h3>
+        </div>
+        <div class="dashboard-card-body">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                    <div>
+                        <h4 class="font-semibold text-gray-900">John Doe - CS2024001</h4>
+                        <p class="text-sm text-gray-600">Medical emergency | 2:00 PM - 4:00 PM</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="btn btn-success btn-sm">Approve</button>
+                        <button class="btn bg-red-500 text-white btn-sm">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

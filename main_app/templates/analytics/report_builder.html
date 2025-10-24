@@ -1,0 +1,88 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Report Builder{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            <i class="fas fa-file-alt mr-2"></i>Report Builder
+        </h2>
+        <p class="text-gray-600">Create custom reports with drag-and-drop interface</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title">Report Configuration</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="form-group">
+                        <label class="form-label">Report Type</label>
+                        <select class="form-select">
+                            <option>Student Report</option>
+                            <option>Attendance Report</option>
+                            <option>Performance Report</option>
+                            <option>Financial Report</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Date Range</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="date" class="form-input">
+                            <input type="date" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Filters</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2"> Department
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2"> Course
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2"> Session Year
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-full">
+                        <i class="fas fa-cog mr-2"></i>Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3 class="dashboard-card-title">Quick Templates</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
+                            <div class="font-semibold text-blue-900">Monthly Attendance</div>
+                            <div class="text-xs text-blue-600">Last used 2 days ago</div>
+                        </button>
+                        <button class="w-full text-left p-3 rounded-lg bg-green-50 hover:bg-green-100 transition-colors">
+                            <div class="font-semibold text-green-900">Exam Results</div>
+                            <div class="text-xs text-green-600">Last used 1 week ago</div>
+                        </button>
+                        <button class="w-full text-left p-3 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors">
+                            <div class="font-semibold text-purple-900">Fee Collection</div>
+                            <div class="text-xs text-purple-600">Last used 3 days ago</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

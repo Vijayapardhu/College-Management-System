@@ -43,6 +43,7 @@ urlpatterns = [
     # Utility endpoints
     path("get_attendance", views.get_attendance, name='get_attendance'),
     path("firebase-messaging-sw.js", views.showFirebaseJS, name='showFirebaseJS'),
+    path("serviceworker.js", views.serve_service_worker, name='service_worker'),
     path("admin/home/", hod_views.admin_home, name='hod_home'),
     path("staff/add", hod_views.add_staff, name='add_staff'),
     path("course/add", hod_views.add_course, name='add_course'),

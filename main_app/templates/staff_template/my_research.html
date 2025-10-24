@@ -1,0 +1,34 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}My Research{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-flask mr-2"></i>My Research
+                </h2>
+                <p class="text-gray-600">Publications and research work</p>
+            </div>
+            <a href="{% url 'add_research' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>Add Research
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-body text-center py-12">
+            <i class="fas fa-flask text-6xl text-gray-300 mb-4"></i>
+            <h4 class="text-xl font-semibold text-gray-900 mb-2">No Research Publications</h4>
+            <p class="text-gray-600 mb-4">Add your first research publication</p>
+            <a href="{% url 'add_research' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>Add Research
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+

@@ -1,458 +1,275 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>EduVision - Login</title>
-    <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#007bff">
+    <meta name="theme-color" content="#6366f1">
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="{% static 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
-    <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <!-- Google Recaptcha     -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        'display': ['Poppins', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="{% static 'css/design-system.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <link rel="apple-touch-icon" href="{% static 'dist/img/AdminLTELogo.png' %}">
-    <style>
-        /* Modern Login Page Styles */
-        body {
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .login-box {
-            width: 450px;
-            margin: 20px auto;
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .login-logo {
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        
-        .login-logo a {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-decoration: none;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            display: block;
-            transition: transform 0.3s;
-        }
-        
-        .login-logo a:hover {
-            transform: scale(1.05);
-        }
-        
-        .login-logo b {
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .card {
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            border: none;
-            overflow: hidden;
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .card-body {
-            padding: 35px;
-            background: white;
-        }
-        
-        .login-box-msg {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        
-        .form-control {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: #f9fafb;
-        }
-        
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            background: white;
-            outline: none;
-        }
-        
-        .input-group-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 0 12px 12px 0;
-            padding: 12px 16px;
-        }
-        
-        .input-group-append .input-group-text {
-            border-radius: 0 12px 12px 0;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        
-        .alert {
-            border-radius: 12px;
-            border: none;
-            padding: 15px 18px;
-            margin-bottom: 20px;
-            animation: slideInDown 0.4s ease-out;
-        }
-        
-        @keyframes slideInDown {
-            from {
-                transform: translateY(-10px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .alert-info {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
-            color: #1e3a8a;
-            border-left: 4px solid #3b82f6;
-        }
-        
-        .alert-info h5 {
-            color: #1e40af;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .alert-danger {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-            color: #991b1b;
-            border-left: 4px solid #ef4444;
-        }
-        
-        .alert-success {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
-            color: #065f46;
-            border-left: 4px solid #10b981;
-        }
-        
-        .icheck-primary > input:first-child:checked + label::before {
-            background-color: #667eea;
-            border-color: #667eea;
-        }
-        
-        a {
-            color: #667eea;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        
-        a:hover {
-            color: #764ba2;
-            text-decoration: none;
-        }
-        
-        hr {
-            border-top: 2px solid #e5e7eb;
-            margin: 20px 0;
-        }
-        
-        code {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        
-        /* Mobile-specific styles */
-        @media (max-width: 576px) {
-            .login-box {
-                width: 90%;
-                margin: 5% auto;
-            }
-            
-            .login-logo a {
-                font-size: 2rem;
-            }
-            
-            .card {
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            }
-            
-            .card-body {
-                padding: 25px;
-            }
-            
-            .btn-block {
-                padding: 12px;
-                font-size: 15px;
-            }
-            
-            .form-control {
-                font-size: 16px; /* Prevents zoom on iOS */
-                padding: 12px;
-            }
-        }
-        
-        /* Loading animation */
-        .btn-primary.loading {
-            pointer-events: none;
-            position: relative;
-            color: transparent;
-        }
-        
-        .btn-primary.loading::after {
-            content: "";
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            top: 50%;
-            left: 50%;
-            margin-left: -8px;
-            margin-top: -8px;
-            border: 3px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spinner 0.6s linear infinite;
-        }
-        
-        @keyframes spinner {
-            to { transform: rotate(360deg); }
-        }
-    </style>
 </head>
 
-<body class="hold-transition login-page" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="../../index2.html"><b>EduVision</b></a>
-
-        </div>
-        <!-- /.login-logo -->
-        <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
-                
-                <!-- Information Box -->
-                <div class="alert alert-info alert-dismissible fade show">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="icon fas fa-info"></i> Login Information</h5>
-                    <p class="mb-1"><strong>Login with:</strong> Email, Roll Number, or Employee ID</p>
-                    <p class="mb-1"><strong>Default Password:</strong> <code>aditya</code></p>
-                    <p class="mb-0 small">After entering credentials, you'll receive an OTP via email for verification.</p>
+<body class="h-full bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800">
+    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="mx-auto h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg mb-6">
+                    <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="EduVision" class="h-10 w-10">
                 </div>
-                
+                <h2 class="text-4xl font-bold text-white font-display mb-2">EduVision</h2>
+                <p class="text-primary-100 text-lg">College Management System</p>
+                <p class="text-primary-200 mt-4">Sign in to your account</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="bg-white rounded-2xl shadow-2xl p-8 space-y-6">
+                <!-- Information Alert -->
+                <div class="alert alert-info">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-info-circle text-blue-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">Login Information</h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p><strong>Login with:</strong> Email, Roll Number, or Employee ID</p>
+                                <p><strong>Default Password:</strong> <code class="bg-blue-100 text-blue-800 px-2 py-1 rounded">aditya</code></p>
+                                <p class="mt-1 text-xs">After entering credentials, you'll receive an OTP via email for verification.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
                 {% if messages %}
-                <div class="col-12">
                     {% for message in messages %}
-                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        {{ message }}
-                    </div>
+                        <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+                            <div class="flex items-center">
+                                {% if message.tags == 'success' %}
+                                    <i class="fas fa-check-circle mr-2"></i>
+                                {% else %}
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                                {% endif %}
+                                {{ message }}
+                            </div>
+                        </div>
                     {% endfor %}
-                </div>
                 {% endif %}
-                <form action="{% url 'user_login' %}" method="post" id="loginForm" class="compact-form">
+
+                <!-- Login Form -->
+                <form action="{% url 'user_login' %}" method="post" id="loginForm" class="space-y-6">
                     {% csrf_token %}
-                    <div class="input-group mb-3">
-                        <input required type="text" name='email' class="form-control" placeholder="Email / Roll Number / Employee ID">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                    
+                    <!-- Email/ID Input -->
+                    <div>
+                        <label for="email" class="form-label">Email / Roll Number / Employee ID</label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="email" 
+                                   id="email" 
+                                   required 
+                                   class="form-input pl-10"
+                                   placeholder="Enter your email, roll number, or employee ID">
+                            <div class="input-group-prepend">
+                                <i class="fas fa-envelope input-group-text"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="input-group mb-3">
-                        <input required type="password" name='password' class="form-control" placeholder="Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" 
+                                   name="password" 
+                                   id="password" 
+                                   required 
+                                   class="form-input pl-10"
+                                   placeholder="Enter your password">
+                            <div class="input-group-prepend">
+                                <i class="fas fa-lock input-group-text"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="input-group mb-3">
 
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember" 
+                                   name="remember" 
+                                   type="checkbox" 
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700">
+                                Remember me
+                            </label>
+                        </div>
+                        <div class="text-sm">
+                            <a href="{% url 'password_reset' %}" class="font-medium text-primary-600 hover:text-primary-500">
+                                Forgot password?
+                            </a>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember">
-                                <label for="remember"> style="font-size: 12px; margin-bottom: 2px;">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block" href="{% url 'verify_otp' %}">Sign In</button>
-                        </div>
 
-
-                        <!-- /.col -->
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" 
+                                class="btn btn-primary w-full btn-lg">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Sign In
+                        </button>
                     </div>
                 </form>
 
-
-                <p class="mb-1">
-                    <a href="{% url 'password_reset' %}">I forgot my password</a>
-                </p>
-                
-                <hr>
-                
-                <p class="mb-0 text-center">
-                    <a href="{% url 'public_data' %}" class="text-primary" target="_blank">
-                        <i class="fas fa-globe"></i> View Public Information (No Login Required)
-                    </a>
-                </p>
-
+                <!-- Public Information Link -->
+                <div class="text-center">
+                    <div class="border-t border-gray-200 pt-6">
+                        <a href="{% url 'public_data' %}" 
+                           class="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500"
+                           target="_blank">
+                            <i class="fas fa-globe mr-2"></i>
+                            View Public Information (No Login Required)
+                        </a>
+                    </div>
+                </div>
             </div>
-            <!-- /.login-card-body -->
         </div>
     </div>
-    <!-- /.login-box -->
 
-    <!-- jQuery -->
+    <!-- Scripts -->
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-    <!-- Bootstrap 4 -->
     <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <!-- AdminLTE App -->
-    <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
     
     <script>
-        // Enhanced login form with loading state
-        $(document).ready(function() {
-            const loginForm = $('#loginForm');
-            const submitBtn = $('.btn-primary');
-            const emailInput = $('input[name="email"]');
-            const passwordInput = $('input[name="password"]');
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
             
-            // Form submission with loading state - DON'T prevent default
-            loginForm.on('submit', function(e) {
+            // Form submission with loading state
+            loginForm.addEventListener('submit', function(e) {
                 // Validate inputs
-                if (emailInput.val().trim() === '' || passwordInput.val() === '') {
+                if (emailInput.value.trim() === '' || passwordInput.value === '') {
                     e.preventDefault();
-                    alert('⚠️ Please enter both email/ID and password');
+                    showAlert('Please enter both email/ID and password', 'error');
                     return false;
                 }
                 
-                // Show loading state and allow form to submit normally
-                submitBtn.addClass('loading');
-                submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Signing in...');
-                submitBtn.prop('disabled', true);
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...';
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
                 
-                // Allow form to submit - will redirect to OTP page
+                // Allow form to submit normally
                 return true;
             });
             
             // Input validation styling
-            emailInput.on('blur', function() {
-                if ($(this).val().trim() !== '') {
-                    $(this).css('border-color', '#10b981');
+            emailInput.addEventListener('blur', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.add('border-green-500');
+                    this.classList.remove('border-gray-300');
                 }
             });
             
-            passwordInput.on('blur', function() {
-                if ($(this).val() !== '') {
-                    $(this).css('border-color', '#10b981');
+            passwordInput.addEventListener('blur', function() {
+                if (this.value !== '') {
+                    this.classList.add('border-green-500');
+                    this.classList.remove('border-gray-300');
                 }
             });
             
             // Reset border on focus
-            $('input').on('focus', function() {
-                $(this).css('border-color', '#667eea');
+            [emailInput, passwordInput].forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.classList.remove('border-gray-300', 'border-green-500');
+                    this.classList.add('border-primary-500');
+                });
             });
             
             // Auto-focus on email field
             emailInput.focus();
             
-            // Enter key navigation between fields
-            emailInput.on('keypress', function(e) {
-                if (e.which === 13) {
+            // Enter key navigation
+            emailInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
                     e.preventDefault();
                     passwordInput.focus();
-                    return false;
                 }
             });
             
-            // Enter key on password field submits form
-            passwordInput.on('keypress', function(e) {
-                if (e.which === 13) {
-                    // Don't prevent default - let form submit
-                    return true;
-                }
-            });
+            // Show alert function
+            function showAlert(message, type) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} mb-4`;
+                alertDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'} mr-2"></i>
+                        ${message}
+                    </div>
+                `;
+                
+                // Insert before the form
+                loginForm.parentNode.insertBefore(alertDiv, loginForm);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 5000);
+            }
         });
     </script>
-
 </body>
-
 </html>

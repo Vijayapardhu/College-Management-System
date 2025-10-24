@@ -1,0 +1,514 @@
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:84
++ ... \templates' -Recurse -Filter '*.html' | Where-Object {.Length -lt 50} ...
++                                                           ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (.Length:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+.Length : The term '.Length' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.

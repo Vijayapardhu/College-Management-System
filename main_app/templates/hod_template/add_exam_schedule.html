@@ -1,0 +1,10 @@
+{% extends 'forms/base_form.html' %}
+
+{% block form_icon %}fas fa-calendar-plus{% endblock %}
+{% block form_title %}Schedule Examination{% endblock %}
+{% block form_subtitle %}Set exam date and time{% endblock %}
+
+{% block cancel_url %}{% url 'manage_exam_schedule' %}{% endblock %}
+{% block submit_text %}Schedule Exam{% endblock %}
+
+

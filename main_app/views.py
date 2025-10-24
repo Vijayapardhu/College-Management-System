@@ -388,3 +388,32 @@ messaging.setBackgroundMessageHandler(function (payload) {
 });
     """
     return HttpResponse(data, content_type='application/javascript')
+
+
+def serve_service_worker(request):
+    """Serve the service worker JavaScript file"""
+    import os
+    from django.conf import settings
+    
+    # Path to service worker file
+    sw_path = os.path.join(settings.BASE_DIR, 'main_app', 'static', 'serviceworker.js')
+    
+    try:
+        with open(sw_path, 'r') as f:
+            data = f.read()
+        return HttpResponse(data, content_type='application/javascript')
+    except FileNotFoundError:
+        # Return a minimal service worker if file not found
+        data = """
+/* Service Worker for EduVision */
+const CACHE_NAME = 'eduvision-v1';
+
+self.addEventListener('install', event => {
+    console.log('Service Worker installed');
+});
+
+self.addEventListener('fetch', event => {
+    // Let the browser handle requests normally
+});
+        """
+        return HttpResponse(data, content_type='application/javascript')

@@ -1,0 +1,40 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Exam Schedule{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-calendar-check mr-2"></i>Exam Schedule
+                </h2>
+                <p class="text-gray-600">Manage examination timetable</p>
+            </div>
+            <a href="{% url 'add_exam_schedule' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>Schedule Exam
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">Upcoming Exams</h3>
+        </div>
+        <div class="dashboard-card-body">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                    <div>
+                        <h4 class="font-semibold text-gray-900">Mid-Term Examination</h4>
+                        <p class="text-sm text-gray-600">Nov 15-20, 2024</p>
+                    </div>
+                    <span class="badge badge-primary">Upcoming</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
