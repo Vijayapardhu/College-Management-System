@@ -303,3 +303,6 @@ def validate_timetable_slot(session, course, semester, weekday, period, staff, e
 
 
 
+
+
+

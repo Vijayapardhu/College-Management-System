@@ -1,0 +1,83 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Child Attendance{% endblock %}
+{% block page_title %}Attendance Record{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem;">
+        <i class="fas fa-calendar-check"></i> {{ student.admin.first_name }}'s Attendance
+    </h2>
+
+    <!-- Overall Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #1e40af;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ attendance_percentage }}%</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Overall Attendance</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #059669;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ total_present }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Classes Attended</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #dc2626;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ total_absent }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Classes Missed</div>
+        </div>
+    </div>
+
+    <!-- Subject-wise Attendance -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Subject-wise Attendance</h3>
+        
+        {% if subject_attendance %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Total Classes</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subject_attendance %}
+                <tr>
+                    <td><strong>{{ subject.name }}</strong></td>
+                    <td>{{ subject.total_classes }}</td>
+                    <td>{{ subject.present }}</td>
+                    <td>{{ subject.absent }}</td>
+                    <td>
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 6px; font-weight: 600;
+                                     background: {% if subject.percentage >= 75 %}#d1fae5{% else %}#fee2e2{% endif %};
+                                     color: {% if subject.percentage >= 75 %}#059669{% else %}#dc2626{% endif %};">
+                            {{ subject.percentage }}%
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: #94a3b8;">
+            <p>No attendance records available</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'view_child_detail' student.id %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Child Details
+        </a>
+    </div>
+</div>
+
+<style>
+    .table { width: 100%; }
+    .table th { background: #f8fafc; padding: 0.75rem; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+    .table td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+</style>
+{% endblock content %}
+

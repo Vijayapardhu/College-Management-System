@@ -3977,8 +3977,31 @@ def auto_schedule(request):
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Implement auto-scheduling logic
-    messages.info(request, 'Auto-scheduling feature will be implemented')
+    # Get course and semester from request
+    course_id = request.GET.get('course')
+    semester = request.GET.get('semester')
+    
+    if not course_id or not semester:
+        messages.error(request, 'Please select course and semester')
+        return redirect('timetable_dashboard')
+    
+    try:
+        # Use the TimetableGenerator to auto-schedule
+        from .timetable_generator import TimetableGenerator
+        course = Course.objects.get(id=course_id)
+        
+        generator = TimetableGenerator(course_id, int(semester))
+        success, message = generator.generate()
+        
+        if success:
+            messages.success(request, f'Timetable auto-scheduled successfully for {course.name} Semester {semester}')
+        else:
+            messages.error(request, f'Auto-scheduling failed: {message}')
+    except Course.DoesNotExist:
+        messages.error(request, 'Course not found')
+    except Exception as e:
+        messages.error(request, f'Error in auto-scheduling: {str(e)}')
+    
     return redirect('timetable_dashboard')
 
 
@@ -3990,8 +4013,54 @@ def check_conflicts(request):
         return redirect('login')
     
     # Implement conflict checking logic
-    messages.info(request, 'Conflict checking feature will be implemented')
-    return redirect('timetable_dashboard')
+    from .models import Timetable
+    
+    # Find conflicts in timetable
+    conflicts = []
+    
+    # Check for faculty conflicts (same faculty, same day/period)
+    faculty_conflicts = Timetable.objects.values('staff', 'day', 'period').annotate(
+        count=Count('id')
+    ).filter(count__gt=1)
+    
+    for conflict in faculty_conflicts:
+        conflicting_entries = Timetable.objects.filter(
+            staff_id=conflict['staff'],
+            day=conflict['day'],
+            period=conflict['period']
+        ).select_related('staff__admin', 'subject', 'classroom')
+        
+        conflicts.append({
+            'type': 'Faculty Conflict',
+            'description': f"{conflicting_entries.first().staff.admin.first_name} has multiple classes",
+            'entries': list(conflicting_entries)
+        })
+    
+    # Check for classroom conflicts
+    classroom_conflicts = Timetable.objects.values('classroom', 'day', 'period').annotate(
+        count=Count('id')
+    ).filter(count__gt=1)
+    
+    for conflict in classroom_conflicts:
+        conflicting_entries = Timetable.objects.filter(
+            classroom_id=conflict['classroom'],
+            day=conflict['day'],
+            period=conflict['period']
+        ).select_related('classroom', 'subject')
+        
+        conflicts.append({
+            'type': 'Classroom Conflict',
+            'description': f"Room {conflicting_entries.first().classroom.name} double-booked",
+            'entries': list(conflicting_entries)
+        })
+    
+    context = {
+        'conflicts': conflicts,
+        'total_conflicts': len(conflicts),
+        'page_title': 'Timetable Conflicts'
+    }
+    
+    return render(request, 'hod_template/timetable_conflicts.html', context)
 
 
 @login_required(login_url='login')
@@ -4014,7 +4083,27 @@ def faculty_availability(request, faculty_id):
         return redirect('login')
     
     # Implement faculty availability logic
-    messages.info(request, 'Faculty availability feature will be implemented')
+    from .models import Timetable
+    
+    faculty_id = request.GET.get('faculty')
+    day = request.GET.get('day')
+    
+    if faculty_id and day:
+        # Get faculty's occupied periods
+        occupied_periods = Timetable.objects.filter(
+            staff_id=faculty_id, day=day
+        ).values_list('period', flat=True)
+        
+        # All periods 1-6
+        all_periods = list(range(1, 7))
+        free_periods = [p for p in all_periods if p not in occupied_periods]
+        
+        return JsonResponse({
+            'occupied_periods': list(occupied_periods),
+            'free_periods': free_periods
+        })
+    
+    messages.error(request, 'Faculty and day parameters required')
     return redirect('timetable_dashboard')
 
 
@@ -4025,21 +4114,78 @@ def classroom_availability(request, classroom_id, date):
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Implement classroom availability logic
-    messages.info(request, 'Classroom availability feature will be implemented')
-    return redirect('timetable_dashboard')
+    try:
+        from .models import Classroom, Timetable
+        import datetime
+        
+        classroom = Classroom.objects.get(id=classroom_id)
+        
+        # Parse date if it's a string
+        if isinstance(date, str):
+            date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        else:
+            date_obj = date
+        
+        # Get day of week (0=Monday, 6=Sunday)
+        day_name = date_obj.strftime('%A')
+        
+        # Get all timetable entries for this classroom on this day
+        occupied_periods = Timetable.objects.filter(
+            classroom=classroom,
+            day=day_name
+        ).values_list('period', flat=True)
+        
+        # Create availability report
+        all_periods = range(1, 7)  # Assuming 6 periods
+        available_periods = [p for p in all_periods if p not in occupied_periods]
+        
+        context = {
+            'classroom': classroom,
+            'date': date_obj,
+            'occupied_periods': list(occupied_periods),
+            'available_periods': available_periods,
+            'page_title': f'Classroom Availability - {classroom.name}'
+        }
+        
+        return render(request, 'hod_template/classroom_availability.html', context)
+        
+    except Classroom.DoesNotExist:
+        messages.error(request, 'Classroom not found')
+        return redirect('timetable_dashboard')
+    except Exception as e:
+        messages.error(request, f'Error checking availability: {str(e)}')
+        return redirect('timetable_dashboard')
 
 
 @login_required(login_url='login')
 def timetable_statistics(request):
-    """Timetable statistics"""
+    """Timetable statistics and utilization"""
     if request.user.user_type != '1':
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Implement statistics logic
-    messages.info(request, 'Timetable statistics feature will be implemented')
-    return redirect('timetable_dashboard')
+    # Calculate timetable statistics
+    from .models import Timetable, Classroom
+    
+    total_timetables = Timetable.objects.count()
+    total_classrooms = Classroom.objects.count()
+    
+    # Calculate classroom utilization
+    if total_classrooms > 0:
+        occupied_slots = Timetable.objects.values('classroom', 'day', 'period').distinct().count()
+        total_possible_slots = total_classrooms * 6 * 6  # 6 days, 6 periods per day
+        utilization_rate = round((occupied_slots / total_possible_slots) * 100, 2) if total_possible_slots > 0 else 0
+    else:
+        utilization_rate = 0
+    
+    context = {
+        'total_timetables': total_timetables,
+        'total_classrooms': total_classrooms,
+        'utilization_rate': utilization_rate,
+        'page_title': 'Timetable Statistics'
+    }
+    
+    return render(request, 'hod_template/timetable_statistics.html', context)
 
 
 @login_required(login_url='login')
@@ -4098,7 +4244,7 @@ def check_timetable_conflicts(request):
 # Department Management Views
 @login_required(login_url='login')
 def department_analytics(request):
-    """Department analytics dashboard"""
+    """Department analytics dashboard with real data"""
     if request.user.user_type != '1':
         messages.error(request, 'Access denied')
         return redirect('login')
@@ -4110,12 +4256,30 @@ def department_analytics(request):
         program_count=Count('programs')
     ).order_by('name')
     
-    # Calculate statistics
+    # Calculate statistics with real data
+    total_students = Student.objects.count()
+    total_faculty = Staff.objects.count()
+    
+    # Calculate actual average attendance
+    total_attendance_records = AttendanceReport.objects.count()
+    if total_attendance_records > 0:
+        present_count = AttendanceReport.objects.filter(status=True).count()
+        avg_attendance = round((present_count / total_attendance_records) * 100, 2)
+    else:
+        avg_attendance = 0
+    
+    # Calculate actual average performance
+    results = StudentResult.objects.all()
+    if results.exists():
+        avg_performance = round(results.aggregate(avg=Avg('marks'))['avg'] or 0, 2)
+    else:
+        avg_performance = 0
+    
     stats = {
-        'total_students': Student.objects.count(),
-        'total_faculty': Staff.objects.count(),
-        'avg_attendance': 85,  # Placeholder
-        'avg_performance': 78   # Placeholder
+        'total_students': total_students,
+        'total_faculty': total_faculty,
+        'avg_attendance': avg_attendance,
+        'avg_performance': avg_performance
     }
     
     context = {
@@ -4280,7 +4444,42 @@ def department_performance(request, department_id):
         return redirect('login')
     
     # Implement performance analysis
-    messages.info(request, 'Department performance analysis will be implemented')
+    # Analyze department performance with real metrics
+    department_id = request.GET.get('department')
+    
+    if department_id:
+        department = get_object_or_404(Department, id=department_id)
+        
+        # Get students in this department
+        students = Student.objects.filter(course__department=department)
+        
+        # Calculate attendance for department
+        student_ids = students.values_list('id', flat=True)
+        attendance_records = AttendanceReport.objects.filter(student_id__in=student_ids)
+        if attendance_records.exists():
+            present = attendance_records.filter(status=True).count()
+            dept_attendance = round((present / attendance_records.count()) * 100, 2)
+        else:
+            dept_attendance = 0
+        
+        # Calculate average performance
+        results = StudentResult.objects.filter(student_id__in=student_ids)
+        if results.exists():
+            dept_performance = round(results.aggregate(avg=Avg('marks'))['avg'] or 0, 2)
+        else:
+            dept_performance = 0
+        
+        context = {
+            'department': department,
+            'total_students': students.count(),
+            'dept_attendance': dept_attendance,
+            'dept_performance': dept_performance,
+            'page_title': f'{department.name} Performance Analysis'
+        }
+        
+        return render(request, 'hod_template/department_performance.html', context)
+    
+    messages.error(request, 'Department parameter required')
     return redirect('department_analytics')
 
 
@@ -4302,8 +4501,43 @@ def department_statistics_api(request):
     if request.user.user_type != '1':
         return JsonResponse({'error': 'Access denied'}, status=403)
     
-    # Implement API logic
-    return JsonResponse({'message': 'API will be implemented'})
+    try:
+        department_id = request.GET.get('department_id')
+        
+        if department_id:
+            # Specific department stats
+            dept = Department.objects.get(id=department_id)
+            students = Student.objects.filter(course__department=dept)
+            faculty = Staff.objects.filter(department=dept)
+            
+            stats = {
+                'department': dept.name,
+                'total_students': students.count(),
+                'total_faculty': faculty.count(),
+                'courses': Course.objects.filter(department=dept).count(),
+            }
+        else:
+            # All departments summary
+            departments = Department.objects.all()
+            stats = {
+                'total_departments': departments.count(),
+                'departments': [
+                    {
+                        'id': dept.id,
+                        'name': dept.name,
+                        'students': Student.objects.filter(course__department=dept).count(),
+                        'faculty': Staff.objects.filter(department=dept).count()
+                    }
+                    for dept in departments
+                ]
+            }
+        
+        return JsonResponse(stats)
+        
+    except Department.DoesNotExist:
+        return JsonResponse({'error': 'Department not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required(login_url='login')
@@ -4312,8 +4546,43 @@ def department_analytics_api(request):
     if request.user.user_type != '1':
         return JsonResponse({'error': 'Access denied'}, status=403)
     
-    # Implement API logic
-    return JsonResponse({'message': 'API will be implemented'})
+    try:
+        department_id = request.GET.get('department_id')
+        
+        if department_id:
+            # Specific department stats
+            dept = Department.objects.get(id=department_id)
+            students = Student.objects.filter(course__department=dept)
+            faculty = Staff.objects.filter(department=dept)
+            
+            stats = {
+                'department': dept.name,
+                'total_students': students.count(),
+                'total_faculty': faculty.count(),
+                'courses': Course.objects.filter(department=dept).count(),
+            }
+        else:
+            # All departments summary
+            departments = Department.objects.all()
+            stats = {
+                'total_departments': departments.count(),
+                'departments': [
+                    {
+                        'id': dept.id,
+                        'name': dept.name,
+                        'students': Student.objects.filter(course__department=dept).count(),
+                        'faculty': Staff.objects.filter(department=dept).count()
+                    }
+                    for dept in departments
+                ]
+            }
+        
+        return JsonResponse(stats)
+        
+    except Department.DoesNotExist:
+        return JsonResponse({'error': 'Department not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required(login_url='login')
@@ -4324,8 +4593,44 @@ def department_comparison(request):
         return redirect('login')
     
     # Implement comparison logic
-    messages.info(request, 'Department comparison feature will be implemented')
-    return redirect('department_analytics')
+    # Compare multiple departments
+    departments = Department.objects.annotate(
+        total_students=Count('programs__students'),
+        total_faculty=Count('staff')
+    )
+    
+    department_stats = []
+    for dept in departments:
+        # Get students
+        students = Student.objects.filter(course__department=dept)
+        student_ids = students.values_list('id', flat=True)
+        
+        # Calculate attendance
+        attendance_records = AttendanceReport.objects.filter(student_id__in=student_ids)
+        if attendance_records.exists():
+            present = attendance_records.filter(status=True).count()
+            attendance_pct = round((present / attendance_records.count()) * 100, 2)
+        else:
+            attendance_pct = 0
+        
+        # Calculate performance
+        results = StudentResult.objects.filter(student_id__in=student_ids)
+        avg_marks = round(results.aggregate(avg=Avg('marks'))['avg'] or 0, 2)
+        
+        department_stats.append({
+            'department': dept,
+            'students': dept.total_students,
+            'faculty': dept.total_faculty,
+            'attendance': attendance_pct,
+            'performance': avg_marks
+        })
+    
+    context = {
+        'department_stats': department_stats,
+        'page_title': 'Department Comparison'
+    }
+    
+    return render(request, 'hod_template/department_comparison.html', context)
 
 
 # Approval Center Views
@@ -4435,7 +4740,25 @@ def bulk_approve_leaves(request):
         return redirect('login')
     
     # Implement bulk approval logic
-    messages.info(request, 'Bulk approval feature will be implemented')
+    # Bulk approve leave applications
+    if request.method == 'POST':
+        leave_ids = request.POST.getlist('leave_ids')
+        
+        if leave_ids:
+            approved_count = LeaveReportStudent.objects.filter(
+                id__in=leave_ids, status='pending'
+            ).update(status='approved')
+            
+            # Also approve staff leaves
+            approved_staff = LeaveReportStaff.objects.filter(
+                id__in=leave_ids, status='pending'
+            ).update(status='approved')
+            
+            total_approved = approved_count + approved_staff
+            messages.success(request, f'{total_approved} leave application(s) approved!')
+        else:
+            messages.warning(request, 'No applications selected')
+    
     return redirect('approval_center')
 
 
@@ -4494,8 +4817,30 @@ def approval_statistics(request):
         return redirect('login')
     
     # Implement approval statistics
-    messages.info(request, 'Approval statistics feature will be implemented')
-    return redirect('approval_center')
+    # Calculate approval statistics
+    # Student leaves
+    student_leaves = LeaveReportStudent.objects.all()
+    student_pending = student_leaves.filter(status='pending').count()
+    student_approved = student_leaves.filter(status='approved').count()
+    student_rejected = student_leaves.filter(status='rejected').count()
+    
+    # Staff leaves
+    staff_leaves = LeaveReportStaff.objects.all()
+    staff_pending = staff_leaves.filter(status='pending').count()
+    staff_approved = staff_leaves.filter(status='approved').count()
+    staff_rejected = staff_leaves.filter(status='rejected').count()
+    
+    context = {
+        'student_pending': student_pending,
+        'student_approved': student_approved,
+        'student_rejected': student_rejected,
+        'staff_pending': staff_pending,
+        'staff_approved': staff_approved,
+        'staff_rejected': staff_rejected,
+        'page_title': 'Approval Statistics'
+    }
+    
+    return render(request, 'hod_template/approval_statistics.html', context)
 
 
 @login_required(login_url='login')
@@ -4506,8 +4851,44 @@ def approval_timeline(request):
         return redirect('login')
     
     # Implement approval timeline
-    messages.info(request, 'Approval timeline feature will be implemented')
-    return redirect('approval_center')
+    # Get approval timeline
+    recent_approvals = []
+    
+    # Get recent student leave approvals
+    student_approvals = LeaveReportStudent.objects.filter(
+        status__in=['approved', 'rejected']
+    ).select_related('student__admin').order_by('-updated_at')[:20]
+    
+    for leave in student_approvals:
+        recent_approvals.append({
+            'type': 'Student Leave',
+            'name': f"{leave.student.admin.first_name} {leave.student.admin.last_name}",
+            'status': leave.status,
+            'date': leave.updated_at
+        })
+    
+    # Get recent staff leave approvals
+    staff_approvals = LeaveReportStaff.objects.filter(
+        status__in=['approved', 'rejected']
+    ).select_related('staff__admin').order_by('-updated_at')[:20]
+    
+    for leave in staff_approvals:
+        recent_approvals.append({
+            'type': 'Staff Leave',
+            'name': f"{leave.staff.admin.first_name} {leave.staff.admin.last_name}",
+            'status': leave.status,
+            'date': leave.updated_at
+        })
+    
+    # Sort by date
+    recent_approvals = sorted(recent_approvals, key=lambda x: x['date'], reverse=True)[:30]
+    
+    context = {
+        'recent_approvals': recent_approvals,
+        'page_title': 'Approval Timeline'
+    }
+    
+    return render(request, 'hod_template/approval_timeline.html', context)
 
 
 @login_required(login_url='login')
@@ -4645,8 +5026,31 @@ def auto_schedule(request):
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Implement auto-scheduling logic
-    messages.info(request, 'Auto-scheduling feature will be implemented')
+    # Get course and semester from request
+    course_id = request.GET.get('course')
+    semester = request.GET.get('semester')
+    
+    if not course_id or not semester:
+        messages.error(request, 'Please select course and semester')
+        return redirect('timetable_dashboard')
+    
+    try:
+        # Use the TimetableGenerator to auto-schedule
+        from .timetable_generator import TimetableGenerator
+        course = Course.objects.get(id=course_id)
+        
+        generator = TimetableGenerator(course_id, int(semester))
+        success, message = generator.generate()
+        
+        if success:
+            messages.success(request, f'Timetable auto-scheduled successfully for {course.name} Semester {semester}')
+        else:
+            messages.error(request, f'Auto-scheduling failed: {message}')
+    except Course.DoesNotExist:
+        messages.error(request, 'Course not found')
+    except Exception as e:
+        messages.error(request, f'Error in auto-scheduling: {str(e)}')
+    
     return redirect('timetable_dashboard')
 
 
@@ -4658,8 +5062,54 @@ def check_conflicts(request):
         return redirect('login')
     
     # Implement conflict checking logic
-    messages.info(request, 'Conflict checking feature will be implemented')
-    return redirect('timetable_dashboard')
+    from .models import Timetable
+    
+    # Find conflicts in timetable
+    conflicts = []
+    
+    # Check for faculty conflicts (same faculty, same day/period)
+    faculty_conflicts = Timetable.objects.values('staff', 'day', 'period').annotate(
+        count=Count('id')
+    ).filter(count__gt=1)
+    
+    for conflict in faculty_conflicts:
+        conflicting_entries = Timetable.objects.filter(
+            staff_id=conflict['staff'],
+            day=conflict['day'],
+            period=conflict['period']
+        ).select_related('staff__admin', 'subject', 'classroom')
+        
+        conflicts.append({
+            'type': 'Faculty Conflict',
+            'description': f"{conflicting_entries.first().staff.admin.first_name} has multiple classes",
+            'entries': list(conflicting_entries)
+        })
+    
+    # Check for classroom conflicts
+    classroom_conflicts = Timetable.objects.values('classroom', 'day', 'period').annotate(
+        count=Count('id')
+    ).filter(count__gt=1)
+    
+    for conflict in classroom_conflicts:
+        conflicting_entries = Timetable.objects.filter(
+            classroom_id=conflict['classroom'],
+            day=conflict['day'],
+            period=conflict['period']
+        ).select_related('classroom', 'subject')
+        
+        conflicts.append({
+            'type': 'Classroom Conflict',
+            'description': f"Room {conflicting_entries.first().classroom.name} double-booked",
+            'entries': list(conflicting_entries)
+        })
+    
+    context = {
+        'conflicts': conflicts,
+        'total_conflicts': len(conflicts),
+        'page_title': 'Timetable Conflicts'
+    }
+    
+    return render(request, 'hod_template/timetable_conflicts.html', context)
 
 
 @login_required(login_url='login')
@@ -4682,7 +5132,27 @@ def faculty_availability(request, faculty_id):
         return redirect('login')
     
     # Implement faculty availability logic
-    messages.info(request, 'Faculty availability feature will be implemented')
+    from .models import Timetable
+    
+    faculty_id = request.GET.get('faculty')
+    day = request.GET.get('day')
+    
+    if faculty_id and day:
+        # Get faculty's occupied periods
+        occupied_periods = Timetable.objects.filter(
+            staff_id=faculty_id, day=day
+        ).values_list('period', flat=True)
+        
+        # All periods 1-6
+        all_periods = list(range(1, 7))
+        free_periods = [p for p in all_periods if p not in occupied_periods]
+        
+        return JsonResponse({
+            'occupied_periods': list(occupied_periods),
+            'free_periods': free_periods
+        })
+    
+    messages.error(request, 'Faculty and day parameters required')
     return redirect('timetable_dashboard')
 
 
@@ -4693,21 +5163,78 @@ def classroom_availability(request, classroom_id, date):
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Implement classroom availability logic
-    messages.info(request, 'Classroom availability feature will be implemented')
-    return redirect('timetable_dashboard')
+    try:
+        from .models import Classroom, Timetable
+        import datetime
+        
+        classroom = Classroom.objects.get(id=classroom_id)
+        
+        # Parse date if it's a string
+        if isinstance(date, str):
+            date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        else:
+            date_obj = date
+        
+        # Get day of week (0=Monday, 6=Sunday)
+        day_name = date_obj.strftime('%A')
+        
+        # Get all timetable entries for this classroom on this day
+        occupied_periods = Timetable.objects.filter(
+            classroom=classroom,
+            day=day_name
+        ).values_list('period', flat=True)
+        
+        # Create availability report
+        all_periods = range(1, 7)  # Assuming 6 periods
+        available_periods = [p for p in all_periods if p not in occupied_periods]
+        
+        context = {
+            'classroom': classroom,
+            'date': date_obj,
+            'occupied_periods': list(occupied_periods),
+            'available_periods': available_periods,
+            'page_title': f'Classroom Availability - {classroom.name}'
+        }
+        
+        return render(request, 'hod_template/classroom_availability.html', context)
+        
+    except Classroom.DoesNotExist:
+        messages.error(request, 'Classroom not found')
+        return redirect('timetable_dashboard')
+    except Exception as e:
+        messages.error(request, f'Error checking availability: {str(e)}')
+        return redirect('timetable_dashboard')
 
 
 @login_required(login_url='login')
 def timetable_statistics(request):
-    """Timetable statistics"""
+    """Timetable statistics and utilization"""
     if request.user.user_type != '1':
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Implement statistics logic
-    messages.info(request, 'Timetable statistics feature will be implemented')
-    return redirect('timetable_dashboard')
+    # Calculate timetable statistics
+    from .models import Timetable, Classroom
+    
+    total_timetables = Timetable.objects.count()
+    total_classrooms = Classroom.objects.count()
+    
+    # Calculate classroom utilization
+    if total_classrooms > 0:
+        occupied_slots = Timetable.objects.values('classroom', 'day', 'period').distinct().count()
+        total_possible_slots = total_classrooms * 6 * 6  # 6 days, 6 periods per day
+        utilization_rate = round((occupied_slots / total_possible_slots) * 100, 2) if total_possible_slots > 0 else 0
+    else:
+        utilization_rate = 0
+    
+    context = {
+        'total_timetables': total_timetables,
+        'total_classrooms': total_classrooms,
+        'utilization_rate': utilization_rate,
+        'page_title': 'Timetable Statistics'
+    }
+    
+    return render(request, 'hod_template/timetable_statistics.html', context)
 
 
 @login_required(login_url='login')
@@ -4766,7 +5293,7 @@ def check_timetable_conflicts(request):
 # Department Management Views
 @login_required(login_url='login')
 def department_analytics(request):
-    """Department analytics dashboard"""
+    """Department analytics dashboard with real data"""
     if request.user.user_type != '1':
         messages.error(request, 'Access denied')
         return redirect('login')
@@ -4778,12 +5305,30 @@ def department_analytics(request):
         program_count=Count('programs')
     ).order_by('name')
     
-    # Calculate statistics
+    # Calculate statistics with real data
+    total_students = Student.objects.count()
+    total_faculty = Staff.objects.count()
+    
+    # Calculate actual average attendance
+    total_attendance_records = AttendanceReport.objects.count()
+    if total_attendance_records > 0:
+        present_count = AttendanceReport.objects.filter(status=True).count()
+        avg_attendance = round((present_count / total_attendance_records) * 100, 2)
+    else:
+        avg_attendance = 0
+    
+    # Calculate actual average performance
+    results = StudentResult.objects.all()
+    if results.exists():
+        avg_performance = round(results.aggregate(avg=Avg('marks'))['avg'] or 0, 2)
+    else:
+        avg_performance = 0
+    
     stats = {
-        'total_students': Student.objects.count(),
-        'total_faculty': Staff.objects.count(),
-        'avg_attendance': 85,  # Placeholder
-        'avg_performance': 78   # Placeholder
+        'total_students': total_students,
+        'total_faculty': total_faculty,
+        'avg_attendance': avg_attendance,
+        'avg_performance': avg_performance
     }
     
     context = {
@@ -4948,7 +5493,42 @@ def department_performance(request, department_id):
         return redirect('login')
     
     # Implement performance analysis
-    messages.info(request, 'Department performance analysis will be implemented')
+    # Analyze department performance with real metrics
+    department_id = request.GET.get('department')
+    
+    if department_id:
+        department = get_object_or_404(Department, id=department_id)
+        
+        # Get students in this department
+        students = Student.objects.filter(course__department=department)
+        
+        # Calculate attendance for department
+        student_ids = students.values_list('id', flat=True)
+        attendance_records = AttendanceReport.objects.filter(student_id__in=student_ids)
+        if attendance_records.exists():
+            present = attendance_records.filter(status=True).count()
+            dept_attendance = round((present / attendance_records.count()) * 100, 2)
+        else:
+            dept_attendance = 0
+        
+        # Calculate average performance
+        results = StudentResult.objects.filter(student_id__in=student_ids)
+        if results.exists():
+            dept_performance = round(results.aggregate(avg=Avg('marks'))['avg'] or 0, 2)
+        else:
+            dept_performance = 0
+        
+        context = {
+            'department': department,
+            'total_students': students.count(),
+            'dept_attendance': dept_attendance,
+            'dept_performance': dept_performance,
+            'page_title': f'{department.name} Performance Analysis'
+        }
+        
+        return render(request, 'hod_template/department_performance.html', context)
+    
+    messages.error(request, 'Department parameter required')
     return redirect('department_analytics')
 
 
@@ -4970,8 +5550,43 @@ def department_statistics_api(request):
     if request.user.user_type != '1':
         return JsonResponse({'error': 'Access denied'}, status=403)
     
-    # Implement API logic
-    return JsonResponse({'message': 'API will be implemented'})
+    try:
+        department_id = request.GET.get('department_id')
+        
+        if department_id:
+            # Specific department stats
+            dept = Department.objects.get(id=department_id)
+            students = Student.objects.filter(course__department=dept)
+            faculty = Staff.objects.filter(department=dept)
+            
+            stats = {
+                'department': dept.name,
+                'total_students': students.count(),
+                'total_faculty': faculty.count(),
+                'courses': Course.objects.filter(department=dept).count(),
+            }
+        else:
+            # All departments summary
+            departments = Department.objects.all()
+            stats = {
+                'total_departments': departments.count(),
+                'departments': [
+                    {
+                        'id': dept.id,
+                        'name': dept.name,
+                        'students': Student.objects.filter(course__department=dept).count(),
+                        'faculty': Staff.objects.filter(department=dept).count()
+                    }
+                    for dept in departments
+                ]
+            }
+        
+        return JsonResponse(stats)
+        
+    except Department.DoesNotExist:
+        return JsonResponse({'error': 'Department not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required(login_url='login')
@@ -4980,8 +5595,43 @@ def department_analytics_api(request):
     if request.user.user_type != '1':
         return JsonResponse({'error': 'Access denied'}, status=403)
     
-    # Implement API logic
-    return JsonResponse({'message': 'API will be implemented'})
+    try:
+        department_id = request.GET.get('department_id')
+        
+        if department_id:
+            # Specific department stats
+            dept = Department.objects.get(id=department_id)
+            students = Student.objects.filter(course__department=dept)
+            faculty = Staff.objects.filter(department=dept)
+            
+            stats = {
+                'department': dept.name,
+                'total_students': students.count(),
+                'total_faculty': faculty.count(),
+                'courses': Course.objects.filter(department=dept).count(),
+            }
+        else:
+            # All departments summary
+            departments = Department.objects.all()
+            stats = {
+                'total_departments': departments.count(),
+                'departments': [
+                    {
+                        'id': dept.id,
+                        'name': dept.name,
+                        'students': Student.objects.filter(course__department=dept).count(),
+                        'faculty': Staff.objects.filter(department=dept).count()
+                    }
+                    for dept in departments
+                ]
+            }
+        
+        return JsonResponse(stats)
+        
+    except Department.DoesNotExist:
+        return JsonResponse({'error': 'Department not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required(login_url='login')
@@ -4992,8 +5642,44 @@ def department_comparison(request):
         return redirect('login')
     
     # Implement comparison logic
-    messages.info(request, 'Department comparison feature will be implemented')
-    return redirect('department_analytics')
+    # Compare multiple departments
+    departments = Department.objects.annotate(
+        total_students=Count('programs__students'),
+        total_faculty=Count('staff')
+    )
+    
+    department_stats = []
+    for dept in departments:
+        # Get students
+        students = Student.objects.filter(course__department=dept)
+        student_ids = students.values_list('id', flat=True)
+        
+        # Calculate attendance
+        attendance_records = AttendanceReport.objects.filter(student_id__in=student_ids)
+        if attendance_records.exists():
+            present = attendance_records.filter(status=True).count()
+            attendance_pct = round((present / attendance_records.count()) * 100, 2)
+        else:
+            attendance_pct = 0
+        
+        # Calculate performance
+        results = StudentResult.objects.filter(student_id__in=student_ids)
+        avg_marks = round(results.aggregate(avg=Avg('marks'))['avg'] or 0, 2)
+        
+        department_stats.append({
+            'department': dept,
+            'students': dept.total_students,
+            'faculty': dept.total_faculty,
+            'attendance': attendance_pct,
+            'performance': avg_marks
+        })
+    
+    context = {
+        'department_stats': department_stats,
+        'page_title': 'Department Comparison'
+    }
+    
+    return render(request, 'hod_template/department_comparison.html', context)
 
 
 # Approval Center Views
@@ -5103,7 +5789,25 @@ def bulk_approve_leaves(request):
         return redirect('login')
     
     # Implement bulk approval logic
-    messages.info(request, 'Bulk approval feature will be implemented')
+    # Bulk approve leave applications
+    if request.method == 'POST':
+        leave_ids = request.POST.getlist('leave_ids')
+        
+        if leave_ids:
+            approved_count = LeaveReportStudent.objects.filter(
+                id__in=leave_ids, status='pending'
+            ).update(status='approved')
+            
+            # Also approve staff leaves
+            approved_staff = LeaveReportStaff.objects.filter(
+                id__in=leave_ids, status='pending'
+            ).update(status='approved')
+            
+            total_approved = approved_count + approved_staff
+            messages.success(request, f'{total_approved} leave application(s) approved!')
+        else:
+            messages.warning(request, 'No applications selected')
+    
     return redirect('approval_center')
 
 
@@ -5162,8 +5866,30 @@ def approval_statistics(request):
         return redirect('login')
     
     # Implement approval statistics
-    messages.info(request, 'Approval statistics feature will be implemented')
-    return redirect('approval_center')
+    # Calculate approval statistics
+    # Student leaves
+    student_leaves = LeaveReportStudent.objects.all()
+    student_pending = student_leaves.filter(status='pending').count()
+    student_approved = student_leaves.filter(status='approved').count()
+    student_rejected = student_leaves.filter(status='rejected').count()
+    
+    # Staff leaves
+    staff_leaves = LeaveReportStaff.objects.all()
+    staff_pending = staff_leaves.filter(status='pending').count()
+    staff_approved = staff_leaves.filter(status='approved').count()
+    staff_rejected = staff_leaves.filter(status='rejected').count()
+    
+    context = {
+        'student_pending': student_pending,
+        'student_approved': student_approved,
+        'student_rejected': student_rejected,
+        'staff_pending': staff_pending,
+        'staff_approved': staff_approved,
+        'staff_rejected': staff_rejected,
+        'page_title': 'Approval Statistics'
+    }
+    
+    return render(request, 'hod_template/approval_statistics.html', context)
 
 
 @login_required(login_url='login')
@@ -5174,8 +5900,44 @@ def approval_timeline(request):
         return redirect('login')
     
     # Implement approval timeline
-    messages.info(request, 'Approval timeline feature will be implemented')
-    return redirect('approval_center')
+    # Get approval timeline
+    recent_approvals = []
+    
+    # Get recent student leave approvals
+    student_approvals = LeaveReportStudent.objects.filter(
+        status__in=['approved', 'rejected']
+    ).select_related('student__admin').order_by('-updated_at')[:20]
+    
+    for leave in student_approvals:
+        recent_approvals.append({
+            'type': 'Student Leave',
+            'name': f"{leave.student.admin.first_name} {leave.student.admin.last_name}",
+            'status': leave.status,
+            'date': leave.updated_at
+        })
+    
+    # Get recent staff leave approvals
+    staff_approvals = LeaveReportStaff.objects.filter(
+        status__in=['approved', 'rejected']
+    ).select_related('staff__admin').order_by('-updated_at')[:20]
+    
+    for leave in staff_approvals:
+        recent_approvals.append({
+            'type': 'Staff Leave',
+            'name': f"{leave.staff.admin.first_name} {leave.staff.admin.last_name}",
+            'status': leave.status,
+            'date': leave.updated_at
+        })
+    
+    # Sort by date
+    recent_approvals = sorted(recent_approvals, key=lambda x: x['date'], reverse=True)[:30]
+    
+    context = {
+        'recent_approvals': recent_approvals,
+        'page_title': 'Approval Timeline'
+    }
+    
+    return render(request, 'hod_template/approval_timeline.html', context)
 
 
 @login_required(login_url='login')

@@ -1,3 +1,721 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Message Details{% endblock %}
+{% block page_title %}Message Details{% endblock %}
+
+{% block custom_css %}
+<style>
+    .message-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .message-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    html.dark .message-card {
+        background: #1e293b;
+    }
+
+    .message-header {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    html.dark .message-header {
+        border-bottom-color: #334155;
+    }
+
+    .message-subject {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 1.5rem;
+    }
+
+    html.dark .message-subject {
+        color: #f1f5f9;
+    }
+
+    .message-meta {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .message-body {
+        padding: 2rem;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #0f172a;
+    }
+
+    html.dark .message-body {
+        color: #f1f5f9;
+    }
+
+    .message-actions {
+        padding: 1.5rem 2rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 1rem;
+    }
+
+    html.dark .message-actions {
+        border-top-color: #334155;
+    }
+
+    .btn-action {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #1e40af;
+        border: 2px solid #1e40af;
+    }
+
+    .btn-secondary:hover {
+        background: #eff6ff;
+    }
+
+    .btn-danger {
+        background: white;
+        color: #dc2626;
+        border: 2px solid #dc2626;
+    }
+
+    .btn-danger:hover {
+        background: #fee2e2;
+    }
+
+    .sender-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .sender-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .sender-details {
+        flex: 1;
+    }
+
+    .sender-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    html.dark .sender-name {
+        color: #f1f5f9;
+    }
+
+    .sender-role {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .replies-section {
+        margin-top: 2rem;
+    }
+
+    .reply-card {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #1e40af;
+    }
+
+    html.dark .reply-card {
+        background: #334155;
+    }
+
+    .reply-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .reply-author {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    html.dark .reply-author {
+        color: #f1f5f9;
+    }
+
+    .reply-time {
+        font-size: 0.8125rem;
+        color: #64748b;
+    }
+
+    .reply-body {
+        color: #0f172a;
+        line-height: 1.6;
+    }
+
+    html.dark .reply-body {
+        color: #f1f5f9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="message-container">
+    <div class="mb-4">
+        <a href="{% url 'view_messages' %}" style="color: #1e40af; text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Back to Messages
+        </a>
+    </div>
+
+    <div class="message-card">
+        <div class="message-header">
+            <h1 class="message-subject">
+                {{ message.subject }}
+            </h1>
+
+            <div class="sender-info">
+                <div class="sender-avatar">
+                    {% if message.sender.profile_pic %}
+                    <img src="{{ message.sender.profile_pic.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% else %}
+                    {{ message.sender.first_name|first|upper }}{{ message.sender.last_name|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="sender-details">
+                    <div class="sender-name">
+                        {{ message.sender.first_name }} {{ message.sender.last_name }}
+                    </div>
+                    <div class="sender-role">
+                        {% if message.sender.user_type == '1' %}HOD
+                        {% elif message.sender.user_type == '2' %}Staff
+                        {% elif message.sender.user_type == '3' %}Student
+                        {% elif message.sender.user_type == '4' %}Management
+                        {% endif %}
+                    </div>
+                    <div style="margin-top: 0.25rem; font-size: 0.875rem; color: #64748b;">
+                        <strong style="color: #475569;">Subject:</strong> {{ message.subject }}
+                    </div>
+                    {% if sender_student %}
+                    <div class="student-info-badges" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        {% if sender_student.roll_number %}
+                        <span class="info-badge" style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-id-badge"></i> {{ sender_student.roll_number }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.course %}
+                        <span class="info-badge" style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-graduation-cap"></i> {{ sender_student.course.name }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.current_semester %}
+                        <span class="info-badge" style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-calendar-alt"></i> Sem {{ sender_student.current_semester }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.admission_year %}
+                        <span class="info-badge" style="background: #e0e7ff; color: #3730a3; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-calendar"></i> {{ sender_student.admission_year }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.current_pincode %}
+                        <span class="info-badge" style="background: #fce7f3; color: #831843; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-map-marker-alt"></i> {{ sender_student.current_pincode }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="message-meta">
+                    <span>
+                        <i class="fas fa-calendar"></i>
+                        {{ message.created_at|date:"M d, Y" }}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i>
+                        {{ message.created_at|time:"h:i A" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="message-body">
+            {{ message.message|linebreaksbr }}
+        </div>
+
+        <div class="message-actions">
+            <button onclick="showReplyForm()" class="btn-action btn-primary">
+                <i class="fas fa-reply"></i>
+                Reply
+            </button>
+            <a href="{% url 'view_messages' %}" class="btn-action btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Inbox
+            </a>
+            <form method="post" action="{% url 'delete_message' message.id %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn-action btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reply Form -->
+    <div class="message-card" id="replyForm" style="display: none;">
+        <div class="message-header">
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0;">
+                <i class="fas fa-reply"></i> Reply to Message
+            </h3>
+        </div>
+        <form method="post" action="{% url 'reply_message' message.id %}">
+            {% csrf_token %}
+            <div style="padding: 2rem;">
+                <div class="form-group">
+                    <label for="replyMessage" style="font-weight: 600; color: #0f172a; margin-bottom: 0.5rem; display: block;">Your Reply</label>
+                    <textarea name="message" id="replyMessage" class="form-control" rows="6" required style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; resize: vertical;" placeholder="Type your reply here..."></textarea>
+                </div>
+            </div>
+            <div class="message-actions" style="justify-content: flex-start;">
+                <button type="submit" class="btn-action btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Reply
+                </button>
+                <button type="button" onclick="hideReplyForm()" class="btn-action btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Replies Section -->
+    {% if replies %}
+    <div class="replies-section">
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem;">
+            Replies ({{ replies|length }})
+        </h3>
+
+        {% for reply in replies %}
+        <div class="reply-card">
+            <div class="reply-header">
+                <div class="reply-author">
+                    <i class="fas fa-user-circle"></i>
+                    {{ reply.sender.first_name }} {{ reply.sender.last_name }}
+                </div>
+                <div class="reply-time">
+                    <i class="fas fa-clock"></i>
+                    {{ reply.created_at|timesince }} ago
+                </div>
+            </div>
+            <div class="reply-body">
+                {{ reply.message|linebreaksbr }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function showReplyForm() {
+    document.getElementById('replyForm').style.display = 'block';
+    document.getElementById('replyMessage').focus();
+    // Smooth scroll to reply form
+    document.getElementById('replyForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function hideReplyForm() {
+    document.getElementById('replyForm').style.display = 'none';
+    document.getElementById('replyMessage').value = '';
+}
+</script>
+{% endblock %}
+
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 1.5rem;
+    }
+
+    html.dark .message-subject {
+        color: #f1f5f9;
+    }
+
+    .message-meta {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .message-body {
+        padding: 2rem;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #0f172a;
+    }
+
+    html.dark .message-body {
+        color: #f1f5f9;
+    }
+
+    .message-actions {
+        padding: 1.5rem 2rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 1rem;
+    }
+
+    html.dark .message-actions {
+        border-top-color: #334155;
+    }
+
+    .btn-action {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #1e40af;
+        border: 2px solid #1e40af;
+    }
+
+    .btn-secondary:hover {
+        background: #eff6ff;
+    }
+
+    .btn-danger {
+        background: white;
+        color: #dc2626;
+        border: 2px solid #dc2626;
+    }
+
+    .btn-danger:hover {
+        background: #fee2e2;
+    }
+
+    .sender-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .sender-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .sender-details {
+        flex: 1;
+    }
+
+    .sender-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    html.dark .sender-name {
+        color: #f1f5f9;
+    }
+
+    .sender-role {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .replies-section {
+        margin-top: 2rem;
+    }
+
+    .reply-card {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #1e40af;
+    }
+
+    html.dark .reply-card {
+        background: #334155;
+    }
+
+    .reply-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .reply-author {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    html.dark .reply-author {
+        color: #f1f5f9;
+    }
+
+    .reply-time {
+        font-size: 0.8125rem;
+        color: #64748b;
+    }
+
+    .reply-body {
+        color: #0f172a;
+        line-height: 1.6;
+    }
+
+    html.dark .reply-body {
+        color: #f1f5f9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="message-container">
+    <div class="mb-4">
+        <a href="{% url 'view_messages' %}" style="color: #1e40af; text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Back to Messages
+        </a>
+    </div>
+
+    <div class="message-card">
+        <div class="message-header">
+            <h1 class="message-subject">
+                {{ message.subject }}
+            </h1>
+
+            <div class="sender-info">
+                <div class="sender-avatar">
+                    {% if message.sender.profile_pic %}
+                    <img src="{{ message.sender.profile_pic.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    {% else %}
+                    {{ message.sender.first_name|first|upper }}{{ message.sender.last_name|first|upper }}
+                    {% endif %}
+                </div>
+                <div class="sender-details">
+                    <div class="sender-name">
+                        {{ message.sender.first_name }} {{ message.sender.last_name }}
+                    </div>
+                    <div class="sender-role">
+                        {% if message.sender.user_type == '1' %}HOD
+                        {% elif message.sender.user_type == '2' %}Staff
+                        {% elif message.sender.user_type == '3' %}Student
+                        {% elif message.sender.user_type == '4' %}Management
+                        {% endif %}
+                    </div>
+                    <div style="margin-top: 0.25rem; font-size: 0.875rem; color: #64748b;">
+                        <strong style="color: #475569;">Subject:</strong> {{ message.subject }}
+                    </div>
+                    {% if sender_student %}
+                    <div class="student-info-badges" style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        {% if sender_student.roll_number %}
+                        <span class="info-badge" style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-id-badge"></i> {{ sender_student.roll_number }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.course %}
+                        <span class="info-badge" style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-graduation-cap"></i> {{ sender_student.course.name }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.current_semester %}
+                        <span class="info-badge" style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-calendar-alt"></i> Sem {{ sender_student.current_semester }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.admission_year %}
+                        <span class="info-badge" style="background: #e0e7ff; color: #3730a3; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-calendar"></i> {{ sender_student.admission_year }}
+                        </span>
+                        {% endif %}
+                        {% if sender_student.current_pincode %}
+                        <span class="info-badge" style="background: #fce7f3; color: #831843; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">
+                            <i class="fas fa-map-marker-alt"></i> {{ sender_student.current_pincode }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="message-meta">
+                    <span>
+                        <i class="fas fa-calendar"></i>
+                        {{ message.created_at|date:"M d, Y" }}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i>
+                        {{ message.created_at|time:"h:i A" }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="message-body">
+            {{ message.message|linebreaksbr }}
+        </div>
+
+        <div class="message-actions">
+            <button onclick="showReplyForm()" class="btn-action btn-primary">
+                <i class="fas fa-reply"></i>
+                Reply
+            </button>
+            <a href="{% url 'view_messages' %}" class="btn-action btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Inbox
+            </a>
+            <form method="post" action="{% url 'delete_message' message.id %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn-action btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reply Form -->
+    <div class="message-card" id="replyForm" style="display: none;">
+        <div class="message-header">
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0;">
+                <i class="fas fa-reply"></i> Reply to Message
+            </h3>
+        </div>
+        <form method="post" action="{% url 'reply_message' message.id %}">
+            {% csrf_token %}
+            <div style="padding: 2rem;">
+                <div class="form-group">
+                    <label for="replyMessage" style="font-weight: 600; color: #0f172a; margin-bottom: 0.5rem; display: block;">Your Reply</label>
+                    <textarea name="message" id="replyMessage" class="form-control" rows="6" required style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; resize: vertical;" placeholder="Type your reply here..."></textarea>
+                </div>
+            </div>
+            <div class="message-actions" style="justify-content: flex-start;">
+                <button type="submit" class="btn-action btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Reply
+                </button>
+                <button type="button" onclick="hideReplyForm()" class="btn-action btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Replies Section -->
+    {% if replies %}
+    <div class="replies-section">
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem;">
+            Replies ({{ replies|length }})
+        </h3>
+
+        {% for reply in replies %}
+        <div class="reply-card">
+            <div class="reply-header">
+                <div class="reply-author">
+                    <i class="fas fa-user-circle"></i>
+                    {{ reply.sender.first_name }} {{ reply.sender.last_name }}
+                </div>
+                <div class="reply-time">
+                    <i class="fas fa-clock"></i>
+                    {{ reply.created_at|timesince }} ago
+                </div>
+            </div>
+            <div class="reply-body">
+                {{ reply.message|linebreaksbr }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function showReplyForm() {
+    document.getElementById('replyForm').style.display = 'block';
+    document.getElementById('replyMessage').focus();
+    // Smooth scroll to reply form
+    document.getElementById('replyForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function hideReplyForm() {
+    document.getElementById('replyForm').style.display = 'none';
+    document.getElementById('replyMessage').value = '';
+}
+</script>
+{% endblock %}
 {%extends 'main_app/base.html' %}
 {%load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}

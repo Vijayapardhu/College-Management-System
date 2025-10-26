@@ -1,0 +1,130 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .resource-meter {
+        height: 30px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+    }
+    .resource-fill {
+        height: 100%;
+        transition: width 0.5s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-server"></i> System Resources</h1>
+            </div>
+        </div>
+
+        {% if not system_info.available %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Notice:</strong> {{ system_info.message }}
+        </div>
+        {% else %}
+        <!-- CPU Usage -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h3 class="card-title"><i class="fas fa-microchip"></i> CPU Usage</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>CPU Cores:</strong> {{ system_info.cpu_count }}</p>
+                        <div class="resource-meter">
+                            <div class="resource-fill {% if system_info.cpu_percent > 80 %}bg-danger{% elif system_info.cpu_percent > 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {{ system_info.cpu_percent }}%">
+                                {{ system_info.cpu_percent }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Usage -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3 class="card-title"><i class="fas fa-memory"></i> Memory Usage</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Memory:</strong> {{ system_info.memory_used }} GB / {{ system_info.memory_total }} GB</p>
+                        <div class="resource-meter">
+                            <div class="resource-fill {% if system_info.memory_percent > 80 %}bg-danger{% elif system_info.memory_percent > 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {{ system_info.memory_percent }}%">
+                                {{ system_info.memory_percent }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disk Usage -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="card-title"><i class="fas fa-hdd"></i> Disk Usage</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Disk:</strong> {{ system_info.disk_used }} GB / {{ system_info.disk_total }} GB</p>
+                        <div class="resource-meter">
+                            <div class="resource-fill {% if system_info.disk_percent > 80 %}bg-danger{% elif system_info.disk_percent > 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                                 style="width: {{ system_info.disk_percent }}%">
+                                {{ system_info.disk_percent }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-lightbulb"></i> Resource Management Tips:</h5>
+                    <ul>
+                        <li>Keep CPU usage below 70% for optimal performance</li>
+                        <li>Monitor memory usage and restart services if necessary</li>
+                        <li>Ensure adequate disk space (keep below 80%)</li>
+                        <li>Consider scaling resources if consistently high usage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <a href="{% url 'performance_dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <button onclick="location.reload()" class="btn btn-primary">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

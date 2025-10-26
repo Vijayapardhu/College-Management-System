@@ -1,0 +1,113 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Student CGPA{% endblock %}
+{% block page_title %}Student CGPA Report{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem;">
+        <i class="fas fa-chart-line"></i> Student CGPA Report
+    </h2>
+
+    <!-- Student Info -->
+    <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+                <span style="color: #64748b;">Student Name:</span>
+                <strong>{{ student.admin.first_name }} {{ student.admin.last_name }}</strong>
+            </div>
+            <div>
+                <span style="color: #64748b;">Roll Number:</span>
+                <strong>{{ student.roll_number }}</strong>
+            </div>
+            <div>
+                <span style="color: #64748b;">Course:</span>
+                <strong>{{ student.course.name }}</strong>
+            </div>
+            <div>
+                <span style="color: #64748b;">Current Semester:</span>
+                <strong>{{ student.current_semester|default:"N/A" }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- CGPA Card -->
+    <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center; color: white;">
+        <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">{{ cgpa|floatformat:2 }}</div>
+        <div style="font-size: 1.125rem;">Cumulative Grade Point Average (CGPA)</div>
+    </div>
+
+    <!-- Semester-wise Results -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Semester-wise Performance</h3>
+        
+        {% if semester_results %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Semester</th>
+                    <th>Total Subjects</th>
+                    <th>Total Credits</th>
+                    <th>SGPA</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in semester_results %}
+                <tr>
+                    <td><strong>Semester {{ result.semester }}</strong></td>
+                    <td>{{ result.subject_count }}</td>
+                    <td>{{ result.total_credits }}</td>
+                    <td>
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 6px; font-weight: 600;
+                                     background: {% if result.sgpa >= 7.0 %}#d1fae5{% elif result.sgpa >= 5.0 %}#fed7aa{% else %}#fee2e2{% endif %};
+                                     color: {% if result.sgpa >= 7.0 %}#059669{% elif result.sgpa >= 5.0 %}#ea580c{% else %}#dc2626{% endif %};">
+                            {{ result.sgpa|floatformat:2 }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if result.sgpa >= 5.0 %}
+                        <span class="badge badge-success">Pass</span>
+                        {% else %}
+                        <span class="badge badge-danger">Fail</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: #94a3b8;">
+            <i class="fas fa-file-alt" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <p>No results available</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'staff_view_students' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Students
+        </a>
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="fas fa-print"></i> Print Report
+        </button>
+    </div>
+</div>
+
+<style>
+    .table { width: 100%; }
+    .table th { background: #f8fafc; padding: 0.75rem; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+    .table td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-primary { background: #1e40af; color: white; }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+    .badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-success { background: #d1fae5; color: #059669; }
+    .badge-danger { background: #fee2e2; color: #dc2626; }
+    
+    @media print {
+        .btn { display: none; }
+    }
+</style>
+{% endblock content %}
+

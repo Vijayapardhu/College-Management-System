@@ -1,0 +1,61 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Approval Timeline{% endblock %}
+{% block page_title %}Recent Approval Timeline{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem;">
+        <i class="fas fa-clock"></i> Recent Approval Timeline
+    </h2>
+
+    <!-- Timeline -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem;">
+        {% if timeline %}
+        <div style="position: relative;">
+            {% for item in timeline %}
+            <div style="padding: 1.5rem; margin-bottom: 1rem; border-left: 4px solid 
+                        {% if item.status == 'approved' %}#059669{% elif item.status == 'rejected' %}#dc2626{% else %}#ea580c{% endif %}; 
+                        background: #f8fafc; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                    <div>
+                        <strong style="font-size: 1.125rem;">{{ item.type|title }} Leave</strong>
+                        <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.25rem;">
+                            {{ item.applicant }}
+                        </div>
+                    </div>
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+                                 background: {% if item.status == 'approved' %}#d1fae5{% elif item.status == 'rejected' %}#fee2e2{% else %}#fed7aa{% endif %};
+                                 color: {% if item.status == 'approved' %}#059669{% elif item.status == 'rejected' %}#dc2626{% else %}#ea580c{% endif %};">
+                        {{ item.status|title }}
+                    </span>
+                </div>
+                <div style="font-size: 0.875rem; color: #64748b;">
+                    <i class="fas fa-calendar"></i> {{ item.date|date:"M d, Y h:i A" }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: #94a3b8;">
+            <i class="fas fa-history" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <p>No approval history available</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'approval_center' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Approval Center
+        </a>
+    </div>
+</div>
+
+<style>
+    .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+</style>
+{% endblock content %}
+
+
+

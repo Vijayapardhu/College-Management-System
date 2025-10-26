@@ -2782,7 +2782,6 @@ class StudentDocument(models.Model):
     def is_rejected(self):
         """Check if document is rejected"""
         return self.verified_status == 'rejected'
-
     class Meta:
         ordering = ['-uploaded_date']
         unique_together = ['student', 'document_type']

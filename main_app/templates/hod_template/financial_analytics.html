@@ -1,0 +1,197 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .financial-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .financial-card h2 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #28a745;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-money-bill-wave"></i> Financial Analytics</h1>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="financial-card" style="border-top: 4px solid #28a745;">
+                    <p><i class="fas fa-check-circle"></i> Fees Collected</p>
+                    <h2>₹{{ total_fee_collected|floatformat:0 }}</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="financial-card" style="border-top: 4px solid #ffc107;">
+                    <p><i class="fas fa-clock"></i> Pending Fees</p>
+                    <h2>₹{{ pending_fees|floatformat:0 }}</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="financial-card" style="border-top: 4px solid #17a2b8;">
+                    <p><i class="fas fa-percentage"></i> Collection Rate</p>
+                    <h2>{{ collection_rate }}%</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="financial-card" style="border-top: 4px solid #dc3545;">
+                    <p><i class="fas fa-exclamation-circle"></i> Defaulters</p>
+                    <h2>{{ defaulters_count }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Revenue Trend -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-line"></i> Monthly Revenue Trend</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="revenueChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course-wise Fee Collection -->
+        <div class="row mt-3">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-graduation-cap"></i> Course-wise Fee Collection</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Students</th>
+                                    <th>Amount Collected</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in course_fees %}
+                                <tr>
+                                    <td>{{ course.name }}</td>
+                                    <td><span class="badge badge-primary">{{ course.student_count }}</span></td>
+                                    <td><strong>₹{{ course.collected|floatformat:0 }}</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Stats -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3 class="card-title"><i class="fas fa-gift"></i> Scholarships</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Total Disbursed:</strong> {{ total_scholarships_disbursed }}</p>
+                        <p><strong>Amount:</strong> ₹{{ scholarship_amount|floatformat:0 }}</p>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header bg-warning">
+                        <h3 class="card-title"><i class="fas fa-credit-card"></i> Payment Modes</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tbody>
+                                {% for mode in payment_modes %}
+                                <tr>
+                                    <td>{{ mode.payment_mode }}</td>
+                                    <td><span class="badge badge-secondary">{{ mode.count }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Financial Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>Total Expected:</strong> ₹{{ total_expected|floatformat:0 }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Collected:</strong> ₹{{ total_fee_collected|floatformat:0 }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Collection Efficiency:</strong> {{ collection_rate }}%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // Monthly Revenue Chart
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+    var revenueData = {{ monthly_revenue_json|safe }};
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: revenueData.map(item => item.month),
+            datasets: [{
+                label: 'Revenue (₹)',
+                data: revenueData.map(item => item.amount),
+                backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                borderColor: 'rgba(40, 167, 69, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock custom_js %}
+

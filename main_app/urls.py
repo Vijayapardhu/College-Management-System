@@ -123,6 +123,9 @@ urlpatterns = [
     path("staff/feedback/", staff_views.staff_feedback, name='staff_feedback'),
     path("staff/view/profile/", staff_views.staff_view_profile,
          name='staff_view_profile'),
+    path("staff/students/", staff_views.view_students, name='staff_view_students'),
+    path("staff/attendance/history/", staff_views.staff_attendance_history,
+         name='staff_attendance_history'),
     path("staff/attendance/take/", staff_views.staff_take_attendance,
          name='staff_take_attendance'),
     path("staff/attendance/bulk-import/", staff_views.bulk_attendance_import,
@@ -546,6 +549,12 @@ urlpatterns = [
     # Management Dashboard
     path("management/home/", management_views.management_home, name='management_home'),
     path("management/profile/", management_views.management_view_profile, name='management_view_profile'),
+    
+    # Management Reporting (Phase 10)
+    path("management/reports/financial/", management_views.financial_reports, name='management_financial_reports'),
+    path("management/reports/operational/", management_views.operational_reports, name='management_operational_reports'),
+    path("management/reports/academic-oversight/", management_views.academic_oversight, name='management_academic_oversight'),
+    path("management/reports/institutional-kpis/", management_views.institutional_kpis, name='management_institutional_kpis'),
     
     # Management - Transport
     path("management/transport/manage/", management_views.manage_transport, name='management_transport'),

@@ -1,0 +1,65 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Timetable Statistics{% endblock %}
+{% block page_title %}Timetable Utilization Statistics{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem;">
+        <i class="fas fa-chart-bar"></i> Timetable Statistics & Utilization
+    </h2>
+
+    <!-- Statistics Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #1e40af;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #1e40af;">{{ total_timetables }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Total Timetable Entries</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #059669;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #059669;">{{ total_classrooms }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Total Classrooms</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #7c3aed;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #7c3aed;">{{ utilization_rate }}%</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Classroom Utilization</div>
+        </div>
+    </div>
+
+    <!-- Utilization Progress -->
+    <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">Overall Utilization</h3>
+        <div style="background: #e2e8f0; height: 24px; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(90deg, #1e40af 0%, #3b82f6 100%); 
+                        height: 100%; width: {{ utilization_rate }}%; 
+                        display: flex; align-items: center; justify-content: center; 
+                        color: white; font-weight: 600; font-size: 0.875rem;">
+                {{ utilization_rate }}%
+            </div>
+        </div>
+        <p style="margin-top: 0.75rem; color: #64748b; font-size: 0.875rem;">
+            <i class="fas fa-info-circle"></i> 
+            {% if utilization_rate < 50 %}
+                Low utilization - Consider consolidating classes or adding more sections
+            {% elif utilization_rate < 80 %}
+                Good utilization - Classrooms are being used efficiently
+            {% else %}
+                High utilization - May need additional classrooms or schedule optimization
+            {% endif %}
+        </p>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'timetable_dashboard' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Timetable
+        </a>
+    </div>
+</div>
+
+<style>
+    .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+</style>
+{% endblock content %}
+
+
+

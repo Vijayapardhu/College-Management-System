@@ -1,0 +1,47 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-download"></i> Export Performance Data</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title"><i class="fas fa-file-csv"></i> Export System Metrics</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Download current system performance metrics in CSV format.</p>
+
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle"></i> Export Includes:</h5>
+                            <ul>
+                                <li>Total Users and Active Users</li>
+                                <li>Student and Staff Counts</li>
+                                <li>Database Query Statistics (if DEBUG mode)</li>
+                                <li>System Health Metrics</li>
+                            </ul>
+                        </div>
+
+                        <a href="?download=1" class="btn btn-success btn-lg">
+                            <i class="fas fa-download"></i> Download CSV
+                        </a>
+                        <a href="{% url 'performance_dashboard' %}" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

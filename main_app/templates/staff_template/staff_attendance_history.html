@@ -1,0 +1,349 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}My Attendance{% endblock %}
+{% block page_title %}My Attendance History{% endblock %}
+
+{% block custom_css %}
+<style>
+    .attendance-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+
+    html.dark .stat-card {
+        background: #1e293b;
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .stat-icon.present {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .stat-icon.absent {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .stat-icon.total {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .stat-icon.percentage {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    html.dark .stat-value {
+        color: #f1f5f9;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .attendance-table-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    html.dark .attendance-table-card {
+        background: #1e293b;
+    }
+
+    .table-professional {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-professional thead {
+        background: #f8fafc;
+    }
+
+    html.dark .table-professional thead {
+        background: #334155;
+    }
+
+    .table-professional th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.875rem;
+    }
+
+    html.dark .table-professional th {
+        color: #f1f5f9;
+    }
+
+    .table-professional td {
+        padding: 1rem;
+        border-top: 1px solid #e2e8f0;
+        color: #0f172a;
+    }
+
+    html.dark .table-professional td {
+        border-top-color: #334155;
+        color: #f1f5f9;
+    }
+
+    .status-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-badge.present {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-badge.absent {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .filter-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    html.dark .filter-card {
+        background: #1e293b;
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    html.dark .form-label {
+        color: #f1f5f9;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    html.dark .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+
+    .btn-filter {
+        padding: 0.625rem 1.5rem;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+        <i class="fas fa-calendar-check"></i> My Attendance History
+    </h2>
+    <p style="color: #64748b; margin: 0;">Track your attendance records</p>
+</div>
+
+<!-- Attendance Stats -->
+<div class="attendance-stats">
+    <div class="stat-card">
+        <div class="stat-icon total">
+            <i class="fas fa-calendar"></i>
+        </div>
+        <div class="stat-value">{{ total_days }}</div>
+        <div class="stat-label">Total Days</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon present">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-value">{{ present_days }}</div>
+        <div class="stat-label">Present Days</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon absent">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="stat-value">{{ absent_days }}</div>
+        <div class="stat-label">Absent Days</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon percentage">
+            <i class="fas fa-percentage"></i>
+        </div>
+        <div class="stat-value">{{ attendance_percentage }}%</div>
+        <div class="stat-label">Attendance Rate</div>
+    </div>
+</div>
+
+<!-- Filter Card -->
+<div class="filter-card">
+    <form method="get" class="filter-form">
+        <div class="form-group">
+            <label class="form-label" for="month">
+                <i class="fas fa-calendar-alt"></i> Month
+            </label>
+            <select name="month" id="month" class="form-control">
+                <option value="">All Months</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="year">
+                <i class="fas fa-calendar"></i> Year
+            </label>
+            <select name="year" id="year" class="form-control">
+                <option value="">All Years</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" style="opacity: 0;">Filter</label>
+            <button type="submit" class="btn-filter">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Attendance Table -->
+<div class="attendance-table-card">
+    {% if attendance_records %}
+    <div class="table-responsive">
+        <table class="table-professional">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ record.date|date:"M d, Y" }}</td>
+                    <td>{{ record.date|date:"l" }}</td>
+                    <td>
+                        {% if record.status %}
+                        <span class="status-badge present">
+                            <i class="fas fa-check"></i> Present
+                        </span>
+                        {% else %}
+                        <span class="status-badge absent">
+                            <i class="fas fa-times"></i> Absent
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ record.remarks|default:"-" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem;">
+        <i class="fas fa-calendar-times" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">No Records Found</h3>
+        <p style="color: #64748b;">No attendance records available for the selected period</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% endblock %}
+
+
+
+

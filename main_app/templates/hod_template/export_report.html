@@ -1,0 +1,90 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-file-export"></i> Export Reports</h1>
+                <p>Download reports in various formats</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title"><i class="fas fa-download"></i> Select Report to Export</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" action="">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Report Type</label>
+                                        <select name="type" class="form-control" required>
+                                            {% for report in available_reports %}
+                                            <option value="{{ report.value }}" {% if selected_type == report.value %}selected{% endif %}>
+                                                {{ report.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Export Format</label>
+                                        <select name="format" class="form-control">
+                                            <option value="csv" {% if selected_format == 'csv' %}selected{% endif %}>CSV</option>
+                                            <option value="excel" disabled>Excel (Coming Soon)</option>
+                                            <option value="pdf" disabled>PDF (Coming Soon)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" name="download" value="1" class="btn btn-success btn-lg">
+                                    <i class="fas fa-download"></i> Download Report
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Reports Info -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-info-circle"></i> Available Reports</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for report in available_reports %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-file-alt"></i> {{ report.name }}</h5>
+                                        <a href="?type={{ report.value }}&download=1" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-download"></i> Download CSV
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

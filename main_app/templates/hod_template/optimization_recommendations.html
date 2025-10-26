@@ -1,0 +1,163 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .priority-critical {
+        border-left: 5px solid #dc3545;
+    }
+    .priority-high {
+        border-left: 5px solid #fd7e14;
+    }
+    .priority-medium {
+        border-left: 5px solid #ffc107;
+    }
+    .priority-low {
+        border-left: 5px solid #17a2b8;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-lightbulb"></i> Optimization Recommendations</h1>
+                <p>AI-powered suggestions to improve your system's performance and security</p>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ critical_count }}</h3>
+                        <p>Critical</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning">
+                    <div class="card-body text-center">
+                        <h3>{{ high_count }}</h3>
+                        <p>High Priority</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ medium_count }}</h3>
+                        <p>Medium Priority</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-secondary text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ low_count }}</h3>
+                        <p>Low Priority</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations List -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                {% if recommendations %}
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title"><i class="fas fa-tasks"></i> Recommendations ({{ total_recommendations }})</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for rec in recommendations %}
+                        <div class="card mb-3 priority-{{ rec.priority|lower }}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h5>
+                                            <span class="badge badge-{% if rec.priority == 'Critical' %}danger{% elif rec.priority == 'High' %}warning{% elif rec.priority == 'Medium' %}info{% else %}secondary{% endif %}">
+                                                {{ rec.priority }}
+                                            </span>
+                                            {{ rec.title }}
+                                        </h5>
+                                        <p><strong>Category:</strong> <span class="badge badge-primary">{{ rec.category }}</span></p>
+                                        <p>{{ rec.description }}</p>
+                                        <div class="alert alert-light mb-0">
+                                            <strong><i class="fas fa-tools"></i> Action:</strong> {{ rec.action }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        {% if rec.priority == 'Critical' %}
+                                        <i class="fas fa-exclamation-circle fa-5x text-danger"></i>
+                                        {% elif rec.priority == 'High' %}
+                                        <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
+                                        {% elif rec.priority == 'Medium' %}
+                                        <i class="fas fa-info-circle fa-5x text-info"></i>
+                                        {% else %}
+                                        <i class="fas fa-check-circle fa-5x text-secondary"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> <strong>Excellent!</strong> No optimization recommendations at this time. Your system is well-configured!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- General Best Practices -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3 class="card-title"><i class="fas fa-book"></i> General Best Practices</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Security:</h5>
+                                <ul>
+                                    <li>Keep dependencies up to date</li>
+                                    <li>Use environment variables for secrets</li>
+                                    <li>Enable HTTPS in production</li>
+                                    <li>Implement proper authentication</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Performance:</h5>
+                                <ul>
+                                    <li>Enable caching (Redis/Memcached)</li>
+                                    <li>Optimize database queries</li>
+                                    <li>Use CDN for static files</li>
+                                    <li>Implement pagination</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <a href="{% url 'performance_dashboard' %}" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

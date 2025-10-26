@@ -1,3 +1,4 @@
+
 <!-- Management Navigation -->
 <nav class="sidebar-nav">
     <!-- Navigation Menu -->
@@ -17,10 +18,31 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'management_analytics' %}" 
+                    <a href="{% url 'management_financial_reports' %}" 
                        class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <span class="nav-text">Analytics</span>
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <span class="nav-text">Financial Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_operational_reports' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <span class="nav-text">Operational Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_academic_oversight' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-graduation-cap"></i>
+                        <span class="nav-text">Academic Oversight</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'management_institutional_kpis' %}" 
+                       class="nav-item nav-item-inactive group">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <span class="nav-text">Institutional KPIs</span>
                     </a>
                 </li>
             </ul>

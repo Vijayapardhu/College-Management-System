@@ -1,0 +1,80 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-file-code"></i> Optimize Static Files</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h3 class="card-title"><i class="fas fa-check-circle"></i> Optimization Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Static Files Collected:</th>
+                                <td>
+                                    {% if optimization_status.collectstatic_run %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Yes</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-times"></i> No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Compression Enabled:</th>
+                                <td>
+                                    {% if optimization_status.compression_enabled %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Yes</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-times"></i> No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>CDN Configured:</th>
+                                <td>
+                                    {% if optimization_status.cdn_configured %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Yes</span>
+                                    {% else %}
+                                    <span class="badge badge-warning"><i class="fas fa-times"></i> No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        {% if recommendations %}
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-lightbulb"></i> Recommendations:</h5>
+                            <ul>
+                                {% for rec in recommendations %}
+                                <li>{{ rec }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> All static file optimizations are properly configured!
+                        </div>
+                        {% endif %}
+
+                        <a href="{% url 'performance_dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

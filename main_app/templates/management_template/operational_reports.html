@@ -1,0 +1,160 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-cogs"></i> Operational Reports</h1>
+                <p>Hostel, Transport, and Library utilization metrics</p>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ hostel_occupancy_rate }}%</h3>
+                        <p>Hostel Occupancy</p>
+                        <small>{{ occupied_rooms }}/{{ total_hostel_rooms }} Rooms</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ transport_utilization }}%</h3>
+                        <p>Transport Utilization</p>
+                        <small>{{ occupied_seats }}/{{ total_transport_seats }} Seats</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h3>{{ library_circulation }}%</h3>
+                        <p>Library Circulation</p>
+                        <small>{{ books_issued }}/{{ total_books }} Books</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hostel Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h3 class="card-title"><i class="fas fa-home"></i> Hostel-wise Occupancy</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Hostel Name</th>
+                                    <th>Total Rooms</th>
+                                    <th>Occupied</th>
+                                    <th>Available</th>
+                                    <th>Occupancy %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hostel in hostel_stats %}
+                                <tr>
+                                    <td>{{ hostel.name }}</td>
+                                    <td>{{ hostel.total_rooms }}</td>
+                                    <td><span class="badge badge-success">{{ hostel.occupied }}</span></td>
+                                    <td><span class="badge badge-warning">{{ hostel.available }}</span></td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar {% if hostel.occupancy >= 80 %}bg-danger{% elif hostel.occupancy >= 60 %}bg-warning{% else %}bg-success{% endif %}" 
+                                                 style="width: {{ hostel.occupancy }}%">{{ hostel.occupancy }}%</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transport Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3 class="card-title"><i class="fas fa-bus"></i> Transport Route Utilization</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Route</th>
+                                    <th>Total Seats</th>
+                                    <th>Occupied</th>
+                                    <th>Available</th>
+                                    <th>Utilization %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transport in transport_stats %}
+                                <tr>
+                                    <td>{{ transport.route }}</td>
+                                    <td>{{ transport.total_seats }}</td>
+                                    <td><span class="badge badge-success">{{ transport.occupied }}</span></td>
+                                    <td><span class="badge badge-warning">{{ transport.available }}</span></td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar {% if transport.utilization >= 80 %}bg-danger{% elif transport.utilization >= 60 %}bg-warning{% else %}bg-success{% endif %}" 
+                                                 style="width: {{ transport.utilization }}%">{{ transport.utilization }}%</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title"><i class="fas fa-book"></i> Library Operations</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Total Books</h5>
+                                <h3>{{ total_books }}</h3>
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Books Issued</h5>
+                                <h3 class="text-primary">{{ books_issued }}</h3>
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Overdue Books</h5>
+                                <h3 class="text-danger">{{ overdue_books }}</h3>
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Total Fines</h5>
+                                <h3 class="text-warning">₹{{ total_fines|floatformat:0 }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

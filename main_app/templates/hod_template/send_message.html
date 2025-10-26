@@ -1,32 +1,234 @@
-{%extends 'main_app/base.html' %}
-{%load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Send Message{% endblock %}
+{% block page_title %}Send Message{% endblock %}
 
-{%block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 class="card-title">Send Message</h3>
-                    </div>
-                    <div class="card-body-professional">
-                        <div class="alert-professional-info">
-                            <i class="icon fas fa-info-circle"></i>
-                            This template is ready for customization.
-                            <br><small>File: {{request.path}}</small>
-                        </div>
-                        
-                        <p class="text-muted">Add your content here...</p>
-                        
-                        <a href="{%url 'admin_messages' %}" class="btn btn-professional-secondary">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </a>
-                    </div>
+{% block custom_css %}
+<style>
+    .compose-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .compose-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    html.dark .compose-card {
+        background: #1e293b;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    html.dark .form-label {
+        color: #f1f5f9;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    html.dark .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    textarea.form-control {
+        min-height: 200px;
+        resize: vertical;
+    }
+
+    .btn-send {
+        padding: 0.875rem 2rem;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-send:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-cancel {
+        padding: 0.875rem 2rem;
+        background: white;
+        color: #64748b;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 1rem;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+
+    .char-count {
+        text-align: right;
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+    }
+
+    .recipient-info {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #1e40af;
+    }
+
+    html.dark .recipient-info {
+        background: #1e3a8a;
+        border-left-color: #3b82f6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="compose-container">
+    <div class="mb-4">
+        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+            <i class="fas fa-paper-plane"></i> Compose Message
+        </h2>
+        <p style="color: #64748b; margin: 0;">Send a message to staff, students, or management</p>
+    </div>
+
+    <div class="compose-card">
+        <div class="recipient-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Tip:</strong> As HOD, you can send messages to all users in the system.
+        </div>
+
+        <form method="post" id="messageForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="receiver_id">
+                    <i class="fas fa-user"></i> To (Recipient) *
+                </label>
+                <select name="receiver_id" id="receiver_id" class="form-control" required>
+                    <option value="">Select recipient...</option>
+                    {% for recipient in recipients %}
+                    <option value="{{ recipient.id }}">
+                        {{ recipient.first_name }} {{ recipient.last_name }}
+                        {% if recipient.user_type == '2' %}(Staff)
+                        {% elif recipient.user_type == '3' %}(Student)
+                        {% elif recipient.user_type == '4' %}(Management)
+                        {% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="subject">
+                    <i class="fas fa-heading"></i> Subject *
+                </label>
+                <input 
+                    type="text" 
+                    name="subject" 
+                    id="subject" 
+                    class="form-control" 
+                    placeholder="Enter message subject..."
+                    required
+                    maxlength="200"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="message">
+                    <i class="fas fa-align-left"></i> Message *
+                </label>
+                <textarea 
+                    name="message" 
+                    id="message" 
+                    class="form-control" 
+                    placeholder="Type your message here..."
+                    required
+                    maxlength="5000"
+                ></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span> / 5000 characters
                 </div>
             </div>
-        </div>
+
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn-send">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+                <a href="{% url 'admin_messages' %}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
     </div>
-</section>
-{%endblock content %}
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+
+    if (messageTextarea && charCount) {
+        messageTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
+
+    // Form validation
+    const form = document.getElementById('messageForm');
+    form.addEventListener('submit', function(e) {
+        const recipient = document.getElementById('receiver_id').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+
+        if (!recipient || !subject.trim() || !message.trim()) {
+            e.preventDefault();
+            alert('Please fill all required fields');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

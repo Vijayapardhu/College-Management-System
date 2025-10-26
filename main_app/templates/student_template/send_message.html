@@ -1,150 +1,233 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block title %}Send Message{% endblock %}
+{% block page_title %}Send Message{% endblock %}
+
 {% block custom_css %}
 <style>
-.compact-form .form-group {
-    margin-bottom: 8px !important;
-}
-.compact-form label {
-    font-size: 12px !important;
-    margin-bottom: 2px !important;
-    font-weight: 500;
-}
-.compact-form input, .compact-form select, .compact-form textarea {
-    padding: 6px 10px !important;
-    font-size: 13px !important;
-    height: auto !important;
-    min-height: 32px !important;
-}
-.compact-form .form-control {
-    border-radius: 4px !important;
-}
-.compact-form .section-header {
-    font-size: 14px !important;
-    margin-bottom: 8px !important;
-    margin-top: 15px !important;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #e9ecef;
-}
-.compact-form .row {
-    margin-bottom: 0 !important;
-}
+    .compose-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .compose-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    html.dark .compose-card {
+        background: #1e293b;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    html.dark .form-label {
+        color: #f1f5f9;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    html.dark .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    textarea.form-control {
+        min-height: 200px;
+        resize: vertical;
+    }
+
+    .btn-send {
+        padding: 0.875rem 2rem;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-send:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-cancel {
+        padding: 0.875rem 2rem;
+        background: white;
+        color: #64748b;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 1rem;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+
+    .char-count {
+        text-align: right;
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+    }
+
+    .recipient-info {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #1e40af;
+    }
+
+    html.dark .recipient-info {
+        background: #1e3a8a;
+        border-left-color: #3b82f6;
+    }
 </style>
-{% endblock custom_css %}
-
-
+{% endblock %}
 
 {% block content %}
+<div class="compose-container">
+    <div class="mb-4">
+        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+            <i class="fas fa-paper-plane"></i> Compose Message
+        </h2>
+        <p style="color: #64748b; margin: 0;">Send a message to faculty or administration</p>
+    </div>
 
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-file me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Manage and organize your data efficiently
-            </p>
+    <div class="compose-card">
+        <div class="recipient-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Tip:</strong> You can send messages to HOD, faculty members, and your proctors.
         </div>
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 class="card-title"><i class="fas fa-paper-plane"></i> Send Message</h3>
-                    </div>
-                    <form method="post" class="compact-form" data-custom-submit="true">
-                        {% csrf_token %}
-                        <div class="card-body-professional" style="padding: 20px;">
-                            <div class="form-group mb-3">
-                                <label for="recipient" style="font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">
-                                    <i class="fas fa-user me-1"></i>To <span class="text-danger">*</span>
-                                </label>
-                                <select name="receiver_id" id="recipient" class="form-control" required>
-                                    <option value="">-- Select Recipient --</option>
-                                    <optgroup label="HOD/Administration">
-                                        {% for user in recipients %}
-                                            {% if user.user_type == '1' %}
-                                            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }} (HOD)</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </optgroup>
-                                    <optgroup label="Faculty/Staff">
-                                        {% for user in recipients %}
-                                            {% if user.user_type == '2' %}
-                                            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }} (Staff)</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </optgroup>
-                                </select>
-                                <small class="form-text text-muted mt-1">You can message HOD, faculty, and your assigned proctors</small>
-                            </div>
 
-                            <div class="form-group mb-3">
-                                <label for="subject" style="font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">
-                                    <i class="fas fa-envelope me-1"></i>Subject <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" name="subject" id="subject" class="form-control" 
-                                       placeholder="E.g., Query about Assignment 1" required maxlength="200">
-                            </div>
+        <form method="post" id="messageForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="receiver_id">
+                    <i class="fas fa-user"></i> To (Recipient) *
+                </label>
+                <select name="receiver_id" id="receiver_id" class="form-control" required>
+                    <option value="">Select recipient...</option>
+                    {% for recipient in recipients %}
+                    <option value="{{ recipient.id }}">
+                        {{ recipient.first_name }} {{ recipient.last_name }}
+                        {% if recipient.user_type == '1' %}(HOD)
+                        {% elif recipient.user_type == '2' %}(Faculty)
+                        {% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-                            <div class="form-group mb-3">
-                                <label for="message" style="font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">
-                                    <i class="fas fa-comment me-1"></i>Message <span class="text-danger">*</span>
-                                </label>
-                                <textarea name="message" id="message" class="form-control auto-expand" rows="6" 
-                                          placeholder="Type your message here..." required maxlength="2000"></textarea>
-                                <small class="form-text text-muted char-counter">0 / 2000 characters</small>
-                            </div>
+            <div class="form-group">
+                <label class="form-label" for="subject">
+                    <i class="fas fa-heading"></i> Subject *
+                </label>
+                <input 
+                    type="text" 
+                    name="subject" 
+                    id="subject" 
+                    class="form-control" 
+                    placeholder="Enter message subject..."
+                    required
+                    maxlength="200"
+                >
+            </div>
 
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Tip:</strong> Be clear and specific in your message. Include relevant details like subject name, assignment number, or date if applicable.
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex gap-2">
-                            <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="fas fa-paper-plane me-2"></i>Send Message
-                            </button>
-                            <a href="{% url 'student_messages' %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Cancel
-                            </a>
-                        </div>
-                    </form>
+            <div class="form-group">
+                <label class="form-label" for="message">
+                    <i class="fas fa-align-left"></i> Message *
+                </label>
+                <textarea 
+                    name="message" 
+                    id="message" 
+                    class="form-control" 
+                    placeholder="Type your message here..."
+                    required
+                    maxlength="5000"
+                ></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span> / 5000 characters
                 </div>
             </div>
-        </div>
+
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn-send">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+                <a href="{% url 'student_messages' %}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
     </div>
-</section>
-{% endblock content %}
+</div>
+{% endblock %}
 
 {% block custom_js %}
 <script>
-    // Character counter
-    $('#message').on('input', function() {
-        const length = $(this).val().length;
-        const maxLength = $(this).attr('maxlength');
-        $('.char-counter').text(length + ' / ' + maxLength + ' characters');
-        
-        if (length > maxLength * 0.9) {
-            $('.char-counter').addClass('text-warning');
-        } else {
-            $('.char-counter').removeClass('text-warning');
+document.addEventListener('DOMContentLoaded', function() {
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+
+    if (messageTextarea && charCount) {
+        messageTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
+
+    // Form validation
+    const form = document.getElementById('messageForm');
+    form.addEventListener('submit', function(e) {
+        const recipient = document.getElementById('receiver_id').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+
+        if (!recipient || !subject.trim() || !message.trim()) {
+            e.preventDefault();
+            alert('Please fill all required fields');
+            return false;
         }
     });
-
-    // Auto-expand textarea
-    $('.auto-expand').on('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    });
+});
 </script>
-{% endblock custom_js %}
-    $('.auto-expand').on('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    });
-</script>
-{% endblock custom_js %}
-
+{% endblock %}

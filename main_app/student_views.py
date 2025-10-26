@@ -50,21 +50,23 @@ def student_home(request):
         categorized_links[link.category].append(link)
     
     context = {
+        'student': student,
         'total_attendance': total_attendance,
+        'total_present': total_present,
         'percent_present': percent_present,
         'percent_absent': percent_absent,
         'total_subject': total_subject,
         'subjects': subjects,
+        'subject_name': subject_name,
         'data_present': data_present,
         'data_absent': data_absent,
-        'data_name': subject_name,
         'public_links': public_links,
         'featured_links': featured_links,
         'categorized_links': dict(categorized_links),
         'current_date': datetime.now(),
         'page_title': 'Student Homepage'
     }
-    return render(request, 'student_template/enhanced_dashboard.html', context)
+    return render(request, 'student_template/home_content.html', context)
 
 
 @ csrf_exempt

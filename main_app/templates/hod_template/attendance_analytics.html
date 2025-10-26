@@ -1,0 +1,225 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .analytics-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .low-attendance-alert {
+        background: #fff3cd;
+        border-left: 4px solid #ff9800;
+        padding: 15px;
+        margin: 10px 0;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-clipboard-check"></i> Attendance Analytics</h1>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="analytics-card" style="border-top: 4px solid #007bff;">
+                    <h3>{{overall_attendance}}%</h3>
+                    <p>Overall Attendance Rate</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="analytics-card" style="border-top: 4px solid #28a745;">
+                    <h3>{{ total_students }}</h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="analytics-card" style="border-top: 4px solid #ffc107;">
+                    <h3>{{ total_records }}</h3>
+                    <p>Attendance Records</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Trend Chart -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-line"></i> Monthly Attendance Trend</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="monthlyTrendChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department-wise Attendance -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-building"></i> Department-wise Attendance</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Students</th>
+                                    <th>Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dept in dept_attendance %}
+                                <tr>
+                                    <td>{{ dept.name }}</td>
+                                    <td>{{ dept.student_count }}</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar {% if dept.percentage >= 75 %}bg-success{% elif dept.percentage >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                                 style="width: {{ dept.percentage }}%">{{ dept.percentage }}%</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course-wise Attendance -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-book"></i> Course-wise Attendance</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>Students</th>
+                                    <th>Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in course_attendance %}
+                                <tr>
+                                    <td>{{ course.name }}</td>
+                                    <td>{{ course.student_count }}</td>
+                                    <td>
+                                        <span class="badge {% if course.percentage >= 75 %}badge-success{% elif course.percentage >= 60 %}badge-warning{% else %}badge-danger{% endif %}">
+                                            {{ course.percentage }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Attendance Students -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Low Attendance Alert (Below 75%)</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if low_attendance_count > 0 %}
+                        <table class="table table-striped" id="lowAttendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Course</th>
+                                    <th>Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in low_attendance_students %}
+                                <tr>
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.roll_number }}</td>
+                                    <td>{{ student.course }}</td>
+                                    <td><span class="badge badge-danger">{{ student.percentage }}%</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> Excellent! All students have attendance above 75%
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    $('#lowAttendanceTable').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+    });
+
+    // Monthly Trend Chart
+    var ctx = document.getElementById('monthlyTrendChart').getContext('2d');
+    var monthlyData = {{ monthly_trend_json|safe }};
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(item => item.month),
+            datasets: [{
+                label: 'Attendance %',
+                data: monthlyData.map(item => item.percentage),
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock custom_js %}
+

@@ -1,6 +1,6 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block title %}Attendance{% endblock %}
+{% block title %}Attendance{% endblock title %}
 
 {% block custom_css %}
 <style>
@@ -149,131 +149,9 @@
         color: #64748b;
     }
 </style>
-{% endblock %}
+{% endblock custom_css %}
 
-{% block page_title %}Attendance{% endblock %}
-
-{% block content %}
-<div class="mb-4">
-    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
-        <i class="fas fa-calendar-check"></i> My Attendance
-    </h2>
-    <p style="color: #64748b; margin: 0;">Track your attendance across all subjects</p>
-</div>
-
-<!-- Overall Summary -->
-<div class="attendance-summary">
-    <div class="summary-card present">
-        <div class="summary-value">{{ total_present }}</div>
-        <div class="summary-label">Classes Present</div>
-    </div>
-    <div class="summary-card absent">
-        <div class="summary-value">{{ total_absent }}</div>
-        <div class="summary-label">Classes Absent</div>
-    </div>
-    <div class="summary-card percentage">
-        <div class="summary-value">{{ percentage_present }}%</div>
-        <div class="summary-label">Overall Attendance</div>
-    </div>
-</div>
-
-<!-- Subject-wise Attendance -->
-<h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
-    Subject-wise Details
-</h3>
-
-{% if subjects %}
-    {% for subject in subjects %}
-    <div class="subject-card">
-        <div class="subject-header">
-            <h4 class="subject-name">
-                <i class="fas fa-book"></i> {{ subject.name }}
-            </h4>
-            <div class="attendance-percentage {% if forloop.counter0|add:0 < data_present|length %}{% with percent=data_present|slice:forloop.counter0|first %}{% if percent >= 75 %}percentage-high{% elif percent >= 60 %}percentage-medium{% else %}percentage-low{% endif %}{% endwith %}{% endif %}">
-                {% if forloop.counter0 < data_present|length %}
-                    {{ data_present|slice:forloop.counter0|first }}%
-                {% else %}
-                    0%
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="progress-wrapper">
-            <div class="progress-bar-container">
-                {% if forloop.counter0 < data_present|length %}
-                    {% with percent=data_present|slice:forloop.counter0|first %}
-                    <div class="progress-bar {% if percent >= 75 %}progress-high{% elif percent >= 60 %}progress-medium{% else %}progress-low{% endif %}" 
-                         style="width: {{ percent }}%"></div>
-                    {% endwith %}
-                {% else %}
-                    <div class="progress-bar progress-low" style="width: 0%"></div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="attendance-stats">
-            <div class="stat-item present">
-                <div class="stat-value">
-                    {% if forloop.counter0 < data_present|length %}
-                        {{ data_present|slice:forloop.counter0|first }}
-                    {% else %}
-                        0
-                    {% endif %}
-                </div>
-                <div class="stat-label">Present</div>
-            </div>
-            <div class="stat-item absent">
-                <div class="stat-value">
-                    {% if forloop.counter0 < data_absent|length %}
-                        {{ data_absent|slice:forloop.counter0|first }}
-                    {% else %}
-                        0
-                    {% endif %}
-                </div>
-                <div class="stat-label">Absent</div>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-{% else %}
-<div style="background: white; padding: 4rem 2rem; text-align: center; border-radius: 8px;">
-    <i class="fas fa-calendar-times" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
-    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">No Attendance Records</h3>
-    <p style="color: #64748b;">Attendance data will appear here once classes begin.</p>
-</div>
-{% endif %}
-{% endblock %}
-
-{% block custom_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate progress bars
-    setTimeout(() => {
-        document.querySelectorAll('.progress-bar').forEach(bar => {
-            const width = bar.style.width;
-            bar.style.width = '0%';
-            setTimeout(() => {
-                bar.style.width = width;
-            }, 100);
-        });
-    }, 300);
-});
-</script>
-{% endblock %}
-
-    }
-
-    .stat-item.present .stat-value { color: #059669; }
-    .stat-item.absent .stat-value { color: #dc2626; }
-
-    .stat-label {
-        font-size: 0.8125rem;
-        color: #64748b;
-    }
-</style>
-{% endblock %}
-
-{% block page_title %}Attendance{% endblock %}
+{% block page_title %}Attendance{% endblock page_title %}
 
 {% block content %}
 <div class="mb-4">
@@ -364,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <p style="color: #64748b;">Attendance data will appear here once classes begin.</p>
 </div>
 {% endif %}
-{% endblock %}
+{% endblock content %}
 
 {% block custom_js %}
 <script>
@@ -381,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
 });
 </script>
-{% endblock %}
+{% endblock custom_js %}
 
 .attendance_div_red{
     padding: 10px;

@@ -1,0 +1,372 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}My Students{% endblock %}
+{% block page_title %}My Students{% endblock %}
+
+{% block custom_css %}
+<style>
+    .students-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .student-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid #1e40af;
+        transition: all 0.3s ease;
+    }
+
+    .student-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    html.dark .student-card {
+        background: #1e293b;
+    }
+
+    .student-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .student-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .student-info {
+        flex: 1;
+    }
+
+    .student-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 0.25rem;
+    }
+
+    html.dark .student-name {
+        color: #f1f5f9;
+    }
+
+    .student-roll {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .student-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .stat-box {
+        text-align: center;
+        padding: 0.75rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    html.dark .stat-box {
+        background: #334155;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e40af;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+    }
+
+    .student-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .btn-action {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-view {
+        background: #eff6ff;
+        color: #1e40af;
+    }
+
+    .btn-view:hover {
+        background: #dbeafe;
+    }
+
+    .btn-message {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .btn-message:hover {
+        background: #bbf7d0;
+    }
+
+    .filter-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    html.dark .filter-bar {
+        background: #1e293b;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    html.dark .form-label {
+        color: #f1f5f9;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    html.dark .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+
+    .btn-filter {
+        padding: 0.625rem 1.5rem;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .stats-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+
+    html.dark .summary-card {
+        background: #1e293b;
+    }
+
+    .summary-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e40af;
+    }
+
+    .summary-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+        <i class="fas fa-users"></i> My Students
+    </h2>
+    <p style="color: #64748b; margin: 0;">View and manage students in your classes</p>
+</div>
+
+<!-- Summary Stats -->
+<div class="stats-summary">
+    <div class="summary-card">
+        <div class="summary-value">{{ total_students }}</div>
+        <div class="summary-label">
+            <i class="fas fa-users"></i> Total Students
+        </div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ total_present_today }}</div>
+        <div class="summary-label">
+            <i class="fas fa-check-circle"></i> Present Today
+        </div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ low_attendance_count }}</div>
+        <div class="summary-label">
+            <i class="fas fa-exclamation-triangle"></i> Low Attendance
+        </div>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <form method="get" class="filter-grid">
+        <div class="form-group">
+            <label class="form-label" for="subject">
+                <i class="fas fa-book"></i> Subject
+            </label>
+            <select name="subject" id="subject" class="form-control">
+                <option value="">All Subjects</option>
+                {% for subject in subjects %}
+                <option value="{{ subject.id }}" {% if selected_subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                    {{ subject.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="search">
+                <i class="fas fa-search"></i> Search
+            </label>
+            <input type="text" name="search" id="search" class="form-control" placeholder="Name or Roll Number..." value="{{ search_query }}">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" style="opacity: 0;">Filter</label>
+            <button type="submit" class="btn-filter">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Students Grid -->
+{% if students %}
+<div class="students-grid">
+    {% for student in students %}
+    <div class="student-card">
+        <div class="student-header">
+            <div class="student-avatar">
+                {% if student.admin.profile_pic %}
+                <img src="{{ student.admin.profile_pic.url }}" alt="{{ student.admin.first_name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                {{ student.admin.first_name|first|upper }}{{ student.admin.last_name|first|upper }}
+                {% endif %}
+            </div>
+            <div class="student-info">
+                <div class="student-name">
+                    {{ student.admin.first_name }} {{ student.admin.last_name }}
+                </div>
+                <div class="student-roll">
+                    <i class="fas fa-id-card"></i> {{ student.roll_number }}
+                </div>
+            </div>
+        </div>
+
+        <div class="student-stats">
+            <div class="stat-box">
+                <div class="stat-value">{{ student.attendance_percentage|default:"0" }}%</div>
+                <div class="stat-label">Attendance</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">{{ student.assignments_submitted|default:"0" }}</div>
+                <div class="stat-label">Assignments</div>
+            </div>
+        </div>
+
+        <div class="student-actions">
+            <a href="/student/view/{{ student.id }}/" class="btn-action btn-view">
+                <i class="fas fa-eye"></i> View Profile
+            </a>
+            <a href="/message/send/?to={{ student.admin.id }}" class="btn-action btn-message">
+                <i class="fas fa-envelope"></i> Message
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);">
+    <i class="fas fa-users" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">No Students Found</h3>
+    <p style="color: #64748b;">Try adjusting your filters or search criteria</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block custom_js %}
+<script>
+// Auto-submit form on filter change
+document.getElementById('subject').addEventListener('change', function() {
+    this.form.submit();
+});
+</script>
+{% endblock %}
+
+
+
+

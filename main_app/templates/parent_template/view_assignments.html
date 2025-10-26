@@ -1,0 +1,91 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Child Assignments{% endblock %}
+{% block page_title %}Assignment Status{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem;">
+        <i class="fas fa-tasks"></i> {{ student.admin.first_name }}'s Assignments
+    </h2>
+
+    <!-- Statistics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #1e40af;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ total_assignments }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Total Assignments</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #059669;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ completed_assignments }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Completed</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ea580c;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ pending_assignments }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Pending</div>
+        </div>
+    </div>
+
+    <!-- Assignments Table -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Assignment Details</h3>
+        
+        {% if assignments %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Assignment</th>
+                    <th>Subject</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assignment in assignments %}
+                <tr>
+                    <td><strong>{{ assignment.title }}</strong></td>
+                    <td>{{ assignment.subject.name }}</td>
+                    <td>{{ assignment.due_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="badge {% if assignment.is_submitted %}badge-success{% else %}badge-warning{% endif %}">
+                            {% if assignment.is_submitted %}Submitted{% else %}Pending{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        {% if assignment.is_graded %}
+                        {{ assignment.marks_obtained }}/{{ assignment.max_marks }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div style="text-align: center; padding: 3rem; color: #94a3b8;">
+            <i class="fas fa-tasks" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <p>No assignments available</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'view_child_detail' student.id %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Child Details
+        </a>
+    </div>
+</div>
+
+<style>
+    .table { width: 100%; }
+    .table th { background: #f8fafc; padding: 0.75rem; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+    .table td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+    .badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-success { background: #d1fae5; color: #059669; }
+    .badge-warning { background: #fed7aa; color: #ea580c; }
+</style>
+{% endblock content %}
+

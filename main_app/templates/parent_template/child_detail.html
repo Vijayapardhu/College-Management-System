@@ -1,0 +1,96 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block title %}Child Details{% endblock %}
+{% block page_title %}{{ student.admin.first_name }}'s Details{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem;">
+        <i class="fas fa-user-graduate"></i> {{ student.admin.first_name }} {{ student.admin.last_name }}
+    </h2>
+
+    <!-- Quick Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #1e40af;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ attendance_percentage }}%</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Attendance</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #059669;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ average_marks|floatformat:1 }}%</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Average Marks</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #7c3aed;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ total_subjects }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Subjects</div>
+        </div>
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ea580c;">
+            <div style="font-size: 2rem; font-weight: 700;">{{ pending_fees|default:"0" }}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">Pending Fees</div>
+        </div>
+    </div>
+
+    <!-- Student Info -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Personal Information</h3>
+        <div style="display: grid; gap: 1rem;">
+            <div><strong>Roll Number:</strong> {{ student.roll_number }}</div>
+            <div><strong>Course:</strong> {{ student.course.name }}</div>
+            <div><strong>Current Semester:</strong> {{ student.current_semester|default:"N/A" }}</div>
+            <div><strong>Session:</strong> {{ student.session.session_start_year }}-{{ student.session.session_end_year }}</div>
+            <div><strong>Email:</strong> {{ student.admin.email }}</div>
+            <div><strong>Mobile:</strong> {{ student.mobile_number|default:"N/A" }}</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <a href="{% url 'parent_view_attendance' student.id %}" class="action-card">
+            <i class="fas fa-calendar-check"></i>
+            <span>View Attendance</span>
+        </a>
+        <a href="{% url 'parent_view_results' student.id %}" class="action-card">
+            <i class="fas fa-file-alt"></i>
+            <span>View Results</span>
+        </a>
+        <a href="{% url 'parent_view_fees' student.id %}" class="action-card">
+            <i class="fas fa-rupee-sign"></i>
+            <span>View Fees</span>
+        </a>
+        <a href="{% url 'parent_view_assignments' student.id %}" class="action-card">
+            <i class="fas fa-tasks"></i>
+            <span>View Assignments</span>
+        </a>
+    </div>
+</div>
+
+<style>
+    .action-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: #0f172a;
+        border: 2px solid #e2e8f0;
+        transition: all 0.2s;
+    }
+    
+    .action-card:hover {
+        border-color: #1e40af;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .action-card i {
+        font-size: 1.5rem;
+        color: #1e40af;
+    }
+    
+    .action-card span {
+        font-weight: 600;
+    }
+</style>
+{% endblock content %}
+

@@ -1,0 +1,112 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-memory"></i> Cache Analysis</h1>
+            </div>
+        </div>
+
+        <!-- Cache Configuration -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h3 class="card-title"><i class="fas fa-cogs"></i> Cache Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Backend:</th>
+                                <td>{{ cache_stats.backend }}</td>
+                            </tr>
+                            <tr>
+                                <th>Location:</th>
+                                <td>{{ cache_stats.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Cache Working:</th>
+                                <td>
+                                    {% if cache_stats.working %}
+                                    <span class="badge badge-success"><i class="fas fa-check"></i> Yes</span>
+                                    {% else %}
+                                    <span class="badge badge-danger"><i class="fas fa-times"></i> No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Test Passed:</th>
+                                <td>
+                                    {% if cache_stats.test_passed %}
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Passed</span>
+                                    {% else %}
+                                    <span class="badge badge-danger"><i class="fas fa-times-circle"></i> Failed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        {% if recommendations %}
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="alert alert-warning">
+                    <h5><i class="fas fa-exclamation-triangle"></i> Recommendations:</h5>
+                    <ul>
+                        {% for rec in recommendations %}
+                        <li>{{ rec }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> Cache configuration is optimal!
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Cache Benefits -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3 class="card-title"><i class="fas fa-info-circle"></i> Cache Benefits</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li><strong>Improved Performance:</strong> Reduces database load and speeds up page rendering</li>
+                            <li><strong>Scalability:</strong> Handles more concurrent users effectively</li>
+                            <li><strong>Cost Efficiency:</strong> Reduces server resource usage</li>
+                            <li><strong>Better UX:</strong> Faster response times for users</li>
+                        </ul>
+
+                        <div class="mt-3">
+                            <a href="{% url 'clear_cache' %}" class="btn btn-warning">
+                                <i class="fas fa-broom"></i> Clear Cache
+                            </a>
+                            <a href="{% url 'performance_dashboard' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

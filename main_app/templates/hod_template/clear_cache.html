@@ -1,0 +1,70 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-broom"></i> Clear Cache</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="card-title"><i class="fas fa-memory"></i> Cache Management</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if cache_cleared %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> <strong>Success!</strong> Cache has been cleared successfully.
+                        </div>
+                        {% endif %}
+
+                        <h4>Cache Information</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Backend:</th>
+                                <td>{{ cache_info.backend }}</td>
+                            </tr>
+                            <tr>
+                                <th>Location:</th>
+                                <td>{{ cache_info.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                    {% if cache_info.status == 'Cleared' %}
+                                    <span class="badge badge-success">{{ cache_info.status }}</span>
+                                    {% else %}
+                                    <span class="badge badge-info">{{ cache_info.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Warning:</strong> Clearing cache will remove all cached data and may temporarily slow down the application.
+                        </div>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-broom"></i> Clear Cache Now
+                            </button>
+                            <a href="{% url 'performance_dashboard' %}" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

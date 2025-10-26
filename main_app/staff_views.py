@@ -48,8 +48,14 @@ def staff_home(request):
     # Pending assignments
     pending_assignments = Assignment.objects.filter(staff=staff, due_date__gte=datetime.now()).count()
     
+    # Get current date
+    from django.utils import timezone
+    current_date = timezone.now()
+    
     context = {
         'page_title': 'Staff Panel - ' + str(staff.admin.last_name) + ' (' + str(staff.course) + ')',
+        'staff': staff,
+        'subjects': subjects,
         'total_students': total_students,
         'total_attendance': total_attendance,
         'total_leave': total_leave,
@@ -61,6 +67,7 @@ def staff_home(request):
         'low_attendance_mentees': low_attendance_mentees,
         'unread_messages': unread_messages,
         'pending_assignments': pending_assignments,
+        'current_date': current_date,
     }
     return render(request, 'staff_template/home_content.html', context)
 
@@ -1545,4 +1552,115 @@ def my_online_exams(request):
         'staff': staff
     }
     return render(request, 'staff_template/my_online_exams.html', context)
+
+
+@login_required(login_url='login')
+def view_students(request):
+    """View all students in staff's classes"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    
+    # Get filter parameters
+    selected_subject = request.GET.get('subject', '')
+    search_query = request.GET.get('search', '')
+    
+    # Get subjects taught by staff
+    subjects = Subject.objects.filter(staff=staff)
+    
+    # Get students based on filters
+    students = Student.objects.filter(course=staff.course)
+    
+    if selected_subject:
+        students = students.filter(course__subjects__id=selected_subject)
+    
+    if search_query:
+        from django.db.models import Q
+        students = students.filter(
+            Q(admin__first_name__icontains=search_query) |
+            Q(admin__last_name__icontains=search_query) |
+            Q(roll_number__icontains=search_query)
+        )
+    
+    students = students.select_related('admin', 'course', 'session').distinct()
+    
+    # Calculate additional stats for each student
+    from django.utils import timezone
+    today = timezone.now().date()
+    
+    for student in students:
+        # Calculate attendance percentage
+        total_attendance = AttendanceReport.objects.filter(student=student).count()
+        if total_attendance > 0:
+            present = AttendanceReport.objects.filter(student=student, status=True).count()
+            student.attendance_percentage = round((present / total_attendance) * 100, 1)
+        else:
+            student.attendance_percentage = 0
+        
+        # Count assignments submitted
+        student.assignments_submitted = AssignmentSubmission.objects.filter(student=student).count()
+    
+    # Summary stats
+    total_students = students.count()
+    total_present_today = AttendanceReport.objects.filter(
+        student__in=students, 
+        attendance__date=today,
+        status=True
+    ).count()
+    low_attendance_count = sum(1 for s in students if s.attendance_percentage < 75)
+    
+    context = {
+        'page_title': 'My Students',
+        'staff': staff,
+        'subjects': subjects,
+        'students': students,
+        'total_students': total_students,
+        'total_present_today': total_present_today,
+        'low_attendance_count': low_attendance_count,
+        'selected_subject': selected_subject,
+        'search_query': search_query,
+    }
+    
+    return render(request, 'staff_template/view_students.html', context)
+
+
+@login_required(login_url='login')
+def staff_attendance_history(request):
+    """View staff's own attendance history"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    
+    # Get filter parameters
+    month = request.GET.get('month', '')
+    year = request.GET.get('year', '')
+    
+    from django.utils import timezone
+    current_date = timezone.now()
+    
+    # Get attendance records
+    from main_app.models import StaffAttendance
+    attendance_records = StaffAttendance.objects.filter(staff=staff).order_by('-date')
+    
+    if month and year:
+        attendance_records = attendance_records.filter(date__month=month, date__year=year)
+    
+    # Calculate stats
+    total_days = attendance_records.count()
+    present_days = attendance_records.filter(status=True).count()
+    absent_days = total_days - present_days
+    
+    if total_days > 0:
+        attendance_percentage = round((present_days / total_days) * 100, 1)
+    else:
+        attendance_percentage = 0
+    
+    context = {
+        'page_title': 'My Attendance History',
+        'staff': staff,
+        'attendance_records': attendance_records,
+        'total_days': total_days,
+        'present_days': present_days,
+        'absent_days': absent_days,
+        'attendance_percentage': attendance_percentage,
+        'current_date': current_date,
+    }
+    
+    return render(request, 'staff_template/staff_attendance_history.html', context)
 

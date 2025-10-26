@@ -275,7 +275,21 @@ function showTypingIndicator() {
 }
 
 function startNewChat() {
-    alert('New chat feature coming soon!');
+    // Clear current chat and start fresh
+    const messagesContainer = document.getElementById('chatMessages');
+    if (messagesContainer) {
+        messagesContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: #94a3b8;"><i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem;"></i><p>Start a new conversation</p></div>';
+    }
+    
+    // Clear and focus on input
+    const messageInput = document.getElementById('messageInput');
+    if (messageInput) {
+        messageInput.value = '';
+        messageInput.focus();
+    }
+    
+    // Optional: Redirect to messaging page
+    // window.location.href = '/send/message/';
 }
 
 function escapeHtml(text) {

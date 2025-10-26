@@ -496,11 +496,17 @@
                 </a>
             </div>
 
-            <nav>
-                <ul class="sidebar-menu">
-                    {% block sidebar_menu %}
-                    {% if user.user_type == '3' %}
-                        <!-- Student Menu -->
+            {% block sidebar_menu %}
+            {% if user.user_type == '1' %}
+                <!-- HOD/Admin Menu -->
+                {% include 'navigation/hod_nav.html' %}
+            {% elif user.user_type == '2' %}
+                <!-- Staff Menu -->
+                {% include 'navigation/staff_nav.html' %}
+            {% elif user.user_type == '3' %}
+                <!-- Student Menu -->
+                <nav>
+                    <ul class="sidebar-menu">
                         <li><a href="{% url 'student_home' %}" class="{% if request.resolver_match.url_name == 'student_home' %}active{% endif %}">
                             <i class="fas fa-home"></i> <span>Dashboard</span>
                         </a></li>
@@ -546,10 +552,13 @@
                         <li><a href="{% url 'user_logout' %}">
                             <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
                         </a></li>
-                {% endif %}
-                    {% endblock %}
-                </ul>
-            </nav>
+                    </ul>
+                </nav>
+            {% elif user.user_type == '4' %}
+                <!-- Management Menu -->
+                {% include 'navigation/management_nav.html' %}
+            {% endif %}
+            {% endblock %}
         </aside>
 
         <!-- Main Content -->

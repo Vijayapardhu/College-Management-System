@@ -1,0 +1,189 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .performance-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .health-score {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}{{ page_title }}{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <h1><i class="fas fa-tachometer-alt"></i> Performance Dashboard</h1>
+                <p>Monitor your system's health and performance metrics</p>
+            </div>
+        </div>
+
+        <!-- System Health Score -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3>System Health Score</h3>
+                        <div class="health-score">{{ health_score }}%</div>
+                        <p class="text-muted">Overall system performance rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Info Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="performance-card" style="border-top: 4px solid #007bff;">
+                    <h4><i class="fab fa-python"></i> Python</h4>
+                    <h5>{{ python_version }}</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="performance-card" style="border-top: 4px solid #28a745;">
+                    <h4><i class="fas fa-code"></i> Django</h4>
+                    <h5>{{ django_version }}</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="performance-card" style="border-top: 4px solid #ffc107;">
+                    <h4><i class="fas fa-database"></i> DB Queries</h4>
+                    <h5>{{ total_queries }}</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="performance-card" style="border-top: 4px solid #17a2b8;">
+                    <h4><i class="fas fa-clock"></i> Response Time</h4>
+                    <h5>{{ avg_response_time }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Statistics -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-users"></i> Application Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr>
+                                <th>Total Users:</th>
+                                <td>{{ total_users }}</td>
+                            </tr>
+                            <tr>
+                                <th>Active Users:</th>
+                                <td><span class="badge badge-success">{{ active_users }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Students:</th>
+                                <td>{{ student_count }}</td>
+                            </tr>
+                            <tr>
+                                <th>Staff:</th>
+                                <td>{{ staff_count }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cache Information -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-memory"></i> Cache Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr>
+                                <th>Backend:</th>
+                                <td>{{ cache_info.backend }}</td>
+                            </tr>
+                            <tr>
+                                <th>Location:</th>
+                                <td>{{ cache_info.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Debug Mode:</th>
+                                <td>
+                                    {% if debug_mode %}
+                                    <span class="badge badge-warning">ON</span>
+                                    {% else %}
+                                    <span class="badge badge-success">OFF</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Tools -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h3 class="card-title"><i class="fas fa-tools"></i> Performance Tools</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'slow_queries' %}" class="btn btn-warning btn-block btn-lg">
+                                    <i class="fas fa-database"></i><br>
+                                    Slow Queries
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'system_resources' %}" class="btn btn-info btn-block btn-lg">
+                                    <i class="fas fa-server"></i><br>
+                                    System Resources
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'error_logs' %}" class="btn btn-danger btn-block btn-lg">
+                                    <i class="fas fa-exclamation-triangle"></i><br>
+                                    Error Logs
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'database_analysis' %}" class="btn btn-secondary btn-block btn-lg">
+                                    <i class="fas fa-chart-pie"></i><br>
+                                    Database Analysis
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'cache_analysis' %}" class="btn btn-primary btn-block btn-lg">
+                                    <i class="fas fa-memory"></i><br>
+                                    Cache Analysis
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'optimization_recommendations' %}" class="btn btn-success btn-block btn-lg">
+                                    <i class="fas fa-lightbulb"></i><br>
+                                    Optimization Tips
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

@@ -130,6 +130,15 @@ def view_message(request, message_id):
     # Get replies
     replies = Message.objects.filter(parent_message=message).select_related('sender').order_by('created_at')
     
+    # Get sender's student profile if sender is a student
+    sender_student = None
+    if message.sender.user_type == '3':
+        try:
+            from main_app.models import Student
+            sender_student = Student.objects.select_related('course', 'session').get(admin=message.sender)
+        except Student.DoesNotExist:
+            sender_student = None
+    
     # Determine template based on user type
     if request.user.user_type == '1':
         template = 'hod_template/view_message.html'
@@ -144,6 +153,7 @@ def view_message(request, message_id):
         'page_title': 'Message Details',
         'message': message,
         'replies': replies,
+        'sender_student': sender_student,
     }
     
     return render(request, template, context)

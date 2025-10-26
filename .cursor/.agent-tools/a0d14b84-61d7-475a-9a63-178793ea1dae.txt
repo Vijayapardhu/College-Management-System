@@ -1,0 +1,35 @@
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:101 char:40
++ renders = re.findall(r\"render\(request,\s*['\\\"]([^'\\\"]+)['\\\"]\ ...
++                                        ~
+Missing argument in parameter list.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:151 char:134
++ ... coding]::UTF8.GetString([System.Convert]::FromBase64String(''{1}''))) ...
++                                                                  ~
+Missing ')' in method call.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:151 char:134
++ ... oding]::UTF8.GetString([System.Convert]::FromBase64String(''{1}'')))' ...
++                                                                 ~
+Unexpected token '{' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:151 char:134
++ ... coding]::UTF8.GetString([System.Convert]::FromBase64String(''{1}''))) ...
++                                                                  ~
+Missing closing ')' in expression.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:151 char:140
++ ... ::UTF8.GetString([System.Convert]::FromBase64String(''{1}'')))' -f $v ...
++                                                                 ~
+Unexpected token ')' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:151 char:141
++ ... :UTF8.GetString([System.Convert]::FromBase64String(''{1}'')))' -f $va ...
++                                                                 ~
+Unexpected token ')' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:166 char:20
++             Emit ('Set-Alias -Name "{0}" -Value "{1}"' -f $alias.Name ...
++                    ~~~~~~~~~
+Unexpected token 'Set-Alias' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-02bd5791-655f-4c75-8ffe-3f366eeb6fba.ps1:166 char:54
++ ... it ('Set-Alias -Name "{0}" -Value "{1}"' -f $alias.Name, $definition)
++                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The string is missing the terminator: '.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingArgument
+ 

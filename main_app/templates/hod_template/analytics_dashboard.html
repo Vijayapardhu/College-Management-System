@@ -1,3 +1,183 @@
-{% include 'analytics/dashboard.html' %}
+{% extends 'main_app/base.html' %}
+{% load static %}
 
+{% block custom_css %}
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .stat-card h3 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    .stat-card p {
+        opacity: 0.9;
+        margin: 0;
+    }
+    .chart-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .analytics-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock custom_css %}
 
+{% block page_title %}
+{{ page_title }}
+{% endblock page_title %}
+
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="analytics-header">
+            <h1><i class="fas fa-chart-line"></i> Analytics Dashboard</h1>
+            <p>Comprehensive insights into your institution's performance</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <p><i class="fas fa-users"></i> Total Students</p>
+                    <h3>{{ total_students }}</h3>
+                    <small>{{ active_students }} Active</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <p><i class="fas fa-clipboard-check"></i> Attendance</p>
+                    <h3>{{ overall_attendance }}%</h3>
+                    <small>Overall Rate</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <p><i class="fas fa-graduation-cap"></i> Performance</p>
+                    <h3>{{ avg_performance }}</h3>
+                    <small>Average Marks</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <p><i class="fas fa-dollar-sign"></i> Fees Collected</p>
+                    <h3>₹{{ total_fees_collected|floatformat:0 }}</h3>
+                    <small>₹{{ pending_fees|floatformat:0 }} Pending</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Detailed Analytics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'attendance_analytics' %}" class="btn btn-primary btn-block btn-lg">
+                                    <i class="fas fa-clipboard-check"></i><br>
+                                    Attendance Analytics
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'academic_performance_analytics' %}" class="btn btn-info btn-block btn-lg">
+                                    <i class="fas fa-chart-line"></i><br>
+                                    Performance Analytics
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <a href="{% url 'financial_analytics' %}" class="btn btn-success btn-block btn-lg">
+                                    <i class="fas fa-money-bill-wave"></i><br>
+                                    Financial Analytics
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Stats -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-building"></i> Department Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Students</th>
+                                    <th>Faculty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dept in department_stats %}
+                                <tr>
+                                    <td>{{ dept.name }}</td>
+                                    <td><span class="badge badge-primary">{{ dept.student_count }}</span></td>
+                                    <td><span class="badge badge-info">{{ dept.faculty_count }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Tools -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="card-title"><i class="fas fa-tools"></i> Report Builder</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Create custom reports with advanced filters</p>
+                        <a href="{% url 'custom_report_builder' %}" class="btn btn-warning">
+                            <i class="fas fa-hammer"></i> Build Custom Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h3 class="card-title"><i class="fas fa-download"></i> Export Reports</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Export data in various formats (CSV, PDF, Excel)</p>
+                        <a href="{% url 'export_report' %}" class="btn btn-success">
+                            <i class="fas fa-file-export"></i> Export Data
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+{% endblock custom_js %}
