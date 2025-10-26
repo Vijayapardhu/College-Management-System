@@ -1,0 +1,282 @@
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+
+ ███            █████████  ██████████ ██████   ██████ █████ ██████   █████ █████
+░░░███         ███░░░░░███░░███░░░░░█░░██████ ██████ ░░███ ░░██████ ░░███ ░░███
+  ░░░███      ███     ░░░  ░███  █ ░  ░███░█████░███  ░███  ░███░███ ░███  ░███
+    ░░░███   ░███          ░██████    ░███░░███ ░███  ░███  ░███░░███░███  ░███
+     ███░    ░███    █████ ░███░░█    ░███ ░░░  ░███  ░███  ░███ ░░██████  ░███
+   ███░      ░░███  ░░███  ░███ ░   █ ░███      ░███  ░███  ░███  ░░█████  ░███
+ ███░         ░░█████████  ██████████ █████     █████ █████ █████  ░░█████ █████
+░░░            ░░░░░░░░░  ░░░░░░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░    ░░░░░ ░░░░░
+
+Tips for getting started:
+1. Ask questions, edit files, or run commands.
+2. Be specific for the best results.
+3. /help for more information.
+
+> echo "═══════════════════════════════════════════════════════════" ; echo "    🎨 STAFF DASHBOARD COMPLETELY REDESIGNED!" ;
+  echo "═══════════════════════════════════════════════════════════" ; echo "" ; echo "✨ NEW MODERN DESIGN:" ; echo "" ; echo
+   "1️⃣ WELCOME BANNER (Blue Gradient)" ; echo "   • Clean blue gradient (#1e40af → #3b82f6)" ; echo "   • Personalized
+  greeting with 👋" ; echo "   • Role & department badges" ; echo "   • Current date display" ; echo "" ; echo "2️⃣ STATS CARDS
+   (4 Cards)" ; echo "   • Total Students (with count)" ; echo "   • Assigned Subjects (with count)" ; echo "   • Attendance
+  Records (recent)" ; echo "   • Unread Messages (new)" ; echo "   • Blue gradient icons" ; echo "   • Green status badges" ;
+  echo "   • Hover animations" ; echo "" ; echo "3️⃣ QUICK ACTIONS (6 Buttons)" ; echo "   • Take Attendance" ; echo "   •
+  Enter Marks" ; echo "   • Upload Materials" ; echo "   • Create Assignment" ; echo "   • View Students" ; echo "   •
+  Messages" ; echo "   • Blue gradient icons on white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT
+  SECTIONS (2 Columns)" ; echo "   Left: My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per
+  subject" ; echo "   • Course information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent
+  actions" ; echo "   • Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓
+  Removed duplicate 'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ;
+  echo "  ✓ Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN
+  FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data integration" ;
+   echo "  • Responsive grid system" ; echo "  • Professional typography" ; echo "  • Smooth transitions" ; echo "  • Empty
+  state handling" ; echo "" ; echo "🔄 REFRESH: http://127.0.0.1:8000/staff/home/" ; echo "   (Ctrl+Shift+R for hard refresh)"
+   ; echo "" ; echo "✨ Now matches the quality of Student & HOD dashboards!"
+
+
+ℹRequest cancelled.
+
+
+ Using: 1 GEMINI.md file
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ > "   • Create Assignment" ; echo "   • View Students" ; echo "   • Messages" ; echo "   • Blue gradient icons on      │
+│   white cards" ; echo "   • Smooth hover effects" ; echo "" ; echo "4️⃣ CONTENT SECTIONS (2 Columns)" ; echo "   Left: │
+│   My Subjects" ; echo "   • List of assigned subjects" ; echo "   • Student count per subject" ; echo "   • Course     │
+│   information" ; echo "" ; echo "   Right: Recent Activity" ; echo "   • Timeline of recent actions" ; echo "   •      │
+│   Time stamps" ; echo "   • Activity descriptions" ; echo "" ; echo "🔧 FIXES APPLIED:" ; echo "  ✓ Removed duplicate  │
+│   'Staff Panel' sections" ; echo "  ✓ Fixed Unicode emoji (👋)" ; echo "  ✓ Changed ALL purple to blue" ; echo "  ✓    │
+│   Removed generic placeholder content" ; echo "  ✓ Added smooth entrance animations" ; echo "" ; echo "🎨 DESIGN       │
+│   FEATURES:" ; echo "  • Clean, modern layout" ; echo "  • Consistent blue theme" ; echo "  • Real backend data        │
+│   integration" ; echo "  • Responsive grecho "   (Ctrl+Shift+R for hard refresh)" ; echo "" ; echo "✨ Now matches     │
+│   the quality of Student & HOD dashboard                                                                               │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯

@@ -402,7 +402,7 @@
             </div>
             <div class="welcome-subtitle">
                 Oversee and manage all institutional operations from here
-            </div>
+                </div>
             <div class="welcome-badges">
                 <span class="welcome-badge">
                     <i class="fas fa-shield-alt"></i>
@@ -674,11 +674,11 @@
                         <div class="activity-time">
                             {{ grievance.submitted_by.first_name }} - {{ grievance.submitted_at|timesince }} ago
                         </div>
-                    </div>
+            </div>
                     <span class="badge {% if grievance.status == 'resolved' %}badge-success{% elif grievance.status == 'submitted' %}badge-warning{% else %}badge-danger{% endif %}">
                         {{ grievance.get_status_display }}
-                    </span>
-                </div>
+                </span>
+            </div>
                 {% endfor %}
             {% else %}
                 <p style="text-align: center; color: #94a3b8; padding: 2rem;">No recent grievances</p>
@@ -1182,7 +1182,7 @@
             <div class="stat-header">
                 <div class="stat-icon green">
                     <i class="fas fa-gift"></i>
-                </div>
+            </div>
                 <span class="stat-change positive">
                     {{ pending_scholarship_apps }} Pending
                 </span>
@@ -1295,11 +1295,11 @@
                         <div class="activity-time">
                             {{ grievance.submitted_by.first_name }} - {{ grievance.submitted_at|timesince }} ago
                         </div>
-                    </div>
+            </div>
                     <span class="badge {% if grievance.status == 'resolved' %}badge-success{% elif grievance.status == 'submitted' %}badge-warning{% else %}badge-danger{% endif %}">
                         {{ grievance.get_status_display }}
-                    </span>
-                </div>
+                </span>
+            </div>
                 {% endfor %}
             {% else %}
                 <p style="text-align: center; color: #94a3b8; padding: 2rem;">No recent grievances</p>

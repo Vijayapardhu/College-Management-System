@@ -1,0 +1,76 @@
+migrate main_app 0024                                                           
+Operations to perform:
+  Target specific migration: 0024_auto_20251026_1602, from main_app
+Running migrations:
+  Rendering model states... DONE
+  Unapplying main_app.0027_alter_admissionapplication_application_number... OK
+  Unapplying main_app.0026_alter_admissionapplication_application_number... OK
+  Unapplying main_app.0025_academicyear_classgroup_documenttype_feeconcession_and_more...Traceback (most recent call last):                                     
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\manage.py", line 22, in <module>                                                             
+    main()
+    ~~~~^^
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\manage.py", line 18, in main                                                                 
+    execute_from_command_line(sys.argv)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\management\__init__.py", line 442, in execute_from_command_line   
+    utility.execute()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\management\__init__.py", line 436, in execute                     
+    self.fetch_command(subcommand).run_from_argv(self.argv)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\management\base.py", line 412, in run_from_argv                   
+    self.execute(*args, **cmd_options)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\management\base.py", line 458, in execute                         
+    output = self.handle(*args, **options)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\management\base.py", line 106, in wrapper                         
+    res = handle_func(*args, **kwargs)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\management\commands\migrate.py", line 356, in handle              
+    post_migrate_state = executor.migrate(
+        targets,
+    ...<3 lines>...
+        fake_initial=fake_initial,
+    )
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\migrations\executor.py", line 141, in migrate                       
+    state = self._migrate_all_backwards(plan, full_plan, fake=fake)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\migrations\executor.py", line 219, in _migrate_all_backwards        
+    self.unapply_migration(states[migration], migration, fake=fake)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\migrations\executor.py", line 279, in unapply_migration             
+    state = migration.unapply(state, schema_editor)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\migrations\migration.py", line 193, in unapply                      
+    operation.database_backwards(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.app_label, schema_editor, from_state, to_state
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\migrations\operations\models.py", line 666, in database_backwards   
+    return self.database_forwards(app_label, schema_editor, from_state, to_state)                                                                               
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                               
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\migrations\operations\models.py", line 659, in database_forwards    
+    alter_together(
+    ~~~~~~~~~~~~~~^
+        new_model,
+        ^^^^^^^^^^
+        getattr(old_model._meta, self.option_name, set()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        getattr(new_model._meta, self.option_name, set()),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\base\schema.py", line 554, in alter_unique_together        
+    self._delete_composed_index(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        model,
+        ^^^^^^
+    ...<2 lines>...
+        self.sql_delete_unique,
+        ^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\base\schema.py", line 610, in _delete_composed_index       
+    raise ValueError(
+    ...<6 lines>...
+    )
+ValueError: Found wrong number (0) of constraints for main_app_classgroup(course_id, academic_year_id, section_id, session_id)                                  

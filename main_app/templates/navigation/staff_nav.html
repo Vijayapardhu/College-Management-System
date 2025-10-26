@@ -4,62 +4,85 @@
         <li><a href="{% url 'staff_home' %}" class="{% if request.resolver_match.url_name == 'staff_home' %}active{% endif %}">
             <i class="fas fa-home"></i> <span>Dashboard</span>
         </a></li>
+        
         <li><a href="{% url 'staff_take_attendance' %}">
             <i class="fas fa-user-check"></i> <span>Take Attendance</span>
         </a></li>
+        
         <li><a href="{% url 'staff_update_attendance' %}">
             <i class="fas fa-edit"></i> <span>Update Attendance</span>
         </a></li>
+        
         <li><a href="{% url 'staff_add_result' %}">
             <i class="fas fa-chart-line"></i> <span>Enter Marks</span>
         </a></li>
-        <li><a href="{% url 'staff_upload_material' %}">
-            <i class="fas fa-upload"></i> <span>Upload Materials</span>
-        </a></li>
-        <li><a href="{% url 'staff_create_assignment' %}">
-            <i class="fas fa-tasks"></i> <span>Create Assignment</span>
-        </a></li>
-        <li><a href="{% url 'staff_view_students' %}">
-            <i class="fas fa-users"></i> <span>My Students</span>
-        </a></li>
-        <li><a href="{% url 'staff_view_assignments' %}">
-            <i class="fas fa-file-alt"></i> <span>Submissions</span>
-        </a></li>
-        <li><a href="{% url 'staff_view_materials' %}">
-            <i class="fas fa-book"></i> <span>Study Materials</span>
-        </a></li>
-        <li><a href="{% url 'staff_gate_pass_approvals' %}">
-            <i class="fas fa-door-open"></i> <span>Gate Pass</span>
-        </a></li>
-        <li><a href="{% url 'view_messages' %}">
-            <i class="fas fa-envelope"></i> <span>Messages</span>
-        </a></li>
-        <li><a href="{% url 'staff_view_notification' %}">
-            <i class="fas fa-bell"></i> <span>Notifications</span>
-        </a></li>
+        
         <li><a href="{% url 'staff_view_timetable' %}">
             <i class="fas fa-calendar-alt"></i> <span>My Timetable</span>
         </a></li>
+        
+        <li><a href="{% url 'staff_upload_material' %}">
+            <i class="fas fa-upload"></i> <span>Upload Materials</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_view_materials' %}">
+            <i class="fas fa-book"></i> <span>Study Materials</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_create_assignment' %}">
+            <i class="fas fa-tasks"></i> <span>Create Assignment</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_view_assignments' %}">
+            <i class="fas fa-file-alt"></i> <span>View Submissions</span>
+        </a></li>
+        
         <li><a href="{% url 'my_online_exams' %}">
             <i class="fas fa-laptop"></i> <span>Online Exams</span>
         </a></li>
+        
+        <li><a href="{% url 'staff_view_students' %}">
+            <i class="fas fa-users"></i> <span>My Students</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_gate_pass_approvals' %}">
+            <i class="fas fa-door-open"></i> <span>Gate Pass Approvals</span>
+        </a></li>
+        
+        <li><a href="{% url 'view_messages' %}">
+            <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_view_notification' %}">
+            <i class="fas fa-bell"></i> <span>Notifications</span>
+        </a></li>
+        
         <li><a href="{% url 'staff_view_profile' %}">
             <i class="fas fa-user"></i> <span>My Profile</span>
         </a></li>
+        
         <li><a href="{% url 'staff_attendance_history' %}">
             <i class="fas fa-calendar-check"></i> <span>My Attendance</span>
         </a></li>
+        
         <li><a href="{% url 'staff_apply_leave' %}">
             <i class="fas fa-calendar-times"></i> <span>Apply Leave</span>
         </a></li>
+        
         <li><a href="{% url 'staff_feedback' %}">
             <i class="fas fa-comment-dots"></i> <span>Feedback</span>
         </a></li>
+        
         <li><a href="{% url 'user_logout' %}" onclick="return confirm('Are you sure you want to logout?')">
             <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
         </a></li>
     </ul>
 </nav>
+
+
+
+
+
 
 
 

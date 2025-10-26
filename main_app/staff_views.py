@@ -14,6 +14,8 @@ from .models import *
 
 
 def staff_home(request):
+    from datetime import datetime
+    
     staff = get_object_or_404(Staff, admin=request.user)
     total_students = Student.objects.filter(course=staff.course).count()
     total_leave = LeaveReportStaff.objects.filter(staff=staff).count()
@@ -45,6 +47,14 @@ def staff_home(request):
     # Unread messages
     unread_messages = Message.objects.filter(receiver=request.user, is_read=False).count()
     
+    # Today's timetable
+    today = datetime.now()
+    weekday_name = today.strftime('%A').lower()
+    today_timetable = Timetable.objects.filter(
+        staff=staff,
+        weekday=weekday_name
+    ).select_related('subject', 'course').order_by('period')
+    
     # Pending assignments
     pending_assignments = Assignment.objects.filter(staff=staff, due_date__gte=datetime.now()).count()
     
@@ -68,6 +78,9 @@ def staff_home(request):
         'unread_messages': unread_messages,
         'pending_assignments': pending_assignments,
         'current_date': current_date,
+        'today_timetable': today_timetable,
+        'subject_count': total_subject,
+        'pending_count': unread_messages,
     }
     return render(request, 'staff_template/home_content.html', context)
 

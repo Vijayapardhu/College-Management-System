@@ -64,10 +64,7 @@ def analytics_dashboard(request):
         'pending_fees': pending_fees,
         'department_stats': department_stats
     }
-    return render(request, 'hod_template/analytics_dashboard.html', context)
-
-
-@login_required(login_url='login')
+    return render(request, 'hod_template/analytics_dashboard.html', context)@login_required(login_url='login')
 def attendance_analytics(request):
     """Detailed attendance analytics with trends"""
     if request.user.user_type != '1':
@@ -491,7 +488,17 @@ def custom_report_builder(request):
 @login_required(login_url='login')
 def report_builder(request):
     """Report builder - simplified interface"""
-    return custom_report_builder(request)
+    from .models import Student, Staff, Session, Course
+    
+    context = {
+        'total_students': Student.objects.count(),
+        'total_staff': Staff.objects.count(),
+        'total_sessions': Session.objects.count(),
+        'total_courses': Course.objects.count(),
+        'page_title': 'Report Builder'
+    }
+    
+    return render(request, 'hod_template/report_builder.html', context)
 
 
 @login_required(login_url='login')
@@ -562,3 +569,8 @@ def export_report(request):
         'selected_format': export_format
     }
     return render(request, 'hod_template/export_report.html', context)
+
+
+
+    context = {'page_title': 'Analytics Dashboard'}
+    return render(request, 'hod_template/analytics_dashboard.html', context)

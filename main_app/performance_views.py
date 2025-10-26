@@ -58,8 +58,6 @@ def performance_dashboard(request):
         'debug_mode': settings.DEBUG
     }
     return render(request, 'hod_template/performance_dashboard.html', context)
-
-
 def performance_api(request):
     """Performance API endpoint"""
     if request.method == 'GET':
@@ -472,3 +470,5 @@ def optimization_recommendations(request):
         'total_recommendations': len(recommendations)
     }
     return render(request, 'hod_template/optimization_recommendations.html', context)
+
+

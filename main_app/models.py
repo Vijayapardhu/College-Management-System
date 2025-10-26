@@ -32,15 +32,34 @@ class CustomUserManager(UserManager):
 
 
 class Session(models.Model):
-    start_year = models.DateField()
-    end_year = models.DateField()
+    """
+    Academic Session/Batch
+    Example: C23 means batch of 2023 (2023-2026 for 3-year program)
+    """
+    session_name = models.CharField(max_length=50, unique=True, null=True, blank=True, help_text="e.g., C23, C24, C25")
+    start_year = models.IntegerField(null=True, blank=True, help_text="Starting year (e.g., 2023)")
+    end_year = models.IntegerField(null=True, blank=True, help_text="Ending year (e.g., 2026)")
+    session_start_year = models.DateField(null=True, blank=True)  # Legacy field
+    session_end_year = models.DateField(null=True, blank=True)    # Legacy field
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
-        return "From " + str(self.start_year) + " to " + str(self.end_year)
+        if self.session_name:
+            if self.start_year and self.end_year:
+                return f"{self.session_name} ({self.start_year}-{self.end_year})"
+            return self.session_name
+        elif self.session_start_year and self.session_end_year:
+            return f"From {self.session_start_year} to {self.session_end_year}"
+        return "Session"
+    
+    class Meta:
+        ordering = ['-start_year']
 
 
 class CustomUser(AbstractUser):
-    USER_TYPE = ((1, "HOD"), (2, "Staff"), (3, "Student"), (4, "Management"))
+    USER_TYPE = ((1, "HOD"), (2, "Staff"), (3, "Student"), (4, "Management"), (5, "Parent"))
     GENDER = [("M", "Male"), ("F", "Female")]
     
     
@@ -142,6 +161,77 @@ class Course(models.Model):
         return self.name
 
 
+class AcademicYear(models.Model):
+    """
+    Year levels in a program (1st Year, 2nd Year, 3rd Year, 4th Year)
+    """
+    YEAR_CHOICES = (
+        (1, '1st Year'),
+        (2, '2nd Year'),
+        (3, '3rd Year'),
+        (4, '4th Year'),
+        (5, '5th Year'),
+    )
+    
+    year_number = models.IntegerField(choices=YEAR_CHOICES, unique=True)
+    year_name = models.CharField(max_length=50, help_text="e.g., First Year, Second Year")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.get_year_number_display()
+    
+    class Meta:
+        ordering = ['year_number']
+        verbose_name = 'Academic Year'
+        verbose_name_plural = 'Academic Years'
+
+
+class Section(models.Model):
+    """
+    Sections within a year (A, B, C, D, etc.)
+    """
+    name = models.CharField(max_length=10, help_text="e.g., A, B, C, D")
+    capacity = models.IntegerField(default=60, help_text="Maximum students in this section")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Section {self.name}"
+    
+    class Meta:
+        ordering = ['name']
+
+
+class ClassGroup(models.Model):
+    """
+    Represents a specific class: Department + Year + Section + Session
+    Example: CSE - 2nd Year - Section A - C23
+    """
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='class_groups')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='class_groups', null=True, blank=True)
+    academic_year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE, related_name='class_groups')
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='class_groups')
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='class_groups')
+    
+    class_teacher = models.ForeignKey('Staff', on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_classes')
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.course.name if self.course else 'N/A'} - {self.academic_year} - {self.section} - {self.session.session_name}"
+    
+    class Meta:
+        ordering = ['-session__start_year', 'academic_year__year_number', 'section__name']
+        unique_together = ('course', 'academic_year', 'section', 'session')
+        verbose_name = 'Class Group'
+        verbose_name_plural = 'Class Groups'
+
+
 class Student(models.Model):
     COURSE_TYPE_CHOICES = (
         ('diploma', 'Diploma'),
@@ -171,7 +261,12 @@ class Student(models.Model):
     
     # Academic Information
     course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=False, verbose_name="Program/Branch")
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
     session = models.ForeignKey(Session, on_delete=models.DO_NOTHING, null=True)
+    academic_year = models.ForeignKey(AcademicYear, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Current Year")
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, blank=True)
+    class_group = models.ForeignKey(ClassGroup, on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
+    
     course_type = models.CharField(max_length=20, choices=COURSE_TYPE_CHOICES, default='btech')
     admission_year = models.IntegerField(null=True, blank=True)
     roll_number = models.CharField(max_length=50, unique=True, null=True, blank=True)
@@ -1637,12 +1732,16 @@ class ActivityLog(models.Model):
 
 class ParentGuardian(models.Model):
     """Parent/Guardian Portal Access"""
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='parent_accounts')
     parent_name = models.CharField(max_length=200)
     relation = models.CharField(max_length=50, choices=(('father', 'Father'), ('mother', 'Mother'), ('guardian', 'Guardian')))
     email = models.EmailField(unique=True)
     password_hash = models.CharField(max_length=255)
     mobile_number = models.CharField(max_length=15)
+    alternate_contact = models.CharField(max_length=15, blank=True, default='')
+    address = models.TextField(blank=True, default='')
+    occupation = models.CharField(max_length=100, blank=True, default='')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(null=True, blank=True)

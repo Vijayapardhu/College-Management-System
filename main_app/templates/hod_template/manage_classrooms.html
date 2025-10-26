@@ -1,97 +1,555 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}Manage Classrooms{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block custom_css %}
+<style>
+    .page-header-modern {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .page-header-modern h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header-modern p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-icon-blue {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+    }
+
+    .stat-icon-green {
+        background: linear-gradient(135deg, #059669, #10b981);
+    }
+
+    .stat-icon-orange {
+        background: linear-gradient(135deg, #ea580c, #f97316);
+    }
+
+    .stat-icon-red {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+    }
+
+    .stat-content h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .stat-content p {
+        color: #64748b;
+        font-size: 0.875rem;
+        margin: 0;
+    }
+
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .search-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        flex: 1;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .table-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .table-card-header {
+        background: #f8fafc;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .table-card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .record-count {
+        background: #3b82f6;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .table-modern {
+        width: 100%;
+        margin: 0;
+    }
+
+    .table-modern thead th {
+        background: #f8fafc;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 2px solid #e2e8f0;
+        padding: 1rem 1.5rem;
+        white-space: nowrap;
+    }
+
+    .table-modern tbody td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .table-modern tbody tr {
+        transition: all 0.2s;
+    }
+
+    .table-modern tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .btn-modern {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary-modern {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+    }
+
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        color: white;
+    }
+
+    .btn-icon {
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+    }
+
+    .btn-edit {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .btn-edit:hover {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .badge-modern {
+        padding: 0.375rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .badge-available {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-maintenance {
+        background: #fed7aa;
+        color: #9a3412;
+    }
+
+    .badge-occupied {
+        background: #fef3c7;
+        color: #78350f;
+    }
+
+    .room-type-badge {
+        padding: 0.25rem 0.625rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .type-classroom {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .type-lab {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .type-seminar {
+        background: #fce7f3;
+        color: #9f1239;
+    }
+
+    .type-auditorium {
+        background: #fed7aa;
+        color: #9a3412;
+    }
+
+    .facility-icons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .facility-icon {
+        color: #3b82f6;
+        font-size: 0.875rem;
+        title: attr(data-title);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">
-                    <i class="fas fa-door-open mr-2"></i>Classroom Management
-                </h2>
-                <p class="text-gray-600">Manage rooms and facilities</p>
-            </div>
-            <a href="{% url 'add_classroom' %}" class="btn btn-primary">
-                <i class="fas fa-plus mr-2"></i>Add Classroom
-            </a>
+<!-- Modern Page Header -->
+<div class="page-header-modern">
+    <h1>
+        <i class="fas fa-door-open"></i>
+        {{page_title}}
+    </h1>
+    <p>Manage classrooms, labs, and facilities</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">
+            <i class="fas fa-door-open"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ total_rooms }}</h3>
+            <p>Total Rooms</p>
         </div>
     </div>
-
-    <div class="grid md:grid-cols-4 gap-6">
-        <div class="metric-card metric-card-primary">
-            <div class="metric-icon metric-icon-primary">
-                <i class="fas fa-door-open"></i>
-            </div>
-            <div class="metric-value" data-count="45">0</div>
-            <div class="metric-label">Total Rooms</div>
+    
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-green">
+            <i class="fas fa-check-circle"></i>
         </div>
-
-        <div class="metric-card metric-card-success">
-            <div class="metric-icon metric-icon-success">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="metric-value" data-count="38">0</div>
-            <div class="metric-label">Available</div>
-        </div>
-
-        <div class="metric-card metric-card-warning">
-            <div class="metric-icon metric-icon-warning">
-                <i class="fas fa-calendar-check"></i>
-            </div>
-            <div class="metric-value" data-count="7">0</div>
-            <div class="metric-label">In Use</div>
-        </div>
-
-        <div class="metric-card metric-card-error">
-            <div class="metric-icon metric-icon-error">
-                <i class="fas fa-tools"></i>
-            </div>
-            <div class="metric-value" data-count="2">0</div>
-            <div class="metric-label">Maintenance</div>
+        <div class="stat-content">
+            <h3>{{ available_rooms }}</h3>
+            <p>Available</p>
         </div>
     </div>
-
-    <div class="dashboard-card">
-        <div class="dashboard-card-header">
-            <h3 class="dashboard-card-title">Classrooms List</h3>
+    
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-orange">
+            <i class="fas fa-flask"></i>
         </div>
-        <div class="dashboard-card-body p-0">
-            <table class="modern-table w-full" id="classroomTable">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-3">Room No</th>
-                        <th class="px-6 py-3">Building</th>
-                        <th class="px-6 py-3">Capacity</th>
-                        <th class="px-6 py-3">Type</th>
-                        <th class="px-6 py-3">Status</th>
-                        <th class="px-6 py-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="px-6 py-4 font-semibold">101</td>
-                        <td class="px-6 py-4">Main Block</td>
-                        <td class="px-6 py-4">60</td>
-                        <td class="px-6 py-4">Lecture Hall</td>
-                        <td class="px-6 py-4"><span class="badge badge-success">Available</span></td>
-                        <td class="px-6 py-4">
-                            <a href="{% url 'edit_classroom' 1 %}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="stat-content">
+            <h3>{{ labs }}</h3>
+            <p>Laboratories</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-red">
+            <i class="fas fa-tools"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ classrooms|length|add:"-"|add:available_rooms|default:0 }}</h3>
+            <p>Under Maintenance</p>
         </div>
     </div>
 </div>
-{% endblock content %}
+
+<!-- Action Bar -->
+<div class="action-bar">
+    <div class="search-section">
+        <div style="position: relative;">
+            <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+            <input type="text" 
+                   class="search-input" 
+                   id="searchInput" 
+                   placeholder="Search classrooms...">
+        </div>
+    </div>
+    
+    <div>
+        <a href="{% url 'add_classroom' %}" class="btn-modern btn-primary-modern">
+            <i class="fas fa-plus"></i>
+            Add New Classroom
+        </a>
+    </div>
+</div>
+
+<!-- Table Card -->
+<div class="table-card">
+    <div class="table-card-header">
+        <h3 class="table-card-title">
+            <i class="fas fa-list"></i>
+            All Classrooms
+        </h3>
+        <span class="record-count" id="classroomCount">{{ classrooms|length }}</span>
+    </div>
+    
+    <div class="table-card-body">
+        {% if classrooms %}
+        <div style="overflow-x: auto;">
+            <table class="table-modern" id="classroomTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Room</th>
+                        <th>Type</th>
+                        <th>Building/Floor</th>
+                        <th>Department</th>
+                        <th>Capacity</th>
+                        <th>Facilities</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room in classrooms %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <div style="font-weight: 700; color: #1f2937; font-size: 1rem;">
+                                <i class="fas fa-door-open" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                                {{ room.room_number }}
+                            </div>
+                            {% if room.room_name %}
+                            <small style="color: #64748b;">{{ room.room_name }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="room-type-badge {% if room.room_type == 'lab' %}type-lab{% elif room.room_type == 'seminar' %}type-seminar{% elif room.room_type == 'auditorium' %}type-auditorium{% else %}type-classroom{% endif %}">
+                                {{ room.get_room_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if room.building %}
+                            <div style="color: #1f2937; font-weight: 500;">
+                                <i class="fas fa-building" style="color: #64748b; margin-right: 0.25rem;"></i>
+                                {{ room.building }}
+                            </div>
+                            {% endif %}
+                            {% if room.floor %}
+                            <small style="color: #64748b;">Floor {{ room.floor }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if room.department %}
+                            <span class="badge-modern badge-available">
+                                {{ room.department.code }}
+                            </span>
+                            {% else %}
+                            <span style="color: #94a3b8;">General</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: #1f2937;">
+                                <i class="fas fa-users" style="color: #3b82f6; margin-right: 0.25rem;"></i>
+                                {{ room.capacity }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="facility-icons">
+                                {% if room.has_projector %}<i class="fas fa-video facility-icon" title="Projector"></i>{% endif %}
+                                {% if room.has_ac %}<i class="fas fa-snowflake facility-icon" title="AC"></i>{% endif %}
+                                {% if room.has_wifi %}<i class="fas fa-wifi facility-icon" title="WiFi"></i>{% endif %}
+                                {% if room.has_audio_system %}<i class="fas fa-volume-up facility-icon" title="Audio"></i>{% endif %}
+                                {% if room.has_computers %}<i class="fas fa-desktop facility-icon" title="{{ room.computer_count }} PCs"></i>{% endif %}
+                                {% if not room.has_projector and not room.has_ac and not room.has_wifi and not room.has_audio_system and not room.has_computers %}
+                                <span style="color: #94a3b8; font-size: 0.8125rem;">Basic</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if room.is_under_maintenance %}
+                            <span class="badge-modern badge-maintenance">
+                                <i class="fas fa-tools"></i> Maintenance
+                            </span>
+                            {% elif room.is_available %}
+                            <span class="badge-modern badge-available">
+                                <i class="fas fa-check-circle"></i> Available
+                            </span>
+                            {% else %}
+                            <span class="badge-modern badge-occupied">
+                                <i class="fas fa-clock"></i> Occupied
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a href="{% url 'edit_classroom' room.id %}" 
+                                   class="btn-modern btn-icon btn-edit"
+                                   title="Edit Classroom">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-door-open"></i>
+            </div>
+            <h3 class="empty-state-title">No Classrooms Found</h3>
+            <p class="empty-state-text">Get started by adding your first classroom.</p>
+            <a href="{% url 'add_classroom' %}" class="btn-modern btn-primary-modern">
+                <i class="fas fa-plus"></i>
+                Add First Classroom
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
 
 {% block custom_js %}
 <script>
-if (typeof safeDataTable !== 'undefined') {
-    safeDataTable('#classroomTable');
+// Search functionality
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const table = document.getElementById('classroomTable');
+        if (!table) return;
+        
+        const rows = table.getElementsByTagName('tr');
+        let visibleCount = 0;
+        
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const text = row.textContent.toLowerCase();
+            
+            if (text.includes(searchValue)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        }
+        
+        document.getElementById('classroomCount').textContent = visibleCount;
+    });
 }
 </script>
-{% endblock custom_js %}
-
-
+{% endblock %}

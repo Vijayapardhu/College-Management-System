@@ -2,54 +2,46 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
+{% block custom_css %}
+<style>
+    .page-header-blue {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .page-header-blue h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header-blue p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+</style>
+{% endblock custom_css %}
+
 {% block content %}
+<div class="page-header-blue">
+    <h1>
+        <i class="fas fa-graduation-cap"></i>
+        {{page_title}}
+    </h1>
+    <p>Create a new course or academic program</p>
+</div>
+
 <section class="content">
     <div class="container-fluid">
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                        <i class="fas fa-graduation-cap me-2"></i>{{page_title}}
-                    </h2>
-                    <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                        Create a new course or program
-                    </p>
-                </div>
-                <div class="col-md-4 text-end">
-                    <a href="{% url 'manage_course' %}" class="btn btn-professional-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Courses
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 style="font-size: 18px;">Course Details</h3>
-                    </div>
-                    <div class="card-body-professional">
-                        {% include "main_app/form_template.html" with messages=messages form=form button_text="Add Course"%}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <div class="alert-professional-info">
-                    <h6 style="color: #0369a1; font-weight: 600; margin-bottom: 10px;">
-                        <i class="fas fa-info-circle me-2"></i>Course Guidelines
-                    </h6>
-                    <ul style="font-size: 13px; padding-left: 20px; margin: 0;">
-                        <li>Provide clear course name</li>
-                        <li>Add unique course code</li>
-                        <li>Specify duration in years</li>
-                        <li>Assign to department if applicable</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        {% include "main_app/form_template.html" with messages=messages form=form button_text="Add Course"%}
     </div>
 </section>
 {% endblock content %}

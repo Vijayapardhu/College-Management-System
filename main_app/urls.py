@@ -17,7 +17,7 @@ from django.urls import path, include
 
 from main_app.EditResultView import EditResultView
 
-from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views, public_views
+from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views, public_views, academic_structure_views, student_filters_views, advanced_features_views
 
 urlpatterns = [
     # New Clean Auth System (Single-Page Login with OTP)
@@ -68,6 +68,49 @@ urlpatterns = [
     path("session/manage/", hod_views.manage_session, name='manage_session'),
     path("session/edit/<int:session_id>",
          hod_views.edit_session, name='edit_session'),
+    
+    # Academic Structure Management
+    path("years/manage/", academic_structure_views.manage_academic_years, name='manage_academic_years'),
+    path("years/add/", academic_structure_views.add_academic_year, name='add_academic_year'),
+    path("years/edit/<int:year_id>/", academic_structure_views.edit_academic_year, name='edit_academic_year'),
+    path("years/delete/<int:year_id>/", academic_structure_views.delete_academic_year, name='delete_academic_year'),
+    
+    path("sections/manage/", academic_structure_views.manage_sections, name='manage_sections'),
+    path("sections/add/", academic_structure_views.add_section, name='add_section'),
+    path("sections/edit/<int:section_id>/", academic_structure_views.edit_section, name='edit_section'),
+    path("sections/delete/<int:section_id>/", academic_structure_views.delete_section, name='delete_section'),
+    
+    path("classgroups/manage/", academic_structure_views.manage_class_groups, name='manage_class_groups'),
+    path("classgroups/add/", academic_structure_views.add_class_group, name='add_class_group'),
+    path("classgroups/edit/<int:group_id>/", academic_structure_views.edit_class_group, name='edit_class_group'),
+    path("classgroups/delete/<int:group_id>/", academic_structure_views.delete_class_group, name='delete_class_group'),
+    
+    # Student Filtering and Export
+    path("students/filter/", student_filters_views.filter_students, name='filter_students'),
+    path("students/export/csv/", student_filters_views.export_students_csv, name='export_students_csv'),
+    path("students/filter/stats/", student_filters_views.get_filter_stats, name='get_filter_stats'),
+    
+    # Advanced Features - Bulk Operations
+    path("students/bulk/upload/", advanced_features_views.bulk_student_upload, name='bulk_student_upload'),
+    path("students/bulk/promote/", advanced_features_views.bulk_promote_students, name='bulk_promote_students'),
+    path("students/bulk/transfer/", advanced_features_views.bulk_transfer_section, name='bulk_transfer_section'),
+    
+    # Advanced Features - Analytics
+    path("students/analytics/dashboard/", advanced_features_views.student_analytics_dashboard, name='student_analytics_dashboard'),
+    path("students/analytics/trends/", advanced_features_views.performance_trends, name='performance_trends'),
+    path("students/analytics/at-risk/", advanced_features_views.identify_at_risk_students, name='identify_at_risk_students'),
+    path("students/analytics/class-comparison/", advanced_features_views.class_performance_comparison, name='class_performance_comparison'),
+    
+    # Advanced Features - Notifications
+    path("students/notifications/bulk/", advanced_features_views.send_bulk_notifications, name='send_bulk_notifications'),
+    path("students/notifications/auto-alerts/", advanced_features_views.auto_attendance_alerts, name='auto_attendance_alerts'),
+    
+    # Advanced Features - Progression
+    path("students/progression/", advanced_features_views.student_progression_view, name='student_progression'),
+    
+    # Advanced Features - Reports
+    path("students/reports/custom/", advanced_features_views.generate_custom_report, name='generate_custom_report'),
+    
     path("student/view/feedback/", hod_views.student_feedback_message,
          name="student_feedback_message",),
     path("staff/view/feedback/", hod_views.staff_feedback_message,
@@ -534,6 +577,9 @@ urlpatterns = [
     path("student/my-hostel/", student_views.student_my_hostel, name='student_hostel_details'),
     
     # ==================== PARENT PORTAL ====================
+    # Parent Login
+    path("parent/login/", auth_views.parent_login, name='parent_login'),
+    
     # Parent Dashboard
     path("parent/home/", parent_views.parent_home, name='parent_home'),
     path("parent/profile/", parent_views.parent_view_profile, name='parent_view_profile'),

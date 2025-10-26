@@ -1,0 +1,14 @@
+StudentResult columns:'); [print(f'  - {row[0]}') for row in cursor.fetchall()]"                                                        
+  File "<string>", line 1
+    import os, django; os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'student_management_system.settings'); django.setup(); from django.db import connection; cursor = connection.cursor(); cursor.execute(" SELECT column_name FROM information_schema.columns WHERE table_name=main_app_studentresult ORDER BY ordinal_position                                                                                     
+                                                                                                                                        
+                                                                     ^
+SyntaxError: unterminated string literal (detected at line 1)
+\); print('StudentResult columns:'); [print(f'  - {row[0]}') for row in cursor.fetchall()] : The term '\); print('StudentResult 
+columns:'); [print(f'  - {row[0]}') for row in cursor.fetchall()]' is not recognized as the name of a cmdlet, function, script file,    
+or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:334
++ ... al_position;\"); print('StudentResult columns:'); [print(f'  - {row[0 ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (\); print('Stud...sor.fetchall()]:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException

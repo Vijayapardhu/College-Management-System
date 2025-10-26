@@ -729,449 +729,39 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {% endblock custom_js %}
 
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{total_attendance}}</h3>
 
-    .card {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
-    }
-
-    html.dark .card {
-        background: #1e293b;
-        border-color: #334155;
-    }
-
-    .card-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    html.dark .card-title {
-        color: #f1f5f9;
-    }
-
-    /* Subject Card */
-    .subject-card {
-        background: linear-gradient(135deg, #1e40af, #3b82f6);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .subject-card:hover {
-        transform: translateX(5px);
-        box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
-    }
-
-    .subject-name {
-        font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .subject-info {
-        font-size: 0.875rem;
-        opacity: 0.9;
-        display: flex;
-        gap: 1rem;
-    }
-
-    /* Activity Item */
-    .activity-item {
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
-        background: #f8fafc;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-    }
-
-    html.dark .activity-item {
-        background: #0f172a;
-    }
-
-    .activity-item:hover {
-        background: #f1f5f9;
-    }
-
-    html.dark .activity-item:hover {
-        background: #1e293b;
-    }
-
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: #dbeafe;
-        color: #1e40af;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .activity-content {
-        flex: 1;
-    }
-
-    .activity-title {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-        font-size: 0.875rem;
-    }
-
-    html.dark .activity-title {
-        color: #f1f5f9;
-    }
-
-    .activity-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-
-    /* Badge */
-    .badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .badge-success {
-        background: #d1fae5;
-        color: #059669;
-    }
-
-    .badge-warning {
-        background: #fed7aa;
-        color: #ea580c;
-    }
-
-    .badge-danger {
-        background: #fee2e2;
-        color: #dc2626;
-    }
-
-    /* View All Link */
-    .view-all-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #1e40af;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-decoration: none;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .view-all-link:hover {
-        gap: 0.75rem;
-        color: #1e3a8a;
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: #94a3b8;
-    }
-
-    .empty-state i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-</style>
-{% endblock custom_css %}
-
-{% block content %}
-<div class="dashboard-container">
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-title">
-                Welcome back, {{ request.user.first_name }}! 🎓
-            </div>
-            <div class="welcome-subtitle">
-                Ready to excel in your academic journey today
-            </div>
-            <div class="welcome-badges">
-                {% if student.roll_number %}
-                <span class="welcome-badge">
-                    <i class="fas fa-id-card"></i>
-                    Roll: {{ student.roll_number }}
-                </span>
-                {% endif %}
-                {% if student.course %}
-                <span class="welcome-badge">
-                <i class="fas fa-graduation-cap"></i>
-                    {{ student.course.name }}
-                </span>
-                {% endif %}
-                {% if student.session %}
-                <span class="welcome-badge">
-                    <i class="fas fa-calendar"></i>
-                    Session {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
-                </span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon blue">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-check"></i> Active
-                </span>
-            </div>
-            <div class="stat-value">{{ total_subject }}</div>
-            <div class="stat-label">Total Subjects</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon green">
-                    <i class="fas fa-calendar-check"></i>
-            </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> {{ percent_present }}%
-                </span>
-            </div>
-            <div class="stat-value">{{ total_attendance }}</div>
-            <div class="stat-label">Total Classes</div>
-        </div>
-
-        <div class="stat-card">
-            <div style="text-align: center;">
-                <div class="progress-ring">
-                    <svg width="120" height="120">
-                        <circle cx="60" cy="60" r="52" stroke="#e2e8f0" stroke-width="8" fill="none" />
-                        <circle cx="60" cy="60" r="52" stroke="#059669" stroke-width="8" fill="none"
-                                stroke-dasharray="326.73" 
-                                stroke-dashoffset="{{ percent_absent|floatformat:0|default:0|add:326.73|divisibleby:100 }}"
-                                stroke-linecap="round" />
-                    </svg>
-                    <div class="progress-text">{{ percent_present }}%</div>
-                </div>
-                <div class="stat-label" style="margin-top: 1rem;">Attendance Rate</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon blue-alt">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-thumbs-up"></i> Good
-                </span>
-            </div>
-            <div class="stat-value">{{ total_present }}</div>
-            <div class="stat-label">Classes Attended</div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h2 class="section-title">
-            <i class="fas fa-bolt"></i>
-            Quick Access
-        </h2>
-        <div class="actions-grid">
-            <a href="{% url 'student_view_attendance' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="action-btn-text">My Attendance</div>
-            </a>
-
-            <a href="{% url 'student_view_result' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="action-btn-text">My Results</div>
-            </a>
-
-            <a href="{% url 'view_assignments' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="action-btn-text">Assignments</div>
-            </a>
-
-            <a href="{% url 'view_materials' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="action-btn-text">Study Materials</div>
-            </a>
-
-            <a href="{% url 'student_apply_leave' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-file-alt"></i>
-            </div>
-                <div class="action-btn-text">Apply Leave</div>
-            </a>
-
-            <a href="{% url 'view_messages' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="action-btn-text">Messages</div>
-            </a>
-        </div>
+                        <p>Total Attendance</p>
                     </div>
-
-    <!-- Two Column Layout -->
-    <div class="two-col-grid">
-        <!-- My Subjects -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-book"></i>
-                My Subjects
-            </h3>
-            
-            {% if subject_name %}
-                {% for subject in subject_name %}
-                <div class="subject-card" onclick="window.location='{% url 'student_view_attendance' %}'">
-                    <div class="subject-name">{{ subject }}</div>
-                    <div class="subject-info">
-                        <span><i class="fas fa-book-open"></i> View Details</span>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
                     </div>
+                    {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-book-open"></i>
-                    <p>No subjects assigned yet</p>
             </div>
-            {% endif %}
-        </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ percent_present }}<sup style="font-size: 20px">%</sup></h3>
 
-        <!-- Recent Activity -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-history"></i>
-                Academic Overview
-                </h3>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-calendar-check"></i>
-            </div>
-                <div class="activity-content">
-                    <div class="activity-title">Total Classes Conducted</div>
-                    <div class="activity-time">{{ total_attendance }} classes so far</div>
+                        <p>Percentage Present</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    {# <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> #}
                 </div>
-                <span class="badge badge-success">{{ total_attendance }}</span>
             </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-check"></i>
-        </div>
-                <div class="activity-content">
-                    <div class="activity-title">Classes Attended</div>
-                    <div class="activity-time">Present in {{ total_present }} classes</div>
-    </div>
-                <span class="badge badge-success">{{ total_present }}</span>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-percentage"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Attendance Percentage</div>
-                    <div class="activity-time">Current attendance rate</div>
-                </div>
-                {% if percent_present >= 75 %}
-                <span class="badge badge-success">{{ percent_present }}%</span>
-                {% elif percent_present >= 60 %}
-                <span class="badge badge-warning">{{ percent_present }}%</span>
-                {% else %}
-                <span class="badge badge-danger">{{ percent_present }}%</span>
-                {% endif %}
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Enrolled Subjects</div>
-                    <div class="activity-time">Active this semester</div>
-            </div>
-                <span class="badge badge-success">{{ total_subject }}</span>
-            </div>
-
-            <a href="{% url 'student_view_attendance' %}" class="view-all-link">
-                View Detailed Attendance
-                <i class="fas fa-arrow-right"></i>
-        </a>
-        </div>
-            </div>
-
-    <!-- Important Links -->
-    {% if featured_links %}
-    <div class="card">
-        <h3 class="card-title">
-            <i class="fas fa-star"></i>
-            Quick Links
-        </h3>
-        <div class="actions-grid">
-            {% for link in featured_links %}
-            <a href="{{ link.url }}" target="_blank" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-external-link-alt"></i>
-            </div>
-                <div class="action-btn-text">{{ link.title }}</div>
-        </a>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-</div>
-{% endblock content %}
-
-{% block custom_js %}
-<script>
-    // Animate stats on load
-document.addEventListener('DOMContentLoaded', function() {
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues.forEach(stat => {
-            stat.style.opacity = '0';
-            stat.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                stat.style.transition = 'all 0.6s ease';
-                stat.style.opacity = '1';
-                stat.style.transform = 'translateY(0)';
-            }, 100);
-        });
-    });
-</script>
-{% endblock custom_js %}
             <!-- ./col -->
             <div class="col-lg-3 col-6">
                 <!-- small box -->
@@ -1270,7 +860,7 @@ $(document).ready(function(){
       ],
       datasets: [
         {
-          data: [{{percent_present}}, {{percent_absent}}],
+            data: [{{percent_present}}, {{percent_absent}}],
           backgroundColor : ['#00a65a','#f56954'],
         }
       ]
@@ -1280,7 +870,7 @@ $(document).ready(function(){
       responsive : true,
     }
     var attendanceData = new Chart(attendanceDataCanvas, {
-      type: 'doughnut',
+        type: 'doughnut',
       data: donutData,
       options: donutOptions      
     });
@@ -1289,8 +879,8 @@ $(document).ready(function(){
 //Bar Chart
 var areaChartData = {
     labels  : subjects,
-    datasets: [
-    {
+        datasets: [
+            {
         label               : 'Present In Class',
         backgroundColor     : 'rgba(60,141,188,0.9)',
         borderColor         : 'rgba(60,141,188,0.8)',
@@ -1326,7 +916,7 @@ var barChartOptions = {
 }
 
 var barChart = new Chart(barChartCanvas, {
-  type: 'bar', 
+        type: 'bar',
   data: barChartData,
   options: barChartOptions
 })
@@ -1404,9 +994,9 @@ var barChart = new Chart(barChartCanvas, {
             })
     
             function sendToServer(token){
-              $.ajax({
-                url: "{% url 'student_fcmtoken' %}",
-                type: 'POST',
+                    $.ajax({
+                        url: "{% url 'student_fcmtoken' %}",
+                        type: 'POST',
                 data: {
                     token: token,
                 }
@@ -1420,5 +1010,5 @@ var barChart = new Chart(barChartCanvas, {
             }
             
             InitializeFireBaseMessaging();
-        </script>
+</script>
 {% endblock custom_js %}

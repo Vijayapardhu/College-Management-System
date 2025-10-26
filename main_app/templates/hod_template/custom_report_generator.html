@@ -1,0 +1,411 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock %}
+
+{% block custom_css %}
+<style>
+    /* Modern clean header */
+    .report-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .report-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .report-header p {
+        color: #6b7280;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    /* Report type cards - horizontal tabs style */
+    .report-types {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        overflow-x: auto;
+    }
+
+    .report-type {
+        flex: 1;
+        min-width: 200px;
+        padding: 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        background: white;
+    }
+
+    .report-type:hover {
+        border-color: #3b82f6;
+        background: #f8fafc;
+    }
+
+    .report-type.active {
+        border-color: #3b82f6;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .report-type input[type="radio"] {
+        display: none;
+    }
+
+    .report-type-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .report-type.active .report-type-icon {
+        color: #3b82f6;
+    }
+
+    .report-type-title {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+
+    .report-type-desc {
+        font-size: 0.8125rem;
+        color: #6b7280;
+    }
+
+    /* Filter section */
+    .filter-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .filter-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .date-range {
+        background: #f8fafc;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .date-range-title {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .date-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+
+    /* Generate button */
+    .action-area {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .btn-generate {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 12px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-generate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+    }
+
+    .btn-generate:active {
+        transform: translateY(0);
+    }
+
+    /* Info badge */
+    .info-badge {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem 1.25rem;
+        border-radius: 8px;
+        margin-top: 1.5rem;
+    }
+
+    .info-badge p {
+        margin: 0;
+        color: #1e40af;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: start;
+        gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .report-types {
+            flex-direction: column;
+        }
+        
+        .date-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Clean header -->
+<div class="report-header">
+    <h1>
+        <i class="fas fa-file-chart-line" style="color: #3b82f6;"></i>
+        Custom Report Generator
+    </h1>
+    <p>Build and download detailed reports with advanced filtering options</p>
+</div>
+
+<form method="post" id="reportForm">
+    {% csrf_token %}
+    
+    <!-- Step 1: Report Type Selection -->
+    <div class="report-types">
+        <div class="report-type active" onclick="selectReport(this, 'attendance')">
+            <input type="radio" name="report_type" value="attendance" id="type_attendance" checked>
+            <div class="report-type-icon">
+                <i class="fas fa-calendar-check" style="color: #3b82f6;"></i>
+            </div>
+            <div class="report-type-title">Attendance</div>
+            <div class="report-type-desc">Daily attendance records</div>
+        </div>
+
+        <div class="report-type" onclick="selectReport(this, 'performance')">
+            <input type="radio" name="report_type" value="performance" id="type_performance">
+            <div class="report-type-icon">
+                <i class="fas fa-chart-line" style="color: #8b5cf6;"></i>
+            </div>
+            <div class="report-type-title">Performance</div>
+            <div class="report-type-desc">Test & exam marks</div>
+        </div>
+
+        <div class="report-type" onclick="selectReport(this, 'fee_status')">
+            <input type="radio" name="report_type" value="fee_status" id="type_fee">
+            <div class="report-type-icon">
+                <i class="fas fa-money-bill-wave" style="color: #10b981;"></i>
+            </div>
+            <div class="report-type-title">Fee Status</div>
+            <div class="report-type-desc">Payment tracking</div>
+        </div>
+
+        <div class="report-type" onclick="selectReport(this, 'complete')">
+            <input type="radio" name="report_type" value="complete" id="type_complete">
+            <div class="report-type-icon">
+                <i class="fas fa-database" style="color: #f59e0b;"></i>
+            </div>
+            <div class="report-type-title">Complete</div>
+            <div class="report-type-desc">All student data</div>
+        </div>
+    </div>
+
+    <!-- Step 2: Filters -->
+    <div class="filter-section">
+        <h3 class="section-title">
+            <i class="fas fa-sliders-h"></i>
+            Apply Filters
+        </h3>
+        
+        <div class="filter-grid">
+            <div class="filter-item">
+                <label for="course_filter">
+                    <i class="fas fa-graduation-cap"></i> Course
+                </label>
+                <select name="course" id="course_filter" class="filter-control">
+                    <option value="">All Courses</option>
+                    {% for course in courses %}
+                    <option value="{{ course.id }}">{{ course.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="year_filter">
+                    <i class="fas fa-layer-group"></i> Year
+                </label>
+                <select name="year" id="year_filter" class="filter-control">
+                    <option value="">All Years</option>
+                    {% for year in years %}
+                    <option value="{{ year.id }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="section_filter">
+                    <i class="fas fa-users"></i> Section
+                </label>
+                <select name="section" id="section_filter" class="filter-control">
+                    <option value="">All Sections</option>
+                    {% for section in sections %}
+                    <option value="{{ section.id }}">{{ section }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="session_filter">
+                    <i class="fas fa-calendar-alt"></i> Session
+                </label>
+                <select name="session" id="session_filter" class="filter-control">
+                    <option value="">All Sessions</option>
+                    {% for session in sessions %}
+                    <option value="{{ session.id }}">
+                        {{ session.session_name|default:session }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Date Range (shown only for attendance report) -->
+        <div class="date-range" id="dateRange">
+            <div class="date-range-title">
+                <i class="fas fa-calendar-range"></i>
+                Date Range (Optional)
+            </div>
+            <div class="date-grid">
+                <div class="filter-item">
+                    <label for="date_from">From Date</label>
+                    <input type="date" name="date_from" id="date_from" class="filter-control">
+                </div>
+                <div class="filter-item">
+                    <label for="date_to">To Date</label>
+                    <input type="date" name="date_to" id="date_to" class="filter-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="info-badge">
+            <p>
+                <i class="fas fa-lightbulb"></i>
+                <span><strong>Tip:</strong> Leave filters empty to generate reports for all students. Use filters to narrow down specific groups.</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Generate Button -->
+    <div class="action-area">
+        <button type="submit" class="btn-generate">
+            <i class="fas fa-download"></i>
+            Generate & Download Report
+        </button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block custom_js %}
+<script>
+function selectReport(element, reportType) {
+    // Remove active class from all
+    document.querySelectorAll('.report-type').forEach(el => el.classList.remove('active'));
+    
+    // Add active class to selected
+    element.classList.add('active');
+    
+    // Check the radio button
+    document.getElementById('type_' + reportType).checked = true;
+    
+    // Show/hide date range based on report type
+    const dateRange = document.getElementById('dateRange');
+    if (reportType === 'attendance') {
+        dateRange.style.display = 'block';
+    } else {
+        dateRange.style.display = 'none';
+    }
+}
+
+// Initialize - hide date range if not attendance
+document.addEventListener('DOMContentLoaded', function() {
+    const selectedType = document.querySelector('input[name="report_type"]:checked').value;
+    if (selectedType !== 'attendance') {
+        document.getElementById('dateRange').style.display = 'none';
+    }
+    
+    // Add loading state on submit
+    document.getElementById('reportForm').addEventListener('submit', function() {
+        const btn = document.querySelector('.btn-generate');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Report...';
+        btn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

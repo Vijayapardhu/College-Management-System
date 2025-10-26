@@ -3066,3 +3066,29 @@ def institutional_kpis(request):
     }
     return render(request, 'management_template/institutional_kpis.html', context)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,98 @@
+═
+     COMPREHENSIVE TODO LIST - REDESIGN ALL 423 TEMPLATES
+
+
+ DESIGN STANDARD: Modern Blue Theme
+   Primary: Blue gradient (#1e40af  #3b82f6)
+   Cards: White with subtle shadows
+   Icons: Blue gradient backgrounds
+   Focus: Blue glow effects
+
+ OVERALL PROGRESS: ~15/423 Templates (3.5%)
+
+
+PHASE 1: FORMS (50% Complete - 7/14)
+
+
+ COMPLETED (7):
+  1. student_form.html - 4 sections + document uploads
+  2. session_form.html - Session/batch management
+  3. course_form.html - Simple course form
+  4. subject_form.html - Subject with faculty
+  5. staff_form.html - 5 sections comprehensive
+  6. department_form.html - Department with HOD
+  7. company_form.html - Company with HR
+
+ REMAINING (7):
+  8. study_material_form.html
+  9. management_form.html
+ 10. alumni_form.html
+ 11. simple_form.html
+ 12. enhanced_form_template.html
+ 13. academic_year_form.html (update)
+ 14. section_form.html (update)
+
+═
+PHASE 2: HOD MODULE (~140 templates)
+
+
+ Management Pages: 5/20 Complete
+   manage_student.html
+   manage_staff.html
+   manage_course.html
+   manage_subject.html
+   manage_session.html
+   + 15 more pending
+
+ Add Pages: 0/25
+ Analytics Pages: 0/15
+ Operations Pages: 0/30
+ Reports Pages: 1/20 (custom_report_generator )
+ Misc Pages: 0/30
+
+
+PHASE 3: STAFF MODULE (~35 templates)
+
+
+ Dashboard: 1/3 (home_content )
+ Attendance Pages: 0/6
+ Marks & Results: 0/6
+ Content Pages: 0/8
+ Misc Pages: 0/12
+
+
+PHASE 4: STUDENT MODULE (~65 templates)
+
+
+ Dashboard: 1/4 (home_content )
+ Academic: 1/12 (view_attendance )
+ Services: 0/15
+ Facilities: 0/10
+ Activities: 0/8
+ Misc: 0/10
+
+
+REMAINING PHASES
+
+
+ Management Module: 0/26
+ Parent Panel: 0/9
+ Proctor Panel: 0/8
+ Navigation: 0/5
+ Common: 0/10
+ Analytics: 0/3
+ Performance: 0/1
+ LMS: 0/4
+ Specialized: 0/15
+
+
+NEXT ACTIONS
+
+
+1. Complete remaining 7 forms (to 100%)
+2. Start HOD Add Pages (25 templates)
+3. Complete HOD Management Pages (15 remaining)
+4. Move to Staff & Student core pages
+
+ GOAL: All 423 templates with consistent blue theme
+ STATUS: In progress, continuing systematically

@@ -1,60 +1,32 @@
-{% extends 'main_app/base.html' %}
+﻿{% extends 'main_app/base.html' %}
 {% load static %}
 {% block title %}Dashboard{% endblock %}
 {% block page_title %}Staff Dashboard{% endblock %}
 
 {% block custom_css %}
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     .dashboard-container {
         padding: 2rem;
         background: #f8fafc;
-        min-height: 100vh;
     }
 
-    html.dark .dashboard-container {
-        background: #0f172a;
-    }
-
-    /* Welcome Section */
-    .welcome-section {
+    /* Welcome Banner */
+    .welcome-banner {
         background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        border-radius: 20px;
+        border-radius: 16px;
         padding: 2.5rem;
         margin-bottom: 2rem;
         color: white;
-        position: relative;
-        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.2);
     }
 
-    .welcome-section::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-
-    .welcome-content {
-        position: relative;
-        z-index: 1;
-    }
-
-    .welcome-title {
+    .welcome-banner h1 {
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
     }
 
-    .welcome-subtitle {
+    .welcome-banner p {
         font-size: 1.125rem;
         opacity: 0.95;
         margin-bottom: 1.5rem;
@@ -68,12 +40,11 @@
 
     .welcome-badge {
         background: rgba(255, 255, 255, 0.2);
-        -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
-        padding: 0.5rem 1rem;
+        padding: 0.625rem 1.25rem;
         border-radius: 25px;
-        font-size: 0.875rem;
-        display: inline-flex;
+        font-size: 0.9375rem;
+        display: flex;
         align-items: center;
         gap: 0.5rem;
     }
@@ -81,7 +52,7 @@
     /* Stats Grid */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 1.5rem;
         margin-bottom: 2rem;
     }
@@ -90,464 +61,197 @@
         background: white;
         border-radius: 16px;
         padding: 1.75rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        border: 1px solid #e2e8f0;
-    }
-
-    html.dark .stat-card {
-        background: #1e293b;
-        border-color: #334155;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
+        border: 1px solid #e5e7eb;
     }
 
     .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     }
 
     .stat-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         margin-bottom: 1rem;
     }
 
     .stat-icon {
-        width: 48px;
-        height: 48px;
+        width: 52px;
+        height: 52px;
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.5rem;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
     }
 
-    .stat-icon.blue {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .stat-icon.green {
-        background: #d1fae5;
-        color: #059669;
-    }
-
-    .stat-icon.orange {
-        background: #fed7aa;
-        color: #ea580c;
-    }
-
-    .stat-icon.purple {
-        background: #e9d5ff;
-        color: #7c3aed;
+    .stat-badge {
+        background: #dcfce7;
+        color: #166534;
+        padding: 0.375rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 600;
     }
 
     .stat-value {
         font-size: 2.25rem;
         font-weight: 700;
-        color: #0f172a;
-        line-height: 1;
+        color: #1f2937;
         margin-bottom: 0.5rem;
     }
 
-    html.dark .stat-value {
-        color: #f1f5f9;
-    }
-
     .stat-label {
-        font-size: 0.875rem;
         color: #64748b;
+        font-size: 0.9375rem;
         font-weight: 500;
     }
 
-    .stat-change {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        font-weight: 600;
-    }
-
-    .stat-change.positive {
-        background: #d1fae5;
-        color: #059669;
-    }
-
     /* Quick Actions */
-    .quick-actions {
-        margin-bottom: 2rem;
-    }
-
     .section-title {
-        font-size: 1.25rem;
+        font-size: 1.375rem;
         font-weight: 700;
-        color: #0f172a;
+        color: #1f2937;
         margin-bottom: 1.5rem;
         display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    html.dark .section-title {
-        color: #f1f5f9;
-    }
-
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-
-    .action-btn {
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        text-decoration: none;
-        color: #0f172a;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
         align-items: center;
         gap: 0.75rem;
     }
 
-    html.dark .action-btn {
-        background: #1e293b;
-        border-color: #334155;
-        color: #f1f5f9;
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .action-btn {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
     }
 
     .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border-color: #1e40af;
-        color: #1e40af;
+        border-color: #3b82f6;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
     }
 
     .action-btn-icon {
         width: 56px;
         height: 56px;
+        margin: 0 auto 1rem auto;
         border-radius: 12px;
         background: linear-gradient(135deg, #1e40af, #3b82f6);
-        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.75rem;
+        font-size: 1.5rem;
+        color: white;
     }
 
     .action-btn-text {
+        color: #1f2937;
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
     }
 
-    /* Two Column Layout */
-    .two-col-grid {
+    .action-btn:hover .action-btn-text {
+        color: #1e40af;
+    }
+
+    /* Content Grid */
+    .content-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
     }
 
-    @media (max-width: 768px) {
-        .two-col-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .card {
+    .content-card {
         background: white;
         border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
     }
 
-    html.dark .card {
-        background: #1e293b;
-        border-color: #334155;
-    }
-
-    .card-title {
+    .content-card-title {
         font-size: 1.125rem;
         font-weight: 700;
-        color: #0f172a;
+        color: #1f2937;
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
 
-    html.dark .card-title {
-        color: #f1f5f9;
-    }
-
-    /* Schedule Item */
-    .schedule-item {
-        padding: 1rem;
-        border-left: 4px solid #1e40af;
-        background: #f8fafc;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    html.dark .schedule-item {
-        background: #0f172a;
-        border-left-color: #3b82f6;
-    }
-
-    .schedule-item:hover {
-        background: #eff6ff;
-        transform: translateX(5px);
-    }
-
-    html.dark .schedule-item:hover {
-        background: #1e293b;
-    }
-
-    .schedule-time {
-        font-size: 0.875rem;
-        color: #1e40af;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-
-    .schedule-subject {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-    }
-
-    html.dark .schedule-subject {
-        color: #f1f5f9;
-    }
-
-    .schedule-details {
-        font-size: 0.875rem;
-        color: #64748b;
-    }
-
-    /* Activity Item */
-    .activity-item {
-        display: flex;
-        gap: 1rem;
+    .subject-item {
         padding: 1rem;
         border-radius: 8px;
-        background: #f8fafc;
         margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-    }
-
-    html.dark .activity-item {
-        background: #0f172a;
-    }
-
-    .activity-item:hover {
-        background: #eff6ff;
-    }
-
-    html.dark .activity-item:hover {
-        background: #1e293b;
-    }
-
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: #dbeafe;
-        color: #1e40af;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .activity-content {
-        flex: 1;
-    }
-
-    .activity-title {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-        font-size: 0.875rem;
-    }
-
-    html.dark .activity-title {
-        color: #f1f5f9;
-    }
-
-    .activity-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-
-    /* Badge */
-    .badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .badge-primary {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .badge-success {
-        background: #d1fae5;
-        color: #059669;
-    }
-
-    .badge-warning {
-        background: #fed7aa;
-        color: #ea580c;
-    }
-
-    .badge-danger {
-        background: #fee2e2;
-        color: #dc2626;
-    }
-
-    /* Message Preview */
-    .message-preview {
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
         background: #f8fafc;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    html.dark .message-preview {
-        background: #0f172a;
-    }
-
-    .message-preview:hover {
-        background: #eff6ff;
-        transform: translateX(5px);
-    }
-
-    html.dark .message-preview:hover {
-        background: #1e293b;
-    }
-
-    .message-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #1e40af, #3b82f6);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-
-    .message-content {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .message-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.25rem;
+        transition: all 0.2s;
     }
 
-    .message-sender {
-        font-weight: 600;
-        color: #0f172a;
-        font-size: 0.875rem;
-    }
-
-    html.dark .message-sender {
-        color: #f1f5f9;
-    }
-
-    .message-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-
-    .message-text {
-        font-size: 0.875rem;
-        color: #64748b;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    /* Subjects Grid */
-    .subjects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
-    }
-
-    .subject-card {
-        background: linear-gradient(135deg, #1e40af, #3b82f6);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .subject-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
-    }
-
-    .subject-icon {
-        font-size: 2rem;
-        margin-bottom: 0.75rem;
+    .subject-item:hover {
+        background: #dbeafe;
     }
 
     .subject-name {
         font-weight: 600;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
+        color: #1f2937;
     }
 
-    .subject-students {
-        font-size: 0.75rem;
-        opacity: 0.9;
+    .subject-course {
+        font-size: 0.8125rem;
+        color: #64748b;
     }
 
-    /* View All Link */
-    .view-all-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #1e40af;
+    .subject-count {
+        background: #3b82f6;
+        color: white;
+        padding: 0.375rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8125rem;
         font-weight: 600;
-        font-size: 0.875rem;
-        text-decoration: none;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
     }
 
-    .view-all-link:hover {
-        gap: 0.75rem;
-        color: #1e3a8a;
+    .activity-item {
+        padding: 1rem;
+        border-left: 3px solid #3b82f6;
+        margin-bottom: 1rem;
+        background: #f8fafc;
+        border-radius: 0 8px 8px 0;
     }
 
-    /* Empty State */
+    .activity-time {
+        font-size: 0.8125rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-text {
+        color: #1f2937;
+        font-weight: 500;
+    }
+
     .empty-state {
         text-align: center;
-        padding: 3rem 1rem;
+        padding: 2rem;
         color: #94a3b8;
     }
 
@@ -556,1234 +260,218 @@
         margin-bottom: 1rem;
         opacity: 0.5;
     }
-</style>
-{% endblock custom_css %}
 
-{% block content %}
-<div class="dashboard-container">
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-title">
-                Welcome back, {{ request.user.first_name }}! 👨‍🏫
-            </div>
-            <div class="welcome-subtitle">
-                Ready to inspire and educate today's brilliant minds
-            </div>
-            <div class="welcome-badges">
-                <span class="welcome-badge">
-                    <i class="fas fa-user-tie"></i>
-                    {{ staff.designation|default:"Faculty Member" }}
-                </span>
-                {% if staff.department %}
-                <span class="welcome-badge">
-                    <i class="fas fa-building"></i>
-                    {{ staff.department.name }}
-                </span>
-                {% endif %}
-                <span class="welcome-badge">
-                    <i class="fas fa-calendar"></i>
-                    {{ current_date|date:"l, F d, Y" }}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon blue">
-                    <i class="fas fa-users"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> Active
-                </span>
-            </div>
-            <div class="stat-value">{{ total_students }}</div>
-            <div class="stat-label">Total Students</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon green">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-check"></i> {{ total_subject }}
-                </span>
-            </div>
-            <div class="stat-value">{{ total_subject }}</div>
-            <div class="stat-label">Assigned Subjects</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon orange">
-                    <i class="fas fa-clipboard-check"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-chart-line"></i> Recent
-                </span>
-            </div>
-            <div class="stat-value">{{ total_attendance }}</div>
-            <div class="stat-label">Attendance Records</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon purple">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                {% if unread_messages > 0 %}
-                <span class="stat-change positive">
-                    <i class="fas fa-circle"></i> New
-                </span>
-                {% endif %}
-            </div>
-            <div class="stat-value">{{ unread_messages|default:0 }}</div>
-            <div class="stat-label">Unread Messages</div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h2 class="section-title">
-            <i class="fas fa-bolt"></i>
-            Quick Actions
-        </h2>
-        <div class="actions-grid">
-            <a href="{% url 'staff_take_attendance' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="action-btn-text">Take Attendance</div>
-            </a>
-
-            <a href="{% url 'staff_add_result' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="action-btn-text">Enter Marks</div>
-            </a>
-
-            <a href="{% url 'staff_upload_material' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-upload"></i>
-                </div>
-                <div class="action-btn-text">Upload Materials</div>
-            </a>
-
-            <a href="{% url 'staff_create_assignment' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="action-btn-text">Create Assignment</div>
-            </a>
-
-            <a href="{% url 'staff_view_students' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="action-btn-text">View Students</div>
-            </a>
-
-            <a href="{% url 'view_messages' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="action-btn-text">Messages</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- My Subjects -->
-    {% if subjects %}
-    <div style="margin-bottom: 2rem;">
-        <h2 class="section-title">
-            <i class="fas fa-book"></i>
-            My Subjects
-        </h2>
-        <div class="subjects-grid">
-            {% for subject in subjects %}
-            <div class="subject-card" onclick="window.location='{% url 'staff_view_students' %}'">
-                <div class="subject-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="subject-name">{{ subject.name }}</div>
-                <div class="subject-students">
-                    <i class="fas fa-users"></i> {{ subject.course.name }}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Two Column Layout -->
-    <div class="two-col-grid">
-        <!-- Today's Schedule -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-calendar-day"></i>
-                Today's Schedule
-            </h3>
-            
-            <div class="schedule-item">
-                <div class="schedule-time">
-                    <i class="fas fa-clock"></i> 09:00 AM - 10:00 AM
-                </div>
-                <div class="schedule-subject">Class Lecture</div>
-                <div class="schedule-details">View your timetable for detailed schedule</div>
-            </div>
-
-            <a href="{% url 'staff_view_timetable' %}" class="view-all-link">
-                View Full Timetable
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-history"></i>
-                Recent Activity
-            </h3>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Attendance marked successfully</div>
-                    <div class="activity-time">Today at {{ current_date|time:"h:i A" }}</div>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-upload"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">{{ total_subject }} subjects assigned</div>
-                    <div class="activity-time">Active this semester</div>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">{{ total_attendance }} attendance records</div>
-                    <div class="activity-time">Total entries</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pending Tasks and Messages -->
-    <div class="two-col-grid">
-        <!-- Pending Tasks -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-clipboard-list"></i>
-                Pending Tasks
-                <span class="badge badge-warning">{{ total_leave }}</span>
-            </h3>
-
-            {% if total_leave > 0 %}
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-calendar-times"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Review Leave Applications</div>
-                    <div class="activity-time">{{ total_leave }} applications pending</div>
-                </div>
-                <span class="badge badge-warning">{{ total_leave }}</span>
-            </div>
-            {% endif %}
-
-            {% if pending_assignments > 0 %}
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Grade Assignments</div>
-                    <div class="activity-time">{{ pending_assignments }} pending submissions</div>
-                </div>
-                <span class="badge badge-primary">{{ pending_assignments }}</span>
-            </div>
-            {% endif %}
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Update Attendance</div>
-                    <div class="activity-time">Keep records up to date</div>
-                </div>
-                <span class="badge badge-primary">Today</span>
-            </div>
-
-            <a href="{% url 'staff_take_attendance' %}" class="view-all-link">
-                View All Tasks
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-
-        <!-- Messages Preview -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-envelope"></i>
-                Messages
-                {% if unread_messages > 0 %}
-                <span class="badge badge-danger">{{ unread_messages }}</span>
-                {% endif %}
-            </h3>
-
-            {% if unread_messages > 0 %}
-            <div class="message-preview" onclick="window.location='{% url 'view_messages' %}'">
-                <div class="message-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-sender">New Messages</span>
-                        <span class="message-time">Recent</span>
-                    </div>
-                    <div class="message-text">You have {{ unread_messages }} unread message{{ unread_messages|pluralize }}</div>
-                </div>
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>No unread messages</p>
-            </div>
-            {% endif %}
-
-            <a href="{% url 'view_messages' %}" class="view-all-link">
-                View All Messages
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</div>
-{% endblock content %}
-
-{% block custom_js %}
-<script>
-    // Add any interactive features here
-    console.log('Staff Dashboard Loaded');
-    
-    // Animate stats on load
-    document.addEventListener('DOMContentLoaded', function() {
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues.forEach(stat => {
-            stat.style.opacity = '0';
-            stat.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                stat.style.transition = 'all 0.6s ease';
-                stat.style.opacity = '1';
-                stat.style.transform = 'translateY(0)';
-            }, 100);
-        });
-    });
-</script>
-{% endblock custom_js %}
-
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    html.dark .card-title {
-        color: #f1f5f9;
-    }
-
-    /* Schedule Item */
-    .schedule-item {
-        padding: 1rem;
-        border-left: 4px solid #1e40af;
-        background: #f8fafc;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    html.dark .schedule-item {
-        background: #0f172a;
-        border-left-color: #3b82f6;
-    }
-
-    .schedule-item:hover {
-        background: #eff6ff;
-        transform: translateX(5px);
-    }
-
-    html.dark .schedule-item:hover {
-        background: #1e293b;
-    }
-
-    .schedule-time {
-        font-size: 0.875rem;
-        color: #1e40af;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-
-    .schedule-subject {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-    }
-
-    html.dark .schedule-subject {
-        color: #f1f5f9;
-    }
-
-    .schedule-details {
-        font-size: 0.875rem;
-        color: #64748b;
-    }
-
-    /* Activity Item */
-    .activity-item {
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
-        background: #f8fafc;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-    }
-
-    html.dark .activity-item {
-        background: #0f172a;
-    }
-
-    .activity-item:hover {
-        background: #eff6ff;
-    }
-
-    html.dark .activity-item:hover {
-        background: #1e293b;
-    }
-
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: #dbeafe;
-        color: #1e40af;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .activity-content {
-        flex: 1;
-    }
-
-    .activity-title {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-        font-size: 0.875rem;
-    }
-
-    html.dark .activity-title {
-        color: #f1f5f9;
-    }
-
-    .activity-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-
-    /* Badge */
-    .badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .badge-primary {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .badge-success {
-        background: #d1fae5;
-        color: #059669;
-    }
-
-    .badge-warning {
-        background: #fed7aa;
-        color: #ea580c;
-    }
-
-    .badge-danger {
-        background: #fee2e2;
-        color: #dc2626;
-    }
-
-    /* Message Preview */
-    .message-preview {
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
-        background: #f8fafc;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    html.dark .message-preview {
-        background: #0f172a;
-    }
-
-    .message-preview:hover {
-        background: #eff6ff;
-        transform: translateX(5px);
-    }
-
-    html.dark .message-preview:hover {
-        background: #1e293b;
-    }
-
-    .message-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #1e40af, #3b82f6);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-
-    .message-content {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .message-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.25rem;
-    }
-
-    .message-sender {
-        font-weight: 600;
-        color: #0f172a;
-        font-size: 0.875rem;
-    }
-
-    html.dark .message-sender {
-        color: #f1f5f9;
-    }
-
-    .message-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-
-    .message-text {
-        font-size: 0.875rem;
-        color: #64748b;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    /* Subjects Grid */
-    .subjects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
-    }
-
-    .subject-card {
-        background: linear-gradient(135deg, #1e40af, #3b82f6);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        text-align: center;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .subject-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
-    }
-
-    .subject-icon {
-        font-size: 2rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .subject-name {
-        font-weight: 600;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .subject-students {
-        font-size: 0.75rem;
-        opacity: 0.9;
-    }
-
-    /* View All Link */
-    .view-all-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #1e40af;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-decoration: none;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .view-all-link:hover {
-        gap: 0.75rem;
-        color: #1e3a8a;
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: #94a3b8;
-    }
-
-    .empty-state i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-</style>
-{% endblock custom_css %}
-
-{% block content %}
-<div class="dashboard-container">
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-title">
-                Welcome back, {{ request.user.first_name }}! 👨‍🏫
-            </div>
-            <div class="welcome-subtitle">
-                Ready to inspire and educate today's brilliant minds
-            </div>
-            <div class="welcome-badges">
-                <span class="welcome-badge">
-                    <i class="fas fa-user-tie"></i>
-                    {{ staff.designation|default:"Faculty Member" }}
-                </span>
-                {% if staff.department %}
-                <span class="welcome-badge">
-                    <i class="fas fa-building"></i>
-                    {{ staff.department.name }}
-                </span>
-                {% endif %}
-                <span class="welcome-badge">
-                    <i class="fas fa-calendar"></i>
-                    {{ current_date|date:"l, F d, Y" }}
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon blue">
-                    <i class="fas fa-users"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> Active
-                </span>
-            </div>
-            <div class="stat-value">{{ total_students }}</div>
-            <div class="stat-label">Total Students</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon green">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-check"></i> {{ total_subject }}
-                </span>
-            </div>
-            <div class="stat-value">{{ total_subject }}</div>
-            <div class="stat-label">Assigned Subjects</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon orange">
-                    <i class="fas fa-clipboard-check"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-chart-line"></i> Recent
-                </span>
-            </div>
-            <div class="stat-value">{{ total_attendance }}</div>
-            <div class="stat-label">Attendance Records</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon purple">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                {% if unread_messages > 0 %}
-                <span class="stat-change positive">
-                    <i class="fas fa-circle"></i> New
-                </span>
-                {% endif %}
-            </div>
-            <div class="stat-value">{{ unread_messages|default:0 }}</div>
-            <div class="stat-label">Unread Messages</div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h2 class="section-title">
-            <i class="fas fa-bolt"></i>
-            Quick Actions
-        </h2>
-        <div class="actions-grid">
-            <a href="{% url 'staff_take_attendance' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="action-btn-text">Take Attendance</div>
-            </a>
-
-            <a href="{% url 'staff_add_result' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="action-btn-text">Enter Marks</div>
-            </a>
-
-            <a href="{% url 'staff_upload_material' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-upload"></i>
-                </div>
-                <div class="action-btn-text">Upload Materials</div>
-            </a>
-
-            <a href="{% url 'staff_create_assignment' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="action-btn-text">Create Assignment</div>
-            </a>
-
-            <a href="{% url 'staff_view_students' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="action-btn-text">View Students</div>
-            </a>
-
-            <a href="{% url 'view_messages' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="action-btn-text">Messages</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- My Subjects -->
-    {% if subjects %}
-    <div style="margin-bottom: 2rem;">
-        <h2 class="section-title">
-            <i class="fas fa-book"></i>
-            My Subjects
-        </h2>
-        <div class="subjects-grid">
-            {% for subject in subjects %}
-            <div class="subject-card" onclick="window.location='{% url 'staff_view_students' %}'">
-                <div class="subject-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="subject-name">{{ subject.name }}</div>
-                <div class="subject-students">
-                    <i class="fas fa-users"></i> {{ subject.course.name }}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Two Column Layout -->
-    <div class="two-col-grid">
-        <!-- Today's Schedule -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-calendar-day"></i>
-                Today's Schedule
-            </h3>
-            
-            <div class="schedule-item">
-                <div class="schedule-time">
-                    <i class="fas fa-clock"></i> 09:00 AM - 10:00 AM
-                </div>
-                <div class="schedule-subject">Class Lecture</div>
-                <div class="schedule-details">View your timetable for detailed schedule</div>
-            </div>
-
-            <a href="{% url 'staff_view_timetable' %}" class="view-all-link">
-                View Full Timetable
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-history"></i>
-                Recent Activity
-            </h3>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Attendance marked successfully</div>
-                    <div class="activity-time">Today at {{ current_date|time:"h:i A" }}</div>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-upload"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">{{ total_subject }} subjects assigned</div>
-                    <div class="activity-time">Active this semester</div>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">{{ total_attendance }} attendance records</div>
-                    <div class="activity-time">Total entries</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pending Tasks and Messages -->
-    <div class="two-col-grid">
-        <!-- Pending Tasks -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-clipboard-list"></i>
-                Pending Tasks
-                <span class="badge badge-warning">{{ total_leave }}</span>
-            </h3>
-
-            {% if total_leave > 0 %}
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-calendar-times"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Review Leave Applications</div>
-                    <div class="activity-time">{{ total_leave }} applications pending</div>
-                </div>
-                <span class="badge badge-warning">{{ total_leave }}</span>
-            </div>
-            {% endif %}
-
-            {% if pending_assignments > 0 %}
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Grade Assignments</div>
-                    <div class="activity-time">{{ pending_assignments }} pending submissions</div>
-                </div>
-                <span class="badge badge-primary">{{ pending_assignments }}</span>
-            </div>
-            {% endif %}
-
-            <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Update Attendance</div>
-                    <div class="activity-time">Keep records up to date</div>
-                </div>
-                <span class="badge badge-primary">Today</span>
-            </div>
-
-            <a href="{% url 'staff_take_attendance' %}" class="view-all-link">
-                View All Tasks
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-
-        <!-- Messages Preview -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-envelope"></i>
-                Messages
-                {% if unread_messages > 0 %}
-                <span class="badge badge-danger">{{ unread_messages }}</span>
-                {% endif %}
-            </h3>
-
-            {% if unread_messages > 0 %}
-            <div class="message-preview" onclick="window.location='{% url 'view_messages' %}'">
-                <div class="message-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-sender">New Messages</span>
-                        <span class="message-time">Recent</span>
-                    </div>
-                    <div class="message-text">You have {{ unread_messages }} unread message{{ unread_messages|pluralize }}</div>
-                </div>
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>No unread messages</p>
-            </div>
-            {% endif %}
-
-            <a href="{% url 'view_messages' %}" class="view-all-link">
-                View All Messages
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</div>
-{% endblock content %}
-
-{% block custom_js %}
-<script>
-    // Add any interactive features here
-    console.log('Staff Dashboard Loaded');
-    
-    // Animate stats on load
-    document.addEventListener('DOMContentLoaded', function() {
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues.forEach(stat => {
-            stat.style.opacity = '0';
-            stat.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                stat.style.transition = 'all 0.6s ease';
-                stat.style.opacity = '1';
-                stat.style.transform = 'translateY(0)';
-            }, 100);
-        });
-    });
-</script>
-{% endblock custom_js %}
-<section class="content">
-    <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-info">
-                    <div class="inner">
-                        <h3>{{total_students}}</h3>
-
-                        <p>Total Students</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                   
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-success">
-                    <div class="inner">
-                        <h3>{{total_attendance}}</h3>
-
-                        <p>Total Attendance Taken</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                   
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{total_leave}}</h3>
-
-                        <p>Total Leave Applied</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-person-add"></i>
-                    </div>
-                   
-                </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3>{{total_subject}}</h3>
-
-                        <p>Total Subjects</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-pie-graph"></i>
-                    </div>
-                   
-                </div>
-            </div>
-            <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-            <div class="col-md-6">
-                <!-- LINE CHART -->
-                <div class="card card-secondary">
-                  <div class="card-header">
-                    <h3 class="card-title">{{page_title}}</h3>
-    
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div></div>
-                  <!-- /.card-body -->
-                </div>
-                <div class="col-md-6">
-                    <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">{{page_title}}</h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="chart">
-                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-                </div>
-            <!-- right col -->
-        </div>
-        <!-- /.row (main row) -->
-    </div><!-- /.container-fluid -->
-</section>
-{% endblock content %}
-
-{% block custom_js %}
-  <script>
-      $(document).ready(function(){
-        var donutData        = {
-            labels: ['Attendance', 'Leave'],
-            datasets: [
-              {
-                data:[{{total_attendance}}, {{total_leave}}],
-                backgroundColor : ['#00a65a', '#f39c12',],
-              }
-            ]
-          }
-        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-        var pieData        = donutData;
-        var pieOptions     = {
-          maintainAspectRatio : false,
-          responsive : true,
+    @media (max-width: 768px) {
+        .content-grid {
+            grid-template-columns: 1fr;
         }
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        var pieChart = new Chart(pieChartCanvas, {
-          type: 'pie',
-          data: pieData,
-          options: pieOptions      
-        });
-
-        var subject_list = {{ subject_list|safe|escape }};
-        var attendance_list = {{ attendance_list }};
-  
-            var barChartData = {
-      labels  : subject_list,
-      datasets: [
-      {
-        label               : 'Attendance Per Subject',
-        backgroundColor     : '#6c757d',
-        borderColor         : 'rgba(60,141,188,0.8)',
-        pointRadius          : false,
-        pointColor          : '#3b8bba',
-        pointStrokeColor    : 'rgba(60,141,188,1)',
-        pointHighlightFill  : '#fff',
-        pointHighlightStroke: 'rgba(60,141,188,1)',
-        data                : attendance_list
-      }, 
-      
-      ]
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .quick-actions-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
-        var barChartCanvas = $('#barChart').get(0).getContext('2d')
-        var temp0 = barChartData.datasets[0]
-        //var temp1 = areaChartData.datasets[1]
-        barChartData.datasets[0] = temp0
-       // barChartData.datasets[1] = temp0
-    
-    var stackedBarChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      scales: {
-        xAxes: [{
-          stacked: true,
-        }],
-        yAxes: [{
-          stacked: true
-        }]
-      }
-    }
-    
-        var barChart = new Chart(barChartCanvas, {
-          type: 'bar', 
-          data: barChartData,
-          options: stackedBarChartOptions
-        })
-      })
+</style>
+{% endblock custom_css %}
 
-    
-  </script>
-      <!-- The core Firebase JS SDK is always required and must be listed first -->
-      <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <h1>Welcome back, {{ request.user.first_name }}! 👋</h1>
+        <p>Ready to inspire and educate today's brilliant minds</p>
+        <div class="welcome-badges">
+            <span class="welcome-badge">
+                <i class="fas fa-user-tie"></i>
+                {{ staff.designation|default:"Faculty Member" }}
+            </span>
+            {% if staff.department %}
+            <span class="welcome-badge">
+                <i class="fas fa-building"></i>
+                {{ staff.department.name }}
+            </span>
+            {% endif %}
+            <span class="welcome-badge">
+                <i class="fas fa-calendar"></i>
+                {% now "l, F j, Y" %}
+            </span>
+        </div>
+    </div>
 
-      <!-- TODO: Add SDKs for Firebase products that you want to use
-       https://firebase.google.com/docs/web/setup#available-libraries -->
-      <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-analytics.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-messaging.js"></script>
-  
-  
-      <script>
-          // Your web app's Firebase configuration
-          // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-          var firebaseConfig = {
-              apiKey: "AIzaSyBarDWWHTfTMSrtc5Lj3Cdw5dEvjAkFwtM",
-              authDomain: "sms-with-django.firebaseapp.com",
-              databaseURL: "https://sms-with-django.firebaseio.com",
-              projectId: "sms-with-django",
-              storageBucket: "sms-with-django.appspot.com",
-              messagingSenderId: "945324593139",
-              appId: "1:945324593139:web:03fa99a8854bbd38420c86",
-              measurementId: "G-2F2RXTL9GT"
-          };
-          // Initialize Firebase
-          firebase.initializeApp(firebaseConfig)
-          const messaging = firebase.messaging();
-          function InitializeFireBaseMessaging() {
-              messaging
-                  .requestPermission()
-                  .then(function () {
-                      console.log("Notification Permission");
-                      return messaging.getToken();
-                  })
-                  .then(function (token) {
-                      console.log("Token : " + token);
-                      sendToServer(token);
-                  })
-                  .catch(function (reason) {
-                      console.log(reason)
-                  })
-          }
-          messaging.onMessage(function (payload) {
-              const notificationOption = {
-                  body: payload.notification.body,
-                  icon: payload.notification.icon,
-  
-              }
-              if (Notification.permission == 'granted') {
-                  var notification = new Notification(payload.notification.title, notificationOption);
-                  notification.onclick = function (event) {
-                      event.preventDefault();
-                      window.open(payload.notification.click_action, "_blank");
-                      notification.close();
-                  }
-              }
-              console.log(payload);
-          });
-          messaging.onTokenRefresh(function () {
-              messaging.getToken()
-                  .then(function (newToken) {
-                      console.log("New Token : " + newToken);
-                      sendToServer(newToken);
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="stat-badge">Active</span>
+            </div>
+            <div class="stat-value">{{ total_students|default:0 }}</div>
+            <div class="stat-label">Total Students</div>
+        </div>
 
-                  })
-                  .catch(function (reason) {
-                      console.log(reason)
-                  })
-          })
-  
-          function sendToServer(token){
-            $.ajax({
-              url: "{% url 'staff_fcmtoken' %}",
-              type: 'POST',
-              data: {
-                  token: token,
-              }
-          }).done(function (response) {
-   
-             
-          }).fail(function (response) {
-          })
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <span class="stat-badge">✓{{ subject_count|default:0 }}</span>
+            </div>
+            <div class="stat-value">{{ subject_count|default:0 }}</div>
+            <div class="stat-label">Assigned Subjects</div>
+        </div>
 
-          }
-          
-          InitializeFireBaseMessaging();
-      </script>
-{% endblock custom_js %}
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <span class="stat-badge">Recent</span>
+            </div>
+            <div class="stat-value">{{ total_attendance|default:0 }}</div>
+            <div class="stat-label">Attendance Records</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <span class="stat-badge">New</span>
+            </div>
+            <div class="stat-value">{{ pending_count|default:0 }}</div>
+            <div class="stat-label">Unread Messages</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">
+        <i class="fas fa-bolt"></i>
+        Quick Actions
+    </h2>
+    <div class="quick-actions-grid">
+        <a href="{% url 'staff_take_attendance' %}" class="action-btn">
+            <div class="action-btn-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="action-btn-text">Take Attendance</div>
+        </a>
+
+        <a href="{% url 'staff_add_result' %}" class="action-btn">
+            <div class="action-btn-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="action-btn-text">Enter Marks</div>
+        </a>
+
+        <a href="{% url 'upload_material' %}" class="action-btn">
+            <div class="action-btn-icon">
+                <i class="fas fa-upload"></i>
+            </div>
+            <div class="action-btn-text">Upload Materials</div>
+        </a>
+
+        <a href="{% url 'create_assignment' %}" class="action-btn">
+            <div class="action-btn-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="action-btn-text">Create Assignment</div>
+        </a>
+
+        <a href="{% url 'staff_view_students' %}" class="action-btn">
+            <div class="action-btn-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="action-btn-text">View Students</div>
+        </a>
+
+        <a href="{% url 'staff_messages' %}" class="action-btn">
+            <div class="action-btn-icon">
+                <i class="fas fa-paper-plane"></i>
+            </div>
+            <div class="action-btn-text">Messages</div>
+        </a>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+        <!-- My Subjects -->
+        <div class="content-card">
+            <h3 class="content-card-title">
+                <i class="fas fa-book-open"></i>
+                My Subjects
+            </h3>
+            {% if subjects %}
+                {% for subject in subjects %}
+                <div class="subject-item">
+                    <div>
+                        <div class="subject-name">{{ subject.name }}</div>
+                        <div class="subject-course">{{ subject.course.name }}</div>
+                    </div>
+                    <span class="subject-count">{{ subject.student_count|default:0 }} Students</span>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <p>No subjects assigned yet</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Today's Timetable -->
+        <div class="content-card">
+            <h3 class="content-card-title">
+                <i class="fas fa-calendar-day"></i>
+                Today's Schedule
+            </h3>
+            {% if today_timetable %}
+                {% for slot in today_timetable %}
+                <div class="activity-item">
+                    <div class="activity-time">
+                        <i class="fas fa-clock"></i>
+                        Period {{ slot.period }} • {{ slot.start_time|time:"g:i A" }} - {{ slot.end_time|time:"g:i A" }}
+                    </div>
+                    <div class="activity-text">
+                        <strong>{{ slot.subject.name }}</strong>
+                        {% if slot.room_number %}
+                        <span style="color: #64748b;"> • Room {{ slot.room_number }}</span>
+                        {% endif %}
+                        {% if slot.is_lab %}
+                        <span style="background: #dbeafe; color: #1e40af; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem;">LAB</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-day"></i>
+                <p>No classes scheduled for today</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Smooth animations on load
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.stat-card, .action-btn, .content-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 50);
+        }, index * 50);
+    });
+});
+</script>
+{% endblock content %}

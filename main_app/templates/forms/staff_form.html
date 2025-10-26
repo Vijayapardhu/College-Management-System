@@ -1,10 +1,381 @@
 {% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .field-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .field-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field-item label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 0.25rem;
+    }
+
+    .field-item input,
+    .field-item select,
+    .field-item textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .field-item input:focus,
+    .field-item select:focus,
+    .field-item textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .field-help {
+        font-size: 0.8125rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+    }
+
+    .file-input {
+        padding: 0.625rem 1rem !important;
+        cursor: pointer;
+    }
+
+    .file-input::-webkit-file-upload-button {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-right: 0.75rem;
+    }
+</style>
+{% endblock %}
 
 {% block form_icon %}fas fa-chalkboard-teacher{% endblock %}
-{% block form_title %}Staff Information{% endblock %}
-{% block form_subtitle %}Add or edit staff member details{% endblock %}
+{% block form_title %}{% if staff_id %}Edit Staff{% else %}Add New Staff Member{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Complete staff member registration details" }}{% endblock %}
 
 {% block cancel_url %}{% url 'manage_staff' %}{% endblock %}
-{% block submit_text %}Save Staff{% endblock %}
+{% block submit_text %}{% if staff_id %}Update Staff{% else %}Save Staff{% endif %}{% endblock %}
 
+{% block form_content %}
 
+<!-- Personal Information -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <h3 class="section-title">Personal Information</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="error-message">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="error-message">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Gender</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<div class="error-message">{{ form.gender.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {% if form.date_of_birth.errors %}<div class="error-message">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Blood Group</label>
+            {{ form.blood_group }}
+            {% if form.blood_group.errors %}<div class="error-message">{{ form.blood_group.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Aadhaar Number</label>
+            {{ form.aadhaar_number }}
+            {% if form.aadhaar_number.errors %}<div class="error-message">{{ form.aadhaar_number.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Contact Information -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-phone"></i>
+        </div>
+        <h3 class="section-title">Contact Information</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">Email Address</label>
+            {{ form.email }}
+            <p class="field-help">Used for login and communication</p>
+            {% if form.email.errors %}<div class="error-message">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Mobile Number</label>
+            {{ form.mobile_number }}
+            {% if form.mobile_number.errors %}<div class="error-message">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Alternate Mobile</label>
+            {{ form.alternate_mobile }}
+            {% if form.alternate_mobile.errors %}<div class="error-message">{{ form.alternate_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row-2">
+        <div class="field-item">
+            <label>Emergency Contact</label>
+            {{ form.emergency_contact }}
+            {% if form.emergency_contact.errors %}<div class="error-message">{{ form.emergency_contact.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Address</label>
+            {{ form.address }}
+            {% if form.address.errors %}<div class="error-message">{{ form.address.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Professional Information -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-briefcase"></i>
+        </div>
+        <h3 class="section-title">Professional Information</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">Employee ID</label>
+            {{ form.employee_id }}
+            <p class="field-help">Unique identifier for staff</p>
+            {% if form.employee_id.errors %}<div class="error-message">{{ form.employee_id.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Designation</label>
+            {{ form.designation }}
+            {% if form.designation.errors %}<div class="error-message">{{ form.designation.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Department</label>
+            {{ form.department }}
+            {% if form.department.errors %}<div class="error-message">{{ form.department.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>Course</label>
+            {{ form.course }}
+            {% if form.course.errors %}<div class="error-message">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Date of Joining</label>
+            {{ form.date_of_joining }}
+            {% if form.date_of_joining.errors %}<div class="error-message">{{ form.date_of_joining.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Date of Retirement</label>
+            {{ form.date_of_retirement }}
+            {% if form.date_of_retirement.errors %}<div class="error-message">{{ form.date_of_retirement.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>Qualification</label>
+            {{ form.qualification }}
+            {% if form.qualification.errors %}<div class="error-message">{{ form.qualification.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Specialization</label>
+            {{ form.specialization }}
+            {% if form.specialization.errors %}<div class="error-message">{{ form.specialization.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Experience (Years)</label>
+            {{ form.experience_years }}
+            {% if form.experience_years.errors %}<div class="error-message">{{ form.experience_years.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row-2">
+        <div class="field-item">
+            <label>Status</label>
+            {{ form.status }}
+            {% if form.status.errors %}<div class="error-message">{{ form.status.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Resume/CV</label>
+            <input type="file" name="resume" accept=".pdf,.doc,.docx" class="file-input">
+            <p class="field-help">Upload resume (PDF, DOC - Max 5MB)</p>
+        </div>
+    </div>
+</div>
+
+<!-- Bank Details -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-university"></i>
+        </div>
+        <h3 class="section-title">Bank Details</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>Bank Name</label>
+            {{ form.bank_name }}
+            {% if form.bank_name.errors %}<div class="error-message">{{ form.bank_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Account Number</label>
+            {{ form.bank_account_number }}
+            {% if form.bank_account_number.errors %}<div class="error-message">{{ form.bank_account_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>IFSC Code</label>
+            {{ form.bank_ifsc_code }}
+            {% if form.bank_ifsc_code.errors %}<div class="error-message">{{ form.bank_ifsc_code.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Additional Information -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <h3 class="section-title">Additional Information</h3>
+    </div>
+    
+    <div class="field-item">
+        <label>Remarks</label>
+        {{ form.remarks }}
+        <p class="field-help">Any additional notes or comments</p>
+        {% if form.remarks.errors %}<div class="error-message">{{ form.remarks.errors.0 }}</div>{% endif %}
+    </div>
+</div>
+
+<script>
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const requiredFields = document.querySelectorAll('input[required]:not([type="file"]), select[required]');
+    let isValid = true;
+    let firstError = null;
+    
+    requiredFields.forEach(field => {
+        if (!field.value) {
+            isValid = false;
+            field.style.borderColor = '#ef4444';
+            if (!firstError) firstError = field;
+        } else {
+            field.style.borderColor = '#e5e7eb';
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Please fill all required fields marked with *');
+        if (firstError) {
+            firstError.focus();
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return false;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+});
+
+// Clear error styling on input
+document.querySelectorAll('input, select, textarea').forEach(field => {
+    field.addEventListener('input', function() {
+        this.style.borderColor = '#e5e7eb';
+    });
+});
+</script>
+
+{% endblock form_content %}

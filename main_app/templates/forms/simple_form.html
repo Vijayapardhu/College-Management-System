@@ -1,19 +1,80 @@
 {% extends 'forms/base_form.html' %}
 {% load static %}
 
+{% block custom_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .field-item {
+        margin-bottom: 1.25rem;
+    }
+
+    .field-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field-item label .required-field {
+        color: #ef4444;
+        margin-left: 0.25rem;
+    }
+
+    .field-item input,
+    .field-item select,
+    .field-item textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .field-item input:focus,
+    .field-item select:focus,
+    .field-item textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}
+
 {% block form_content %}
-<!-- Dynamic form fields will be rendered here -->
-{% for field in form %}
-    <div class="form-group mb-2">
-        {{field.errors}}
+<div class="form-card">
+    {% for field in form %}
+    <div class="field-item">
         <label for="{{field.id_for_label}}">
             {{field.label}}
             {% if field.field.required %}<span class="required-field">*</span>{% endif %}
         </label>
         {{field}}
+        {% if field.errors %}<div class="error-message">{{field.errors.0}}</div>{% endif %}
     </div>
-{% endfor %}
+    {% endfor %}
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+});
+</script>
 {% endblock form_content %}
-
-
-

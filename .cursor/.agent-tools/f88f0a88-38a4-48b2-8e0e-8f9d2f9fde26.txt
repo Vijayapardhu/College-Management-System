@@ -1,0 +1,91 @@
+═
+     COMPREHENSIVE TEMPLATE REDESIGN TODO LIST CREATED!
+
+
+ TOTAL: 423 Templates to Redesign
+
+ BLUE THEME STANDARDS:
+   Primary: Blue gradient (#1e40af  #3b82f6)
+   Cards: White with subtle shadows
+   Headers: Blue gradient banners
+   Buttons: Blue primary, white secondary
+   Icons: Blue backgrounds
+   Tables: Modern with hover states
+   Forms: Clean with blue focus states
+
+ BREAKDOWN BY MODULE:
+
+ COMPLETED (8):
+   Student Dashboard
+   HOD Dashboard
+   Staff Dashboard
+   Student Form + Documents
+   Session Form
+   Manage Student
+   Manage Staff
+   Manage Course
+
+ IN PROGRESS (4):
+   HOD Management Pages (5/20 done)
+   HOD Reports Pages (1/20 done)
+   Student Dashboard (1/4 done)
+   Student Academic Pages (1/12 done)
+
+ PENDING (30 TODO GROUPS):
+
+1 Forms (14 templates)
+    Course, Subject, Staff, Department, Academic Year, etc.
+
+2 HOD Module (~140 templates)
+    Add Pages (25): staff, course, subject, classroom, etc.
+    Analytics (15): dashboard, attendance, exams, financial
+    Operations (30): timetable, exams, approvals, certificates
+    Reports (19): custom reports, advanced reports, export
+    Misc (30): messages, notifications, feedback, views
+
+3 Staff Module (~35 templates)
+    Attendance (6): take, update, history, QR, bulk, analytics
+    Marks (6): enter, add, edit, view, bulk, CGPA
+    Content (8): materials, assignments, submissions, exams
+    Misc (12): profile, messages, leave, events, timetable
+
+4 Student Module (~65 templates)
+    Academic (11): attendance, results, materials, assignments
+    Services (15): leave, certificates, gate pass, grievances
+    Facilities (10): hostel, transport, library, medical, fees
+    Activities (8): discussions, events, sports, internships
+    Misc (10): messages, notifications, profile, chatbot
+
+5 Management Module (~26 templates)
+    Operations (20): transport, hostel, library, fees, etc.
+    Reports (4): financial, operational, academic, KPIs
+
+6 Parent Module (9 templates)
+    Home, login, link_student, child details, views
+
+7 Proctor Module (8 templates)
+    Home, students, absentees, messages, profile
+
+8 Common & Special (33 templates)
+    Navigation (5), Common (10), Analytics (3)
+    Performance (1), LMS (4), Specialized (15)
+
+ DESIGN CONSISTENCY CHECKLIST:
+   Blue gradient headers (#1e40af  #3b82f6)
+   White card backgrounds
+   Consistent padding & spacing
+   Blue icon badges with gradients
+   Modern table styling
+   Clean form inputs with blue focus
+   Responsive grid layouts
+   Smooth hover animations
+   Professional typography
+   Consistent button styles
+
+ START WITH:
+  1. All Form Templates (most reused)
+  2. HOD Add Pages (consistent pattern)
+  3. Staff Core Pages (attendance, marks)
+  4. Student Core Pages (academic views)
+
+ Every single template will match the modern blue theme!

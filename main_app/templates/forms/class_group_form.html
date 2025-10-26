@@ -1,0 +1,139 @@
+{% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .field-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field-item label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 0.25rem;
+    }
+
+    .field-item input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .field-item input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .field-help {
+        font-size: 0.8125rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+    }
+
+    .info-box {
+        background: #dbeafe;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-box-text {
+        color: #1e40af;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block form_icon %}fas fa-object-group{% endblock %}
+{% block form_title %}{% if class_group_id %}Edit Class Group{% else %}Add Class Group{% endif %}{% endblock %}
+{% block form_subtitle %}Configure class groups for advanced organization{% endblock %}
+
+{% block cancel_url %}{% url 'manage_class_groups' %}{% endblock %}
+{% block submit_text %}Save Class Group{% endblock %}
+
+{% block form_content %}
+
+<div class="info-box">
+    <div class="info-box-text">
+        <i class="fas fa-info-circle"></i>
+        Class groups allow additional grouping within sections (e.g., Group 1, Group 2)
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-object-group"></i>
+        </div>
+        <h3 class="section-title">Class Group Information</h3>
+    </div>
+    
+    <div class="field-item">
+        <label class="required">Group Name</label>
+        {{ form.name }}
+        <p class="field-help">Name for this class group (e.g., Group 1, Team A)</p>
+        {% if form.name.errors %}<div class="error-message">{{ form.name.errors.0 }}</div>{% endif %}
+    </div>
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+});
+</script>
+
+{% endblock form_content %}

@@ -1,0 +1,30 @@
+Was attendanceregister.check_in_time renamed to attendanceregister.check_in (a TimeField)? [y/N] Get-Content ".cursor\.agent-tools\1e61a04c-5ca7-42a5-a32f-e04cb445dd00.txt"                                      
+Please answer yes or no: y
+Was attendanceregister.check_out_time renamed to attendanceregister.check_out (a TimeField)? [y/N] y
+Was attendanceregister.overtime_hours renamed to attendanceregister.hours_worked (a DecimalField)? [y/N]                                                                                                          
+Was bonus.approved_at renamed to bonus.approved_date (a DateTimeField)? [y/N] y
+Was employeesalary.da_amount renamed to employeesalary.da (a DecimalField)? [y/N] y
+Was employeesalary.esi_amount renamed to employeesalary.hra (a DecimalField)? [y/N] y
+Was loan.emi_amount renamed to loan.principal_amount (a DecimalField)? [y/N] y
+Was loanemi.emi_date renamed to loanemi.due_date (a DateField)? [y/N] y
+Was loanemi.emi_amount renamed to loanemi.interest_amount (a DecimalField)? [y/N] y
+Was loanemi.interest_component renamed to loanemi.principal_amount (a DecimalField)? [y/N] y
+Was loanemi.principal_component renamed to loanemi.total_emi (a DecimalField)? [y/N] y
+Was payrollstructure.research_allowance renamed to payrollstructure.da (a DecimalField)? [y/N] y
+Was payrollstructure.special_allowance renamed to payrollstructure.hra (a DecimalField)? [y/N] y
+Was payslip.da_amount renamed to payslip.deductions (a DecimalField)? [y/N] y
+Was payslip.generated_at renamed to payslip.generated_date (a DateTimeField)? [y/N] y
+Was payslip.pay_period_month renamed to payslip.month (a IntegerField)? [y/N] y
+Was payslip.pay_period_year renamed to payslip.year (a IntegerField)? [y/N] y 
+Was taxdeclaration.created_at renamed to taxdeclaration.submitted_date (a DateTimeField)? [y/N] y
+Was taxdeclaration.amount renamed to taxdeclaration.total_income (a DecimalField)? [y/N] y
+Was taxdeclaration.verified_at renamed to taxdeclaration.verified_date (a DateTimeField)? [y/N] y
+It is impossible to add a non-nullable field 'staff' to bonus without specifying a default. This is because the database needs something to populate existing rows.                                               
+Please select a fix:
+ 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)   
+ 2) Quit and manually define a default value in models.py.
+Select an option: 1  
+Please enter the default value as valid Python.
+The datetime and django.utils.timezone modules are available, so it is possible to provide e.g. timezone.now as a value.                                                                                          
+Type 'exit' to exit this prompt
+>>> exit 

@@ -260,8 +260,8 @@ class StudentForm(forms.ModelForm):
         model = Student
         fields = [
             # Academic Details
-            'course', 'session', 'roll_number', 'admission_number', 
-            'admission_date', 'course_type',
+            'course', 'department', 'session', 'academic_year', 'section',
+            'roll_number', 'admission_number', 'admission_date', 'course_type',
             # Parent Details  
             'father_name', 'father_mobile', 'mother_name', 'mother_mobile',
             'guardian_name', 'guardian_mobile',
@@ -270,7 +270,10 @@ class StudentForm(forms.ModelForm):
         ]
         widgets = {
             'course': forms.Select(attrs={'class': 'form-control'}),
+            'department': forms.Select(attrs={'class': 'form-control'}),
             'session': forms.Select(attrs={'class': 'form-control'}),
+            'academic_year': forms.Select(attrs={'class': 'form-control'}),
+            'section': forms.Select(attrs={'class': 'form-control'}),
             'roll_number': forms.TextInput(attrs={'placeholder': 'e.g., CSE2024001', 'class': 'form-control'}),
             'admission_number': forms.TextInput(attrs={'placeholder': 'e.g., ADM2024001', 'class': 'form-control'}),
             'admission_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),

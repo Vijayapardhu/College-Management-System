@@ -2,105 +2,431 @@
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
-{% block content %}
+{% block custom_css %}
+<style>
+    .page-header-modern {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
 
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-file me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Manage and organize your data efficiently
-            </p>
-        </div>
-<section class="content">
-    <div class="container-fluid">
-        <div class="card-professional">
-            <div class="card-header bg-primary">
-                <h3 class="card-title"><i class="fas fa-building"></i> {{ page_title }}</h3>
-                <div class="card-tools">
-                    <a href="{% url 'add_department' %}" class="btn btn-success btn-sm">
-                        <i class="fas fa-plus"></i> Add Department
-                    </a>
-                </div>
-            </div>
-            <div class="card-body-professional">
-                {% if departments %}
-                <div class="table-responsive">
-                    <table class="table table-professional" id="departmentTable">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>#</th>
-                                <th>Department Name</th>
-                                <th>Code</th>
-                                <th>HOD</th>
-                                <th>Contact Email</th>
-                                <th>Contact Number</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for dept in departments %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td><strong>{{ dept.name }}</strong></td>
-                                <td>
-                                    {% if dept.code %}
-                                    <span class="badge badge-info">{{ dept.code }}</span>
-                                    {% else %}
-                                    <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if dept.hod %}
-                                    <i class="fas fa-user-tie"></i> {{ dept.hod.admin.first_name }} {{ dept.hod.admin.last_name }}
-                                    {% else %}
-                                    <span class="text-muted"><i class="fas fa-user-slash"></i> Not Assigned</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if dept.contact_email %}
-                                    <a href="mailto:{{ dept.contact_email }}">{{ dept.contact_email }}</a>
-                                    {% else %}
-                                    <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if dept.contact_number %}
-                                    <i class="fas fa-phone"></i> {{ dept.contact_number }}
-                                    {% else %}
-                                    <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="{% url 'edit_department' dept.id %}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert-professional-info">
-                    <h5><i class="fas fa-info-circle"></i> No Departments Found</h5>
-                    <p class="mb-0">No departments have been created yet. <a href="{% url 'add_department' %}">Add your first department</a></p>
-                </div>
-                {% endif %}
-            </div>
+    .page-header-modern h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header-modern p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin: 0;
+    }
+
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .search-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        flex: 1;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .table-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .table-card-header {
+        background: #f8fafc;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .table-card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .record-count {
+        background: #3b82f6;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .table-modern {
+        width: 100%;
+        margin: 0;
+    }
+
+    .table-modern thead th {
+        background: #f8fafc;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 2px solid #e2e8f0;
+        padding: 1rem 1.5rem;
+        white-space: nowrap;
+    }
+
+    .table-modern tbody td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .table-modern tbody tr {
+        transition: all 0.2s;
+    }
+
+    .table-modern tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .btn-modern {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary-modern {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+    }
+
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        color: white;
+    }
+
+    .btn-icon {
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+    }
+
+    .btn-edit {
+        background: #dbeafe;
+        color: #1e40af;
+        border: none;
+    }
+
+    .btn-edit:hover {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .badge-modern {
+        padding: 0.375rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.8125rem;
+    }
+
+    .badge-blue {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
+    }
+
+    .dept-info-card {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .dept-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .dept-details h5 {
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+    }
+
+    .dept-details small {
+        color: #64748b;
+        font-size: 0.8125rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Modern Page Header -->
+<div class="page-header-modern">
+    <h1>
+        <i class="fas fa-building"></i>
+        {{page_title}}
+    </h1>
+    <p>Manage academic departments and their leadership</p>
+</div>
+
+<!-- Action Bar -->
+<div class="action-bar">
+    <div class="search-section">
+        <div style="position: relative;">
+            <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+            <input type="text" 
+                   class="search-input" 
+                   id="searchInput" 
+                   placeholder="Search departments...">
         </div>
     </div>
-</section>
+    
+    <div>
+        <a href="{% url 'add_department' %}" class="btn-modern btn-primary-modern">
+            <i class="fas fa-plus"></i>
+            Add New Department
+        </a>
+    </div>
+</div>
 
+<!-- Table Card -->
+<div class="table-card">
+    <div class="table-card-header">
+        <h3 class="table-card-title">
+            <i class="fas fa-list"></i>
+            All Departments
+        </h3>
+        <span class="record-count" id="deptCount">{{ departments|length }}</span>
+    </div>
+    
+    <div class="table-card-body">
+        {% if departments %}
+        <div style="overflow-x: auto;">
+            <table class="table-modern" id="departmentTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Department</th>
+                        <th>Code</th>
+                        <th>HOD</th>
+                        <th>Contact</th>
+                        <th>Established</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in departments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <div class="dept-info-card">
+                                <div class="dept-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="dept-details">
+                                    <h5>{{ dept.name }}</h5>
+                                    {% if dept.description %}
+                                    <small>{{ dept.description|truncatewords:8 }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-modern badge-blue">{{ dept.code }}</span>
+                        </td>
+                        <td>
+                            {% if dept.hod %}
+                            <div style="color: #1f2937; font-weight: 500;">
+                                <i class="fas fa-user-tie" style="color: #3b82f6; margin-right: 0.25rem;"></i>
+                                {{ dept.hod.admin.first_name }} {{ dept.hod.admin.last_name }}
+                            </div>
+                            <small style="color: #64748b;">{{ dept.hod.designation|title }}</small>
+                            {% else %}
+                            <span style="color: #94a3b8;">
+                                <i class="fas fa-user-slash"></i> Not Assigned
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if dept.contact_email %}
+                            <div style="font-size: 0.875rem;">
+                                <div style="color: #64748b; margin-bottom: 0.25rem;">
+                                    <i class="fas fa-envelope"></i> {{ dept.contact_email }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if dept.contact_number %}
+                            <div style="font-size: 0.875rem; color: #64748b;">
+                                <i class="fas fa-phone"></i> {{ dept.contact_number }}
+                            </div>
+                            {% endif %}
+                            {% if not dept.contact_email and not dept.contact_number %}
+                            <span style="color: #94a3b8;">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if dept.established_year %}
+                            <div style="font-weight: 600; color: #1f2937;">
+                                <i class="fas fa-calendar-alt" style="color: #3b82f6; margin-right: 0.25rem;"></i>
+                                {{ dept.established_year }}
+                            </div>
+                            {% else %}
+                            <span style="color: #94a3b8;">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <a href="{% url 'edit_department' dept.id %}" 
+                                   class="btn-modern btn-icon btn-edit"
+                                   title="Edit Department">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 class="empty-state-title">No Departments Found</h3>
+            <p class="empty-state-text">Get started by adding your first department.</p>
+            <a href="{% url 'add_department' %}" class="btn-modern btn-primary-modern">
+                <i class="fas fa-plus"></i>
+                Add First Department
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block custom_js %}
 <script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchValue = this.value.toLowerCase();
+    const table = document.getElementById('departmentTable');
+    if (!table) return;
+    
+    const rows = table.getElementsByTagName('tr');
+    let visibleCount = 0;
+    
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const text = row.textContent.toLowerCase();
+        
+        if (text.includes(searchValue)) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    }
+    
+    document.getElementById('deptCount').textContent = visibleCount;
+});
+
+// Initialize DataTable for enhanced functionality
 $(document).ready(function() {
-    $('#departmentTable').DataTable({
-        "pageLength": 25,
-        "order": [[1, "asc"]]
-    });
+    if ($('#departmentTable').length) {
+        $('#departmentTable').DataTable({
+            "pageLength": 25,
+            "order": [[1, "asc"]],
+            "responsive": true,
+            "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            "language": {
+                "search": "Search:",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ departments",
+                "infoEmpty": "No departments available",
+                "infoFiltered": "(filtered from _MAX_ total departments)"
+            }
+        });
+    }
 });
 </script>
-{% endblock content %}
-
-
+{% endblock %}

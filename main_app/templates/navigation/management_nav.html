@@ -1,5 +1,64 @@
-
 <!-- Management Navigation -->
+<nav>
+    <ul class="sidebar-menu">
+        <li><a href="{% url 'management_home' %}" class="{% if request.resolver_match.url_name == 'management_home' %}active{% endif %}">
+            <i class="fas fa-home"></i> <span>Dashboard</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_transport' %}">
+            <i class="fas fa-bus"></i> <span>Transport Management</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_hostels' %}">
+            <i class="fas fa-hotel"></i> <span>Hostel Management</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_library' %}">
+            <i class="fas fa-book-reader"></i> <span>Library Management</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_fee_structure' %}">
+            <i class="fas fa-money-bill-wave"></i> <span>Fee Management</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_scholarships' %}">
+            <i class="fas fa-award"></i> <span>Scholarship Management</span>
+        </a></li>
+        
+        <li><a href="{% url 'view_grievances' %}">
+            <i class="fas fa-exclamation-circle"></i> <span>Grievance Management</span>
+        </a></li>
+        
+        <li><a href="{% url 'financial_reports' %}">
+            <i class="fas fa-chart-pie"></i> <span>Financial Reports</span>
+        </a></li>
+        
+        <li><a href="{% url 'operational_reports' %}">
+            <i class="fas fa-tasks"></i> <span>Operational Reports</span>
+        </a></li>
+        
+        <li><a href="{% url 'academic_oversight' %}">
+            <i class="fas fa-graduation-cap"></i> <span>Academic Oversight</span>
+        </a></li>
+        
+        <li><a href="{% url 'institutional_kpis' %}">
+            <i class="fas fa-chart-line"></i> <span>Institutional KPIs</span>
+        </a></li>
+        
+        <li><a href="{% url 'view_messages' %}">
+            <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a></li>
+        
+        <li><a href="{% url 'management_view_profile' %}">
+            <i class="fas fa-user"></i> <span>My Profile</span>
+        </a></li>
+        
+        <li><a href="{% url 'user_logout' %}" onclick="return confirm('Are you sure you want to logout?')">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a></li>
+    </ul>
+</nav>
+
 <nav class="sidebar-nav">
     <!-- Navigation Menu -->
     <ul class="space-y-1 px-3">
@@ -18,31 +77,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'management_financial_reports' %}" 
+                    <a href="{% url 'management_analytics' %}" 
                        class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-money-bill-wave"></i>
-                        <span class="nav-text">Financial Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'management_operational_reports' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <span class="nav-text">Operational Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'management_academic_oversight' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-graduation-cap"></i>
-                        <span class="nav-text">Academic Oversight</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'management_institutional_kpis' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-bar"></i>
-                        <span class="nav-text">Institutional KPIs</span>
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <span class="nav-text">Analytics</span>
                     </a>
                 </li>
             </ul>

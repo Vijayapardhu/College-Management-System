@@ -1,321 +1,126 @@
-
-<!-- HOD/Admin Navigation -->
-<nav class="sidebar-nav">
-    <!-- Navigation Menu -->
-    <ul class="space-y-1 px-3">
-        <!-- Dashboard Section -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-tachometer-alt mr-2"></i>
-                Dashboard
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'hod_comprehensive_dashboard' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-university"></i>
-                        <span class="nav-text">Department Dashboard</span>
-                        <span class="nav-badge">New</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'hod_home' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <span class="nav-text">Analytics</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Department Management -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-building mr-2"></i>
-                Department Management
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'timetable_dashboard' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-calendar-alt"></i>
-                        <span class="nav-text">Timetables</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'department_analytics' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <span class="nav-text">Analytics</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'department_management' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <span class="nav-text">Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- User Management -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-users mr-2"></i>
-                User Management
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'user_management_hub' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-users-cog"></i>
-                        <span class="nav-text">User Hub</span>
-                        <span class="nav-badge">New</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'add_student' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user-plus"></i>
-                        <span class="nav-text">Add Student</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'manage_student' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user-graduate"></i>
-                        <span class="nav-text">Manage Students</span>
-                        <span class="nav-badge">{{ total_students }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'add_staff' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user-tie"></i>
-                        <span class="nav-text">Add Staff</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'manage_staff' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chalkboard-teacher"></i>
-                        <span class="nav-text">Manage Staff</span>
-                        <span class="nav-badge">{{ total_staff }}</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Academic Management -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-graduation-cap mr-2"></i>
-                Academic Management
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'add_course' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-plus-circle"></i>
-                        <span class="nav-text">Add Course</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'manage_course' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-book"></i>
-                        <span class="nav-text">Manage Courses</span>
-                        <span class="nav-badge">{{ total_course }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'add_subject' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-plus"></i>
-                        <span class="nav-text">Add Subject</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'manage_subject' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-list"></i>
-                        <span class="nav-text">Manage Subjects</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'add_session' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-calendar-plus"></i>
-                        <span class="nav-text">Add Session</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'manage_session' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-calendar-alt"></i>
-                        <span class="nav-text">Manage Sessions</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Academic Operations -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-tasks mr-2"></i>
-                Academic Operations
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'academic_operations' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-tasks"></i>
-                        <span class="nav-text">Operations Center</span>
-                        <span class="nav-badge">New</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'reports_hub' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-bar"></i>
-                        <span class="nav-text">Reports Hub</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Approvals & Workflows -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-check-circle mr-2"></i>
-                Approvals & Workflows
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'approval_center' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-inbox"></i>
-                        <span class="nav-text">Approval Center</span>
-                        <span class="nav-badge" id="pending-approvals-count">0</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'student_leave_view' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-calendar-times"></i>
-                        <span class="nav-text">Student Leaves</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'staff_leave_view' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user-clock"></i>
-                        <span class="nav-text">Staff Leaves</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Academic Tracking -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-chart-line mr-2"></i>
-                Academic Tracking
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'student_attendance_view' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user-check"></i>
-                        <span class="nav-text">Student Attendance</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'student_feedback_message' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-comments"></i>
-                        <span class="nav-text">Student Feedback</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'staff_feedback_message' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-comment-dots"></i>
-                        <span class="nav-text">Staff Feedback</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Analytics & Reports -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-chart-bar mr-2"></i>
-                Analytics & Reports
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'analytics_dashboard' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <span class="nav-text">Analytics Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'attendance_analytics' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-chart-line"></i>
-                        <span class="nav-text">Attendance Analytics</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'report_builder' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-file-alt"></i>
-                        <span class="nav-text">Report Builder</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- System Management -->
-        <li class="nav-section">
-            <div class="nav-section-header">
-                <i class="fas fa-cogs mr-2"></i>
-                System Management
-            </div>
-            <ul class="ml-4 space-y-1">
-                <li>
-                    <a href="{% url 'view_profile' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user"></i>
-                        <span class="nav-text">View Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'edit_profile' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-user-edit"></i>
-                        <span class="nav-text">Edit Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'manage_public_links' %}" 
-                       class="nav-item nav-item-inactive group">
-                        <i class="nav-icon fas fa-link"></i>
-                        <span class="nav-text">Manage Public Links</span>
-                        <span class="nav-badge">New</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'admin_logout' %}" 
-                       class="nav-item nav-item-inactive group text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
-                        <i class="nav-icon fas fa-sign-out-alt"></i>
-                        <span class="nav-text">Logout</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+<!-- HOD/Admin Navigation --><nav>
+    <ul class="sidebar-menu">
+        <li><a href="{% url 'hod_home' %}" class="{% if request.resolver_match.url_name == 'hod_home' %}active{% endif %}">
+            <i class="fas fa-home"></i> <span>Dashboard</span>
+        </a></li>
+        
+        <li><a href="{% url 'add_student' %}">
+            <i class="fas fa-user-plus"></i> <span>Add Student</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_student' %}">
+            <i class="fas fa-user-graduate"></i> <span>Manage Students</span>
+        </a></li>
+        
+        <li><a href="{% url 'add_staff' %}">
+            <i class="fas fa-user-tie"></i> <span>Add Faculty</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_staff' %}">
+            <i class="fas fa-chalkboard-teacher"></i> <span>Manage Faculty</span>
+        </a></li>
+        
+        <li><a href="{% url 'add_course' %}">
+            <i class="fas fa-plus-circle"></i> <span>Add Course</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_course' %}">
+            <i class="fas fa-graduation-cap"></i> <span>Manage Courses</span>
+        </a></li>
+        
+        <li><a href="{% url 'add_subject' %}">
+            <i class="fas fa-book"></i> <span>Add Subject</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_subject' %}">
+            <i class="fas fa-list"></i> <span>Manage Subjects</span>
+        </a></li>
+        
+        <li><a href="{% url 'add_session' %}">
+            <i class="fas fa-calendar-plus"></i> <span>Add Session</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_session' %}">
+            <i class="fas fa-calendar-alt"></i> <span>Manage Sessions</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_academic_years' %}">
+            <i class="fas fa-layer-group"></i> <span>Manage Years</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_sections' %}">
+            <i class="fas fa-users"></i> <span>Manage Sections</span>
+        </a></li>
+        
+        <li><a href="{% url 'manage_class_groups' %}">
+            <i class="fas fa-th-large"></i> <span>Manage Classes</span>
+        </a></li>
+        
+        <li><a href="{% url 'student_attendance_view' %}">
+            <i class="fas fa-calendar-check"></i> <span>Student Attendance</span>
+        </a></li>
+        
+        <li><a href="{% url 'student_analytics_dashboard' %}">
+            <i class="fas fa-chart-line"></i> <span>Analytics Dashboard</span>
+        </a></li>
+        
+        <li><a href="{% url 'identify_at_risk_students' %}">
+            <i class="fas fa-exclamation-triangle"></i> <span>At-Risk Students</span>
+        </a></li>
+        
+        <li><a href="{% url 'bulk_student_upload' %}">
+            <i class="fas fa-file-upload"></i> <span>Bulk Upload</span>
+        </a></li>
+        
+        <li><a href="{% url 'bulk_promote_students' %}">
+            <i class="fas fa-arrow-up"></i> <span>Promote Students</span>
+        </a></li>
+        
+        <li><a href="{% url 'generate_custom_report' %}">
+            <i class="fas fa-file-alt"></i> <span>Custom Reports</span>
+        </a></li>
+        
+        <li><a href="{% url 'class_performance_comparison' %}">
+            <i class="fas fa-balance-scale"></i> <span>Class Comparison</span>
+        </a></li>
+        
+        <li><a href="{% url 'student_leave_view' %}">
+            <i class="fas fa-calendar-times"></i> <span>Student Leaves</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_leave_view' %}">
+            <i class="fas fa-user-clock"></i> <span>Staff Leaves</span>
+        </a></li>
+        
+        <li><a href="{% url 'analytics_dashboard' %}">
+            <i class="fas fa-chart-bar"></i> <span>Analytics</span>
+        </a></li>
+        
+        <li><a href="{% url 'report_builder' %}">
+            <i class="fas fa-file-alt"></i> <span>Reports</span>
+        </a></li>
+        
+        <li><a href="{% url 'view_messages' %}">
+            <i class="fas fa-envelope"></i> <span>Messages</span>
+        </a></li>
+        
+        <li><a href="{% url 'student_feedback_message' %}">
+            <i class="fas fa-comments"></i> <span>Student Feedback</span>
+        </a></li>
+        
+        <li><a href="{% url 'staff_feedback_message' %}">
+            <i class="fas fa-comment-dots"></i> <span>Staff Feedback</span>
+        </a></li>
+        
+        <li><a href="{% url 'view_profile' %}">
+            <i class="fas fa-user"></i> <span>My Profile</span>
+        </a></li>
+        
+        <li><a href="{% url 'admin_logout' %}" onclick="return confirm('Are you sure you want to logout?')">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a></li>
     </ul>
 </nav>
+
+
+<!-- HOD/Admin Navigation -->

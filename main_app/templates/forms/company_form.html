@@ -1,10 +1,301 @@
 {% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .field-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field-item label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 0.25rem;
+    }
+
+    .field-item input,
+    .field-item select,
+    .field-item textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .field-item input:focus,
+    .field-item select:focus,
+    .field-item textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .field-help {
+        font-size: 0.8125rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+    }
+
+    .file-input {
+        padding: 0.625rem 1rem !important;
+        cursor: pointer;
+    }
+
+    .file-input::-webkit-file-upload-button {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-right: 0.75rem;
+    }
+
+    .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 52px;
+        height: 28px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: 0.3s;
+        border-radius: 28px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .toggle-label {
+        font-weight: 600;
+        color: #374151;
+    }
+</style>
+{% endblock %}
 
 {% block form_icon %}fas fa-briefcase{% endblock %}
-{% block form_title %}Company Information{% endblock %}
-{% block form_subtitle %}Add or edit placement company details{% endblock %}
+{% block form_title %}{% if company_id %}Edit Company{% else %}Add New Company{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Configure company details for placements" }}{% endblock %}
 
 {% block cancel_url %}{% url 'manage_companies' %}{% endblock %}
-{% block submit_text %}Save Company{% endblock %}
+{% block submit_text %}{% if company_id %}Update Company{% else %}Save Company{% endif %}{% endblock %}
 
+{% block form_content %}
 
+<!-- Company Details -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-briefcase"></i>
+        </div>
+        <h3 class="section-title">Company Information</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">Company Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}<div class="error-message">{{ form.name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Company Type</label>
+            {{ form.company_type }}
+            <p class="field-help">e.g., IT, Manufacturing, Finance</p>
+            {% if form.company_type.errors %}<div class="error-message">{{ form.company_type.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Website</label>
+            {{ form.website }}
+            {% if form.website.errors %}<div class="error-message">{{ form.website.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 1.25rem;">
+        <div class="field-item">
+            <label>Description</label>
+            {{ form.description }}
+            <p class="field-help">Brief overview of the company</p>
+            {% if form.description.errors %}<div class="error-message">{{ form.description.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>Company Logo</label>
+            <input type="file" name="logo" accept="image/*" class="file-input">
+            <p class="field-help">Upload logo (JPG, PNG - Max 2MB)</p>
+        </div>
+        <div class="field-item">
+            <label>Address</label>
+            {{ form.address }}
+            {% if form.address.errors %}<div class="error-message">{{ form.address.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- HR Contact Details -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <h3 class="section-title">HR Contact Details</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>HR Name</label>
+            {{ form.hr_name }}
+            {% if form.hr_name.errors %}<div class="error-message">{{ form.hr_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>HR Email</label>
+            {{ form.hr_email }}
+            {% if form.hr_email.errors %}<div class="error-message">{{ form.hr_email.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>HR Contact</label>
+            {{ form.hr_contact }}
+            {% if form.hr_contact.errors %}<div class="error-message">{{ form.hr_contact.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Status -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-toggle-on"></i>
+        </div>
+        <h3 class="section-title">Status</h3>
+    </div>
+    
+    <div class="toggle-container">
+        <label class="toggle-switch">
+            {{ form.is_active }}
+            <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Active for Placements</span>
+    </div>
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const name = document.querySelector('input[name="name"]');
+    
+    if (!name.value.trim()) {
+        e.preventDefault();
+        name.style.borderColor = '#ef4444';
+        alert('Please enter company name');
+        name.focus();
+        return false;
+    }
+    
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+});
+
+document.querySelectorAll('input, select, textarea').forEach(field => {
+    field.addEventListener('input', function() {
+        this.style.borderColor = '#e5e7eb';
+    });
+});
+</script>
+
+{% endblock form_content %}

@@ -1,0 +1,156 @@
+{% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .field-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field-item label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 0.25rem;
+    }
+
+    .field-item input,
+    .field-item select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .field-item input:focus,
+    .field-item select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .field-help {
+        font-size: 0.8125rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+    }
+
+    .info-box {
+        background: #dbeafe;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-box-text {
+        color: #1e40af;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block form_icon %}fas fa-layer-group{% endblock %}
+{% block form_title %}{% if year_id %}Edit Academic Year{% else %}Add Academic Year{% endblock %}{% endblock %}
+{% block form_subtitle %}Configure year levels for student organization{% endblock %}
+
+{% block cancel_url %}{% url 'manage_academic_years' %}{% endblock %}
+{% block submit_text %}Save Year{% endblock %}
+
+{% block form_content %}
+
+<div class="info-box">
+    <div class="info-box-text">
+        <i class="fas fa-info-circle"></i>
+        Academic years help organize students by year level (1st, 2nd, 3rd, etc.)
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-layer-group"></i>
+        </div>
+        <h3 class="section-title">Year Information</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">Year Number</label>
+            {{ form.year_number }}
+            <p class="field-help">Select year level (1 = 1st Year, 2 = 2nd Year)</p>
+            {% if form.year_number.errors %}<div class="error-message">{{ form.year_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Year Name</label>
+            {{ form.year_name }}
+            <p class="field-help">Display name (e.g., "First Year")</p>
+            {% if form.year_name.errors %}<div class="error-message">{{ form.year_name.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+});
+</script>
+
+{% endblock form_content %}

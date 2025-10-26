@@ -1,10 +1,215 @@
 {% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+<style>
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .field-item label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field-item label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 0.25rem;
+    }
+
+    .field-item input,
+    .field-item select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+    }
+
+    .field-item input:focus,
+    .field-item select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .field-help {
+        font-size: 0.8125rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+
+    .error-message {
+        color: #ef4444;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+    }
+
+    .info-box {
+        background: #dbeafe;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-box-text {
+        color: #1e40af;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}
 
 {% block form_icon %}fas fa-book-open{% endblock %}
-{% block form_title %}Subject Information{% endblock %}
-{% block form_subtitle %}Add or edit subject details{% endblock %}
+{% block form_title %}{% if subject_id %}Edit Subject{% else %}Add New Subject{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Configure subject details and assignments" }}{% endblock %}
 
 {% block cancel_url %}{% url 'manage_subject' %}{% endblock %}
-{% block submit_text %}Save Subject{% endblock %}
+{% block submit_text %}{% if subject_id %}Update Subject{% else %}Save Subject{% endif %}{% endblock %}
 
+{% block form_content %}
 
+<!-- Info Box -->
+<div class="info-box">
+    <div class="info-box-text">
+        <i class="fas fa-info-circle"></i>
+        Subjects are courses taught within a program. Assign a faculty member and link to a course.
+    </div>
+</div>
+
+<!-- Subject Details -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-book-open"></i>
+        </div>
+        <h3 class="section-title">Subject Information</h3>
+    </div>
+    
+    <div style="margin-bottom: 1.25rem;">
+        <div class="field-item">
+            <label class="required">Subject Name</label>
+            {{ form.name }}
+            <p class="field-help">Full name of the subject (e.g., Data Structures and Algorithms)</p>
+            {% if form.name.errors %}<div class="error-message">{{ form.name.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label class="required">Course/Program</label>
+            {{ form.course }}
+            <p class="field-help">Which course this subject belongs to</p>
+            {% if form.course.errors %}<div class="error-message">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label class="required">Assigned Faculty</label>
+            {{ form.staff }}
+            <p class="field-help">Faculty member teaching this subject</p>
+            {% if form.staff.errors %}<div class="error-message">{{ form.staff.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const subjectName = document.querySelector('input[name="name"]');
+    const course = document.querySelector('select[name="course"]');
+    const staff = document.querySelector('select[name="staff"]');
+    
+    let isValid = true;
+    let firstError = null;
+    
+    if (!subjectName.value.trim()) {
+        isValid = false;
+        subjectName.style.borderColor = '#ef4444';
+        if (!firstError) firstError = subjectName;
+    }
+    
+    if (!course.value) {
+        isValid = false;
+        course.style.borderColor = '#ef4444';
+        if (!firstError) firstError = course;
+    }
+    
+    if (!staff.value) {
+        isValid = false;
+        staff.style.borderColor = '#ef4444';
+        if (!firstError) firstError = staff;
+    }
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Please fill all required fields marked with *');
+        if (firstError) {
+            firstError.focus();
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return false;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    submitBtn.disabled = true;
+});
+
+// Clear error styling on input
+document.querySelectorAll('input, select').forEach(field => {
+    field.addEventListener('input', function() {
+        this.style.borderColor = '#e5e7eb';
+    });
+    field.addEventListener('change', function() {
+        this.style.borderColor = '#e5e7eb';
+    });
+});
+</script>
+
+{% endblock form_content %}
