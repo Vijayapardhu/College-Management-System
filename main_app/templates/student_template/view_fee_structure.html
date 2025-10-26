@@ -1,40 +1,251 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
+{% block title %}Fee Structure{% endblock %}
+
+{% block custom_css %}
+<style>
+    .fee-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .fee-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid;
+    }
+
+    .fee-card.total { border-left-color: #1e40af; }
+    .fee-card.paid { border-left-color: #059669; }
+    .fee-card.pending { border-left-color: #d97706; }
+
+    html.dark .fee-card {
+        background: #1e293b;
+    }
+
+    .fee-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .fee-card.total .fee-value { color: #1e40af; }
+    .fee-card.paid .fee-value { color: #059669; }
+    .fee-card.pending .fee-value { color: #d97706; }
+
+    .fee-label {
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .fee-breakdown {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    html.dark .fee-breakdown {
+        background: #1e293b;
+    }
+
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .breakdown-item:last-child {
+        border-bottom: none;
+        font-weight: 600;
+        font-size: 1.125rem;
+    }
+
+    html.dark .breakdown-item {
+        border-bottom-color: #334155;
+    }
+
+    .payment-history {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    html.dark .payment-history {
+        background: #1e293b;
+    }
+
+    .payment-item {
+        padding: 1.25rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+    }
+
+    .payment-item:hover {
+        border-color: #1e40af;
+        box-shadow: 0 2px 8px rgba(30, 64, 175, 0.1);
+    }
+
+    html.dark .payment-item {
+        border-color: #334155;
+    }
+
+    .payment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .payment-amount {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #059669;
+    }
+
+    .payment-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: #f0fdf4;
+        color: #166534;
+    }
+
+    .payment-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+{% endblock %}
+
 {% block page_title %}Fee Structure{% endblock %}
 
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-money-bill-wave me-2"></i>My Fee Structure
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                View your fee details and payment information
-            </p>
-        </div>
+<div class="mb-4">
+    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+        <i class="fas fa-dollar-sign"></i> Fee Structure
+    </h2>
+    <p style="color: #64748b; margin: 0;">View your fee details and payment history</p>
+</div>
 
-        <div class="card-professional">
-            <div class="card-header-professional">
-                <h3 style="font-size: 18px;">Fee Details</h3>
+<!-- Fee Summary -->
+<div class="fee-summary">
+    <div class="fee-card total">
+        <div class="fee-value">₹45,000</div>
+        <div class="fee-label">Total Annual Fee</div>
+    </div>
+    <div class="fee-card paid">
+        <div class="fee-value">₹30,000</div>
+        <div class="fee-label">Amount Paid</div>
+    </div>
+    <div class="fee-card pending">
+        <div class="fee-value">₹15,000</div>
+        <div class="fee-label">Balance Due</div>
+    </div>
+</div>
+
+<!-- Fee Breakdown -->
+<div class="fee-breakdown">
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
+        Fee Breakdown
+    </h3>
+    
+    <div class="breakdown-item">
+        <span style="color: #64748b;">Tuition Fee</span>
+        <span style="font-weight: 500; color: #0f172a;">₹30,000</span>
+    </div>
+    <div class="breakdown-item">
+        <span style="color: #64748b;">Development Fee</span>
+        <span style="font-weight: 500; color: #0f172a;">₹5,000</span>
+    </div>
+    <div class="breakdown-item">
+        <span style="color: #64748b;">Library Fee</span>
+        <span style="font-weight: 500; color: #0f172a;">₹2,000</span>
+    </div>
+    <div class="breakdown-item">
+        <span style="color: #64748b;">Laboratory Fee</span>
+        <span style="font-weight: 500; color: #0f172a;">₹5,000</span>
+    </div>
+    <div class="breakdown-item">
+        <span style="color: #64748b;">Examination Fee</span>
+        <span style="font-weight: 500; color: #0f172a;">₹3,000</span>
+    </div>
+    <div class="breakdown-item">
+        <span style="color: #0f172a;">Total Amount</span>
+        <span style="color: #1e40af;">₹45,000</span>
+    </div>
+</div>
+
+<!-- Payment History -->
+<div class="payment-history">
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
+        Payment History
+    </h3>
+    
+    <div class="payment-item">
+        <div class="payment-header">
+            <div class="payment-amount">₹15,000</div>
+            <div class="payment-status"><i class="fas fa-check-circle"></i> Paid</div>
+        </div>
+        <div class="payment-details">
+            <div class="detail-item">
+                <i class="fas fa-calendar"></i>
+                <span>Sept 15, 2025</span>
             </div>
-            <div class="card-body-professional">
-                <div class="empty-state-professional">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <h4>Fee Structure Not Available</h4>
-                    <p>Your fee structure will be displayed here once assigned by administration</p>
-                </div>
+            <div class="detail-item">
+                <i class="fas fa-credit-card"></i>
+                <span>Online Payment</span>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-receipt"></i>
+                <span>TXN123456</span>
             </div>
         </div>
     </div>
-</section>
+
+    <div class="payment-item">
+        <div class="payment-header">
+            <div class="payment-amount">₹15,000</div>
+            <div class="payment-status"><i class="fas fa-check-circle"></i> Paid</div>
+        </div>
+        <div class="payment-details">
+            <div class="detail-item">
+                <i class="fas fa-calendar"></i>
+                <span>July 10, 2025</span>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-credit-card"></i>
+                <span>Bank Transfer</span>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-receipt"></i>
+                <span>TXN123455</span>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
-
-
-
-
-
-
 
 
 

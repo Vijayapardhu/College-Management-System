@@ -1,0 +1,25 @@
+C:\Users\PARDHU\Desktop\projects\College-Management-System\student_management_system\settings.py:193: RuntimeWarning: Supabase configuration missing. Document uploads will not work. Set SUPABASE_URL and SUPABASE_KEY in your .env file. 
+  warnings.warn(
+======================================================================                        
+CREATING STUDENT CERTIFICATE TABLE
+======================================================================                        
+
+📝 Creating 'main_app_studentcertificate' table...                                            
+✅ Table created successfully!
+
+📊 StudentCertificate table columns:
+   id                             - bigint     
+   certificate_type               - character varying                                         
+   certificate_title              - character varying                                         
+   certificate_file               - character varying                                         
+   issue_date                     - date       
+   uploaded_at                    - timestamp with time zone                                  
+   student_id                     - bigint     
+
+======================================================================                        
+✅ TABLE CREATION COMPLETE
+======================================================================                        
+
+🎉 Certificate upload feature should now work! 
+
+Test it at: http://127.0.0.1:8000/student/certificates/request/                               

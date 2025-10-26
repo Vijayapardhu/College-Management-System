@@ -1,0 +1,70 @@
+nage.py makemigrations              
+C:\Users\PARDHU\Desktop\projects\College-Management-System\student_management_system\settings.py:193: RuntimeWarning: Supabase configuration missing. Document uploads will not work. Set SUPABASE_URL and SUPABASE_KEY in your .env file.                  
+  warnings.warn(
+Was attendanceregister.check_in_time renamed to attendanceregister.check_in (a TimeField)? [y/N] nn         
+Was attendanceregister.check_out_time renamed to attendanceregister.check_in (a TimeField)? [y/N] n         
+Was attendanceregister.check_in_time renamed to attendanceregister.check_out (a TimeField)? [y/N] n         
+Was attendanceregister.check_out_time renamed to attendanceregister.check_out (a TimeField)? [y/N] n        
+Was attendanceregister.overtime_hours renamed to attendanceregister.hours_worked (a DecimalField)? [y/N] n  
+Was bonus.approved_at renamed to bonus.approved_date (a DateTimeField)? [y/N] n                             
+Was bonus.description renamed to bonus.reason (a TextField)? [y/N] n    
+Was employeesalary.da_amount renamed to employeesalary.da (a DecimalField)? [y/N] n                         
+Was employeesalary.esi_amount renamed to employeesalary.da (a DecimalField)? [y/N] n                        
+Was employeesalary.hra_amount renamed to employeesalary.da (a DecimalField)? [y/N] n                        
+Was employeesalary.income_tax renamed to employeesalary.da (a DecimalField)? [y/N] n                        
+Was employeesalary.loan_deduction renamed to employeesalary.da (a DecimalField)? [y/N] n                    
+Was employeesalary.other_deductions renamed to employeesalary.da (a DecimalField)? [y/N] n                  
+Was employeesalary.pf_amount renamed to employeesalary.da (a DecimalField)? [y/N] n                         
+Was employeesalary.professional_tax renamed to employeesalary.da (a DecimalField)? [y/N] n                  
+Was employeesalary.research_allowance renamed to employeesalary.da (a DecimalField)? [y/N] n                
+Was employeesalary.special_allowance renamed to employeesalary.da (a DecimalField)? [y/N] n                 
+Was employeesalary.da_amount renamed to employeesalary.hra (a DecimalField)? [y/N] n                        
+Was employeesalary.esi_amount renamed to employeesalary.hra (a DecimalField)? [y/N] n                       
+Was employeesalary.hra_amount renamed to employeesalary.hra (a DecimalField)? [y/N] n                       
+Was employeesalary.income_tax renamed to employeesalary.hra (a DecimalField)? [y/N] n                       
+Was employeesalary.loan_deduction renamed to employeesalary.hra (a DecimalField)? [y/N] n                   
+Was employeesalary.other_deductions renamed to employeesalary.hra (a DecimalField)? [y/N] n                 
+Was employeesalary.pf_amount renamed to employeesalary.hra (a DecimalField)? [y/N] n                        
+Was employeesalary.professional_tax renamed to employeesalary.hra (a DecimalField)? [y/N] n                 
+Was employeesalary.research_allowance renamed to employeesalary.hra (a DecimalField)? [y/N] n               
+Was employeesalary.special_allowance renamed to employeesalary.hra (a DecimalField)? [y/N] n                
+Was loan.emi_amount renamed to loan.monthly_emi (a DecimalField)? [y/N]                                     
+Was loan.emi_amount renamed to loan.principal_amount (a DecimalField)? [y/N] n                              
+Was loanemi.emi_date renamed to loanemi.due_date (a DateField)? [y/N] n 
+Was loanemi.emi_amount renamed to loanemi.interest_amount (a DecimalField)? [y/N] n                         
+Was loanemi.interest_component renamed to loanemi.interest_amount (a DecimalField)? [y/N] n                 
+Was loanemi.principal_component renamed to loanemi.interest_amount (a DecimalField)? [y/N] n                
+Was loanemi.emi_amount renamed to loanemi.principal_amount (a DecimalField)? [y/N] n                        
+Was loanemi.interest_component renamed to loanemi.principal_amount (a DecimalField)? [y/N] n                
+Was loanemi.principal_component renamed to loanemi.principal_amount (a DecimalField)? [y/N] n               
+Was loanemi.emi_amount renamed to loanemi.total_emi (a DecimalField)? [y/N] n                               
+Was loanemi.interest_component renamed to loanemi.total_emi (a DecimalField)? [y/N] n                       
+Was loanemi.principal_component renamed to loanemi.total_emi (a DecimalField)? [y/N] n                      
+Was payrollstructure.research_allowance renamed to payrollstructure.da (a DecimalField)? [y/N] n            
+Was payrollstructure.special_allowance renamed to payrollstructure.da (a DecimalField)? [y/N] n             
+Was payrollstructure.research_allowance renamed to payrollstructure.hra (a DecimalField)? [y/N] n           
+Was payrollstructure.special_allowance renamed to payrollstructure.hra (a DecimalField)? [y/N] n            
+Was payslip.da_amount renamed to payslip.deductions (a DecimalField)? [y/N] n                               
+Was payslip.esi_amount renamed to payslip.deductions (a DecimalField)? [y/N] n                              
+Was payslip.hra_amount renamed to payslip.deductions (a DecimalField)? [y/N] n                              
+Was payslip.income_tax renamed to payslip.deductions (a DecimalField)? [y/N] n                              
+Was payslip.loan_deduction renamed to payslip.deductions (a DecimalField)? [y/N] n                          
+Was payslip.other_deductions renamed to payslip.deductions (a DecimalField)? [y/N] n                        
+Was payslip.pf_amount renamed to payslip.deductions (a DecimalField)? [y/N] n                               
+Was payslip.professional_tax renamed to payslip.deductions (a DecimalField)? [y/N] n                        
+Was payslip.generated_at renamed to payslip.generated_date (a DateTimeField)? [y/N] n                       
+Was payslip.pay_period_month renamed to payslip.month (a IntegerField)? [y/N] n                             
+Was payslip.pay_period_year renamed to payslip.year (a IntegerField)? [y/N] n                               
+Was taxdeclaration.created_at renamed to taxdeclaration.submitted_date (a DateTimeField)? [y/N] n           
+Was taxdeclaration.amount renamed to taxdeclaration.total_income (a DecimalField)? [y/N] n                  
+Was taxdeclaration.verified_at renamed to taxdeclaration.verified_date (a DateTimeField)? [y/N] n           
+It is impossible to add a non-nullable field 'bonus_date' to bonus without specifying a default. This is because the database needs something to populate existing rows.            
+Please select a fix:
+ 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)      
+ 2) Quit and manually define a default value in models.py.              
+Select an option: n
+Please select a valid option: 1
+Please enter the default value as valid Python.                         
+The datetime and django.utils.timezone modules are available, so it is possible to provide e.g. timezone.now as a value.                        
+Type 'exit' to exit this prompt     
+>>> exit 

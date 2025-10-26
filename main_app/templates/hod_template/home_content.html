@@ -2,411 +2,267 @@
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
+{% block custom_css %}
+<style>
+    /* Additional dashboard-specific styles */
+    .dashboard-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .metric-card h3 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0 0 10px 0;
+    }
+    
+    .metric-card p {
+        font-size: 1rem;
+        margin: 0;
+        opacity: 0.9;
+    }
+    
+    .chart-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+        .chart-section {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-metrics {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock custom_css %}
+
 {% block content %}
-<!-- HOD Dashboard -->
-<div class="space-y-6">
-    <!-- Page Header -->
-    <div class="gradient-header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">
-                    Welcome to Command Center! 🎯
-                </h2>
-                <p class="text-white/90 text-lg">Managing excellence, one student at a time</p>
-            </div>
-            <div class="hidden md:flex space-x-3">
-                <button class="btn bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30">
-                    <i class="fas fa-download mr-2"></i>
-                    Export Report
-                </button>
-                <button class="btn bg-white text-blue-600 hover:bg-blue-50">
-                    <i class="fas fa-plus mr-2"></i>
-                    Quick Add
-                </button>
+<section class="content">
+    <div class="container-fluid">
+        <!-- Breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'hod_home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Administrative Dashboard</li>
+                    </ol>
+                </nav>
             </div>
         </div>
-        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-white/90">
-            <div class="bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl text-center">
-                <div class="text-2xl font-bold">{{total_students}}</div>
-                <div class="text-xs opacity-90">Students</div>
+        
+        <!-- Dashboard Metrics -->
+        <div class="dashboard-metrics">
+            <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h3>{{total_students}}</h3>
+                <p>Total Students</p>
+                <a href="{% url 'manage_student' %}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.8;">View Details →</a>
             </div>
-            <div class="bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl text-center">
-                <div class="text-2xl font-bold">{{total_staff}}</div>
-                <div class="text-xs opacity-90">Staff</div>
+            
+            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <h3>{{total_staff}}</h3>
+                <p>Total Staff</p>
+                <a href="{% url 'manage_staff' %}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.8;">View Details →</a>
             </div>
-            <div class="bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl text-center">
-                <div class="text-2xl font-bold">{{total_course}}</div>
-                <div class="text-xs opacity-90">Courses</div>
+            
+            <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <h3>{{total_course}}</h3>
+                <p>Total Courses</p>
+                <a href="{% url 'manage_course' %}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.8;">View Details →</a>
             </div>
-            <div class="bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl text-center">
-                <div class="text-2xl font-bold">{{total_subject}}</div>
-                <div class="text-xs opacity-90">Subjects</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Stats Overview -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Total Students -->
-        <div class="metric-card metric-card-primary group">
-            <div class="metric-icon metric-icon-primary">
-                <i class="fas fa-user-graduate"></i>
-            </div>
-            <div class="metric-value" data-count="{{total_students}}">0</div>
-            <div class="metric-label">Total Students</div>
-            <a href="{% url 'manage_student' %}" class="mt-4 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700">
-                View Students
-                <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-
-        <!-- Total Staff -->
-        <div class="metric-card metric-card-success group">
-            <div class="metric-icon metric-icon-success">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-            <div class="metric-value" data-count="{{total_staff}}">0</div>
-            <div class="metric-label">Total Staff</div>
-            <a href="{% url 'manage_staff' %}" class="mt-4 inline-flex items-center text-sm font-medium text-green-600 hover:text-green-700">
-                View Staff
-                <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-
-        <!-- Total Courses -->
-        <div class="metric-card metric-card-info group">
-            <div class="metric-icon metric-icon-info">
-                <i class="fas fa-book"></i>
-            </div>
-            <div class="metric-value" data-count="{{total_course}}">0</div>
-            <div class="metric-label">Total Courses</div>
-            <a href="{% url 'manage_course' %}" class="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
-                View Courses
-                <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-
-        <!-- Total Subjects -->
-        <div class="metric-card metric-card-warning group">
-            <div class="metric-icon metric-icon-warning">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="metric-value" data-count="{{total_subject}}">0</div>
-            <div class="metric-label">Total Subjects</div>
-            <a href="{% url 'manage_subject' %}" class="mt-4 inline-flex items-center text-sm font-medium text-yellow-600 hover:text-yellow-700">
-                View Subjects
-                <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-    </div>
-
-    <!-- Charts Section -->
-    <div class="grid lg:grid-cols-2 gap-6">
-        <!-- Distribution Chart -->
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h3 class="dashboard-card-title">
-                    <i class="fas fa-chart-pie mr-2"></i>
-                    Student & Staff Distribution
-                </h3>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="chart-container chart-container-lg">
-                    <canvas id="pieChart"></canvas>
-                </div>
+            
+            <div class="metric-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <h3>{{total_subject}}</h3>
+                <p>Total Subjects</p>
+                <a href="{% url 'manage_subject' %}" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.8;">View Details →</a>
             </div>
         </div>
-
-        <!-- Attendance Chart -->
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h3 class="dashboard-card-title">
-                    <i class="fas fa-chart-bar mr-2"></i>
-                    Attendance Per Subject
-                </h3>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="chart-container chart-container-lg">
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Activities & Pending Actions -->
-    <div class="grid lg:grid-cols-2 gap-6">
-        <!-- Recent Activities -->
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h3 class="dashboard-card-title">
-                    <i class="fas fa-clock mr-2"></i>
-                    Recent Activities
-                </h3>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="space-y-4">
-                    <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-user-plus text-primary-600"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900">New Student Enrolled</p>
-                            <p class="text-xs text-gray-500">Computer Science Department</p>
-                            <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-check-circle text-green-600"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900">Leave Request Approved</p>
-                            <p class="text-xs text-gray-500">Faculty Member: Dr. Smith</p>
-                            <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-file-alt text-yellow-600"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900">New Report Generated</p>
-                            <p class="text-xs text-gray-500">Monthly Attendance Report</p>
-                            <p class="text-xs text-gray-400 mt-1">1 day ago</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pending Actions -->
-        <div class="dashboard-card">
-            <div class="dashboard-card-header">
-                <h3 class="dashboard-card-title">
-                    <i class="fas fa-tasks mr-2"></i>
-                    Pending Actions
-                </h3>
-                <span class="badge badge-error">3</span>
-            </div>
-            <div class="dashboard-card-body">
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between p-3 bg-red-50 border border-red-100 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-exclamation-circle text-red-600"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">Leave Requests</p>
-                                <p class="text-xs text-gray-500">5 pending approvals</p>
-                            </div>
-                        </div>
-                        <a href="{% url 'student_leave_view' %}" class="btn btn-sm btn-error">
-                            Review
-                        </a>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-100 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-clipboard-check text-yellow-600"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">Document Verification</p>
-                                <p class="text-xs text-gray-500">8 documents pending</p>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-warning">
-                            Review
-                        </button>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-user-clock text-blue-600"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900">Staff Attendance</p>
-                                <p class="text-xs text-gray-500">Review today's attendance</p>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-primary">
-                            View
+        <!-- /.row -->
+        
+        <!-- Charts Section -->
+        <div class="chart-section">
+            <!-- PIE CHART -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Student & Staff Distribution</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
                         </button>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BAR CHART -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Attendance Per Subject</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+        <!-- /.row (main row) -->
+    </div><!-- /.container-fluid -->
+</section>
 {% endblock content %}
 
 {% block custom_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Counter Animation
-    function animateCounter(element) {
-        const target = parseInt(element.getAttribute('data-count'));
-        const duration = 1500;
-        const increment = target / (duration / 16);
-        let current = 0;
-
-        const updateCounter = () => {
-            current += increment;
-            if (current < target) {
-                element.textContent = Math.floor(current);
-                requestAnimationFrame(updateCounter);
-            } else {
-                element.textContent = target;
-            }
-        };
-
-        updateCounter();
-    }
-
-    // Animate all counters
-    document.querySelectorAll('[data-count]').forEach(counter => {
-        animateCounter(counter);
-    });
-
-    // Modern Chart.js Configuration
-    Chart.defaults.font.family = "'Inter', sans-serif";
-    Chart.defaults.font.size = 12;
-    Chart.defaults.color = '#6b7280';
-
-    // Pie Chart Data
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    const pieData = {
-        labels: ['Students', 'Staff'],
-        datasets: [{
-            data: [{{total_students}}, {{total_staff}}],
-            backgroundColor: [
-                '#6366f1',
-                '#a855f7'
-            ],
-            borderColor: [
-                '#ffffff',
-                '#ffffff'
-            ],
-            borderWidth: 3,
-            hoverOffset: 10
-        }]
-    };
-
-    const pieOptions = {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    usePointStyle: true,
-                    font: {
-                        size: 14,
-                        weight: '500'
-                    }
-                }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                cornerRadius: 8,
-                displayColors: true,
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.parsed;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = ((value / total) * 100).toFixed(1);
-                        return label + ': ' + value + ' (' + percentage + '%)';
-                    }
-                }
-            }
-        },
-        animation: {
-            animateRotate: true,
-            animateScale: true,
-            duration: 1000
+  <script>
+      $(document).ready(function(){
+        // Pie Chart Data
+        var donutData = {
+            labels: ['Students', 'Staff'],
+            datasets: [{
+                data: [{{total_students}}, {{total_staff}}],
+                backgroundColor: ['#00a65a', '#f39c12'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
         }
-    };
+        
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+        
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: donutData,
+            options: pieOptions      
+        });
 
-    new Chart(pieCtx, {
-        type: 'doughnut',
-        data: pieData,
-        options: pieOptions
-    });
-
-    // Bar Chart Data
-    const subjectList = {{ subject_list|safe|escape }};
-    const attendanceList = {{ attendance_list }};
-
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    const barData = {
-        labels: subjectList.map(label => label.length > 15 ? label.substring(0, 15) + '...' : label),
-        datasets: [{
-            label: 'Attendance',
-            data: attendanceList,
-            backgroundColor: '#6366f1',
-            borderColor: '#4f46e5',
-            borderWidth: 0,
-            borderRadius: 8,
-            borderSkipped: false,
-            hoverBackgroundColor: '#4f46e5'
-        }]
-    };
-
-    const barOptions = {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                display: false
+        // Bar Chart Data
+        var subject_list = {{ subject_list|safe|escape }};
+        var attendance_list = {{ attendance_list }};
+        
+        // Truncate long subject names for better display
+        var truncated_labels = subject_list.map(function(label) {
+            return label.length > 8 ? label.substring(0, 8) + '...' : label;
+        });
+  
+        var barChartData = {
+            labels: truncated_labels,
+            datasets: [{
+                label: 'Attendance Per Subject',
+                backgroundColor: '#6c757d',
+                borderColor: 'rgba(60,141,188,0.8)',
+                borderWidth: 1,
+                data: attendance_list
+            }]
+        }
+        
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            var index = context[0].dataIndex;
+                            return subject_list[index]; // Show full name in tooltip
+                        }
+                    }
+                }
             },
-            tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                cornerRadius: 8,
-                callbacks: {
-                    title: function(context) {
-                        return subjectList[context[0].dataIndex];
+            scales: {
+                x: {
+                    display: true,
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45,
+                        font: {
+                            size: 10
+                        },
+                        callback: function(value, index) {
+                            return truncated_labels[index];
+                        }
                     },
-                    label: function(context) {
-                        return 'Attendance: ' + context.parsed.y + ' students';
+                    grid: {
+                        display: false
                     }
-                }
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
                 },
-                ticks: {
-                    maxRotation: 45,
-                    minRotation: 45,
-                    font: {
-                        size: 11,
-                        weight: '500'
+                y: {
+                    display: true,
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 10
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
                     }
                 }
             },
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.05)'
-                },
-                ticks: {
-                    font: {
-                        size: 11,
-                        weight: '500'
-                    }
+            layout: {
+                padding: {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
                 }
             }
-        },
-        animation: {
-            duration: 1000,
-            easing: 'easeInOutQuart'
         }
-    };
-
-    new Chart(barCtx, {
-        type: 'bar',
-        data: barData,
-        options: barOptions
-    });
-});
-</script>
+    
+        var barChart = new Chart(barChartCanvas, {
+            type: 'bar', 
+            data: barChartData,
+            options: barChartOptions
+        })
+      })
+  </script>
 {% endblock custom_js %}

@@ -1,0 +1,13 @@
+C:\Users\PARDHU\Desktop\projects\College-Management-System\student_management_system\settings.py:193: RuntimeWarning: Supabase configuration missing. Document uploads will not work. Set SUPABASE_URL and SUPABASE_KEY in your .env file. 
+  warnings.warn(
+SystemCheckError: System check identified some issues:                                        
+
+ERRORS:
+main_app.Certificate.student: (fields.E304) Reverse accessor 'Student.certificates' for 'main_app.Certificate.student' clashes with reverse accessor for 'main_app.StudentCertificate.student'.                                            
+        HINT: Add or change a related_name argument to the definition for 'main_app.Certificate.student' or 'main_app.StudentCertificate.student'.                                          
+main_app.Certificate.student: (fields.E305) Reverse query name for 'main_app.Certificate.student' clashes with reverse query name for 'main_app.StudentCertificate.student'.                
+        HINT: Add or change a related_name argument to the definition for 'main_app.Certificate.student' or 'main_app.StudentCertificate.student'.                                          
+main_app.StudentCertificate.student: (fields.E304) Reverse accessor 'Student.certificates' for 'main_app.StudentCertificate.student' clashes with reverse accessor for 'main_app.Certificate.student'.                                     
+        HINT: Add or change a related_name argument to the definition for 'main_app.StudentCertificate.student' or 'main_app.Certificate.student'.                                          
+main_app.StudentCertificate.student: (fields.E305) Reverse query name for 'main_app.StudentCertificate.student' clashes with reverse query name for 'main_app.Certificate.student'.         
+        HINT: Add or change a related_name argument to the definition for 'main_app.StudentCertificate.student' or 'main_app.Certificate.student'.                                          

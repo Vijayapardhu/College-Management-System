@@ -245,7 +245,6 @@ class Student(models.Model):
     
     # Additional Required Documents
     aadhaar_card = models.FileField(upload_to='documents/aadhaar/', blank=True, null=True)
-    pan_card = models.FileField(upload_to='documents/pan/', blank=True, null=True)
     bank_passbook = models.FileField(upload_to='documents/bank_passbook/', blank=True, null=True)
     birth_certificate = models.FileField(upload_to='documents/birth/', blank=True, null=True)
     entrance_exam_scorecard = models.FileField(upload_to='documents/entrance/', blank=True, null=True)
@@ -265,7 +264,6 @@ class Student(models.Model):
     bank_name = models.CharField(max_length=100, blank=True)
     
     # Additional Required Fields for College Enrollment
-    pan_number = models.CharField(max_length=10, blank=True, help_text="Permanent Account Number")
     
     # Medical Information
     medical_conditions = models.TextField(blank=True, help_text="Any medical conditions or allergies")
@@ -394,7 +392,6 @@ class Staff(models.Model):
     # Additional Info
     blood_group = models.CharField(max_length=5, blank=True)
     aadhaar_number = models.CharField(max_length=12, blank=True, unique=True, null=True)
-    pan_number = models.CharField(max_length=10, blank=True)
     
     # Bank Details
     bank_account_number = models.CharField(max_length=50, blank=True)
@@ -1729,6 +1726,37 @@ class OnlineExamAttempt(models.Model):
         return f"{self.student} - {self.exam.title}"
 
 
+class StudentCertificate(models.Model):
+    """Student's Personal Certificate Storage"""
+    CERTIFICATE_TYPES = (
+        ('10th', '10th Grade Certificate'),
+        ('12th', '12th Grade Certificate'),
+        ('diploma', 'Diploma Certificate'),
+        ('degree', 'Degree Certificate'),
+        ('transfer', 'Transfer Certificate'),
+        ('migration', 'Migration Certificate'),
+        ('conduct', 'Conduct Certificate'),
+        ('bonafide', 'Bonafide Certificate'),
+        ('character', 'Character Certificate'),
+        ('experience', 'Experience Certificate'),
+        ('achievement', 'Achievement Certificate'),
+        ('other', 'Other'),
+    )
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='uploaded_certificates')
+    certificate_type = models.CharField(max_length=50, choices=CERTIFICATE_TYPES)
+    certificate_title = models.CharField(max_length=200)
+    certificate_file = models.FileField(upload_to='student_certificates/%Y/%m/')
+    issue_date = models.DateField(null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.student.admin.username} - {self.certificate_title}"
+    
+    class Meta:
+        ordering = ['-uploaded_at']
+
+
 class Certificate(models.Model):
     """Certificate Generation & Management"""
     CERTIFICATE_TYPE = (
@@ -1742,7 +1770,7 @@ class Certificate(models.Model):
         ('achievement', 'Achievement Certificate'),
     )
     
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='certificates')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='official_certificates')
     certificate_type = models.CharField(max_length=30, choices=CERTIFICATE_TYPE)
     certificate_number = models.CharField(max_length=50, unique=True)
     
@@ -2511,7 +2539,7 @@ class LeaveBalance(models.Model):
 
 class AttendanceRegister(models.Model):
     """Employee attendance register"""
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='attendance_records')
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='attendance_records', null=True, blank=True)
     date = models.DateField()
     check_in = models.TimeField(null=True, blank=True)
     check_out = models.TimeField(null=True, blank=True)
@@ -2527,7 +2555,8 @@ class AttendanceRegister(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.staff.admin.first_name} - {self.date}"
+        staff_name = self.staff.admin.first_name if self.staff else "Unknown"
+        return f"{staff_name} - {self.date}"
     
     class Meta:
         ordering = ['-date']
@@ -2539,8 +2568,8 @@ class Bonus(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='bonuses')
     bonus_type = models.CharField(max_length=50)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    reason = models.TextField()
-    bonus_date = models.DateField()
+    reason = models.TextField(blank=True, default='')
+    bonus_date = models.DateField(null=True, blank=True)
     approved_by = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_bonuses')
     approved_date = models.DateTimeField(null=True, blank=True)
     is_approved = models.BooleanField(default=False)
@@ -2560,8 +2589,8 @@ class Loan(models.Model):
     principal_amount = models.DecimalField(max_digits=10, decimal_places=2)
     interest_rate = models.DecimalField(max_digits=5, decimal_places=2)
     tenure_months = models.IntegerField()
-    monthly_emi = models.DecimalField(max_digits=10, decimal_places=2)
-    loan_date = models.DateField()
+    monthly_emi = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    loan_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=[
         ('active', 'Active'),
         ('completed', 'Completed'),
@@ -2753,3 +2782,38 @@ class StudentDocument(models.Model):
     def is_rejected(self):
         """Check if document is rejected"""
         return self.verified_status == 'rejected'
+
+    class Meta:
+        ordering = ['-uploaded_date']
+        unique_together = ['student', 'document_type']
+    
+    def get_file_size(self):
+        """Get file size in human readable format"""
+        if self.file:
+            size = self.file.size
+            for unit in ['B', 'KB', 'MB', 'GB']:
+                if size < 1024.0:
+                    return f"{size:.1f} {unit}"
+                size /= 1024.0
+        return "0 B"
+    
+    def get_file_extension(self):
+        """Get file extension"""
+        if self.file:
+            return self.file.name.split('.')[-1].lower()
+        return ""
+    
+    def is_verified(self):
+        """Check if document is verified"""
+        return self.verified_status == 'verified'
+    
+    def is_pending(self):
+        """Check if document is pending verification"""
+        return self.verified_status == 'pending'
+    
+    def is_rejected(self):
+        """Check if document is rejected"""
+        return self.verified_status == 'rejected'
+
+
+

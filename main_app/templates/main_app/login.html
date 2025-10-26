@@ -170,14 +170,19 @@
                     </div>
                 </form>
 
-                <!-- Public Information Link -->
+                <!-- Public Information Links -->
                 <div class="text-center">
-                    <div class="border-t border-gray-200 pt-6">
+                    <div class="border-t border-gray-200 pt-6 space-y-3">
+                        <a href="{% url 'public_roll_verify' %}" 
+                           class="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500 block">
+                            <i class="fas fa-user-graduate mr-2"></i>
+                            View My Materials & Fees (Enter Roll Number)
+                        </a>
                         <a href="{% url 'public_data' %}" 
-                           class="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-500"
+                           class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-800"
                            target="_blank">
                             <i class="fas fa-globe mr-2"></i>
-                            View Public Information (No Login Required)
+                            View College Information
                         </a>
                     </div>
                 </div>
@@ -269,6 +274,10 @@
                     }
                 }, 5000);
             }
+        });
+    </script>
+</body>
+</html>            }
         });
     </script>
 </body>

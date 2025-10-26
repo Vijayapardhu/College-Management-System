@@ -1,8 +1,318 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block title %}Assignments{% endblock %}
+
+{% block custom_css %}
+<style>
+    .assignment-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid #1e40af;
+        transition: all 0.2s;
+    }
+
+    .assignment-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        transform: translateX(4px);
+    }
+
+    html.dark .assignment-card {
+        background: #1e293b;
+    }
+
+    .assignment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+
+    .assignment-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    html.dark .assignment-title {
+        color: #f1f5f9;
+    }
+
+    .assignment-subject {
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+
+    .status-badge {
+        padding: 0.375rem 0.875rem;
+        border-radius: 6px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+
+    .status-submitted {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #16a34a;
+    }
+
+    .status-pending {
+        background: #fffbeb;
+        color: #92400e;
+        border: 1px solid #f59e0b;
+    }
+
+    .status-overdue {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #dc2626;
+    }
+
+    .assignment-meta {
+        display: flex;
+        gap: 2rem;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 6px;
+    }
+
+    html.dark .assignment-meta {
+        background: #334155;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .meta-item i {
+        color: #1e40af;
+    }
+
+    .assignment-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .btn-submit {
+        padding: 0.625rem 1.5rem;
+        background: #1e40af;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-submit:hover {
+        background: #1e3a8a;
+        transform: translateY(-1px);
+    }
+
+    .btn-view {
+        padding: 0.625rem 1.5rem;
+        background: white;
+        color: #1e40af;
+        border: 2px solid #1e40af;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-view:hover {
+        background: #eff6ff;
+    }
+
+    @media (max-width: 768px) {
+        .assignment-header {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .assignment-meta {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Assignments{% endblock %}
 
 {% block content %}
+<div class="mb-4">
+    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+        <i class="fas fa-tasks"></i> My Assignments
+    </h2>
+    <p style="color: #64748b; margin: 0;">View and submit your course assignments</p>
+</div>
+
+{% if assignment_data %}
+    {% for data in assignment_data %}
+    <div class="assignment-card">
+        <div class="assignment-header">
+            <div>
+                <h3 class="assignment-title">{{ data.assignment.title }}</h3>
+                <p class="assignment-subject">
+                    <i class="fas fa-book"></i> {{ data.assignment.subject.name }}
+                </p>
+            </div>
+            <div>
+                {% if data.submission %}
+                    {% if data.submission.marks_obtained %}
+                        <span class="status-badge status-submitted">
+                            <i class="fas fa-check-circle"></i> Graded: {{ data.submission.marks_obtained }}/{{ data.assignment.max_marks }}
+                        </span>
+                    {% else %}
+                        <span class="status-badge status-submitted">
+                            <i class="fas fa-check"></i> Submitted
+                        </span>
+                    {% endif %}
+                {% elif data.is_overdue %}
+                    <span class="status-badge status-overdue">
+                        <i class="fas fa-exclamation-circle"></i> Overdue
+                    </span>
+                {% else %}
+                    <span class="status-badge status-pending">
+                        <i class="fas fa-clock"></i> Pending
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <p style="color: #475569; line-height: 1.6;">{{ data.assignment.description|truncatewords:30 }}</p>
+
+        <div class="assignment-meta">
+            <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: {{ data.assignment.due_date|date:"M d, Y" }}</span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-trophy"></i>
+                <span>Max Marks: {{ data.assignment.max_marks }}</span>
+            </div>
+            {% if data.submission %}
+            <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>Submitted: {{ data.submission.submitted_at|date:"M d, Y" }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="assignment-actions">
+            {% if not data.submission %}
+            <a href="{% url 'submit_assignment' data.assignment.id %}" class="btn-submit">
+                <i class="fas fa-upload"></i> Submit Assignment
+            </a>
+            {% endif %}
+            {% if data.assignment.attachment %}
+            <a href="{{ data.assignment.attachment.url }}" class="btn-view" download>
+                <i class="fas fa-download"></i> Download
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div style="background: white; padding: 4rem 2rem; text-align: center; border-radius: 8px;">
+    <i class="fas fa-tasks" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">No Assignments</h3>
+    <p style="color: #64748b;">You don't have any assignments at the moment.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+    <p style="color: #64748b; margin: 0;">View and submit your course assignments</p>
+</div>
+
+{% if assignment_data %}
+    {% for data in assignment_data %}
+    <div class="assignment-card">
+        <div class="assignment-header">
+            <div>
+                <h3 class="assignment-title">{{ data.assignment.title }}</h3>
+                <p class="assignment-subject">
+                    <i class="fas fa-book"></i> {{ data.assignment.subject.name }}
+                </p>
+            </div>
+            <div>
+                {% if data.submission %}
+                    {% if data.submission.marks_obtained %}
+                        <span class="status-badge status-submitted">
+                            <i class="fas fa-check-circle"></i> Graded: {{ data.submission.marks_obtained }}/{{ data.assignment.max_marks }}
+                        </span>
+                    {% else %}
+                        <span class="status-badge status-submitted">
+                            <i class="fas fa-check"></i> Submitted
+                        </span>
+                    {% endif %}
+                {% elif data.is_overdue %}
+                    <span class="status-badge status-overdue">
+                        <i class="fas fa-exclamation-circle"></i> Overdue
+                    </span>
+                {% else %}
+                    <span class="status-badge status-pending">
+                        <i class="fas fa-clock"></i> Pending
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <p style="color: #475569; line-height: 1.6;">{{ data.assignment.description|truncatewords:30 }}</p>
+
+        <div class="assignment-meta">
+            <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>Due: {{ data.assignment.due_date|date:"M d, Y" }}</span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-trophy"></i>
+                <span>Max Marks: {{ data.assignment.max_marks }}</span>
+            </div>
+            {% if data.submission %}
+            <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>Submitted: {{ data.submission.submitted_at|date:"M d, Y" }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="assignment-actions">
+            {% if not data.submission %}
+            <a href="{% url 'submit_assignment' data.assignment.id %}" class="btn-submit">
+                <i class="fas fa-upload"></i> Submit Assignment
+            </a>
+            {% endif %}
+            {% if data.assignment.attachment %}
+            <a href="{{ data.assignment.attachment.url }}" class="btn-view" download>
+                <i class="fas fa-download"></i> Download
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div style="background: white; padding: 4rem 2rem; text-align: center; border-radius: 8px;">
+    <i class="fas fa-tasks" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">No Assignments</h3>
+    <p style="color: #64748b;">You don't have any assignments at the moment.</p>
+</div>
+{% endif %}
+{% endblock %}
 
         <!-- Page Header -->
         <div class="page-header-professional">

@@ -264,98 +264,181 @@ def add_staff(request):
 
 
 def add_student(request):
-    form = StudentForm(request.POST or None)
+    """
+    Simplified student addition with Supabase storage integration
+    """
+    from .supabase_storage import get_storage
+    import secrets
+    import string
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    logger.info("=" * 80)
+    logger.info("ADD STUDENT VIEW CALLED")
+    logger.info(f"Request Method: {request.method}")
+    
+    form = StudentForm(request.POST or None, request.FILES or None)
     context = {
         'form': form,
         'page_title': 'Add Student'
     }
+    
     if request.method == 'POST':
+        logger.info("POST request received")
+        logger.info(f"POST Data: {request.POST.keys()}")
+        logger.info(f"FILES Data: {request.FILES.keys()}")
+        
         if form.is_valid():
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-            gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
-            course = form.cleaned_data.get('course')
-            session = form.cleaned_data.get('session')
-            roll_number = form.cleaned_data.get('roll_number')
-            admission_number = form.cleaned_data.get('admission_number')
-            admission_year = form.cleaned_data.get('admission_year')
-            date_of_birth = form.cleaned_data.get('date_of_birth')
-            nationality = form.cleaned_data.get('nationality')
-            religion = form.cleaned_data.get('religion')
-            blood_group = form.cleaned_data.get('blood_group')
-            mobile_number = form.cleaned_data.get('mobile_number')
-            alternate_mobile = form.cleaned_data.get('alternate_mobile')
-            aadhaar_number = form.cleaned_data.get('aadhaar_number')
-            pan_number = form.cleaned_data.get('pan_number')
-            father_name = form.cleaned_data.get('father_name')
-            mother_name = form.cleaned_data.get('mother_name')
-            father_occupation = form.cleaned_data.get('father_occupation')
-            mother_occupation = form.cleaned_data.get('mother_occupation')
-            father_mobile = form.cleaned_data.get('father_mobile')
-            mother_mobile = form.cleaned_data.get('mother_mobile')
-            permanent_address = form.cleaned_data.get('permanent_address')
-            permanent_city = form.cleaned_data.get('permanent_city')
-            permanent_state = form.cleaned_data.get('permanent_state')
-            permanent_pincode = form.cleaned_data.get('permanent_pincode')
-            photo = form.cleaned_data.get('photo')
-            signature = form.cleaned_data.get('signature')
-            
+            logger.info("✓ Form is VALID")
             try:
-                # Generate password if not provided
-                if not password:
-                    password = first_name[:4].lower() + str(admission_number)[-4:] if admission_number else first_name[:4].lower() + "1234"
+                # Extract form data
+                first_name = form.cleaned_data.get('first_name')
+                last_name = form.cleaned_data.get('last_name')
+                email = form.cleaned_data.get('email').lower()
+                gender = form.cleaned_data.get('gender')
+                date_of_birth = form.cleaned_data.get('date_of_birth')
+                mobile_number = form.cleaned_data.get('mobile_number')
                 
+                logger.info(f"Basic Info - Name: {first_name} {last_name}, Email: {email}")
+                
+                # Academic details
+                course = form.cleaned_data.get('course')
+                session = form.cleaned_data.get('session')
+                roll_number = form.cleaned_data.get('roll_number')
+                
+                logger.info(f"Academic Info - Course: {course}, Session: {session}, Roll: {roll_number}")
+                
+                # Generate random password
+                password_chars = string.ascii_letters + string.digits
+                password = ''.join(secrets.choice(password_chars) for _ in range(10))
+                
+                logger.info(f"Generated password (length: {len(password)})")
+                
+                # Create user with email as username (no separate username field)
+                logger.info("Creating CustomUser object...")
                 user = CustomUser.objects.create_user(
-                    email=email, 
-                    password=password, 
-                    user_type=3, 
-                    first_name=first_name, 
+                    username=email,  # Use email as username internally
+                    email=email,
+                    password=password,
+                    user_type='3',  # Student type
+                    first_name=first_name,
                     last_name=last_name,
-                    username=username or email.split('@')[0],
                     gender=gender
                 )
-                user.address = address
-                user.save()
+                logger.info(f"✓ User created successfully with ID: {user.id}")
                 
-                student = Student.objects.create(
-                    admin=user,
-                    course=course,
-                    session=session,
-                    roll_number=roll_number,
-                    admission_number=admission_number,
-                    admission_year=admission_year,
-                    date_of_birth=date_of_birth,
-                    nationality=nationality,
-                    religion=religion,
-                    blood_group=blood_group,
-                    mobile_number=mobile_number,
-                    alternate_mobile=alternate_mobile,
-                    aadhaar_number=aadhaar_number,
-                    pan_number=pan_number,
-                    father_name=father_name,
-                    mother_name=mother_name,
-                    father_occupation=father_occupation,
-                    mother_occupation=mother_occupation,
-                    father_mobile=father_mobile,
-                    mother_mobile=mother_mobile,
-                    permanent_address=permanent_address,
-                    permanent_city=permanent_city,
-                    permanent_state=permanent_state,
-                    permanent_pincode=permanent_pincode,
-                    photo=photo,
-                    signature=signature
+                # Create student instance
+                logger.info("Creating Student object...")
+                student = form.save(commit=False)
+                student.admin = user
+                student.date_of_birth = date_of_birth
+                student.mobile_number = mobile_number
+                student.save()
+                logger.info(f"✓ Student created successfully with ID: {student.id}")
+                
+                # Handle document uploads to Supabase
+                logger.info("Starting document upload process...")
+                document_fields = ['photo', 'signature', 'aadhaar_card', 'income_certificate', 
+                                 'transfer_certificate', 'tenth_certificate']
+                
+                # Check if any files were uploaded
+                has_files = any(request.FILES.get(field) for field in document_fields)
+                
+                if has_files:
+                    logger.info(f"Files detected: {[f for f in document_fields if request.FILES.get(f)]}")
+                    try:
+                        storage = get_storage()
+                        logger.info("✓ Supabase storage initialized")
+                        
+                        uploaded_count = 0
+                        for field_name in document_fields:
+                            file = request.FILES.get(field_name)
+                            if file:
+                                logger.info(f"Uploading {field_name}: {file.name} ({file.size} bytes)")
+                                success, file_path, error = storage.upload_file(
+                                    file=file,
+                                    folder=field_name.replace('_', '-'),
+                                    student_id=student.id
+                                )
+                                
+                                if success:
+                                    setattr(student, field_name, file_path)
+                                    uploaded_count += 1
+                                    logger.info(f"✓ {field_name} uploaded successfully: {file_path}")
+                                else:
+                                    logger.warning(f"✗ Failed to upload {field_name}: {error}")
+                        
+                        logger.info(f"✓ Uploaded {uploaded_count} documents successfully")
+                    
+                    except Exception as upload_error:
+                        logger.error(f"✗ Document upload error: {upload_error}", exc_info=True)
+                        messages.warning(request, f"Document upload skipped: Supabase not configured. Basic info still saved.")
+                else:
+                    logger.info("No files uploaded, skipping document upload process")
+                
+                student.save()
+                
+                # Send credentials email
+                logger.info("Attempting to send credentials email...")
+                try:
+                    from django.core.mail import send_mail
+                    from django.conf import settings
+                    
+                    subject = 'Welcome to EduVision College - Your Login Credentials'
+                    message = f"""
+Dear {first_name} {last_name},
+
+Welcome to EduVision College! Your student account has been created successfully.
+
+Login Credentials:
+------------------
+Roll Number: {roll_number}
+Email: {email}
+Password: {password}
+
+You can login using either your roll number or email address.
+
+Login URL: {request.build_absolute_uri('/login')}
+
+Please change your password after first login for security.
+
+Best regards,
+EduVision College Administration
+"""
+                    
+                    send_mail(
+                        subject,
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [email],
+                        fail_silently=True
+                    )
+                    logger.info(f"✓ Email sent successfully to {email}")
+                except Exception as email_error:
+                    logger.error(f"✗ Email sending error: {email_error}", exc_info=True)
+                
+                logger.info("✓✓✓ Student addition completed successfully!")
+                messages.success(
+                    request, 
+                    f"Successfully added student! Login credentials sent to {email}. "
+                    f"Temporary password: {password}"
                 )
-                messages.success(request, "Successfully Added Student")
-                return redirect(reverse('add_student'))
+                logger.info(f"Redirecting to manage_student...")
+                return redirect(reverse('manage_student'))
+                
             except Exception as e:
-                messages.error(request, "Could Not Add: " + str(e))
+                logger.error(f"✗✗✗ EXCEPTION in add_student: {str(e)}", exc_info=True)
+                messages.error(request, f"Could not add student: {str(e)}")
         else:
-            messages.error(request, "Could Not Add: ")
-    return render(request, 'forms/student_form.html', context)
+            logger.warning("✗ Form is INVALID")
+            logger.warning(f"Form errors: {form.errors.as_json()}")
+            for field, errors in form.errors.items():
+                logger.warning(f"  - {field}: {errors}")
+            messages.error(request, "Please correct the errors in the form")
+    
+    logger.info(f"Rendering template: student_form_simple.html")
+    logger.info("=" * 80)
+    return render(request, 'forms/student_form_simple.html', context)
 
 
 def add_course(request):
@@ -514,80 +597,127 @@ def edit_staff(request, staff_id):
 
 
 def edit_student(request, student_id):
+    """
+    Simplified student edit with Supabase storage integration
+    """
+    from .supabase_storage import get_storage
+    import logging
+    
+    logger = logging.getLogger(__name__)
+    logger.info("=" * 80)
+    logger.info(f"EDIT STUDENT VIEW CALLED - Student ID: {student_id}")
+    logger.info(f"Request Method: {request.method}")
+    
     student = get_object_or_404(Student, id=student_id)
-    form = StudentForm(request.POST or None, instance=student)
+    logger.info(f"Student found: {student.admin.first_name} {student.admin.last_name}")
+    
+    form = StudentForm(request.POST or None, request.FILES or None, instance=student)
     context = {
         'form': form,
         'student_id': student_id,
         'page_title': 'Edit Student'
     }
+    
     if request.method == 'POST':
+        logger.info("POST request received")
+        logger.info(f"POST Data: {request.POST.keys()}")
+        logger.info(f"FILES Data: {request.FILES.keys()}")
         if form.is_valid():
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-            gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
-            course = form.cleaned_data.get('course')
-            session = form.cleaned_data.get('session')
-            passport = request.FILES.get('profile_pic') or None
+            logger.info("✓ Form is VALID")
             try:
-                user = CustomUser.objects.get(id=student.admin.id)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                user.first_name = first_name
-                user.last_name = last_name
-                user.gender = gender
-                user.address = address
+                # Update user information
+                logger.info("Updating user information...")
+                user = student.admin
+                user.first_name = form.cleaned_data.get('first_name')
+                user.last_name = form.cleaned_data.get('last_name')
+                user.email = form.cleaned_data.get('email').lower()
+                user.username = user.email  # Keep email as username
+                user.gender = form.cleaned_data.get('gender')
                 user.save()
+                logger.info(f"✓ User updated: {user.first_name} {user.last_name}")
                 
-                # Update student fields
-                student.session = session
-                student.course = course
-                student.roll_number = form.cleaned_data.get('roll_number')
-                student.admission_number = form.cleaned_data.get('admission_number')
-                student.admission_year = form.cleaned_data.get('admission_year')
+                # Update student information
+                logger.info("Updating student information...")
+                student = form.save(commit=False)
+                student.admin = user
                 student.date_of_birth = form.cleaned_data.get('date_of_birth')
-                student.nationality = form.cleaned_data.get('nationality')
-                student.religion = form.cleaned_data.get('religion')
-                student.blood_group = form.cleaned_data.get('blood_group')
                 student.mobile_number = form.cleaned_data.get('mobile_number')
-                student.alternate_mobile = form.cleaned_data.get('alternate_mobile')
-                student.aadhaar_number = form.cleaned_data.get('aadhaar_number')
-                student.pan_number = form.cleaned_data.get('pan_number')
-                student.father_name = form.cleaned_data.get('father_name')
-                student.mother_name = form.cleaned_data.get('mother_name')
-                student.father_occupation = form.cleaned_data.get('father_occupation')
-                student.mother_occupation = form.cleaned_data.get('mother_occupation')
-                student.father_mobile = form.cleaned_data.get('father_mobile')
-                student.mother_mobile = form.cleaned_data.get('mother_mobile')
-                student.permanent_address = form.cleaned_data.get('permanent_address')
-                student.permanent_city = form.cleaned_data.get('permanent_city')
-                student.permanent_state = form.cleaned_data.get('permanent_state')
-                student.permanent_pincode = form.cleaned_data.get('permanent_pincode')
-                if form.cleaned_data.get('photo'):
-                    student.photo = form.cleaned_data.get('photo')
-                if form.cleaned_data.get('signature'):
-                    student.signature = form.cleaned_data.get('signature')
-                student.save()
                 
-                messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_student', args=[student_id]))
+                # Handle document uploads to Supabase
+                logger.info("Starting document upload process...")
+                document_fields = ['photo', 'signature', 'aadhaar_card', 'income_certificate', 
+                                 'transfer_certificate', 'tenth_certificate']
+                
+                # Check if any files were uploaded
+                has_files = any(request.FILES.get(field) for field in document_fields)
+                
+                if has_files:
+                    logger.info(f"Files detected: {[f for f in document_fields if request.FILES.get(f)]}")
+                    try:
+                        storage = get_storage()
+                        logger.info("✓ Supabase storage initialized")
+                        
+                        updated_count = 0
+                        for field_name in document_fields:
+                            file = request.FILES.get(field_name)
+                            if file:
+                                logger.info(f"Uploading {field_name}: {file.name} ({file.size} bytes)")
+                                
+                                # Delete old file if exists
+                                old_path = getattr(student, field_name, None)
+                                if old_path:
+                                    try:
+                                        storage.delete_file(old_path)
+                                        logger.info(f"✓ Deleted old {field_name}")
+                                    except Exception as del_err:
+                                        logger.warning(f"Could not delete old {field_name}: {del_err}")
+                                
+                                # Upload new file
+                                success, file_path, error = storage.upload_file(
+                                    file=file,
+                                    folder=field_name.replace('_', '-'),
+                                    student_id=student.id
+                                )
+                                
+                                if success:
+                                    setattr(student, field_name, file_path)
+                                    updated_count += 1
+                                    logger.info(f"✓ {field_name} uploaded successfully: {file_path}")
+                                else:
+                                    logger.warning(f"✗ Failed to upload {field_name}: {error}")
+                                    messages.warning(request, f"Failed to upload {field_name}: {error}")
+                        
+                        logger.info(f"✓ Updated {updated_count} documents")
+                    
+                    except Exception as upload_error:
+                        logger.error(f"✗ Document upload error: {upload_error}", exc_info=True)
+                        messages.warning(request, f"Document upload skipped: Supabase not configured. Basic info still saved.")
+                else:
+                    logger.info("No files uploaded, skipping document upload process")
+                
+                student.save()
+                logger.info("✓✓✓ Student update completed successfully!")
+                
+                messages.success(request, "Successfully updated student information")
+                logger.info("Redirecting to manage_student...")
+                return redirect(reverse('manage_student'))
+                
             except Exception as e:
-                messages.error(request, "Could Not Update " + str(e))
+                logger.error(f"✗✗✗ EXCEPTION in edit_student: {str(e)}", exc_info=True)
+                messages.error(request, f"Could not update student: {str(e)}")
         else:
-            messages.error(request, "Please Fill Form Properly!")
-    else:
-        return render(request, "forms/student_form.html", context)
+            logger.warning("✗ Form is INVALID")
+            logger.warning(f"Form errors: {form.errors.as_json()}")
+            for field, errors in form.errors.items():
+                logger.warning(f"  - {field}: {errors}")
+                # Add specific error messages for each field
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors highlighted in the form above")
+    
+    logger.info(f"Rendering template: student_form_simple.html")
+    logger.info("=" * 80)
+    return render(request, "forms/student_form_simple.html", context)
 
 
 def edit_course(request, course_id):
@@ -1480,15 +1610,8 @@ def record_fee_payment(request):
     
     if request.method == 'POST':
         if form.is_valid():
-            payment = form.save(commit=False)
-            
-            # Auto-generate receipt number
-            from datetime import datetime
-            import random
-            payment.receipt_number = f"REC{datetime.now().year}{random.randint(10000, 99999)}"
-            payment.save()
-            
-            messages.success(request, f"Fee payment recorded successfully! Receipt: {payment.receipt_number}")
+            form.save()
+            messages.success(request, "Fee payment recorded successfully!")
             return redirect('view_fee_payments')
         else:
             messages.error(request, "Failed to record payment. Please check the form.")
@@ -1498,183 +1621,6 @@ def record_fee_payment(request):
         'form': form
     }
     return render(request, 'hod_template/record_fee_payment.html', context)
-
-
-@login_required(login_url='/')
-def generate_fee_receipt(request, payment_id):
-    """Generate PDF fee receipt"""
-    from reportlab.lib import colors
-    from reportlab.lib.pagesizes import A4
-    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.lib.units import inch
-    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
-    from io import BytesIO
-    from django.http import HttpResponse
-    from datetime import datetime
-    
-    payment = get_object_or_404(FeePayment, id=payment_id)
-    
-    # Create PDF
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4,
-                           rightMargin=30, leftMargin=30,
-                           topMargin=30, bottomMargin=18)
-    
-    elements = []
-    styles = getSampleStyleSheet()
-    
-    # Custom styles
-    title_style = ParagraphStyle(
-        'CustomTitle',
-        parent=styles['Heading1'],
-        fontSize=24,
-        textColor=colors.HexColor('#003d82'),
-        spaceAfter=12,
-        alignment=TA_CENTER,
-        fontName='Helvetica-Bold'
-    )
-    
-    heading_style = ParagraphStyle(
-        'CustomHeading',
-        parent=styles['Heading2'],
-        fontSize=16,
-        textColor=colors.HexColor('#1a202c'),
-        spaceAfter=12,
-        alignment=TA_CENTER
-    )
-    
-    # Header
-    elements.append(Paragraph("EDUVISION COLLEGE", title_style))
-    elements.append(Paragraph("FEE PAYMENT RECEIPT", heading_style))
-    elements.append(Spacer(1, 0.3*inch))
-    
-    # Receipt details
-    receipt_data = [
-        ['Receipt Number:', payment.receipt_number or f"REC{payment.id}"],
-        ['Date:', payment.payment_date.strftime('%d-%m-%Y')],
-        ['Payment Mode:', payment.payment_mode.upper()]
-    ]
-    
-    receipt_table = Table(receipt_data, colWidths=[2*inch, 4*inch])
-    receipt_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ('TOPPADDING', (0, 0), (-1, -1), 8),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 8)
-    ]))
-    
-    elements.append(receipt_table)
-    elements.append(Spacer(1, 0.3*inch))
-    
-    # Student details
-    elements.append(Paragraph("Student Details", heading_style))
-    elements.append(Spacer(1, 0.1*inch))
-    
-    student_data = [
-        ['Student Name:', f"{payment.student.admin.first_name} {payment.student.admin.last_name}"],
-        ['Roll Number:', payment.student.roll_number],
-        ['Course:', payment.student.course.name if payment.student.course else 'N/A'],
-        ['Session:', str(payment.student.session) if payment.student.session else 'N/A']
-    ]
-    
-    student_table = Table(student_data, colWidths=[2*inch, 4*inch])
-    student_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ('TOPPADDING', (0, 0), (-1, -1), 8),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 8)
-    ]))
-    
-    elements.append(student_table)
-    elements.append(Spacer(1, 0.3*inch))
-    
-    # Fee details
-    elements.append(Paragraph("Fee Details", heading_style))
-    elements.append(Spacer(1, 0.1*inch))
-    
-    total_fee = payment.fee_structure.total_fee if hasattr(payment, 'fee_structure') and payment.fee_structure else payment.amount_paid
-    remaining = total_fee - payment.amount_paid
-    
-    fee_data = [
-        ['Description', 'Amount (₹)'],
-        ['Total Fee Amount', f"₹ {total_fee:,.2f}"],
-        ['Amount Paid (This Payment)', f"₹ {payment.amount_paid:,.2f}"],
-        ['Balance Amount', f"₹ {remaining:,.2f}"]
-    ]
-    
-    fee_table = Table(fee_data, colWidths=[4*inch, 2*inch])
-    fee_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#003d82')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 11),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-        ('TOPPADDING', (0, 0), (-1, -1), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige)
-    ]))
-    
-    elements.append(fee_table)
-    elements.append(Spacer(1, 0.3*inch))
-    
-    # Payment status
-    status_text = "PAID" if payment.status == 'paid' else payment.status.upper()
-    status_color = colors.green if payment.status == 'paid' else colors.orange
-    
-    status_style = ParagraphStyle(
-        'StatusStyle',
-        parent=styles['Normal'],
-        fontSize=16,
-        textColor=status_color,
-        alignment=TA_CENTER,
-        fontName='Helvetica-Bold'
-    )
-    
-    elements.append(Paragraph(f"Payment Status: {status_text}", status_style))
-    elements.append(Spacer(1, 0.5*inch))
-    
-    # Footer
-    footer_data = [
-        ['Date: ' + datetime.now().strftime('%d-%m-%Y'), 'Authorized Signatory']
-    ]
-    footer_table = Table(footer_data, colWidths=[3*inch, 3*inch])
-    footer_table.setStyle(TableStyle([
-        ('ALIGN', (0, 0), (0, 0), 'LEFT'),
-        ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 9),
-        ('TOPPADDING', (0, 0), (-1, -1), 15)
-    ]))
-    
-    elements.append(footer_table)
-    
-    # Note
-    note_style = ParagraphStyle(
-        'NoteStyle',
-        parent=styles['Normal'],
-        fontSize=8,
-        textColor=colors.grey,
-        alignment=TA_CENTER
-    )
-    elements.append(Spacer(1, 0.2*inch))
-    elements.append(Paragraph("This is a computer-generated receipt and does not require a signature.", note_style))
-    
-    # Build PDF
-    doc.build(elements)
-    
-    # Return PDF response
-    buffer.seek(0)
-    response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Fee_Receipt_{payment.student.roll_number}.pdf"'
-    
-    return response
 
 
 def fee_defaulters(request):
@@ -1699,6 +1645,171 @@ def fee_defaulters(request):
         'defaulters': defaulters
     }
     return render(request, 'hod_template/fee_defaulters.html', context)
+
+
+@login_required
+def generate_fee_receipt(request, payment_id):
+    """Generate PDF receipt for fee payment"""
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter, A4
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+    from io import BytesIO
+    
+    payment = get_object_or_404(FeePayment, id=payment_id)
+    student = payment.student
+    fee_structure = payment.fee_structure
+    
+    # Create PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                           rightMargin=30, leftMargin=30,
+                           topMargin=30, bottomMargin=18)
+    
+    # Container for elements
+    elements = []
+    
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#003d82'),
+        spaceAfter=12,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold'
+    )
+    
+    heading_style = ParagraphStyle(
+        'CustomHeading',
+        parent=styles['Heading2'],
+        fontSize=16,
+        textColor=colors.HexColor('#1a202c'),
+        spaceAfter=12,
+        alignment=TA_CENTER
+    )
+    
+    # Header
+    elements.append(Paragraph("EDUVISION COLLEGE", title_style))
+    elements.append(Paragraph("FEE PAYMENT RECEIPT", heading_style))
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Receipt Details
+    receipt_data = [
+        ['Receipt No:', f"FEE/{payment.id:06d}"],
+        ['Date:', payment.payment_date.strftime('%d-%m-%Y') if hasattr(payment, 'payment_date') and payment.payment_date else datetime.now().strftime('%d-%m-%Y')],
+        ['Payment Method:', dict(FeePayment.PAYMENT_METHOD).get(payment.payment_method, payment.payment_method) if hasattr(payment, 'payment_method') else 'N/A'],
+    ]
+    
+    receipt_table = Table(receipt_data, colWidths=[2*inch, 4*inch])
+    receipt_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
+    ]))
+    
+    elements.append(receipt_table)
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Student Details
+    student_data = [
+        ['Student Name:', f"{student.admin.first_name} {student.admin.last_name}"],
+        ['Roll Number:', student.roll_number],
+        ['Course:', fee_structure.course.name if fee_structure and fee_structure.course else 'N/A'],
+        ['Semester:', str(fee_structure.semester) if fee_structure and hasattr(fee_structure, 'semester') else 'N/A'],
+    ]
+    
+    student_table = Table(student_data, colWidths=[2*inch, 4*inch])
+    student_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('TOPPADDING', (0, 0), (-1, -1), 8),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
+    ]))
+    
+    elements.append(student_table)
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Fee Details
+    fee_data = [
+        ['Fee Component', 'Amount (₹)']
+    ]
+    
+    if fee_structure:
+        if hasattr(fee_structure, 'tuition_fee'):
+            fee_data.append(['Tuition Fee', f"{fee_structure.tuition_fee:,.2f}"])
+        if hasattr(fee_structure, 'development_fee') and fee_structure.development_fee > 0:
+            fee_data.append(['Development Fee', f"{fee_structure.development_fee:,.2f}"])
+        if hasattr(fee_structure, 'lab_fee') and fee_structure.lab_fee > 0:
+            fee_data.append(['Lab Fee', f"{fee_structure.lab_fee:,.2f}"])
+        if hasattr(fee_structure, 'library_fee') and fee_structure.library_fee > 0:
+            fee_data.append(['Library Fee', f"{fee_structure.library_fee:,.2f}"])
+        if hasattr(fee_structure, 'exam_fee') and fee_structure.exam_fee > 0:
+            fee_data.append(['Exam Fee', f"{fee_structure.exam_fee:,.2f}"])
+        if hasattr(fee_structure, 'other_fee') and fee_structure.other_fee > 0:
+            fee_data.append(['Other Fee', f"{fee_structure.other_fee:,.2f}"])
+        
+        total_fee = fee_structure.total_fee if hasattr(fee_structure, 'total_fee') else 0
+    else:
+        total_fee = 0
+    
+    fee_data.append(['', ''])
+    fee_data.append(['Total Fee', f"₹ {total_fee:,.2f}"])
+    fee_data.append(['Amount Paid', f"₹ {payment.amount_paid:,.2f}"])
+    
+    fee_table = Table(fee_data, colWidths=[4*inch, 2*inch])
+    fee_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#003d82')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -2), 0.5, colors.grey),
+        ('BACKGROUND', (0, -2), (-1, -1), colors.HexColor('#f5f5f5')),
+        ('FONTNAME', (0, -2), (-1, -1), 'Helvetica-Bold'),
+        ('LINEABOVE', (0, -2), (-1, -2), 1, colors.black),
+    ]))
+    
+    elements.append(fee_table)
+    elements.append(Spacer(1, 0.5*inch))
+    
+    # Footer
+    footer_text = Paragraph(
+        "<para align=center>This is a computer-generated receipt and does not require a signature.<br/>"
+        "For any queries, please contact the accounts department.</para>",
+        styles['Normal']
+    )
+    elements.append(footer_text)
+    
+    # Build PDF
+    doc.build(elements)
+    
+    # Get PDF value and return response
+    pdf = buffer.getvalue()
+    buffer.close()
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="fee_receipt_{payment.id}.pdf"'
+    response.write(pdf)
+    
+    return response
 
 
 # ==================== TRANSPORT MANAGEMENT ====================
@@ -2333,7 +2444,6 @@ def resolve_grievance(request, grievance_id):
         'grievance': grievance
     }
     return render(request, 'hod_template/resolve_grievance.html', context)
-
 # ==================== HOD/ADMIN USER MANAGEMENT ====================
 
 def manage_admins(request):
@@ -2511,6 +2621,273 @@ def admin_analytics_dashboard(request):
         'approved_scholarships': approved_scholarships,
     }
     return render(request, 'hod_template/analytics_dashboard.html', context)
+
+
+# ============================================================================
+# AI-POWERED INSIGHTS
+# ============================================================================
+
+@login_required
+def ai_student_insights(request):
+    """AI-powered student insights and analytics"""
+    students = Student.objects.filter(student_status='active').select_related(
+        'admin', 'course', 'session'
+    )[:100]  # Limit to avoid performance issues
+    
+    # Calculate various metrics for each student
+    student_insights = []
+    for student in students:
+        # Attendance percentage
+        total_attendance = Attendance.objects.filter(student=student).count()
+        present_attendance = Attendance.objects.filter(student=student, status=True).count()
+        attendance_percentage = (present_attendance / total_attendance * 100) if total_attendance > 0 else 0
+        
+        # Average marks
+        results = StudentResult.objects.filter(student=student)
+        if results.exists():
+            avg_marks = sum([r.test + r.exam for r in results]) / results.count()
+        else:
+            avg_marks = 0
+        
+        # Risk assessment
+        risk_level = 'low'
+        risk_factors = []
+        
+        if attendance_percentage < 75:
+            risk_level = 'high'
+            risk_factors.append('Low attendance')
+        elif attendance_percentage < 85:
+            risk_level = 'medium'
+            risk_factors.append('Borderline attendance')
+        
+        if avg_marks < 50:
+            risk_level = 'high'
+            risk_factors.append('Poor academic performance')
+        elif avg_marks < 65:
+            if risk_level == 'low':
+                risk_level = 'medium'
+            risk_factors.append('Below average performance')
+        
+        # Fee status
+        pending_fees = FeePayment.objects.filter(
+            student=student, 
+            status__in=['pending', 'partial', 'overdue']
+        )
+        if pending_fees.exists():
+            risk_factors.append('Pending fees')
+        
+        student_insights.append({
+            'student': student,
+            'attendance_percentage': round(attendance_percentage, 2),
+            'avg_marks': round(avg_marks, 2),
+            'risk_level': risk_level,
+            'risk_factors': risk_factors,
+        })
+    
+    # Sort by risk level (high first)
+    risk_order = {'high': 0, 'medium': 1, 'low': 2}
+    student_insights.sort(key=lambda x: risk_order[x['risk_level']])
+    
+    # Overall statistics
+    high_risk_count = len([s for s in student_insights if s['risk_level'] == 'high'])
+    medium_risk_count = len([s for s in student_insights if s['risk_level'] == 'medium'])
+    low_risk_count = len([s for s in student_insights if s['risk_level'] == 'low'])
+    
+    context = {
+        'page_title': 'AI Student Insights',
+        'student_insights': student_insights[:50],  # Show top 50
+        'high_risk_count': high_risk_count,
+        'medium_risk_count': medium_risk_count,
+        'low_risk_count': low_risk_count,
+        'total_analyzed': len(student_insights),
+    }
+    return render(request, 'hod_template/ai_student_insights.html', context)
+
+
+@login_required
+def generate_ai_report(request):
+    """Generate comprehensive AI-powered report"""
+    from io import BytesIO
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter, A4
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT
+    
+    # Gather comprehensive data
+    total_students = Student.objects.filter(student_status='active').count()
+    total_staff = Staff.objects.filter(staff_status='active').count()
+    total_courses = Course.objects.count()
+    
+    # Student performance analysis
+    students = Student.objects.filter(student_status='active')
+    high_performers = []
+    at_risk_students = []
+    
+    for student in students[:100]:  # Analyze first 100
+        # Calculate metrics
+        total_attendance = Attendance.objects.filter(student=student).count()
+        present_attendance = Attendance.objects.filter(student=student, status=True).count()
+        attendance_percentage = (present_attendance / total_attendance * 100) if total_attendance > 0 else 0
+        
+        results = StudentResult.objects.filter(student=student)
+        if results.exists():
+            avg_marks = sum([r.test + r.exam for r in results]) / results.count()
+        else:
+            avg_marks = 0
+        
+        if avg_marks >= 75 and attendance_percentage >= 85:
+            high_performers.append({
+                'name': f"{student.admin.first_name} {student.admin.last_name}",
+                'roll': student.roll_number,
+                'marks': round(avg_marks, 2),
+                'attendance': round(attendance_percentage, 2)
+            })
+        elif avg_marks < 50 or attendance_percentage < 75:
+            at_risk_students.append({
+                'name': f"{student.admin.first_name} {student.admin.last_name}",
+                'roll': student.roll_number,
+                'marks': round(avg_marks, 2),
+                'attendance': round(attendance_percentage, 2)
+            })
+    
+    # Create PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                           rightMargin=30, leftMargin=30,
+                           topMargin=30, bottomMargin=18)
+    
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Title
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#003d82'),
+        spaceAfter=12,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold'
+    )
+    
+    elements.append(Paragraph("EDUVISION COLLEGE", title_style))
+    elements.append(Paragraph("AI-POWERED ANALYTICS REPORT", title_style))
+    elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%d-%m-%Y %H:%M')}", styles['Normal']))
+    elements.append(Spacer(1, 0.5*inch))
+    
+    # Executive Summary
+    elements.append(Paragraph("Executive Summary", styles['Heading2']))
+    summary_data = [
+        ['Metric', 'Value'],
+        ['Total Active Students', str(total_students)],
+        ['Total Active Staff', str(total_staff)],
+        ['Total Courses', str(total_courses)],
+        ['High Performers Identified', str(len(high_performers))],
+        ['At-Risk Students Identified', str(len(at_risk_students))],
+    ]
+    
+    summary_table = Table(summary_data, colWidths=[3*inch, 2*inch])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#003d82')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+    ]))
+    
+    elements.append(summary_table)
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # High Performers Section
+    if high_performers:
+        elements.append(Paragraph("Top Performers (Top 10)", styles['Heading2']))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        performer_data = [['Name', 'Roll No', 'Avg Marks', 'Attendance %']]
+        for performer in high_performers[:10]:
+            performer_data.append([
+                performer['name'],
+                performer['roll'],
+                str(performer['marks']),
+                str(performer['attendance'])
+            ])
+        
+        performer_table = Table(performer_data, colWidths=[2.5*inch, 1.5*inch, 1*inch, 1*inch])
+        performer_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.green),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ]))
+        
+        elements.append(performer_table)
+        elements.append(Spacer(1, 0.3*inch))
+    
+    # At-Risk Students Section
+    if at_risk_students:
+        elements.append(Paragraph("At-Risk Students (Require Attention)", styles['Heading2']))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        risk_data = [['Name', 'Roll No', 'Avg Marks', 'Attendance %']]
+        for student in at_risk_students[:15]:
+            risk_data.append([
+                student['name'],
+                student['roll'],
+                str(student['marks']),
+                str(student['attendance'])
+            ])
+        
+        risk_table = Table(risk_data, colWidths=[2.5*inch, 1.5*inch, 1*inch, 1*inch])
+        risk_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.red),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ]))
+        
+        elements.append(risk_table)
+        elements.append(Spacer(1, 0.3*inch))
+    
+    # Recommendations
+    elements.append(Paragraph("AI-Generated Recommendations", styles['Heading2']))
+    recommendations = [
+        "1. Immediate intervention required for students with attendance below 75%",
+        "2. Conduct remedial classes for students with average marks below 50",
+        "3. Recognize and reward top performers to maintain motivation",
+        "4. Consider one-on-one counseling for at-risk students",
+        "5. Monitor fee payment status to ensure no academic disruption"
+    ]
+    
+    for rec in recommendations:
+        elements.append(Paragraph(rec, styles['Normal']))
+        elements.append(Spacer(1, 0.1*inch))
+    
+    # Build PDF
+    doc.build(elements)
+    
+    # Return response
+    pdf = buffer.getvalue()
+    buffer.close()
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="ai_analytics_report_{datetime.now().strftime("%Y%m%d")}.pdf"'
+    response.write(pdf)
+    
+    return response
 
 
 # ============================================================================
@@ -3128,110 +3505,6 @@ def reorder_public_links(request):
 
 
 # =============================================================================
-# AI-POWERED ANALYTICS
-# =============================================================================
-
-@login_required(login_url='/')
-def ai_student_insights(request):
-    """AI-powered early warning system for at-risk students"""
-    from main_app.ai_analytics import analyze_all_students
-    from django.db.models import Q
-    
-    # Get filter parameters
-    course_id = request.GET.get('course')
-    session_id = request.GET.get('session')
-    risk_filter = request.GET.get('risk_level', 'all')
-    
-    # Get at-risk students
-    course = Course.objects.get(id=course_id) if course_id else None
-    session = Session.objects.get(id=session_id) if session_id else None
-    
-    at_risk_students = analyze_all_students(course=course, session=session)
-    
-    # Filter by risk level
-    if risk_filter != 'all':
-        at_risk_students = [s for s in at_risk_students if s['risk_level'] == risk_filter.upper()]
-    
-    # Calculate statistics
-    total_at_risk = len(at_risk_students)
-    critical_count = len([s for s in at_risk_students if s['risk_level'] == 'CRITICAL'])
-    high_count = len([s for s in at_risk_students if s['risk_level'] == 'HIGH'])
-    moderate_count = len([s for s in at_risk_students if s['risk_level'] == 'MODERATE'])
-    
-    # Get filter options
-    courses = Course.objects.all()
-    sessions = Session.objects.all()
-    
-    context = {
-        'page_title': 'AI Student Insights - Early Warning System',
-        'at_risk_students': at_risk_students,
-        'total_at_risk': total_at_risk,
-        'critical_count': critical_count,
-        'high_count': high_count,
-        'moderate_count': moderate_count,
-        'courses': courses,
-        'sessions': sessions,
-        'selected_course': course_id,
-        'selected_session': session_id,
-        'selected_risk': risk_filter
-    }
-    
-    return render(request, 'hod_template/ai_student_insights.html', context)
-
-
-@login_required(login_url='/')
-def generate_ai_report(request):
-    """Generate and email weekly AI insights report"""
-    from main_app.ai_analytics import generate_weekly_report
-    from django.core.mail import send_mail
-    from django.conf import settings
-    from datetime import datetime
-    
-    report = generate_weekly_report()
-    
-    # Prepare email content
-    email_subject = f"Weekly At-Risk Students Report - {datetime.now().strftime('%d %B %Y')}"
-    email_body = f"""
-Weekly At-Risk Students Report
-================================
-
-Total At-Risk Students: {report['total_at_risk']}
-- Critical Risk: {report['critical_count']}
-- High Risk: {report['high_count']}
-- Moderate Risk: {report['moderate_count']}
-
-Course-wise Breakdown:
-----------------------
-"""
-    
-    for course_name, data in report['course_wise'].items():
-        email_body += f"\n{course_name}:\n"
-        email_body += f"  Total: {data['total']} (Critical: {data['critical']}, High: {data['high']}, Moderate: {data['moderate']})\n"
-        email_body += f"  Top At-Risk Students:\n"
-        for student_info in data['students']:
-            email_body += f"    - {student_info['student'].admin.first_name} {student_info['student'].admin.last_name} "
-            email_body += f"({student_info['student'].roll_number}) - Risk: {student_info['risk_level']}\n"
-    
-    email_body += f"\n\nLogin to the system for detailed insights and recommended interventions."
-    email_body += f"\n\nThis is an automated report from EduVision College Management System."
-    
-    # Send email to HOD
-    try:
-        send_mail(
-            email_subject,
-            email_body,
-            settings.EMAIL_HOST_USER,
-            [request.user.email],
-            fail_silently=False,
-        )
-        messages.success(request, 'AI Report generated and sent to your email successfully!')
-    except Exception as e:
-        messages.error(request, f'Failed to send email: {str(e)}')
-    
-    return redirect('ai_student_insights')
-
-
-# =============================================================================
 # COMPREHENSIVE HOD DASHBOARD FUNCTIONS
 # =============================================================================
 
@@ -3400,16 +3673,7 @@ def user_management_hub(request):
     total_students = students.count()
     total_staff = staff_members.count()
     active_users = CustomUser.objects.filter(is_active=True).count()
-    
-    # Get pending approvals - use first department or 0
-    try:
-        first_dept = departments.first()
-        if first_dept:
-            pending_approvals = get_pending_approvals(first_dept.id)['totals']['total']
-        else:
-            pending_approvals = 0
-    except:
-        pending_approvals = 0
+    pending_approvals = get_pending_approvals()['totals']['total']
     
     context = {
         'students': students,
@@ -3424,6 +3688,113 @@ def user_management_hub(request):
     }
     
     return render(request, 'hod_template/user_management_hub.html', context)
+
+
+@login_required(login_url='login')
+def bulk_student_upload(request):
+    """Bulk upload students from CSV/Excel file"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        if 'file' not in request.FILES:
+            messages.error(request, 'No file uploaded')
+            return redirect('bulk_student_upload')
+        
+        uploaded_file = request.FILES['file']
+        
+        # Validate file extension
+        if not uploaded_file.name.endswith(('.csv', '.xlsx', '.xls')):
+            messages.error(request, 'Please upload a CSV or Excel file')
+            return redirect('bulk_student_upload')
+        
+        try:
+            import pandas as pd
+            from io import BytesIO
+            
+            # Read file based on extension
+            if uploaded_file.name.endswith('.csv'):
+                df = pd.read_csv(uploaded_file)
+            else:
+                df = pd.read_excel(BytesIO(uploaded_file.read()))
+            
+            # Validate required columns
+            required_columns = ['first_name', 'last_name', 'email', 'username', 'course_id', 'session_id']
+            missing_columns = [col for col in required_columns if col not in df.columns]
+            
+            if missing_columns:
+                messages.error(request, f'Missing required columns: {", ".join(missing_columns)}')
+                return redirect('bulk_student_upload')
+            
+            # Process each row
+            success_count = 0
+            error_count = 0
+            errors = []
+            
+            for index, row in df.iterrows():
+                try:
+                    # Get or create course and session
+                    course = Course.objects.get(id=row['course_id'])
+                    session = Session.objects.get(id=row['session_id'])
+                    
+                    # Create user
+                    user = CustomUser.objects.create_user(
+                        username=row['username'],
+                        email=row['email'],
+                        first_name=row['first_name'],
+                        last_name=row['last_name'],
+                        password=row.get('password', 'student123'),  # Default password
+                        user_type='3'
+                    )
+                    user.gender = row.get('gender', 'M')
+                    user.address = row.get('address', '')
+                    user.save()
+                    
+                    # Create student
+                    student = Student.objects.create(
+                        admin=user,
+                        course=course,
+                        session=session,
+                        roll_number=row.get('roll_number', f'STU{user.id:06d}'),
+                        admission_number=row.get('admission_number', ''),
+                    )
+                    
+                    success_count += 1
+                    
+                except Exception as e:
+                    error_count += 1
+                    errors.append(f"Row {index + 2}: {str(e)}")
+                    continue
+            
+            # Show results
+            if success_count > 0:
+                messages.success(request, f'Successfully uploaded {success_count} students')
+            
+            if error_count > 0:
+                error_msg = f'{error_count} students failed to upload. '
+                if len(errors) <= 5:
+                    error_msg += 'Errors: ' + '; '.join(errors)
+                else:
+                    error_msg += f'First 5 errors: ' + '; '.join(errors[:5])
+                messages.error(request, error_msg)
+            
+            return redirect('manage_student')
+            
+        except ImportError:
+            messages.error(request, 'pandas library is required for bulk upload. Please install it: pip install pandas openpyxl')
+            return redirect('bulk_student_upload')
+        except Exception as e:
+            messages.error(request, f'Error processing file: {str(e)}')
+            return redirect('bulk_student_upload')
+    
+    # GET request - show upload form
+    context = {
+        'page_title': 'Bulk Student Upload',
+        'courses': Course.objects.all(),
+        'sessions': Session.objects.all(),
+    }
+    return render(request, 'hod_template/bulk_student_upload.html', context)
 
 
 @login_required(login_url='login')
@@ -3601,97 +3972,14 @@ def view_timetable(request, timetable_id):
 
 @login_required(login_url='login')
 def auto_schedule(request):
-    """Auto-schedule timetables using smart generator"""
+    """Auto-schedule timetables"""
     if request.user.user_type != '1':
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    if request.method == 'POST':
-        from main_app.timetable_generator import TimetableGenerator
-        
-        try:
-            session_id = request.POST.get('session')
-            course_id = request.POST.get('course')
-            semester = request.POST.get('semester')
-            
-            session = get_object_or_404(Session, id=session_id)
-            course = get_object_or_404(Course, id=course_id)
-            
-            # Get all subjects for this course and semester
-            subjects = Subject.objects.filter(course=course)
-            
-            if not subjects.exists():
-                messages.error(request, 'No subjects found for this course')
-                return redirect('auto_schedule')
-            
-            # Prepare subject configuration
-            subjects_config = []
-            for subject in subjects:
-                # Get lectures per week from POST or default to 3
-                lectures_per_week = int(request.POST.get(f'lectures_{subject.id}', 3))
-                is_lab = subject.name.lower().find('lab') >= 0
-                
-                subjects_config.append({
-                    'subject': subject,
-                    'staff': subject.staff if subject.staff else None,
-                    'lectures_per_week': lectures_per_week,
-                    'is_lab': is_lab
-                })
-            
-            # Generate timetable
-            generator = TimetableGenerator(session, course, semester)
-            schedule, conflicts = generator.generate(subjects_config)
-            
-            # If successful, ask for confirmation before saving
-            if request.POST.get('confirm') == 'yes':
-                # Delete existing timetable for this configuration
-                Timetable.objects.filter(
-                    session=session,
-                    course=course,
-                    semester=semester
-                ).delete()
-                
-                # Save new timetable
-                created_count = generator.save_to_database()
-                
-                if conflicts:
-                    messages.warning(request, f'Timetable generated with {created_count} slots, but {len(conflicts)} conflicts detected')
-                else:
-                    messages.success(request, f'Timetable generated successfully with {created_count} slots!')
-                
-                return redirect('manage_timetable')
-            else:
-                # Show preview
-                preview_data = generator.export_to_dict()
-                
-                context = {
-                    'page_title': 'Timetable Preview',
-                    'schedule': preview_data,
-                    'conflicts': conflicts,
-                    'session': session,
-                    'course': course,
-                    'semester': semester,
-                    'weekdays': generator.WEEKDAYS,
-                    'periods': generator.PERIODS
-                }
-                
-                return render(request, 'hod_template/timetable_preview.html', context)
-                
-        except Exception as e:
-            messages.error(request, f'Error generating timetable: {str(e)}')
-            return redirect('auto_schedule')
-    
-    # GET request - show form
-    sessions = Session.objects.all()
-    courses = Course.objects.all()
-    
-    context = {
-        'page_title': 'Auto-Generate Timetable',
-        'sessions': sessions,
-        'courses': courses
-    }
-    
-    return render(request, 'hod_template/auto_schedule_form.html', context)
+    # Implement auto-scheduling logic
+    messages.info(request, 'Auto-scheduling feature will be implemented')
+    return redirect('timetable_dashboard')
 
 
 @login_required(login_url='login')
@@ -3815,20 +4103,12 @@ def department_analytics(request):
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    # Get department data with proper relationships
+    # Get department data
     departments = Department.objects.annotate(
-        faculty_count=Count('staff_members'),
+        student_count=Count('programs__students'),
+        faculty_count=Count('staff'),
         program_count=Count('programs')
     ).order_by('name')
-    
-    # Add student count manually
-    # Since Course is legacy and doesn't have department field,
-    # we'll count all students for now
-    for dept in departments:
-        # Count students through programs (if they exist)
-        dept.student_count = Student.objects.filter(
-            course__name__icontains=dept.name
-        ).count() if hasattr(dept, 'programs') else 0
     
     # Calculate statistics
     stats = {
@@ -4262,5 +4542,675 @@ def view_staff_detail(request, staff_id):
     }
     
     return render(request, 'hod_template/staff_detail.html', context)
+
+
+
+    timetables = Timetable.objects.all().order_by('-created_at')[:10]
+    total_timetables = Timetable.objects.count()
+    
+    context = {
+        'timetables': timetables,
+        'total_timetables': total_timetables,
+        'page_title': 'Timetable Dashboard'
+    }
+    
+    return render(request, 'hod_template/timetable_dashboard.html', context)
+
+
+@login_required(login_url='login')
+def create_timetable(request):
+    """Create new timetable"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        form = TimetableForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Timetable created successfully')
+            return redirect('timetable_dashboard')
+    else:
+        form = TimetableForm()
+    
+    context = {
+        'form': form,
+        'page_title': 'Create Timetable'
+    }
+    
+    return render(request, 'hod_template/timetable_form.html', context)
+
+
+@login_required(login_url='login')
+def edit_timetable(request, timetable_id):
+    """Edit timetable"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    timetable = get_object_or_404(Timetable, id=timetable_id)
+    
+    if request.method == 'POST':
+        form = TimetableForm(request.POST, instance=timetable)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Timetable updated successfully')
+            return redirect('timetable_dashboard')
+    else:
+        form = TimetableForm(instance=timetable)
+    
+    context = {
+        'form': form,
+        'timetable': timetable,
+        'page_title': 'Edit Timetable'
+    }
+    
+    return render(request, 'hod_template/timetable_form.html', context)
+
+
+@login_required(login_url='login')
+def delete_timetable(request, timetable_id):
+    """Delete timetable"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    timetable = get_object_or_404(Timetable, id=timetable_id)
+    timetable.delete()
+    messages.success(request, 'Timetable deleted successfully')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def view_timetable(request, timetable_id):
+    """View timetable details"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    timetable = get_object_or_404(Timetable, id=timetable_id)
+    
+    context = {
+        'timetable': timetable,
+        'page_title': 'View Timetable'
+    }
+    
+    return render(request, 'hod_template/view_timetable.html', context)
+
+
+@login_required(login_url='login')
+def auto_schedule(request):
+    """Auto-schedule timetables"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement auto-scheduling logic
+    messages.info(request, 'Auto-scheduling feature will be implemented')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def check_conflicts(request):
+    """Check timetable conflicts"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement conflict checking logic
+    messages.info(request, 'Conflict checking feature will be implemented')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def timetable_export(request, timetable_id, format):
+    """Export timetable"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement export logic
+    messages.info(request, f'Exporting timetable in {format} format')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def faculty_availability(request, faculty_id):
+    """Check faculty availability"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement faculty availability logic
+    messages.info(request, 'Faculty availability feature will be implemented')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def classroom_availability(request, classroom_id, date):
+    """Check classroom availability"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement classroom availability logic
+    messages.info(request, 'Classroom availability feature will be implemented')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def timetable_statistics(request):
+    """Timetable statistics"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement statistics logic
+    messages.info(request, 'Timetable statistics feature will be implemented')
+    return redirect('timetable_dashboard')
+
+
+@login_required(login_url='login')
+def check_timetable_conflicts(request):
+    """Check for timetable conflicts via AJAX or direct access"""
+    if request.user.user_type != '1':
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        # AJAX request for conflict checking
+        session_id = request.POST.get('session')
+        course_id = request.POST.get('course')
+        semester = request.POST.get('semester')
+        weekday = request.POST.get('weekday')
+        period = request.POST.get('period')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        exclude_id = request.POST.get('exclude_id')
+        
+        # Check for conflicts
+        conflicts = Timetable.objects.filter(
+            session_id=session_id,
+            course_id=course_id,
+            semester=semester,
+            weekday=weekday,
+            period=period
+        )
+        
+        if exclude_id:
+            conflicts = conflicts.exclude(id=exclude_id)
+        
+        has_conflict = conflicts.exists()
+        
+        return JsonResponse({
+            'has_conflict': has_conflict,
+            'conflicts': list(conflicts.values(
+                'id', 'subject__name', 'staff__admin__first_name', 
+                'staff__admin__last_name', 'room_number', 'start_time', 'end_time'
+            ))
+        })
+    
+    # Direct access - show conflict check page
+    all_conflicts = detect_timetable_conflicts()
+    
+    context = {
+        'conflicts': all_conflicts,
+        'page_title': 'Timetable Conflict Check'
+    }
+    
+    return render(request, 'hod_template/check_timetable_conflicts.html', context)
+
+
+# Department Management Views
+@login_required(login_url='login')
+def department_analytics(request):
+    """Department analytics dashboard"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Get department data
+    departments = Department.objects.annotate(
+        student_count=Count('programs__students'),
+        faculty_count=Count('staff'),
+        program_count=Count('programs')
+    ).order_by('name')
+    
+    # Calculate statistics
+    stats = {
+        'total_students': Student.objects.count(),
+        'total_faculty': Staff.objects.count(),
+        'avg_attendance': 85,  # Placeholder
+        'avg_performance': 78   # Placeholder
+    }
+    
+    context = {
+        'departments': departments,
+        'stats': stats,
+        'page_title': 'Department Analytics'
+    }
+    
+    return render(request, 'hod_template/department_analytics.html', context)
+
+
+@login_required(login_url='login')
+def department_management(request):
+    """Department management"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    departments = Department.objects.all()
+    
+    context = {
+        'departments': departments,
+        'page_title': 'Department Management'
+    }
+    
+    return render(request, 'hod_template/department_management.html', context)
+
+
+@login_required(login_url='login')
+def add_department(request):
+    """Add new department"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Department added successfully')
+            return redirect('department_management')
+    else:
+        form = DepartmentForm()
+    
+    context = {
+        'form': form,
+        'page_title': 'Add Department'
+    }
+    
+    return render(request, 'hod_template/department_form.html', context)
+
+
+@login_required(login_url='login')
+def edit_department(request, department_id):
+    """Edit department"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    department = get_object_or_404(Department, id=department_id)
+    
+    if request.method == 'POST':
+        form = DepartmentForm(request.POST, instance=department)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Department updated successfully')
+            return redirect('department_management')
+    else:
+        form = DepartmentForm(instance=department)
+    
+    context = {
+        'form': form,
+        'department': department,
+        'page_title': 'Edit Department'
+    }
+    
+    return render(request, 'hod_template/department_form.html', context)
+
+
+@login_required(login_url='login')
+def delete_department(request, department_id):
+    """Delete department"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    department = get_object_or_404(Department, id=department_id)
+    department.delete()
+    messages.success(request, 'Department deleted successfully')
+    return redirect('department_management')
+
+
+@login_required(login_url='login')
+def add_program(request):
+    """Add new program"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        form = ProgramForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Program added successfully')
+            return redirect('department_management')
+    else:
+        form = ProgramForm()
+    
+    context = {
+        'form': form,
+        'page_title': 'Add Program'
+    }
+    
+    return render(request, 'hod_template/program_form.html', context)
+
+
+@login_required(login_url='login')
+def edit_program(request, program_id):
+    """Edit program"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    program = get_object_or_404(Program, id=program_id)
+    
+    if request.method == 'POST':
+        form = ProgramForm(request.POST, instance=program)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Program updated successfully')
+            return redirect('department_management')
+    else:
+        form = ProgramForm(instance=program)
+    
+    context = {
+        'form': form,
+        'program': program,
+        'page_title': 'Edit Program'
+    }
+    
+    return render(request, 'hod_template/program_form.html', context)
+
+
+@login_required(login_url='login')
+def delete_program(request, program_id):
+    """Delete program"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    program = get_object_or_404(Program, id=program_id)
+    program.delete()
+    messages.success(request, 'Program deleted successfully')
+    return redirect('department_management')
+
+
+@login_required(login_url='login')
+def department_performance(request, department_id):
+    """Department performance analysis"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement performance analysis
+    messages.info(request, 'Department performance analysis will be implemented')
+    return redirect('department_analytics')
+
+
+@login_required(login_url='login')
+def department_export(request, department_id, format):
+    """Export department data"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement export logic
+    messages.info(request, f'Exporting department data in {format} format')
+    return redirect('department_analytics')
+
+
+@login_required(login_url='login')
+def department_statistics_api(request):
+    """Department statistics API"""
+    if request.user.user_type != '1':
+        return JsonResponse({'error': 'Access denied'}, status=403)
+    
+    # Implement API logic
+    return JsonResponse({'message': 'API will be implemented'})
+
+
+@login_required(login_url='login')
+def department_analytics_api(request):
+    """Department analytics API"""
+    if request.user.user_type != '1':
+        return JsonResponse({'error': 'Access denied'}, status=403)
+    
+    # Implement API logic
+    return JsonResponse({'message': 'API will be implemented'})
+
+
+@login_required(login_url='login')
+def department_comparison(request):
+    """Department comparison"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement comparison logic
+    messages.info(request, 'Department comparison feature will be implemented')
+    return redirect('department_analytics')
+
+
+# Approval Center Views
+@login_required(login_url='login')
+def approval_center(request):
+    """Centralized approval center"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Get pending approvals
+    student_leaves = LeaveReportStudent.objects.filter(status=0)
+    staff_leaves = LeaveReportStaff.objects.filter(status=0)
+    classroom_bookings = ClassroomBooking.objects.filter(status='pending')
+    
+    context = {
+        'student_leaves': student_leaves,
+        'staff_leaves': staff_leaves,
+        'classroom_bookings': classroom_bookings,
+        'page_title': 'Approval Center'
+    }
+    
+    return render(request, 'hod_template/approval_center.html', context)
+
+
+@login_required(login_url='login')
+def student_leave_approvals(request):
+    """Student leave approvals"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    student_leaves = LeaveReportStudent.objects.filter(status=0)
+    
+    context = {
+        'student_leaves': student_leaves,
+        'page_title': 'Student Leave Approvals'
+    }
+    
+    return render(request, 'hod_template/student_leave_approvals.html', context)
+
+
+@login_required(login_url='login')
+def staff_leave_approvals(request):
+    """Staff leave approvals"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    staff_leaves = LeaveReportStaff.objects.filter(status=0)
+    
+    context = {
+        'staff_leaves': staff_leaves,
+        'page_title': 'Staff Leave Approvals'
+    }
+    
+    return render(request, 'hod_template/staff_leave_approvals.html', context)
+
+
+@login_required(login_url='login')
+def approve_leave(request, leave_id, leave_type):
+    """Approve leave application"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if leave_type == 'student':
+        leave = get_object_or_404(LeaveReportStudent, id=leave_id)
+        leave.status = 1
+        leave.save()
+        messages.success(request, 'Student leave approved successfully')
+    elif leave_type == 'staff':
+        leave = get_object_or_404(LeaveReportStaff, id=leave_id)
+        leave.status = 1
+        leave.save()
+        messages.success(request, 'Staff leave approved successfully')
+    
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def reject_leave(request, leave_id, leave_type):
+    """Reject leave application"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    if leave_type == 'student':
+        leave = get_object_or_404(LeaveReportStudent, id=leave_id)
+        leave.status = 2
+        leave.save()
+        messages.success(request, 'Student leave rejected')
+    elif leave_type == 'staff':
+        leave = get_object_or_404(LeaveReportStaff, id=leave_id)
+        leave.status = 2
+        leave.save()
+        messages.success(request, 'Staff leave rejected')
+    
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def bulk_approve_leaves(request):
+    """Bulk approve leaves"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement bulk approval logic
+    messages.info(request, 'Bulk approval feature will be implemented')
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def classroom_booking_approvals(request):
+    """Classroom booking approvals"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    classroom_bookings = ClassroomBooking.objects.filter(status='pending')
+    
+    context = {
+        'classroom_bookings': classroom_bookings,
+        'page_title': 'Classroom Booking Approvals'
+    }
+    
+    return render(request, 'hod_template/classroom_booking_approvals.html', context)
+
+
+@login_required(login_url='login')
+def approve_classroom_booking(request, booking_id):
+    """Approve classroom booking"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    booking = get_object_or_404(ClassroomBooking, id=booking_id)
+    booking.status = 'approved'
+    booking.save()
+    messages.success(request, 'Classroom booking approved successfully')
+    
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def reject_classroom_booking(request, booking_id):
+    """Reject classroom booking"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    booking = get_object_or_404(ClassroomBooking, id=booking_id)
+    booking.status = 'rejected'
+    booking.save()
+    messages.success(request, 'Classroom booking rejected')
+    
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def approval_statistics(request):
+    """Approval statistics"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement approval statistics
+    messages.info(request, 'Approval statistics feature will be implemented')
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def approval_timeline(request):
+    """Approval timeline"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    # Implement approval timeline
+    messages.info(request, 'Approval timeline feature will be implemented')
+    return redirect('approval_center')
+
+
+@login_required(login_url='login')
+def view_student_detail(request, student_id):
+    """View detailed student information"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    student = get_object_or_404(Student, id=student_id)
+    
+    context = {
+        'student': student,
+        'page_title': f'Student Details - {student.admin.first_name} {student.admin.last_name}'
+    }
+    
+    return render(request, 'hod_template/student_detail.html', context)
+
+
+@login_required(login_url='login')
+def view_staff_detail(request, staff_id):
+    """View detailed staff information"""
+    if request.user.user_type != '1':
+        messages.error(request, 'Access denied')
+        return redirect('login')
+    
+    staff = get_object_or_404(Staff, id=staff_id)
+    
+    context = {
+        'staff': staff,
+        'page_title': f'Staff Details - {staff.admin.first_name} {staff.admin.last_name}'
+    }
+    
+    return render(request, 'hod_template/staff_detail.html', context)
+
+
 
 

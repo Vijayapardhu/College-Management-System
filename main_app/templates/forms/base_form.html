@@ -30,7 +30,7 @@
         {% endif %}
 
         <!-- Form Content -->
-        <form method="post" enctype="multipart/form-data" class="space-y-6">
+        <form method="post" enctype="multipart/form-data" class="space-y-6 custom-submit-handler" data-custom-submit="true">
             {% csrf_token %}
             
             {% block form_content %}

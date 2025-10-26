@@ -1,4 +1,10 @@
 {% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+    <!-- Tempusdominus Bootstrap 4 for Date Picker -->
+    <link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+{% endblock %}
 
 {% block form_icon %}fas fa-user-graduate{% endblock %}
 {% block form_title %}Student Information{% endblock %}
@@ -7,4 +13,1861 @@
 {% block cancel_url %}{% url 'manage_student' %}{% endblock %}
 {% block submit_text %}Save Student{% endblock %}
 
+{% block form_content %}
 
+<!-- Collapse/Expand All Button -->
+<div style="margin-bottom: 1.5rem; text-align: right;">
+    <button type="button" id="toggleAllSections" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-compress-alt"></i> Collapse All
+    </button>
+</div>
+
+<style>
+    .form-section {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    
+    .form-section-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        margin-right: 12px;
+    }
+    
+    .form-section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row-full {
+        margin-bottom: 1rem;
+    }
+    
+    .form-field {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-field label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-field label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 4px;
+    }
+    
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.625rem 0.75rem !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        font-size: 14px !important;
+        background: white !important;
+        transition: all 0.2s !important;
+    }
+    
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+        outline: none !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    /* Ensure all form-control inputs are visible */
+    .form-control {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.625rem 0.75rem !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        color: #212529 !important;
+        background-color: #fff !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+    }
+    
+    .form-select {
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    .form-field textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 12px;
+        margin-top: 0.25rem;
+    }
+    
+    .form-help {
+        color: #6c757d;
+        font-size: 12px;
+        margin-top: 0.25rem;
+    }
+    
+    @media (max-width: 768px) {
+        .form-row,
+        .form-row-2,
+        .form-row-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Profile Picture Upload Styles */
+    .profile-pic-upload-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .profile-pic-preview {
+        width: 120px;
+        height: 120px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #f9fafb;
+        flex-shrink: 0;
+    }
+    
+    .profile-pic-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .profile-pic-preview i {
+        color: #9ca3af;
+    }
+    
+    .profile-pic-upload-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .profile-pic-upload-controls input[type="file"] {
+        display: none !important;
+    }
+    
+    .profile-pic-upload-controls .btn {
+        width: fit-content;
+        padding: 0.5rem 1rem;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .profile-pic-upload-controls .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+    }
+    
+    .profile-pic-upload-controls .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .profile-pic-upload-controls .btn-outline-secondary {
+        background: white;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+    }
+    
+    .file-name-display {
+        font-size: 13px;
+        color: #6b7280;
+        padding: 0.25rem 0;
+    }
+    
+    /* Date Picker Input Group Styles */
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+    }
+    
+    .input-group.date input {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+    
+    .input-group-append {
+        display: flex;
+        margin-left: -1px;
+    }
+    
+    .input-group-text {
+        display: flex;
+        align-items: center;
+        padding: 0.625rem 0.75rem;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        text-align: center;
+        white-space: nowrap;
+        background-color: #e9ecef;
+        border: 1px solid #d1d5db;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .input-group-text:hover {
+        background-color: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-pic-upload-wrapper {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<!-- Section 1: Basic Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <h3 class="form-section-title">Basic Information</h3>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.first_name.id_for_label }}" class="{% if form.first_name.field.required %}required{% endif %}">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.last_name.id_for_label }}" class="{% if form.last_name.field.required %}required{% endif %}">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.gender.id_for_label }}" class="{% if form.gender.field.required %}required{% endif %}">Gender</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<div class="invalid-feedback">{{ form.gender.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="{% if form.date_of_birth.field.required %}required{% endif %}">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {% if form.date_of_birth.errors %}<div class="invalid-feedback">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.blood_group.id_for_label }}">Blood Group</label>
+            {{ form.blood_group }}
+            {% if form.blood_group.errors %}<div class="invalid-feedback">{{ form.blood_group.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.nationality.id_for_label }}">Nationality</label>
+            {{ form.nationality }}
+            {% if form.nationality.errors %}<div class="invalid-feedback">{{ form.nationality.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.religion.id_for_label }}">Religion</label>
+            {{ form.religion }}
+            {% if form.religion.errors %}<div class="invalid-feedback">{{ form.religion.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_tongue.id_for_label }}">Mother Tongue</label>
+            {{ form.mother_tongue }}
+            {% if form.mother_tongue.errors %}<div class="invalid-feedback">{{ form.mother_tongue.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Account & Contact Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <h3 class="form-section-title">Account & Contact Information</h3>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.username.id_for_label }}" class="{% if form.username.field.required %}required{% endif %}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}<div class="invalid-feedback">{{ form.username.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}" class="{% if form.email.field.required %}required{% endif %}">Email Address</label>
+            {{ form.email }}
+            {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            <p class="form-help">Leave blank to keep current password</p>
+            {% if form.password.errors %}<div class="invalid-feedback">{{ form.password.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.profile_pic.id_for_label }}">Profile Picture</label>
+            <div class="profile-pic-upload-wrapper">
+                <div class="profile-pic-preview" id="profilePicPreview">
+                    {% if form.instance.admin.profile_pic %}
+                        <img src="{{ form.instance.admin.profile_pic.url }}" alt="Profile Picture">
+                    {% else %}
+                        <i class="fas fa-user fa-3x"></i>
+                    {% endif %}
+                </div>
+                <div class="profile-pic-upload-controls">
+                    <label for="{{ form.profile_pic.id_for_label }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-upload"></i> Choose File
+                    </label>
+                    {{ form.profile_pic }}
+                    <span id="fileName" class="file-name-display">No file chosen</span>
+                    <button type="button" id="clearProfilePic" class="btn btn-sm btn-outline-secondary" style="display: none;">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+                <p class="form-help">Max size: 2MB. Supported formats: JPG, PNG, GIF</p>
+            </div>
+            {% if form.profile_pic.errors %}<div class="invalid-feedback">{{ form.profile_pic.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.mobile_number.id_for_label }}" class="{% if form.mobile_number.field.required %}required{% endif %}">Mobile Number</label>
+            {{ form.mobile_number }}
+            {% if form.mobile_number.errors %}<div class="invalid-feedback">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.alternate_mobile.id_for_label }}">Alternate Mobile</label>
+            {{ form.alternate_mobile }}
+            {% if form.alternate_mobile.errors %}<div class="invalid-feedback">{{ form.alternate_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: Academic Details -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3 class="form-section-title">Academic Details</h3>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.course.id_for_label }}" class="{% if form.course.field.required %}required{% endif %}">Course</label>
+            {{ form.course }}
+            {% if form.course.errors %}<div class="invalid-feedback">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.session.id_for_label }}" class="{% if form.session.field.required %}required{% endif %}">Session</label>
+            {{ form.session }}
+            {% if form.session.errors %}<div class="invalid-feedback">{{ form.session.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.roll_number.id_for_label }}">Roll Number</label>
+            {{ form.roll_number }}
+            {% if form.roll_number.errors %}<div class="invalid-feedback">{{ form.roll_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_number.id_for_label }}">Admission Number</label>
+            {{ form.admission_number }}
+            {% if form.admission_number.errors %}<div class="invalid-feedback">{{ form.admission_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_year.id_for_label }}">Admission Year</label>
+            {{ form.admission_year }}
+            {% if form.admission_year.errors %}<div class="invalid-feedback">{{ form.admission_year.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.course_type.id_for_label }}">Course Type</label>
+            {{ form.course_type }}
+            {% if form.course_type.errors %}<div class="invalid-feedback">{{ form.course_type.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_mode.id_for_label }}">Admission Mode</label>
+            {{ form.admission_mode }}
+            {% if form.admission_mode.errors %}<div class="invalid-feedback">{{ form.admission_mode.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+            <div class="input-group date" id="admissionDatePicker" data-target-input="nearest">
+                <input type="text" 
+                       class="form-control datetimepicker-input" 
+                       data-target="#admissionDatePicker"
+                       name="admission_date"
+                       id="id_admission_date"
+                       placeholder="Select admission date"
+                       value="{{ form.admission_date.value|default:'' }}"
+                       autocomplete="off">
+                <div class="input-group-append" data-target="#admissionDatePicker" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+            {% if form.admission_date.errors %}<div class="invalid-feedback">{{ form.admission_date.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 4: Address Information -->
+<div class="form-section">
+    <div class="form-section-header form-section-toggle" onclick="toggleSection(this)">
+        <div class="form-section-icon">
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3 class="form-section-title">Address Information</h3>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="form-section-content">
+    
+    <div class="form-row-full">
+        <div class="form-field">
+            <label for="{{ form.address.id_for_label }}">Current Address</label>
+            {{ form.address }}
+            {% if form.address.errors %}<div class="invalid-feedback">{{ form.address.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.current_city.id_for_label }}">City</label>
+            {{ form.current_city }}
+            {% if form.current_city.errors %}<div class="invalid-feedback">{{ form.current_city.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.current_state.id_for_label }}">State</label>
+            {{ form.current_state }}
+            {% if form.current_state.errors %}<div class="invalid-feedback">{{ form.current_state.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.current_pincode.id_for_label }}">Pincode</label>
+            {{ form.current_pincode }}
+            {% if form.current_pincode.errors %}<div class="invalid-feedback">{{ form.current_pincode.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-full">
+        <div class="form-field">
+            <label for="{{ form.permanent_address.id_for_label }}">Permanent Address</label>
+            {{ form.permanent_address }}
+            {% if form.permanent_address.errors %}<div class="invalid-feedback">{{ form.permanent_address.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.permanent_city.id_for_label }}">Permanent City</label>
+            {{ form.permanent_city }}
+            {% if form.permanent_city.errors %}<div class="invalid-feedback">{{ form.permanent_city.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.permanent_state.id_for_label }}">Permanent State</label>
+            {{ form.permanent_state }}
+            {% if form.permanent_state.errors %}<div class="invalid-feedback">{{ form.permanent_state.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.permanent_pincode.id_for_label }}">Permanent Pincode</label>
+            {{ form.permanent_pincode }}
+            {% if form.permanent_pincode.errors %}<div class="invalid-feedback">{{ form.permanent_pincode.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Section 5: Parent/Guardian Information -->
+<div class="form-section">
+    <div class="form-section-header form-section-toggle" onclick="toggleSection(this)">
+        <div class="form-section-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="form-section-title">Parent & Guardian Information</h3>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="form-section-content">
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.father_name.id_for_label }}">Father's Name</label>
+            {{ form.father_name }}
+            {% if form.father_name.errors %}<div class="invalid-feedback">{{ form.father_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.father_occupation.id_for_label }}">Father's Occupation</label>
+            {{ form.father_occupation }}
+            {% if form.father_occupation.errors %}<div class="invalid-feedback">{{ form.father_occupation.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.father_mobile.id_for_label }}">Father's Mobile</label>
+            {{ form.father_mobile }}
+            {% if form.father_mobile.errors %}<div class="invalid-feedback">{{ form.father_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.mother_name.id_for_label }}">Mother's Name</label>
+            {{ form.mother_name }}
+            {% if form.mother_name.errors %}<div class="invalid-feedback">{{ form.mother_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_occupation.id_for_label }}">Mother's Occupation</label>
+            {{ form.mother_occupation }}
+            {% if form.mother_occupation.errors %}<div class="invalid-feedback">{{ form.mother_occupation.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_mobile.id_for_label }}">Mother's Mobile</label>
+            {{ form.mother_mobile }}
+            {% if form.mother_mobile.errors %}<div class="invalid-feedback">{{ form.mother_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.guardian_name.id_for_label }}">Guardian's Name</label>
+            {{ form.guardian_name }}
+            {% if form.guardian_name.errors %}<div class="invalid-feedback">{{ form.guardian_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.guardian_relation.id_for_label }}">Guardian's Relation</label>
+            {{ form.guardian_relation }}
+            {% if form.guardian_relation.errors %}<div class="invalid-feedback">{{ form.guardian_relation.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.guardian_mobile.id_for_label }}">Guardian's Mobile</label>
+            {{ form.guardian_mobile }}
+            {% if form.guardian_mobile.errors %}<div class="invalid-feedback">{{ form.guardian_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Section 6: Government IDs & Documents -->
+<div class="form-section">
+    <div class="form-section-header form-section-toggle" onclick="toggleSection(this)">
+        <div class="form-section-icon">
+            <i class="fas fa-id-card"></i>
+        </div>
+        <h3 class="form-section-title">Government IDs & Documents</h3>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="form-section-content">
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.aadhaar_number.id_for_label }}">Aadhaar Number</label>
+            {{ form.aadhaar_number }}
+            {% if form.aadhaar_number.errors %}<div class="invalid-feedback">{{ form.aadhaar_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.pan_number.id_for_label }}">PAN Number</label>
+            {{ form.pan_number }}
+            {% if form.pan_number.errors %}<div class="invalid-feedback">{{ form.pan_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.caste_category.id_for_label }}">Caste Category</label>
+            {{ form.caste_category }}
+            {% if form.caste_category.errors %}<div class="invalid-feedback">{{ form.caste_category.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.income_certificate_number.id_for_label }}">Income Certificate Number</label>
+            {{ form.income_certificate_number }}
+            {% if form.income_certificate_number.errors %}<div class="invalid-feedback">{{ form.income_certificate_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.annual_family_income.id_for_label }}">Annual Family Income</label>
+            {{ form.annual_family_income }}
+            {% if form.annual_family_income.errors %}<div class="invalid-feedback">{{ form.annual_family_income.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Section 7: Previous Academic Records -->
+<div class="form-section">
+    <div class="form-section-header form-section-toggle" onclick="toggleSection(this)">
+        <div class="form-section-icon">
+            <i class="fas fa-certificate"></i>
+        </div>
+        <h3 class="form-section-title">Previous Academic Records</h3>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="form-section-content">
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.tenth_board.id_for_label }}">10th Board</label>
+            {{ form.tenth_board }}
+            {% if form.tenth_board.errors %}<div class="invalid-feedback">{{ form.tenth_board.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.tenth_school.id_for_label }}">10th School</label>
+            {{ form.tenth_school }}
+            {% if form.tenth_school.errors %}<div class="invalid-feedback">{{ form.tenth_school.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.tenth_year.id_for_label }}">10th Pass Year</label>
+            {{ form.tenth_year }}
+            {% if form.tenth_year.errors %}<div class="invalid-feedback">{{ form.tenth_year.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.tenth_percentage.id_for_label }}">10th Percentage</label>
+            {{ form.tenth_percentage }}
+            {% if form.tenth_percentage.errors %}<div class="invalid-feedback">{{ form.tenth_percentage.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.tenth_marks_obtained.id_for_label }}">10th Marks Obtained</label>
+            {{ form.tenth_marks_obtained }}
+            {% if form.tenth_marks_obtained.errors %}<div class="invalid-feedback">{{ form.tenth_marks_obtained.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.tenth_marks_total.id_for_label }}">10th Total Marks</label>
+            {{ form.tenth_marks_total }}
+            {% if form.tenth_marks_total.errors %}<div class="invalid-feedback">{{ form.tenth_marks_total.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <h4 style="font-size: 14px; font-weight: 600; color: #4a5568; margin: 1.5rem 0 1rem;">Entrance Exam Details</h4>
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.entrance_exam_name.id_for_label }}">Entrance Exam Name</label>
+            {{ form.entrance_exam_name }}
+            {% if form.entrance_exam_name.errors %}<div class="invalid-feedback">{{ form.entrance_exam_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.entrance_exam_year.id_for_label }}">Exam Year</label>
+            {{ form.entrance_exam_year }}
+            {% if form.entrance_exam_year.errors %}<div class="invalid-feedback">{{ form.entrance_exam_year.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.entrance_exam_rank.id_for_label }}">Exam Rank</label>
+            {{ form.entrance_exam_rank }}
+            {% if form.entrance_exam_rank.errors %}<div class="invalid-feedback">{{ form.entrance_exam_rank.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Section 8: Additional Details -->
+<div class="form-section">
+    <div class="form-section-header form-section-toggle" onclick="toggleSection(this)">
+        <div class="form-section-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <h3 class="form-section-title">Additional Details</h3>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="form-section-content">
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.hobbies.id_for_label }}">Hobbies</label>
+            {{ form.hobbies }}
+            {% if form.hobbies.errors %}<div class="invalid-feedback">{{ form.hobbies.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.achievements.id_for_label }}">Achievements</label>
+            {{ form.achievements }}
+            {% if form.achievements.errors %}<div class="invalid-feedback">{{ form.achievements.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.medical_conditions.id_for_label }}">Medical Conditions</label>
+            {{ form.medical_conditions }}
+            {% if form.medical_conditions.errors %}<div class="invalid-feedback">{{ form.medical_conditions.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.is_disabled.id_for_label }}">Person with Disability</label>
+            {{ form.is_disabled }}
+            {% if form.is_disabled.errors %}<div class="invalid-feedback">{{ form.is_disabled.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.scholarship_applied.id_for_label }}">Scholarship Applied</label>
+            {{ form.scholarship_applied }}
+            {% if form.scholarship_applied.errors %}<div class="invalid-feedback">{{ form.scholarship_applied.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.scholarship_name.id_for_label }}">Scholarship Name</label>
+            {{ form.scholarship_name }}
+            {% if form.scholarship_name.errors %}<div class="invalid-feedback">{{ form.scholarship_name.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Section 9: Bank Details -->
+<div class="form-section">
+    <div class="form-section-header form-section-toggle" onclick="toggleSection(this)">
+        <div class="form-section-icon">
+            <i class="fas fa-university"></i>
+        </div>
+        <h3 class="form-section-title">Bank Account Details</h3>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="form-section-content">
+    
+    <div class="form-row-3">
+        <div class="form-field">
+            <label for="{{ form.bank_account_number.id_for_label }}">Account Number</label>
+            {{ form.bank_account_number }}
+            {% if form.bank_account_number.errors %}<div class="invalid-feedback">{{ form.bank_account_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.bank_ifsc_code.id_for_label }}">IFSC Code</label>
+            {{ form.bank_ifsc_code }}
+            {% if form.bank_ifsc_code.errors %}<div class="invalid-feedback">{{ form.bank_ifsc_code.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.bank_name.id_for_label }}">Bank Name</label>
+            {{ form.bank_name }}
+            {% if form.bank_name.errors %}<div class="invalid-feedback">{{ form.bank_name.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Section 10: Document Uploads -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="form-section-title">Document Uploads</h3>
+    </div>
+    
+    <style>
+        .file-upload-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .file-upload-item {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 1rem;
+            background: #f9fafb;
+            transition: all 0.2s;
+        }
+        
+        .file-upload-item:hover {
+            border-color: #667eea;
+            background: #f3f4ff;
+        }
+        
+        .file-upload-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-upload-input {
+            display: block !important;
+            width: 100% !important;
+            font-size: 13px !important;
+            padding: 0.5rem !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 4px !important;
+            background: white !important;
+            cursor: pointer !important;
+        }
+        
+        /* Ensure file inputs are visible */
+        input[type="file"] {
+            display: block !important;
+            width: 100% !important;
+            padding: 0.5rem !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 4px !important;
+            background: white !important;
+            font-size: 13px !important;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 0.75rem;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background: #5568d3;
+        }
+        
+        .file-preview {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+        }
+        
+        .file-preview-image {
+            max-width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-preview-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+        
+        .file-preview-name {
+            font-size: 12px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .file-preview-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .file-preview-btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-preview-btn-view {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .file-preview-btn-view:hover {
+            background: #2563eb;
+        }
+        
+        .file-preview-btn-remove {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .file-preview-btn-remove:hover {
+            background: #dc2626;
+        }
+        
+        .upload-hint {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 0.25rem;
+        }
+        
+        .border-success {
+            border-color: #10b981 !important;
+            animation: pulse-success 0.5s ease;
+        }
+        
+        @keyframes pulse-success {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        }
+        
+        /* Collapsible Sections */
+        .form-section-toggle {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .form-section-toggle i.toggle-icon {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        
+        .form-section.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .form-section-content {
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .form-section.collapsed .form-section-content {
+            display: none;
+        }
+        
+        /* Make collapsible sections start collapsed by default */
+        .form-section:not(.always-open) {
+            /* Sections with toggle will start collapsed */
+        }
+    </style>
+    
+    <!-- Document Upload Summary -->
+    {% if student_id %}
+    <div class="alert alert-info" style="margin-bottom: 1.5rem; border-left: 4px solid #3b82f6; padding: 1rem 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+            <i class="fas fa-info-circle" style="font-size: 1.25rem;"></i>
+            <div style="flex: 1;">
+                <strong>Document Upload Status:</strong>
+                <span id="docUploadCount">Calculating...</span>
+            </div>
+        </div>
+        <div class="progress" style="height: 8px; border-radius: 4px; background: #e5e7eb;">
+            <div id="docProgressBar" class="progress-bar" role="progressbar" style="width: 0%; background: #3b82f6; border-radius: 4px; transition: width 0.3s ease;"></div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <h4 style="font-size: 14px; font-weight: 600; color: #4a5568; margin: 0 0 1rem 0;">Photo & Signature</h4>
+    <div class="file-upload-group">
+        <div class="file-upload-item">
+            <label class="file-upload-label">Student Photo</label>
+            {{ form.photo }}
+            <p class="upload-hint">Upload passport size photo (JPG, PNG - Max 2MB)</p>
+            <div id="photo-preview" class="file-preview" style="display: none;">
+                <img id="photo-preview-img" class="file-preview-image" alt="Photo Preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name" id="photo-name"></span>
+                </div>
+            </div>
+            {% if student_id and form.instance.photo %}
+            <div class="file-preview">
+                <img src="{{ form.instance.photo.url }}" class="file-preview-image" alt="Current Photo">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-image"></i> Current Photo
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.photo.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Student Signature</label>
+            {{ form.signature }}
+            <p class="upload-hint">Upload signature (JPG, PNG - Max 1MB)</p>
+            <div id="signature-preview" class="file-preview" style="display: none;">
+                <img id="signature-preview-img" class="file-preview-image" alt="Signature Preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name" id="signature-name"></span>
+                </div>
+            </div>
+            {% if student_id and form.instance.signature %}
+            <div class="file-preview">
+                <img src="{{ form.instance.signature.url }}" class="file-preview-image" alt="Current Signature">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-signature"></i> Current Signature
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.signature.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h4 style="font-size: 14px; font-weight: 600; color: #4a5568; margin: 1.5rem 0 1rem 0;">Educational Certificates</h4>
+    <div class="file-upload-group">
+        <div class="file-upload-item">
+            <label class="file-upload-label">10th Certificate</label>
+            {{ form.tenth_certificate }}
+            <p class="upload-hint">Upload 10th mark sheet (PDF - Max 5MB)</p>
+            {% if student_id and form.instance.tenth_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> 10th Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.tenth_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Transfer Certificate</label>
+            {{ form.transfer_certificate }}
+            <p class="upload-hint">Upload TC (PDF - Max 5MB)</p>
+            {% if student_id and form.instance.transfer_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Transfer Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.transfer_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Migration Certificate</label>
+            {{ form.migration_certificate }}
+            <p class="upload-hint">Upload migration certificate (PDF - Max 5MB)</p>
+            {% if student_id and form.instance.migration_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Migration Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.migration_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Character Certificate</label>
+            {{ form.character_certificate }}
+            <p class="upload-hint">Upload character certificate (PDF - Max 5MB)</p>
+            {% if student_id and form.instance.character_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Character Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.character_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Entrance Exam Scorecard</label>
+            {{ form.entrance_exam_scorecard }}
+            <p class="upload-hint">Upload entrance exam result (PDF - Max 5MB)</p>
+            {% if student_id and form.instance.entrance_exam_scorecard %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Entrance Exam Scorecard
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.entrance_exam_scorecard.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h4 style="font-size: 14px; font-weight: 600; color: #4a5568; margin: 1.5rem 0 1rem 0;">Government Documents</h4>
+    <div class="file-upload-group">
+        <div class="file-upload-item">
+            <label class="file-upload-label">Aadhaar Card</label>
+            {{ form.aadhaar_card }}
+            <p class="upload-hint">Upload Aadhaar card (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.aadhaar_card %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-id-card"></i> Aadhaar Card
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.aadhaar_card.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">PAN Card</label>
+            {{ form.pan_card }}
+            <p class="upload-hint">Upload PAN card (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.pan_card %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-id-card"></i> PAN Card
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.pan_card.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Caste Certificate</label>
+            {{ form.caste_certificate }}
+            <p class="upload-hint">Upload caste certificate (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.caste_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Caste Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.caste_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Income Certificate</label>
+            {{ form.income_certificate }}
+            <p class="upload-hint">Upload income certificate (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.income_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Income Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.income_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Disability Certificate</label>
+            {{ form.disability_certificate }}
+            <p class="upload-hint">Upload disability certificate (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.disability_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Disability Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.disability_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="file-upload-item">
+            <label class="file-upload-label">Birth Certificate</label>
+            {{ form.birth_certificate }}
+            <p class="upload-hint">Upload birth certificate (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.birth_certificate %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Birth Certificate
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.birth_certificate.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h4 style="font-size: 14px; font-weight: 600; color: #4a5568; margin: 1.5rem 0 1rem 0;">Financial Documents</h4>
+    <div class="file-upload-group">
+        <div class="file-upload-item">
+            <label class="file-upload-label">Bank Passbook</label>
+            {{ form.bank_passbook }}
+            <p class="upload-hint">Upload bank passbook first page (PDF - Max 2MB)</p>
+            {% if student_id and form.instance.bank_passbook %}
+            <div class="file-preview">
+                <div class="file-preview-info">
+                    <span class="file-preview-name">
+                        <i class="fas fa-file-pdf"></i> Bank Passbook
+                    </span>
+                    <div class="file-preview-actions">
+                        <a href="{{ form.instance.bank_passbook.url }}" target="_blank" class="file-preview-btn file-preview-btn-view">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // ========== FILE UPLOAD PREVIEW FUNCTIONALITY ==========
+    
+    // Image preview for photo and signature
+    function setupImagePreview(inputName, previewId, previewImgId, previewNameId) {
+        const input = $('input[name="' + inputName + '"]');
+        const preview = $('#' + previewId);
+        const previewImg = $('#' + previewImgId);
+        const previewName = $('#' + previewNameId);
+        
+        input.on('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                // Validate file size
+                const maxSize = inputName === 'photo' ? 2 * 1024 * 1024 : 1 * 1024 * 1024; // 2MB for photo, 1MB for signature
+                if (file.size > maxSize) {
+                    alert('File size exceeds maximum limit of ' + (maxSize / 1024 / 1024) + 'MB');
+                    $(this).val('');
+                    preview.hide();
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file (JPG, PNG)');
+                    $(this).val('');
+                    preview.hide();
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.attr('src', e.target.result);
+                    previewName.html('<i class="fas fa-image"></i> ' + file.name);
+                    preview.fadeIn();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.hide();
+            }
+        });
+    }
+    
+    // Setup previews for photo and signature
+    setupImagePreview('photo', 'photo-preview', 'photo-preview-img', 'photo-name');
+    setupImagePreview('signature', 'signature-preview', 'signature-preview-img', 'signature-name');
+    
+    // PDF file preview for documents
+    function setupPDFPreview(inputName) {
+        const input = $('input[name="' + inputName + '"]');
+        
+        input.on('change', function(e) {
+            const file = e.target.files[0];
+            const fileItem = $(this).closest('.file-upload-item');
+            
+            if (file) {
+                // Validate file size (5MB for certificates, 2MB for others)
+                const maxSize = inputName.includes('certificate') || inputName.includes('tenth') ? 5 * 1024 * 1024 : 2 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    alert('File size exceeds maximum limit of ' + (maxSize / 1024 / 1024) + 'MB');
+                    $(this).val('');
+                    return;
+                }
+                
+                // Show file name as preview
+                const existingPreview = fileItem.find('.file-preview');
+                existingPreview.remove();
+                
+                const newPreview = $(`
+                    <div class="file-preview" style="margin-top: 0.75rem;">
+                        <div class="file-preview-info">
+                            <span class="file-preview-name">
+                                <i class="fas fa-file-pdf"></i> ${file.name}
+                            </span>
+                            <span class="badge badge-success" style="font-size: 11px;">New Upload</span>
+                        </div>
+                    </div>
+                `);
+                
+                fileItem.append(newPreview);
+                fileItem.css('border-color', '#10b981');
+                fileItem.css('background', '#f0fdf4');
+            }
+        });
+    }
+    
+    // Setup PDF previews for all document fields
+    const documentFields = [
+        'tenth_certificate', 'transfer_certificate', 'migration_certificate', 
+        'character_certificate', 'entrance_exam_scorecard', 'aadhaar_card', 
+        'pan_card', 'caste_certificate', 'income_certificate', 
+        'disability_certificate', 'birth_certificate', 'bank_passbook'
+    ];
+    
+    documentFields.forEach(function(field) {
+        setupPDFPreview(field);
+    });
+    
+    // Add drag and drop functionality
+    $('.file-upload-item').on('dragover', function(e) {
+        e.preventDefault();
+        $(this).css('border-color', '#667eea');
+        $(this).css('background', '#eef2ff');
+    });
+    
+    $('.file-upload-item').on('dragleave', function(e) {
+        e.preventDefault();
+        $(this).css('border-color', '#d1d5db');
+        $(this).css('background', '#f9fafb');
+    });
+    
+    $('.file-upload-item').on('drop', function(e) {
+        e.preventDefault();
+        $(this).css('border-color', '#d1d5db');
+        $(this).css('background', '#f9fafb');
+        
+        const input = $(this).find('input[type="file"]');
+        if (input.length && e.originalEvent.dataTransfer.files.length) {
+            input[0].files = e.originalEvent.dataTransfer.files;
+            input.trigger('change');
+        }
+    });
+    
+    // ========== OTHER FORM FUNCTIONALITY ==========
+    
+    // Add "Same as Current Address" checkbox after permanent address label
+    if ($('textarea[name="permanent_address"]').length && $('textarea[name="address"]').length) {
+        const checkbox = $('<div class="mt-2"><label class="flex items-center"><input type="checkbox" id="sameAsCurrentAddress" class="mr-2"> <span style="font-size: 13px; color: #6c757d;">Same as Current Address</span></label></div>');
+        $('textarea[name="permanent_address"]').parent().append(checkbox);
+        
+        $('#sameAsCurrentAddress').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('textarea[name="permanent_address"]').val($('textarea[name="address"]').val());
+                $('input[name="permanent_city"]').val($('input[name="current_city"]').val());
+                $('input[name="permanent_state"]').val($('input[name="current_state"]').val());
+                $('input[name="permanent_pincode"]').val($('input[name="current_pincode"]').val());
+            }
+        });
+    }
+    
+    // Add date picker styling for date inputs
+    $('input[type="date"]').each(function() {
+        $(this).attr('placeholder', 'DD/MM/YYYY');
+    });
+    
+    // Phone number validation
+    $('input[name="mobile_number"], input[name="alternate_mobile"], input[name="father_mobile"], input[name="mother_mobile"], input[name="guardian_mobile"]').on('input', function() {
+        let value = $(this).val().replace(/\D/g, '');
+        if (value.length > 10) {
+            value = value.substr(0, 10);
+        }
+        $(this).val(value);
+    });
+    
+    // Pincode validation
+    $('input[name="current_pincode"], input[name="permanent_pincode"]').on('input', function() {
+        let value = $(this).val().replace(/\D/g, '');
+        if (value.length > 6) {
+            value = value.substr(0, 6);
+        }
+        $(this).val(value);
+    });
+    
+    // Aadhaar validation
+    $('input[name="aadhaar_number"]').on('input', function() {
+        let value = $(this).val().replace(/\D/g, '');
+        if (value.length > 12) {
+            value = value.substr(0, 12);
+        }
+        $(this).val(value);
+    });
+    
+    // Auto-calculate percentage from marks
+    $('input[name="tenth_marks_obtained"], input[name="tenth_marks_total"]').on('input', function() {
+        const obtained = parseFloat($('input[name="tenth_marks_obtained"]').val()) || 0;
+        const total = parseFloat($('input[name="tenth_marks_total"]').val()) || 0;
+        
+        if (total > 0) {
+            const percentage = ((obtained / total) * 100).toFixed(2);
+            $('input[name="tenth_percentage"]').val(percentage);
+        }
+    });
+    
+    // Show/hide scholarship name based on scholarship applied
+    function toggleScholarshipName() {
+        const scholarshipApplied = $('input[name="scholarship_applied"]:checked').val();
+        const scholarshipNameField = $('input[name="scholarship_name"]').parent();
+        
+        if (scholarshipApplied === 'True' || scholarshipApplied === 'on') {
+            scholarshipNameField.show();
+        } else {
+            scholarshipNameField.hide();
+        }
+    }
+    
+    $('input[name="scholarship_applied"]').on('change', toggleScholarshipName);
+    toggleScholarshipName();
+    
+    // Smooth scroll to first error
+    if ($('.invalid-feedback:visible').length) {
+        $('html, body').animate({
+            scrollTop: $('.invalid-feedback:visible').first().parent().offset().top - 100
+        }, 500);
+    }
+    
+    // Add asterisk to required field labels
+    $('.form-field label.required').each(function() {
+        if (!$(this).find('sup').length) {
+            $(this).append(' <sup style="color: #ef4444;">*</sup>');
+        }
+    });
+    
+    // Form submission validation and button handling
+    const form = $('form');
+    const submitButton = form.find('button[type="submit"]');
+    let isSubmitting = false;
+    
+    form.on('submit', function(e) {
+        // Prevent double submission
+        if (isSubmitting) {
+            e.preventDefault();
+            return false;
+        }
+        
+        let hasErrors = false;
+        
+        // Check required fields
+        $('input[required], select[required], textarea[required]').each(function() {
+            if (!$(this).val()) {
+                hasErrors = true;
+                $(this).addClass('border-red-500');
+                
+                if (!$(this).next('.invalid-feedback').length) {
+                    $(this).after('<div class="invalid-feedback">This field is required</div>');
+                }
+            } else {
+                $(this).removeClass('border-red-500');
+            }
+        });
+        
+        if (hasErrors) {
+            e.preventDefault();
+            
+            // Re-enable submit button since there are errors
+            submitButton.prop('disabled', false).html('<i class="fas fa-save mr-2"></i>Save Student');
+            
+            $('html, body').animate({
+                scrollTop: $('.border-red-500').first().offset().top - 100
+            }, 500);
+            alert('Please fill all required fields');
+            return false;
+        }
+        
+        // Mark as submitting and disable button to prevent double submission
+        isSubmitting = true;
+        submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Saving...');
+        
+        // If no errors, allow form to submit naturally
+        return true;
+    });
+    
+    // Re-enable button if there are form errors after attempted submission
+    form.on('invalid', function() {
+        submitButton.prop('disabled', false).html('<i class="fas fa-save mr-2"></i>Save Student');
+        isSubmitting = false;
+    }, true);
+    
+    // Clear field errors on input
+    $('input, select, textarea').on('input change', function() {
+        if ($(this).hasClass('border-red-500')) {
+            $(this).removeClass('border-red-500');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+    
+    // Ensure button is enabled on page load
+    submitButton.prop('disabled', false).html('<i class="fas fa-save mr-2"></i>Save Student');
+    
+    // Re-enable button if page becomes visible again (handles back button scenarios)
+    $(document).on('visibilitychange', function() {
+        if (!document.hidden && isSubmitting) {
+            submitButton.prop('disabled', false).html('<i class="fas fa-save mr-2"></i>Save Student');
+            isSubmitting = false;
+        }
+    });
+    
+    // Re-enable button on page show (Safari back button fix)
+    $(window).on('pageshow', function(event) {
+        if (event.originalEvent.persisted || window.performance && window.performance.navigation.type === 2) {
+            submitButton.prop('disabled', false).html('<i class="fas fa-save mr-2"></i>Save Student');
+            isSubmitting = false;
+        }
+    });
+    
+    // ========== DOCUMENT UPLOAD STATUS COUNTER ==========
+    {% if student_id %}
+    function calculateDocumentStatus() {
+        const totalDocuments = 14; // Total number of document fields
+        let uploadedCount = 0;
+        
+        // Check which documents are uploaded
+        const documentChecks = [
+            '{{ form.instance.photo|yesno:"1,0" }}',
+            '{{ form.instance.signature|yesno:"1,0" }}',
+            '{{ form.instance.tenth_certificate|yesno:"1,0" }}',
+            '{{ form.instance.transfer_certificate|yesno:"1,0" }}',
+            '{{ form.instance.migration_certificate|yesno:"1,0" }}',
+            '{{ form.instance.character_certificate|yesno:"1,0" }}',
+            '{{ form.instance.entrance_exam_scorecard|yesno:"1,0" }}',
+            '{{ form.instance.aadhaar_card|yesno:"1,0" }}',
+            '{{ form.instance.pan_card|yesno:"1,0" }}',
+            '{{ form.instance.caste_certificate|yesno:"1,0" }}',
+            '{{ form.instance.income_certificate|yesno:"1,0" }}',
+            '{{ form.instance.disability_certificate|yesno:"1,0" }}',
+            '{{ form.instance.birth_certificate|yesno:"1,0" }}',
+            '{{ form.instance.bank_passbook|yesno:"1,0" }}'
+        ];
+        
+        uploadedCount = documentChecks.filter(doc => doc === '1').length;
+        
+        const percentage = Math.round((uploadedCount / totalDocuments) * 100);
+        const statusText = uploadedCount + ' of ' + totalDocuments + ' documents uploaded';
+        
+        let badgeClass = 'badge-warning';
+        let progressColor = '#f59e0b';
+        if (percentage >= 80) {
+            badgeClass = 'badge-success';
+            progressColor = '#10b981';
+        } else if (percentage >= 50) {
+            badgeClass = 'badge-info';
+            progressColor = '#3b82f6';
+        }
+        
+        $('#docUploadCount').html(statusText + ' <span class="badge ' + badgeClass + '" style="font-size: 12px; margin-left: 0.5rem;">' + percentage + '%</span>');
+        $('#docProgressBar').css('width', percentage + '%').css('background', progressColor);
+    }
+    
+    calculateDocumentStatus();
+    
+    // Update status when new files are selected
+    $('input[type="file"]').on('change', function() {
+        const fileName = $(this).val().split('\\').pop();
+        if (fileName) {
+            // Show a visual indicator that file was selected
+            const fileItem = $(this).closest('.file-upload-item');
+            fileItem.addClass('border-success');
+            setTimeout(() => fileItem.removeClass('border-success'), 2000);
+        }
+    });
+    {% endif %}
+    
+    // ========== COLLAPSE SECTIONS BY DEFAULT ==========
+    // Collapse all sections with toggle (except Basic Info, Account, and Academic)
+    $('.form-section-toggle').each(function() {
+        const section = $(this).closest('.form-section');
+        const sectionTitle = $(this).find('.form-section-title').text().trim();
+        
+        // Keep these sections open by default
+        const alwaysOpen = [
+            'Basic Information',
+            'Account & Contact Information',
+            'Academic Details'
+        ];
+        
+        if (!alwaysOpen.includes(sectionTitle)) {
+            section.addClass('collapsed');
+            section.find('.form-section-content').hide();
+            section.find('.toggle-icon').css('transform', 'rotate(-90deg)');
+        }
+    });
+    
+    // Update initial button state
+    const totalSections = $('.form-section-toggle').length;
+    const collapsedSections = $('.form-section.collapsed').length;
+    if (collapsedSections > 0) {
+        $('#toggleAllSections').html('<i class="fas fa-expand-alt"></i> Expand All (' + collapsedSections + '/' + totalSections + ')');
+    }
+    
+    // ========== EXPAND/COLLAPSE ALL BUTTON ==========
+    let allCollapsed = true;
+    
+    $('#toggleAllSections').on('click', function() {
+        const btn = $(this);
+        
+        if (allCollapsed) {
+            // Expand all
+            $('.form-section').removeClass('collapsed');
+            $('.form-section-content').slideDown(300);
+            $('.toggle-icon').css('transform', 'rotate(0deg)');
+            btn.html('<i class="fas fa-compress-alt"></i> Collapse All');
+            allCollapsed = false;
+        } else {
+            // Collapse all
+            $('.form-section').addClass('collapsed');
+            $('.form-section-content').slideUp(300);
+            $('.toggle-icon').css('transform', 'rotate(-90deg)');
+            btn.html('<i class="fas fa-expand-alt"></i> Expand All');
+            allCollapsed = true;
+        }
+    });
+    
+    // Update button text on individual section toggle
+    window.updateToggleAllButton = function() {
+        const totalSections = $('.form-section-toggle').length;
+        const collapsedSections = $('.form-section.collapsed').length;
+        const btn = $('#toggleAllSections');
+        
+        if (collapsedSections === totalSections) {
+            btn.html('<i class="fas fa-expand-alt"></i> Expand All');
+            allCollapsed = true;
+        } else if (collapsedSections === 0) {
+            btn.html('<i class="fas fa-compress-alt"></i> Collapse All');
+            allCollapsed = false;
+        } else {
+            btn.html('<i class="fas fa-compress-alt"></i> Collapse All (' + collapsedSections + '/' + totalSections + ')');
+        }
+    };
+    
+    console.log('Student form enhancements loaded');
+    console.log('Submit button initialized and ready');
+    
+    // Global error handler to prevent external scripts from breaking form
+    window.addEventListener('error', function(e) {
+        // Log the error but don't let it break the form
+        console.warn('External script error caught:', e.message);
+        
+        // Re-enable button if it was disabled due to the error
+        const btn = $('button[type="submit"]');
+        if (btn.prop('disabled') && !isSubmitting) {
+            btn.prop('disabled', false).html('<i class="fas fa-save mr-2"></i>Save Student');
+            console.log('Submit button re-enabled after external error');
+        }
+    }, true);
+    
+    // ========== PROFILE PICTURE UPLOAD ==========
+    const profilePicInput = document.querySelector('input[name="profile_pic"]');
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    const fileNameDisplay = document.getElementById('fileName');
+    const clearProfilePicBtn = document.getElementById('clearProfilePic');
+    
+    if (profilePicInput) {
+        profilePicInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                // Update file name display
+                fileNameDisplay.textContent = file.name;
+                clearProfilePicBtn.style.display = 'inline-block';
+                
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Please upload a valid image file (JPG, PNG, or GIF)');
+                    this.value = '';
+                    fileNameDisplay.textContent = 'No file chosen';
+                    clearProfilePicBtn.style.display = 'none';
+                    return;
+                }
+                
+                // Validate file size (2MB max)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size must be less than 2MB');
+                    this.value = '';
+                    fileNameDisplay.textContent = 'No file chosen';
+                    clearProfilePicBtn.style.display = 'none';
+                    return;
+                }
+                
+                // Preview the image
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    profilePicPreview.innerHTML = '<img src="' + event.target.result + '" alt="Profile Picture">';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Clear button functionality
+        if (clearProfilePicBtn) {
+            clearProfilePicBtn.addEventListener('click', function() {
+                profilePicInput.value = '';
+                fileNameDisplay.textContent = 'No file chosen';
+                this.style.display = 'none';
+                
+                // Reset preview to default icon
+                profilePicPreview.innerHTML = '<i class="fas fa-user fa-3x"></i>';
+            });
+        }
+    }
+    
+    // ========== DATE PICKER FOR ADMISSION DATE ==========
+    if (typeof $.fn.datetimepicker !== 'undefined') {
+        $('#admissionDatePicker').datetimepicker({
+            format: 'YYYY-MM-DD',
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-arrow-up',
+                down: 'fa fa-arrow-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-calendar-check',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            useCurrent: false,
+            maxDate: new Date()
+        });
+    }
+});
+
+// ========== COLLAPSIBLE SECTIONS ==========
+function toggleSection(headerElement) {
+    const section = $(headerElement).closest('.form-section');
+    section.toggleClass('collapsed');
+    
+    // Animate the content
+    const content = section.find('.form-section-content');
+    if (section.hasClass('collapsed')) {
+        content.slideUp(300);
+    } else {
+        content.slideDown(300);
+    }
+    
+    // Update the expand/collapse all button
+    if (typeof window.updateToggleAllButton === 'function') {
+        window.updateToggleAllButton();
+    }
+}
+</script>
+
+<!-- Required JavaScript Libraries for Date Picker -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+{% endblock form_content %}

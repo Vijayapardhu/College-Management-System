@@ -54,11 +54,13 @@
                     <div class="card-header-professional">
                         <h3 class="card-title"><i class="fas fa-paper-plane"></i> Send Message</h3>
                     </div>
-                    <form method="post" class="compact-form">
+                    <form method="post" class="compact-form" data-custom-submit="true">
                         {% csrf_token %}
-                        <div class="card-body-professional" style="padding: 10px;">
-                            <div class="form-group" mb-2>
-                                <label for="recipient"> style="font-size: 12px; margin-bottom: 2px;">To *</label>
+                        <div class="card-body-professional" style="padding: 20px;">
+                            <div class="form-group mb-3">
+                                <label for="recipient" style="font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">
+                                    <i class="fas fa-user me-1"></i>To <span class="text-danger">*</span>
+                                </label>
                                 <select name="receiver_id" id="recipient" class="form-control" required>
                                     <option value="">-- Select Recipient --</option>
                                     <optgroup label="HOD/Administration">
@@ -76,32 +78,37 @@
                                         {% endfor %}
                                     </optgroup>
                                 </select>
-                                <small class="form-text text-muted" style="font-size: 11px;">You can message HOD, faculty, and your assigned proctors</small>
+                                <small class="form-text text-muted mt-1">You can message HOD, faculty, and your assigned proctors</small>
                             </div>
 
-                            <div class="form-group" mb-2>
-                                <label for="subject"> style="font-size: 12px; margin-bottom: 2px;">Subject *</label>
+                            <div class="form-group mb-3">
+                                <label for="subject" style="font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">
+                                    <i class="fas fa-envelope me-1"></i>Subject <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" name="subject" id="subject" class="form-control" 
                                        placeholder="E.g., Query about Assignment 1" required maxlength="200">
                             </div>
 
-                            <div class="form-group" mb-2>
-                                <label for="message"> style="font-size: 12px; margin-bottom: 2px;">Message *</label>
+                            <div class="form-group mb-3">
+                                <label for="message" style="font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block;">
+                                    <i class="fas fa-comment me-1"></i>Message <span class="text-danger">*</span>
+                                </label>
                                 <textarea name="message" id="message" class="form-control auto-expand" rows="6" 
                                           placeholder="Type your message here..." required maxlength="2000"></textarea>
                                 <small class="form-text text-muted char-counter">0 / 2000 characters</small>
                             </div>
 
-                            <div class="alert-professional-info">
-                                <i class="fas fa-info-circle"></i> <strong>Tip:</strong> Be clear and specific in your message. Include relevant details like subject name, assignment number, or date if applicable.
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Tip:</strong> Be clear and specific in your message. Include relevant details like subject name, assignment number, or date if applicable.
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-professional-primary">
-                                <i class="fas fa-paper-plane"></i> Send Message
+                        <div class="card-footer d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
                             </button>
-                            <a href="{% url 'student_messages' %}" class="btn btn-professional-secondary">
-                                <i class="fas fa-arrow-left"></i> Cancel
+                            <a href="{% url 'student_messages' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
                             </a>
                         </div>
                     </form>
@@ -134,3 +141,10 @@
     });
 </script>
 {% endblock custom_js %}
+    $('.auto-expand').on('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+</script>
+{% endblock custom_js %}
+

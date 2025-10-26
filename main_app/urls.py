@@ -17,7 +17,7 @@ from django.urls import path, include
 
 from main_app.EditResultView import EditResultView
 
-from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views
+from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views, public_views
 
 urlpatterns = [
     # New Clean Auth System (Single-Page Login with OTP)
@@ -39,6 +39,9 @@ urlpatterns = [
     
     # Public Data Access (No authentication required)
     path("public/", views.public_data, name='public_data'),
+    path("public/roll/", public_views.public_roll_verify, name='public_roll_verify'),
+    path("public/student/info/", public_views.public_student_info, name='public_student_info'),
+    path("public/clear/", public_views.clear_public_session, name='clear_public_session'),
     
     # Utility endpoints
     path("get_attendance", views.get_attendance, name='get_attendance'),
@@ -168,7 +171,7 @@ urlpatterns = [
     path('student/view/result/', student_views.student_view_result,
          name='student_view_result'),
     
-    # Additional Student URLs for navigation
+    # Additional Student URLs for navigation (primary URLs for students)
     path("student/materials/", student_views.view_materials, name='view_materials'),
     path("student/assignments/", student_views.view_assignments, name='view_assignments'),
     path("student/submissions/", student_views.view_submissions, name='view_submissions'),
@@ -499,10 +502,10 @@ urlpatterns = [
     
     # Additional Staff URLs for navigation
     path("staff/materials/upload/", staff_views.upload_material, name='upload_material'),
-    path("staff/materials/", staff_views.view_materials, name='view_materials'),
+    path("staff/materials/", staff_views.view_materials, name='staff_view_materials_legacy'),
     path("staff/assignments/create/", staff_views.create_assignment, name='create_assignment'),
-    path("staff/assignments/", staff_views.view_assignments, name='view_assignments'),
-    path("staff/submissions/", staff_views.view_submissions, name='view_submissions'),
+    path("staff/assignments/", staff_views.view_assignments, name='staff_view_assignments_legacy'),
+    path("staff/submissions/", staff_views.view_submissions, name='staff_view_submissions_legacy'),
     path("staff/exams/create/", staff_views.create_online_exam, name='create_online_exam'),
     path("staff/exams/", staff_views.my_online_exams, name='my_online_exams'),
     
@@ -811,6 +814,7 @@ urlpatterns = [
     # Comprehensive HOD Dashboard URLs
     path("hod-dashboard/", hod_views.hod_comprehensive_dashboard, name='hod_comprehensive_dashboard'),
     path("user-management-hub/", hod_views.user_management_hub, name='user_management_hub'),
+    path("bulk-student-upload/", hod_views.bulk_student_upload, name='bulk_student_upload'),
     path("academic-operations/", hod_views.academic_operations, name='academic_operations'),
     path("reports-hub/", hod_views.reports_hub, name='reports_hub'),
     

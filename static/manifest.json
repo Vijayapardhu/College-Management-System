@@ -1,12 +1,16 @@
 {
-  "name": "EduVision - College Management System",
+  "name": "EduVision College Management System",
   "short_name": "EduVision",
-  "description": "Complete college management platform for students, faculty, and administrators",
+  "description": "Comprehensive College Management System with modern UI and real-time features",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "productivity", "business"],
   "icons": [
     {
       "src": "/static/dist/img/AdminLTELogo.png",
@@ -19,35 +23,125 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/static/dist/img/AdminLTELogo.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/dist/img/AdminLTELogo.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/dist/img/AdminLTELogo.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/dist/img/AdminLTELogo.png",
+      "sizes": "48x48",
+      "type": "image/png"
     }
   ],
-  "categories": ["education", "productivity"],
   "screenshots": [
     {
-      "src": "/static/ss/1.png",
-      "sizes": "1920x1080",
+      "src": "/static/dist/img/screenshot1.png",
+      "sizes": "1280x720",
       "type": "image/png",
-      "label": "Dashboard"
+      "form_factor": "wide",
+      "label": "EduVision Dashboard"
+    },
+    {
+      "src": "/static/dist/img/screenshot2.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "EduVision Mobile View"
     }
   ],
   "shortcuts": [
     {
       "name": "Dashboard",
-      "url": "/",
-      "description": "View your dashboard"
+      "short_name": "Dashboard",
+      "description": "View college dashboard",
+      "url": "/hod_home",
+      "icons": [
+        {
+          "src": "/static/dist/img/dashboard-icon.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "name": "Messages",
-      "url": "/messages/",
-      "description": "Check your messages"
+      "name": "Students",
+      "short_name": "Students",
+      "description": "Manage students",
+      "url": "/manage_student",
+      "icons": [
+        {
+          "src": "/static/dist/img/student-icon.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "name": "Attendance",
-      "url": "/student/view/attendance/",
-      "description": "View attendance"
+      "name": "Staff",
+      "short_name": "Staff",
+      "description": "Manage staff",
+      "url": "/manage_staff",
+      "icons": [
+        {
+          "src": "/static/dist/img/staff-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Analytics",
+      "description": "View analytics and reports",
+      "url": "/analytics/",
+      "icons": [
+        {
+          "src": "/static/dist/img/analytics-icon.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
-  "related_applications": [],
-  "prefer_related_applications": false
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://eduvision.edu/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "capture_links": "new-client",
+  "file_handlers": [
+    {
+      "action": "/upload/",
+      "accept": {
+        "application/pdf": [".pdf"],
+        "application/msword": [".doc"],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+        "image/*": [".jpg", ".jpeg", ".png", ".gif"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+eduvision",
+      "url": "/protocol?action=%s"
+    }
+  ]
 }
 

@@ -769,27 +769,42 @@ def student_my_certificates(request):
 
 @login_required
 def student_request_certificate(request):
-    """Student request a new certificate"""
+    """Student upload and manage certificates"""
     student = get_object_or_404(Student, admin=request.user)
     
     if request.method == 'POST':
-        cert_type = request.POST.get('certificate_type')
-        reason = request.POST.get('reason', '')
+        # Handle certificate upload
+        certificate_type = request.POST.get('certificate_type')
+        certificate_title = request.POST.get('certificate_title')
+        issue_date = request.POST.get('issue_date')
+        certificate_file = request.FILES.get('certificate_file')
         
-        # Create a grievance or request for certificate
-        from main_app.models import Grievance
-        Grievance.objects.create(
-            student=student,
-            grievance_type='certificate_request',
-            description=f"Certificate Request: {cert_type}\nReason: {reason}",
-            status='pending'
-        )
-        messages.success(request, "Certificate request submitted successfully!")
-        return redirect('student_my_certificates')
+        if certificate_file and certificate_type and certificate_title:
+            try:
+                from main_app.models import StudentCertificate
+                cert = StudentCertificate.objects.create(
+                    student=student,
+                    certificate_type=certificate_type,
+                    certificate_title=certificate_title,
+                    certificate_file=certificate_file,
+                    issue_date=issue_date if issue_date else None
+                )
+                messages.success(request, f"Certificate '{certificate_title}' uploaded successfully!")
+            except Exception as e:
+                messages.error(request, f"Error uploading certificate: {str(e)}")
+        else:
+            messages.error(request, "Please fill all required fields and select a file.")
+        
+        return redirect('student_request_certificate')
+    
+    # Get student's uploaded certificates
+    from main_app.models import StudentCertificate
+    certificates = StudentCertificate.objects.filter(student=student)
     
     context = {
-        'page_title': 'Request Certificate',
-        'student': student
+        'page_title': 'My Certificates',
+        'student': student,
+        'certificates': certificates
     }
     return render(request, 'student_template/request_certificate.html', context)
 
@@ -990,12 +1005,99 @@ def view_materials(request):
 @login_required(login_url='login')
 def view_assignments(request):
     """Student view assignments"""
+    from django.utils import timezone
+    
     student = get_object_or_404(Student, admin=request.user)
-    assignments = Assignment.objects.filter(subject__course=student.course).order_by('-created_at')
+    assignments = Assignment.objects.filter(subject__course=student.course).order_by('-due_date')
+    
+    # Get all submissions for this student
+    submissions = AssignmentSubmission.objects.filter(student=student)
+    submission_dict = {sub.assignment_id: sub for sub in submissions}
+    
+    # Build assignment data with submission info
+    assignment_data = []
+    now = timezone.now()
+    
+    for assignment in assignments:
+        submission = submission_dict.get(assignment.id)
+        is_overdue = assignment.due_date < now if not submission else False
+        
+        # Calculate grade color and percentage if submitted
+        grade_color = 'secondary'
+        percentage = None
+        
+        if submission and submission.marks_obtained is not None:
+            percentage = round((submission.marks_obtained / assignment.max_marks) * 100, 1)
+            if percentage >= 75:
+                grade_color = 'success'
+            elif percentage >= 50:
+                grade_color = 'warning'
+            else:
+                grade_color = 'danger'
+        
+        assignment_data.append({
+            'assignment': assignment,
+            'submission': submission,
+            'is_overdue': is_overdue,
+            'grade_color': grade_color,
+            'percentage': percentage
+        })
     
     context = {
         'page_title': 'Assignments',
-        'assignments': assignments,
+        'assignment_data': assignment_data,
+        'assignments': assignments,  # Keep for backward compatibility
+        'student': student
+    }
+    return render(request, 'student_template/view_assignments.html', context)
+
+
+@login_required(login_url='login')
+def view_submissions(request):
+    """Student view their assignment submissions"""
+    student = get_object_or_404(Student, admin=request.user)
+    submissions = AssignmentSubmission.objects.filter(student=student).order_by('-submitted_at')
+    
+    context = {
+        'page_title': 'My Submissions',
+        'submissions': submissions,
+        'student': student
+    }
+    return render(request, 'student_template/view_submissions.html', context)
+
+
+@login_required(login_url='login')
+def view_online_exam(request):
+    """Student view online exams"""
+    student = get_object_or_404(Student, admin=request.user)
+    from main_app.models import Quiz
+    quizzes = Quiz.objects.filter(subject__course=student.course, is_active=True).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Online Exams',
+        'quizzes': quizzes,
+        'student': student
+    }
+    return render(request, 'student_template/view_online_exam.html', context)
+
+
+@login_required(login_url='login')
+def view_events(request):
+    """Student view events"""
+    student = get_object_or_404(Student, admin=request.user)
+    events = Event.objects.filter(is_approved=True).order_by('-created_at')
+    
+    context = {
+        'page_title': 'Events',
+        'events': events,
+        'student': student
+    }
+    return render(request, 'student_template/view_events.html', context)
+
+    context = {
+        'page_title': 'Assignments',
+        'assignment_data': assignment_data,
+        'assignments': assignments,  # Keep for backward compatibility
         'student': student
     }
     return render(request, 'student_template/view_assignments.html', context)

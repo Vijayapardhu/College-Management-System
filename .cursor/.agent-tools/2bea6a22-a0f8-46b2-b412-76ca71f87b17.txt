@@ -1,0 +1,49 @@
+d_payment_gateway_column.py         
+C:\Users\PARDHU\Desktop\projects\College-Management-System\student_management_system\settings.py:193: RuntimeWarning: Supabase configuration missing. Document uploads will not work. Set SUPABASE_URL and SUPABASE_KEY in your .env file.                  
+  warnings.warn(
+======================================================================  
+ADDING PAYMENT_GATEWAY COLUMN TO FEEPAYMENT TABLE                       
+======================================================================  
+
+❌ Error: syntax error at or near "PRAGMA"                              
+LINE 1: PRAGMA table_info(main_app_feepayment)                          
+        ^
+
+Traceback (most recent call last):  
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute            
+    return self.cursor.execute(sql) 
+           ~~~~~~~~~~~~~~~~~~~^^^^^ 
+psycopg2.errors.SyntaxError: syntax error at or near "PRAGMA"           
+LINE 1: PRAGMA table_info(main_app_feepayment)                          
+        ^
+
+
+The above exception was the direct cause of the following exception:    
+
+Traceback (most recent call last):  
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\add_payment_gateway_column.py", line 21, in <module>                         
+    cursor.execute("PRAGMA table_info(main_app_feepayment)")            
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^            
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 102, in execute            
+    return super().execute(sql, params)                                 
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^                                 
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 67, in execute             
+    return self._execute_with_wrappers(                                 
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^                                 
+        sql, params, many=False, executor=self._execute                 
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                 
+    )
+    ^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers                                  
+    return executor(sql, params, many, context)                         
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute            
+    with self.db.wrap_database_errors:                                  
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                   
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\utils.py", line 91, in __exit__                     
+    raise dj_exc_value.with_traceback(traceback) from exc_value         
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 87, in _execute            
+    return self.cursor.execute(sql) 
+           ~~~~~~~~~~~~~~~~~~~^^^^^ 
+django.db.utils.ProgrammingError: syntax error at or near "PRAGMA"      
+LINE 1: PRAGMA table_info(main_app_feepayment)                          
+        ^

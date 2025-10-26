@@ -1,0 +1,21 @@
+Testing URLs:
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>                                  
+    from django.urls import reverse; print('Testing URLs:'); print('public_roll_verify:', reverse('public_roll_verify')); print('public_student_info:', reverse('public_student_info')); print('All public URLs working!')                                  
+                                    
+                                    
+                  ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^                         
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\base.py", line
+ 30, in reverse
+    resolver = get_resolver(urlconf)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\urls\resolvers.py", line 107, in get_resolver          
+    urlconf = settings.ROOT_URLCONF 
+              ^^^^^^^^^^^^^^^^^^^^^ 
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\conf\__init__.py", line 102, in __getattr__            
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\conf\__init__.py", line 82, in _setup                  
+    raise ImproperlyConfigured(     
+    ...<4 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: Requested setting ROOT_URLCONF, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.                

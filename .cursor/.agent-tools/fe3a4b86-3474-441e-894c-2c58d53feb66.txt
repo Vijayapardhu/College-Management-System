@@ -1,0 +1,35 @@
+olumns.py                                      
+C:\Users\PARDHU\Desktop\projects\College-Management-System\student_management_system\settings.py:193: RuntimeWarning: Supabase configuration missing. Document uploads will not work. Set SUPABASE_URL and SUPABASE_KEY in your .env file. 
+  warnings.warn(
+======================================================================                        
+ADDING MISSING COLUMNS TO FEEPAYMENT TABLE
+======================================================================                        
+
+📊 Current columns: 13
+
+📝 Adding 'payment_proof' column...
+✅ Column 'payment_proof' added successfully!
+
+📊 Final FeePayment table columns (14 total):  
+   id                             - bigint     
+   amount_paid                    - numeric    
+   payment_date                   - date       
+   payment_method                 - character varying                                         
+   transaction_id                 - character varying                                         
+   receipt_number                 - character varying                                         
+   status                         - character varying                                         
+   remarks                        - text       
+   created_at                     - timestamp with time zone                                  
+   updated_at                     - timestamp with time zone                                  
+   fee_structure_id               - bigint     
+   student_id                     - bigint     
+   payment_gateway                - character varying                                         
+   payment_proof                  - character varying                                         
+
+======================================================================                        
+✅ DATABASE UPDATE COMPLETE - Added 1 column(s)
+======================================================================                        
+
+🎉 Fee structure page should now work without errors!                                         
+
+Test it at: http://127.0.0.1:8000/student/fees/structure/                                     

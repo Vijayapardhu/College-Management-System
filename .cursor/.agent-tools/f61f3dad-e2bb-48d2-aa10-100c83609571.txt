@@ -1,0 +1,57 @@
+agement-System> taskkill /F /IM python.exe     
+SUCCESS: The process "python.exe" with PID 25860 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 32464 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 536 has been terminated.                           
+SUCCESS: The process "python.exe" with PID 16300 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 4036 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 27584 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 19732 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 27236 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 19900 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 35968 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 15284 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 37308 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 5244 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 3544 has been terminated.                          
+ERROR: The process "python.exe" with PID 30896 could not be terminated.                       
+Reason: There is no running instance of the task.                                             
+SUCCESS: The process "python.exe" with PID 8740 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 26532 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 27376 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 29760 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 34944 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 22564 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 21900 has been terminated.                         
+ERROR: The process "python.exe" with PID 14764 could not be terminated.                       
+Reason: There is no running instance of the task.                                             
+ERROR: The process "python.exe" with PID 21104 could not be terminated.                       
+Reason: There is no running instance of the task.                                             
+SUCCESS: The process "python.exe" with PID 32504 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 14388 has been terminated.                         
+ERROR: The process "python.exe" with PID 20556 could not be terminated.                       
+Reason: Access is denied.
+SUCCESS: The process "python.exe" with PID 37180 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 18156 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 24892 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 36964 has been terminated.                         
+ERROR: The process "python.exe" with PID 27204 could not be terminated.                       
+Reason: There is no running instance of the task.                                             
+SUCCESS: The process "python.exe" with PID 5248 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 27960 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 16368 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 25172 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 13712 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 36972 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 8112 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 12944 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 9268 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 19256 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 10364 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 1800 has been terminated.                          
+SUCCESS: The process "python.exe" with PID 36488 has been terminated.                         
+ERROR: The process "python.exe" with PID 2820 could not be terminated.                        
+Reason: There is no running instance of the task.                                             
+SUCCESS: The process "python.exe" with PID 37076 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 11532 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 14272 has been terminated.                         
+SUCCESS: The process "python.exe" with PID 19704 has been terminated.                         

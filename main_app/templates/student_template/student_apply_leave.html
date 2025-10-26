@@ -1,86 +1,346 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block title %}Apply for Leave{% endblock %}
+
+{% block custom_css %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    html.dark .form-card {
+        background: #1e293b;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+        font-size: 0.9375rem;
+    }
+
+    html.dark .form-label {
+        color: #f1f5f9;
+    }
+
+    .form-label.required::after {
+        content: ' *';
+        color: #dc2626;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    html.dark .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn-submit {
+        background: #1e40af;
+        color: white;
+        padding: 0.875rem 2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        background: #1e3a8a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-submit:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #1e40af;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+    }
+
+    html.dark .info-box {
+        background: #1e293b;
+    }
+
+    .info-box p {
+        margin: 0;
+        color: #1e40af;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Apply for Leave{% endblock %}
 
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-file-alt me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Submit leave application for approval
-            </p>
-        </div>
+<div class="form-container">
+    <div class="mb-4">
+        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+            <i class="fas fa-file-alt"></i> Apply for Leave
+        </h2>
+        <p style="color: #64748b; margin: 0;">Submit your leave application</p>
+    </div>
 
-        <div class="row">
-            <!-- Leave Application Form -->
-            <div class="col-lg-6">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 style="font-size: 18px;">Apply for Leave</h3>
+    <div class="info-box">
+        <p><i class="fas fa-info-circle"></i> Please fill in all required fields. Your leave application will be reviewed by the administration.</p>
+    </div>
+
+    <div class="form-card">
+        <form method="POST" data-custom-submit="true">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label required">Leave Type</label>
+                <select name="leave_type" class="form-control" required>
+                    <option value="">Select Leave Type</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="casual">Casual Leave</option>
+                    <option value="emergency">Emergency Leave</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label required">From Date</label>
+                        <input type="date" name="from_date" class="form-control" required>
                     </div>
-                    <div class="card-body-professional">
-                        {% include "main_app/form_template.html" with messages=messages form=form button_text="Submit Application"%}
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label required">To Date</label>
+                        <input type="date" name="to_date" class="form-control" required>
                     </div>
                 </div>
             </div>
 
-            <!-- Leave History -->
-            <div class="col-lg-6">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 style="font-size: 18px;">Leave History</h3>
-                    </div>
-                    <div style="padding: 0;">
-                        {% if leave_history %}
-                        <div class="table-responsive">
-                            <table class="table table-professional mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Date</th>
-                                        <th>Message</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for leave in leave_history %}
-                                    <tr>
-                                        <td><strong>{{forloop.counter}}</strong></td>
-                                        <td>{{leave.date}}</td>
-                                        <td>{{leave.message|truncatewords:10}}</td>
-                                        <td>
-                                            {% if leave.status == 0 %}
-                                            <span class="badge-professional-warning">
-                                                <i class="fas fa-clock me-1"></i>Pending
-                                            </span>
-                                            {% elif leave.status == 1 %}
-                                            <span class="badge-professional-success">
-                                                <i class="fas fa-check me-1"></i>Approved
-                                            </span>
-                                            {% else %}
-                                            <span class="badge-professional-danger">
-                                                <i class="fas fa-times me-1"></i>Rejected
-                                            </span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <div class="empty-state-professional">
-                            <i class="fas fa-calendar-day"></i>
-                            <h4>No Leave Applications</h4>
-                            <p>You haven't applied for any leave yet</p>
-                        </div>
-                        {% endif %}
+            <div class="form-group">
+                <label class="form-label required">Reason for Leave</label>
+                <textarea name="reason" class="form-control" placeholder="Please provide detailed reason for your leave..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Supporting Document (Optional)</label>
+                <input type="file" name="document" class="form-control">
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Submit Leave Application
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+    html.dark .form-control {
+        background: #334155;
+        border-color: #475569;
+        color: #f1f5f9;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn-submit {
+        background: #1e40af;
+        color: white;
+        padding: 0.875rem 2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        background: #1e3a8a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-submit:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #1e40af;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+    }
+
+    html.dark .info-box {
+        background: #1e293b;
+    }
+
+    .info-box p {
+        margin: 0;
+        color: #1e40af;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Apply for Leave{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="mb-4">
+        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
+            <i class="fas fa-file-alt"></i> Apply for Leave
+        </h2>
+        <p style="color: #64748b; margin: 0;">Submit your leave application</p>
+    </div>
+
+    <div class="info-box">
+        <p><i class="fas fa-info-circle"></i> Please fill in all required fields. Your leave application will be reviewed by the administration.</p>
+    </div>
+
+    <div class="form-card">
+        <form method="POST" data-custom-submit="true">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label required">Leave Type</label>
+                <select name="leave_type" class="form-control" required>
+                    <option value="">Select Leave Type</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="casual">Casual Leave</option>
+                    <option value="emergency">Emergency Leave</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label required">From Date</label>
+                        <input type="date" name="from_date" class="form-control" required>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label required">To Date</label>
+                        <input type="date" name="to_date" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">Reason for Leave</label>
+                <textarea name="reason" class="form-control" placeholder="Please provide detailed reason for your leave..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Supporting Document (Optional)</label>
+                <input type="file" name="document" class="form-control">
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Submit Leave Application
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                    </div>
+
+                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Apply For Leave"%}
+                </div>
+                <!-- /.card -->
+<div class="card card-primary">
+    <div class="card-header"><h3 class="card-title">{{page_title}}</h3></div>
+   <div class="table">
+
+       <table class="table table-bordered">
+           <tr>
+               <th>ID</th>
+               <th>Date</th>
+               <th>Message</th>
+                <th>Status</th>
+        </tr>
+        {% for leave in leave_history %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{leave.date}}</td>
+              <td>{{leave.message}}</td>
+              <td>
+                  
+                  {% if leave.status == 0 %}
+                  <span class="badge badge-warning">Pending</span>
+                  {% elif leave.status == 1 %}
+                  <span class="badge badge-success">Accepted</span>
+                  
+                    {% else %}
+                    <span class="badge badge-danger">Rejected</span>
+                    
+                    {% endif %}
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </div>
             </div>
         </div>
     </div>

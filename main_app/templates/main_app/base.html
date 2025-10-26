@@ -1,621 +1,686 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <title>EduVision - {% block title %}Dashboard{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --primary-color: #1e40af;
+            --secondary-color: #3b82f6;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+            --info-color: #0284c7;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --border-color: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --sidebar-width: 260px;
+            --navbar-height: 65px;
+            --transition-speed: 0.2s;
+        }
+
+        /* Dark Mode Variables */
+        html.dark {
+            --primary-color: #3b82f6;
+            --dark-color: #0f172a;
+            --light-color: #1e293b;
+            --border-color: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed);
+            line-height: 1.6;
+        }
+
+        html.dark body {
+            background-color: #0f172a;
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #1e40af;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+            transition: transform var(--transition-speed);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 2rem;
+        }
+
+        html.dark .sidebar {
+            background: #1e293b;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+            border-right-color: #334155;
+        }
+
+        .sidebar-header {
+            padding: 1.25rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-logo i {
+            font-size: 1.75rem;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0 3rem 0;
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0.25rem 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.75rem 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            font-weight: 400;
+            font-size: 0.9375rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border-left-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border-left-color: white;
+            font-weight: 500;
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Mobile Sidebar Toggle */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1100;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            .navbar-custom {
+                padding-left: 4rem !important;
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - var(--sidebar-width));
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: white;
+            height: var(--navbar-height);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        html.dark .navbar-custom {
+            background: #1e293b;
+            border-bottom-color: #334155;
+        }
+
+        .navbar-title {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+        .navbar-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        html.dark .navbar-btn:hover {
+            background: #334155;
+            color: var(--secondary-color);
+        }
+
+        .navbar-btn i {
+            font-size: 1.25rem;
+        }
+
+        .navbar-btn .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 10px;
+            padding: 0.125rem 0.375rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            border: 1px solid transparent;
+        }
+
+        .user-dropdown:hover {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+        }
+
+        html.dark .user-dropdown:hover {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        html.dark .user-avatar {
+            border-color: #334155;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            padding: 2rem;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 1rem;
+            }
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Messages/Alerts */
+        .alert {
+            border-radius: 6px;
+            border-left: 4px solid;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            background: white;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #166534;
+            border-left-color: #16a34a;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border-left-color: #dc2626;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            color: #92400e;
+            border-left-color: #f59e0b;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            color: #1e40af;
+            border-left-color: #3b82f6;
+        }
+        
+        html.dark .alert {
+            background: #1e293b;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+        }
+
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Overlay for mobile menu */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Additional custom styles */
+    {% block custom_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <!-- Mobile Sidebar Toggle -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="main-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>EduVision</span>
+                </a>
+            </div>
+
+            <nav>
+                <ul class="sidebar-menu">
+                    {% block sidebar_menu %}
+                    {% if user.user_type == '3' %}
+                        <!-- Student Menu -->
+                        <li><a href="{% url 'student_home' %}" class="{% if request.resolver_match.url_name == 'student_home' %}active{% endif %}">
+                            <i class="fas fa-home"></i> <span>Dashboard</span>
+                        </a></li>
+                        <li><a href="{% url 'student_view_attendance' %}">
+                            <i class="fas fa-calendar-check"></i> <span>Attendance</span>
+                        </a></li>
+                        <li><a href="{% url 'student_view_result' %}">
+                            <i class="fas fa-chart-line"></i> <span>Results</span>
+                        </a></li>
+                        <li><a href="{% url 'student_view_timetable' %}">
+                            <i class="fas fa-clock"></i> <span>My Timetable</span>
+                        </a></li>
+                        <li><a href="{% url 'view_assignments' %}">
+                            <i class="fas fa-tasks"></i> <span>Assignments</span>
+                        </a></li>
+                        <li><a href="{% url 'view_materials' %}">
+                            <i class="fas fa-book"></i> <span>Study Materials</span>
+                        </a></li>
+                        <li><a href="{% url 'student_apply_leave' %}">
+                            <i class="fas fa-file-alt"></i> <span>Apply Leave</span>
+                        </a></li>
+                        <li><a href="{% url 'student_gate_pass' %}">
+                            <i class="fas fa-id-card"></i> <span>Gate Pass</span>
+                        </a></li>
+                        <li><a href="{% url 'student_request_certificate' %}">
+                            <i class="fas fa-certificate"></i> <span>Certificates</span>
+                        </a></li>
+                        <li><a href="{% url 'student_view_fee_structure' %}">
+                            <i class="fas fa-dollar-sign"></i> <span>Fee Structure</span>
+                        </a></li>
+                        <li><a href="{% url 'view_messages' %}">
+                            <i class="fas fa-envelope"></i> <span>Messages</span>
+                        </a></li>
+                        <li><a href="{% url 'student_view_notification' %}">
+                            <i class="fas fa-bell"></i> <span>Notifications</span>
+                        </a></li>
+                        <li><a href="{% url 'student_view_profile' %}">
+                            <i class="fas fa-user"></i> <span>My Profile</span>
+                        </a></li>
+                        <li><a href="{% url 'student_feedback' %}">
+                            <i class="fas fa-comment"></i> <span>Feedback</span>
+                        </a></li>
+                        <li><a href="{% url 'user_logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                        </a></li>
+                {% endif %}
+                    {% endblock %}
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <nav class="navbar-custom">
+                <h1 class="navbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                
+                <div class="navbar-actions">
+                    <!-- Theme Toggle -->
+                    <button class="navbar-btn" onclick="toggleTheme()" title="Toggle Dark Mode">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                    
+                    <!-- Notifications -->
+                    <button class="navbar-btn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+
+                            <!-- Messages -->
+                    <button class="navbar-btn" title="Messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge">5</span>
+                </button>
+                
+                    <!-- User Dropdown -->
+                    <div class="user-dropdown">
+                        <div class="user-avatar">
+                            {{ user.first_name.0|upper }}{{ user.last_name.0|upper }}
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+                            <span class="user-role">
+                                {% if user.user_type == '1' %}Admin
+                                {% elif user.user_type == '2' %}Staff
+                                {% elif user.user_type == '3' %}Student
+                                {% elif user.user_type == '4' %}Management
+                                {% endif %}
+                            </span>
+                        </div>
+            </div>
+                </div>
+                </nav>
+
+            <!-- Content Area -->
+            <div class="content-wrapper">
+                <!-- Django Messages -->
+                                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                {% endif %}
+
+                <!-- Page Content -->
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script>
+        // Sidebar Toggle for Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Dark Mode Toggle
+        let isDarkMode = localStorage.getItem('theme') === 'dark';
+        
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            
+            if (isDarkMode) {
+                html.classList.add('dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.classList.remove('dark');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').classList.remove('fa-moon');
+                document.getElementById('theme-icon').classList.add('fa-sun');
+            }
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.transition = 'opacity 0.3s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                });
+            }, 5000);
+        });
+
+        // Close sidebar on mobile when clicking a link
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+    
+    {% block custom_js %}{% endblock %}
+</body>
+</html>
+
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}EduVision - College Management System{% endblock %}</title>
-    
-    <!-- Responsive Meta Tags -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#6366f1">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                            950: '#1e1b4b',
-                        },
-                        secondary: {
-                            50: '#faf5ff',
-                            100: '#f3e8ff',
-                            200: '#e9d5ff',
-                            300: '#d8b4fe',
-                            400: '#c084fc',
-                            500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7c3aed',
-                            800: '#6b21a8',
-                            900: '#581c87',
-                            950: '#3b0764',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                        'display': ['Poppins', 'Inter', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-in': 'slideIn 0.3s ease-out',
-                        'bounce-in': 'bounceIn 0.6s ease-out',
-                        'slide-in-right': 'slideInRight 0.3s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideIn: {
-                            '0%': { transform: 'translateY(-10px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        slideInRight: {
-                            '0%': { transform: 'translateX(10px)', opacity: '0' },
-                            '100%': { transform: 'translateX(0)', opacity: '1' },
-                        },
-                        bounceIn: {
-                            '0%': { transform: 'scale(0.3)', opacity: '0' },
-                            '50%': { transform: 'scale(1.05)' },
-                            '70%': { transform: 'scale(0.9)' },
-                            '100%': { transform: 'scale(1)', opacity: '1' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- AdminLTE (Minimal - Load First) -->
-    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
-    
-    <!-- Design System & Components (Override AdminLTE) -->
-    <link rel="stylesheet" href="{% static 'css/design-system.css' %}">
-    <link rel="stylesheet" href="{% static 'css/components.css' %}">
-    <link rel="stylesheet" href="{% static 'css/modern-forms.css' %}">
-    <link rel="stylesheet" href="{% static 'css/modern-tables.css' %}">
-    <link rel="stylesheet" href="{% static 'css/form-fields-override.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mobile-responsive.css' %}">
-    <link rel="stylesheet" href="{% static 'css/animations.css' %}">
-    <link rel="stylesheet" href="{% static 'css/accessibility.css' %}">
-    <link rel="stylesheet" href="{% static 'css/global-overrides.css' %}">
-    <link rel="stylesheet" href="{% static 'css/college-casual-theme.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar-clean.css' %}">
-    
-    <!-- Additional Plugins -->
-    <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="{% static 'manifest.json' %}">
-    <link rel="apple-touch-icon" href="{% static 'dist/img/AdminLTELogo.png' %}">
-    
-    {% block custom_css %}{% endblock %}
-</head>
-
-<body class="h-full bg-gray-50 dark:bg-gray-900" data-theme="light">
-    <!-- Skip to Main Content Link -->
-    <a href="#main-content" class="skip-to-main">Skip to main content</a>
-    
-    <!-- Live Region for Screen Readers -->
-    <div aria-live="polite" aria-atomic="true" class="sr-only" id="live-region"></div>
-    
-    <div class="min-h-full">
-        <!-- Mobile sidebar overlay -->
-        <div id="mobile-sidebar-overlay" 
-             class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden lg:hidden" 
-             aria-hidden="true"></div>
-        
-        <!-- Sidebar -->
-        <aside id="sidebar" 
-               role="navigation" 
-               aria-label="Main navigation"
-               class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0">
-            <!-- Brand Logo -->
-            <div class="sidebar-header">
-                <a href="{% url 'hod_home' %}" class="sidebar-logo" aria-label="EduVision home">
-                    <div class="sidebar-logo-icon">
-                        🎓
-                    </div>
-                    <div>
-                        <div class="sidebar-logo-text">EduVision</div>
-                        <div class="sidebar-logo-subtitle">College ERP</div>
-                    </div>
-                </a>
-                <button id="sidebar-close" 
-                        class="lg:hidden absolute top-6 right-6 p-2 rounded-md text-gray-400 hover:text-gray-600"
-                        aria-label="Close sidebar">
-                    <i class="fas fa-times" aria-hidden="true"></i>
-                </button>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="flex-1 overflow-y-auto" aria-label="Primary">
-                {% if request.user.user_type == '1' %}
-                    {% include "navigation/hod_nav.html" %}
-                {% elif request.user.user_type == '2' %}
-                    {% include "navigation/staff_nav.html" %}
-                {% elif request.user.user_type == '3' %}
-                    {% include "navigation/student_nav.html" %}
-                {% elif request.user.user_type == '4' %}
-                    {% include "navigation/management_nav.html" %}
-                {% else %}
-                    <div class="sidebar-nav">
-                        <a href="{% url 'login' %}" class="nav-item nav-item-inactive" aria-label="Login to your account">
-                            <i class="nav-icon fas fa-sign-in-alt" aria-hidden="true"></i>
-                            <span class="nav-text">Login</span>
-                        </a>
-                    </div>
-                {% endif %}
-            </nav>
-            
-            <!-- User Profile -->
-            {% if request.user.is_authenticated %}
-                {% include "navigation/sidebar_user.html" %}
-            {% endif %}
-        </aside>
-
-        <!-- Main content -->
-        <div class="lg:pl-64">
-            <!-- Top navigation -->
-            <header role="banner">
-                <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700" 
-                     aria-label="Top navigation">
-                <div class="px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex items-center">
-                            <!-- Mobile menu button -->
-                            <button id="sidebar-toggle" 
-                                    class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                    aria-label="Open sidebar menu"
-                                    aria-expanded="false"
-                                    aria-controls="sidebar">
-                                <i class="fas fa-bars" aria-hidden="true"></i>
-                            </button>
-                            
-                            <!-- Breadcrumb -->
-                            <nav class="ml-4 flex items-center space-x-2 text-sm" 
-                                 aria-label="Breadcrumb"
-                                 role="navigation">
-                                <a href="{% url 'hod_home' %}" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                    <i class="fas fa-home"></i>
-                                </a>
-                                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                                <span class="text-gray-900 dark:text-gray-100 font-medium">{% block page_title %}{% endblock %}</span>
-                            </nav>
-                        </div>
-
-                        <div class="flex items-center space-x-4">
-                            <!-- Global Search -->
-                            <div class="hidden md:block">
-                                <div class="relative">
-                                    <label for="global-search" class="sr-only">Search</label>
-                                    <input type="text" 
-                                           placeholder="Search..." 
-                                           class="w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-                                           id="global-search"
-                                           aria-label="Global search"
-                                           role="searchbox">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400" aria-hidden="true"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Quick Actions -->
-                            <div class="relative">
-                                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" 
-                                        aria-label="Quick Actions">
-                                    <i class="fas fa-bolt" aria-hidden="true"></i>
-                                </button>
-                            </div>
-
-                            <!-- Messages -->
-                            <div class="relative">
-                                <a href="{% url 'view_messages' %}" 
-                                   class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 relative" 
-                                   aria-label="Messages">
-                                    <i class="far fa-envelope" aria-hidden="true"></i>
-                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden" 
-                                          id="unread-count"
-                                          role="status"
-                                          aria-label="Unread messages">0</span>
-                                </a>
-                            </div>
-
-                            <!-- Notifications -->
-                            <div class="relative">
-                                {% if request.user.user_type == '2' %}
-                                    <a href="{% url 'staff_view_notification' %}" 
-                                       class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 relative" 
-                                       aria-label="Notifications">
-                                        <i class="far fa-bell" aria-hidden="true"></i>
-                                        <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
-                                              role="status"
-                                              aria-label="3 unread notifications">3</span>
-                                    </a>
-                                {% elif request.user.user_type == '3' %}
-                                    <a href="{% url 'student_view_notification' %}" 
-                                       class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 relative" 
-                                       aria-label="Notifications">
-                                        <i class="far fa-bell" aria-hidden="true"></i>
-                                        <span class="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
-                                              role="status"
-                                              aria-label="2 unread notifications">2</span>
-                                    </a>
-                                {% endif %}
-                            </div>
-
-                            <!-- Theme Toggle -->
-                            <button id="theme-toggle" 
-                                    class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" 
-                                    aria-label="Toggle dark mode">
-                                <i class="fas fa-moon" id="theme-icon" aria-hidden="true"></i>
-                            </button>
-
-                            <!-- User Menu -->
-                            <div class="relative">
-                                <button class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" 
-                                        id="user-menu-button"
-                                        aria-label="User menu"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                    <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                                        <span class="text-white text-sm font-medium">
-                                            {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
-                                        </span>
-                                    </div>
-                                    <div class="hidden md:block text-left">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ request.user.first_name }} {{ request.user.last_name }}
-                                        </div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">
-                                            {% if request.user.user_type == '1' %}HOD/Admin
-                                            {% elif request.user.user_type == '2' %}Faculty
-                                            {% elif request.user.user_type == '3' %}Student
-                                            {% elif request.user.user_type == '4' %}Management
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
-                                </button>
-                                
-                                <!-- User dropdown menu -->
-                                <div id="user-menu" 
-                                     class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50"
-                                     role="menu"
-                                     aria-labelledby="user-menu-button">
-                                    <div class="py-1">
-                                        {% if request.user.user_type == '1' %}
-                                            <a href="{% url 'admin_view_profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <i class="fas fa-user mr-3"></i> Profile
-                                            </a>
-                                        {% elif request.user.user_type == '2' %}
-                                            <a href="{% url 'staff_view_profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <i class="fas fa-user mr-3"></i> Profile
-                                            </a>
-                                        {% elif request.user.user_type == '3' %}
-                                            <a href="{% url 'student_view_profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <i class="fas fa-user mr-3"></i> Profile
-                                            </a>
-                                        {% endif %}
-                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                            <i class="fas fa-cog mr-3"></i> Settings
-                                        </a>
-                                        <div class="border-t border-gray-200 dark:border-gray-700"></div>
-                                        <a href="{% url 'user_logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" onclick="return confirm('Logout?')">
-                                            <i class="fas fa-sign-out-alt mr-3"></i> Logout
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </nav>
-            </header>
-
-            <!-- Page content -->
-            <main id="main-content" 
-                  class="flex-1" 
-                  role="main" 
-                  aria-label="Main content">
-                <!-- Messages -->
-                {% if messages %}
-                    <div class="px-4 sm:px-6 lg:px-8 py-4" role="alert" aria-live="polite">
-                        {% for message in messages %}
-                            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-4" role="alert">
-                                <div class="flex items-center">
-                                    {% if message.tags == 'success' %}
-                                        <i class="fas fa-check-circle mr-2"></i>
-                                    {% else %}
-                                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                                    {% endif %}
-                                    {{ message }}
-                                </div>
-                                <button type="button" class="absolute top-0 right-0 p-2" onclick="this.parentElement.remove()">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                <!-- Main content area -->
-                <div class="px-4 sm:px-6 lg:px-8 py-8">
-                    {% block content %}{% endblock %}
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
-    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
-    
-    <!-- DataTables Helper (Must load after DataTables) -->
-    <script src="{% static 'js/datatables-helper.js' %}"></script>
-    
-    <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
-    <script src="{% static 'dist/js/adminlte.js' %}"></script>
-    
-    <!-- Performance Optimization -->
-    <script src="{% static 'js/performance-optimization.js' %}"></script>
-    
-    <!-- Application Utilities -->
-    <script src="{% static 'js/app-utilities.js' %}"></script>
-    
-    <!-- Casual Interactions -->
-    <script src="{% static 'js/casual-interactions.js' %}"></script>
-
-    <!-- Modern JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar toggle functionality
-            const sidebarToggle = document.getElementById('sidebar-toggle');
-            const sidebarClose = document.getElementById('sidebar-close');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobile-sidebar-overlay');
-
-            function openSidebar() {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-                overlay.setAttribute('aria-hidden', 'false');
-                sidebarToggle.setAttribute('aria-expanded', 'true');
-                
-                // Focus first focusable element in sidebar
-                const firstFocusable = sidebar.querySelector('a, button');
-                if (firstFocusable) {
-                    setTimeout(() => firstFocusable.focus(), 100);
-                }
-            }
-
-            function closeSidebar() {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-                overlay.setAttribute('aria-hidden', 'true');
-                sidebarToggle.setAttribute('aria-expanded', 'false');
-                
-                // Return focus to toggle button
-                if (sidebarToggle) {
-                    sidebarToggle.focus();
-                }
-            }
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', openSidebar);
-            }
-
-            if (sidebarClose) {
-                sidebarClose.addEventListener('click', closeSidebar);
-            }
-
-            if (overlay) {
-                overlay.addEventListener('click', closeSidebar);
-            }
-
-            // Keyboard navigation for sidebar
-            if (sidebar) {
-                sidebar.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') {
-                        closeSidebar();
-                    }
-                });
-            }
-
-            // User menu toggle with accessibility
-            const userMenuButton = document.getElementById('user-menu-button');
-            const userMenu = document.getElementById('user-menu');
-
-            if (userMenuButton && userMenu) {
-                userMenuButton.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const isHidden = userMenu.classList.contains('hidden');
-                    userMenu.classList.toggle('hidden');
-                    userMenuButton.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-                    
-                    // Focus first menu item when opening
-                    if (isHidden) {
-                        const firstItem = userMenu.querySelector('a');
-                        if (firstItem) {
-                            setTimeout(() => firstItem.focus(), 100);
-                        }
-                    }
-                });
-
-                // Close user menu when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
-                        userMenu.classList.add('hidden');
-                        userMenuButton.setAttribute('aria-expanded', 'false');
-                    }
-                });
-
-                // Keyboard navigation in user menu
-                userMenu.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') {
-                        userMenu.classList.add('hidden');
-                        userMenuButton.setAttribute('aria-expanded', 'false');
-                        userMenuButton.focus();
-                    }
-                    
-                    // Arrow key navigation
-                    const menuItems = Array.from(userMenu.querySelectorAll('a'));
-                    const currentIndex = menuItems.indexOf(document.activeElement);
-                    
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        const nextIndex = (currentIndex + 1) % menuItems.length;
-                        menuItems[nextIndex].focus();
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        const prevIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
-                        menuItems[prevIndex].focus();
-                    }
-                });
-            }
-
-            // Theme toggle functionality
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            const body = document.body;
-
-            if (themeToggle && themeIcon) {
-                // Check for saved theme preference
-                const currentTheme = localStorage.getItem('theme') || 'light';
-                if (currentTheme === 'dark') {
-                    body.setAttribute('data-theme', 'dark');
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
-                }
-
-                themeToggle.addEventListener('click', function() {
-                    const isDark = body.getAttribute('data-theme') === 'dark';
-                    const newTheme = isDark ? 'light' : 'dark';
-                    
-                    body.setAttribute('data-theme', newTheme);
-                    themeIcon.classList.toggle('fa-moon');
-                    themeIcon.classList.toggle('fa-sun');
-                    
-                    localStorage.setItem('theme', newTheme);
-                });
-            }
-
-            // Global search functionality
-            const globalSearch = document.getElementById('global-search');
-            if (globalSearch) {
-                globalSearch.addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    if (searchTerm.length > 2) {
-                        // Implement search functionality here
-                        console.log('Searching for:', searchTerm);
-                    }
-                });
-
-                // Keyboard shortcut for search (Cmd/Ctrl + K)
-                document.addEventListener('keydown', function(e) {
-                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                        e.preventDefault();
-                        globalSearch.focus();
-                    }
-                });
-            }
-
-            // Auto-hide alerts after 5 seconds
-            document.querySelectorAll('.alert').forEach(alert => {
-                setTimeout(() => {
-                    alert.style.opacity = '0';
-                    setTimeout(() => {
-                        if (alert.parentNode) {
-                            alert.parentNode.removeChild(alert);
-                        }
-                    }, 300);
-                }, 5000);
-            });
-
-            // Loading states for buttons
-            document.querySelectorAll('button[type="submit"]').forEach(button => {
-                button.addEventListener('click', function() {
-                    if (this.form && this.form.checkValidity()) {
-                        this.classList.add('opacity-50', 'cursor-not-allowed');
-                        this.disabled = true;
-                    }
-                });
-            });
-
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-        });
-
-        // CSRF Token for AJAX requests
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // Set up CSRF token for all AJAX requests
-        const csrftoken = getCookie('csrftoken');
-        if (csrftoken) {
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        }
-    </script>
-
-    {% block custom_js %}{% endblock %}
-</body>
-</html>

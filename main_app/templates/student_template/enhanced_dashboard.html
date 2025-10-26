@@ -1,9 +1,173 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}Student Dashboard{% endblock page_title %}
+{% block title %}Student Dashboard{% endblock %}
 
 {% block custom_css %}
 <style>
+    .welcome-section {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 8px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .welcome-section h2 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        border-left: 4px solid;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    html.dark .stat-card {
+        background: #1e293b;
+    }
+
+    .stat-card.blue { border-left-color: #1e40af; }
+    .stat-card.green { border-left-color: #059669; }
+    .stat-card.orange { border-left-color: #d97706; }
+    .stat-card.red { border-left-color: #dc2626; }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.25rem;
+    }
+
+    html.dark .stat-value {
+        color: #f1f5f9;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .action-btn {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.25rem;
+        text-align: center;
+        text-decoration: none;
+        color: #0f172a;
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        border-color: #1e40af;
+        background: #eff6ff;
+        transform: translateY(-2px);
+    }
+
+    html.dark .action-btn {
+        background: #1e293b;
+        border-color: #334155;
+        color: #f1f5f9;
+    }
+
+    .action-btn i {
+        font-size: 2rem;
+        color: #1e40af;
+        margin-bottom: 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h2>Welcome back, {{ user.first_name }}! 👋</h2>
+    <p>Here's what's happening with your academic progress today</p>
+    <div style="margin-top: 0.75rem; opacity: 0.9;">
+        <i class="fas fa-calendar-alt"></i> {{ current_date|date:"l, F d, Y" }}
+        </div>
+    </div>
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-value">{{ total_subject }}</div>
+        <div class="stat-label">Total Subjects</div>
+        </div>
+        
+    <div class="stat-card green">
+        <div class="stat-value">{{ percent_present }}%</div>
+        <div class="stat-label">Attendance Rate</div>
+    </div>
+
+    <div class="stat-card orange">
+        <div class="stat-value">{{ total_attendance }}</div>
+        <div class="stat-label">Classes Attended</div>
+                    </div>
+                    
+    <div class="stat-card red">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Notifications</div>
+                        </div>
+                    </div>
+                    
+<div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);">
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
+        <i class="fas fa-bolt"></i> Quick Actions
+    </h3>
+    <div class="quick-actions">
+        <a href="{% url 'view_materials' %}" class="action-btn">
+            <i class="fas fa-book"></i>
+            <div>Materials</div>
+        </a>
+        <a href="{% url 'view_assignments' %}" class="action-btn">
+            <i class="fas fa-tasks"></i>
+            <div>Assignments</div>
+        </a>
+        <a href="{% url 'student_view_attendance' %}" class="action-btn">
+            <i class="fas fa-calendar-check"></i>
+            <div>Attendance</div>
+        </a>
+        <a href="{% url 'student_view_result' %}" class="action-btn">
+            <i class="fas fa-chart-line"></i>
+            <div>Results</div>
+        </a>
+        <a href="{% url 'student_apply_leave' %}" class="action-btn">
+            <i class="fas fa-file-alt"></i>
+            <div>Apply Leave</div>
+        </a>
+        <a href="{% url 'student_view_fee_structure' %}" class="action-btn">
+            <i class="fas fa-dollar-sign"></i>
+            <div>Fee Structure</div>
+        </a>
+                        </div>
+                    </div>
+{% endblock %}
+
     .academic-summary-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 16px;

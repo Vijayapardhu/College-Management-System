@@ -1,0 +1,47 @@
+C:\Users\PARDHU\Desktop\projects\College-Management-System\student_management_system\settings.py:193: RuntimeWarning: Supabase configuration missing. Document uploads will not work. Set SUPABASE_URL and SUPABASE_KEY in your .env file.      
+  warnings.warn(
+======================================================================
+STUDENT NAVIGATION URL VALIDATION
+======================================================================
+
+📂 Dashboard Section:
+----------------------------------------------------------------------
+  ✅ Dashboard Home                 → student_home                        → /student/home/                                                                      
+
+📂 Academic Section:
+----------------------------------------------------------------------
+  ✅ Attendance                     → student_view_attendance             → /student/view/attendance/                                                           
+  ✅ Results                        → student_view_result                 → /student/view/result/                                                               
+  ✅ Timetable                      → student_view_timetable              → /student/timetable/                                                                 
+  ✅ Assignments                    → view_assignments                    → /student/assignments/                                                               
+  ✅ Study Materials                → view_materials                      → /student/materials/                                                                 
+
+📂 Services Section:
+----------------------------------------------------------------------
+  ✅ Apply Leave                    → student_apply_leave                 → /student/apply/leave/                                                               
+  ✅ Gate Pass                      → student_gate_pass                   → /student/gate_pass/                                                                 
+  ✅ Certificates                   → student_request_certificate         → /student/certificates/request/                                                      
+  ✅ Fee Structure                  → student_view_fee_structure          → /student/fees/structure/                                                            
+
+📂 Communication Section:
+----------------------------------------------------------------------
+  ✅ Messages                       → view_messages                       → /messages/                                                                          
+  ✅ Notifications                  → student_view_notification           → /student/view/notification/                                                         
+
+📂 Profile Section:
+----------------------------------------------------------------------
+  ✅ My Profile                     → student_view_profile                → /student/view/profile/                                                              
+  ✅ Feedback                       → student_feedback                    → /student/feedback/                                                                  
+
+📂 Account Section:
+----------------------------------------------------------------------
+  ✅ Logout                         → user_logout                         → /logout_user/                                                                       
+
+======================================================================
+🎉 SUCCESS! All student navigation URLs are valid!
+======================================================================
+
+Total URLs checked: 15
+Valid: 15
+Broken: 0
+======================================================================

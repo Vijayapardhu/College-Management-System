@@ -1,0 +1,2211 @@
+{% extends 'forms/base_form.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<style>
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    
+    .form-section-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        margin-right: 1rem;
+    }
+    
+    .form-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-field {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-field label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-field label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 4px;
+    }
+    
+    .form-control {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .form-control:focus {
+        outline: none !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    .file-upload-wrapper {
+        position: relative;
+    }
+    
+    .file-upload-label {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: transform 0.2s;
+    }
+    
+    .file-upload-label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .file-upload-input {
+        display: none !important;
+    }
+    
+    .file-name-display {
+        display: inline-block;
+        margin-left: 1rem;
+        color: #6b7280;
+        font-size: 14px;
+    }
+    
+    .form-help {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 13px;
+        margin-top: 0.25rem;
+    }
+    
+    .document-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .document-item {
+        border: 2px dashed #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    
+    .document-item:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+    
+    .document-item.has-file {
+        border-color: #10b981;
+        border-style: solid;
+        background: #f0fdf4;
+    }
+    
+    @media (max-width: 768px) {
+        .form-row,
+        .form-row-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block form_icon %}fas fa-user-graduate{% endblock %}
+{% block form_title %}{% if student_id %}Edit Student{% else %}Add Student{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Fill in the essential student information" }}{% endblock %}
+
+{% block cancel_url %}{% url 'manage_student' %}{% endblock %}
+{% block submit_text %}Save Student{% endblock %}
+
+{% block form_content %}
+
+<!-- Section 1: Basic Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <h3 class="form-section-title">Basic Information</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.first_name.id_for_label }}" class="required">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.last_name.id_for_label }}" class="required">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.gender.id_for_label }}" class="required">Gender</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<div class="invalid-feedback">{{ form.gender.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="required">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {% if form.date_of_birth.errors %}<div class="invalid-feedback">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mobile_number.id_for_label }}" class="required">Mobile Number</label>
+            {{ form.mobile_number }}
+            {% if form.mobile_number.errors %}<div class="invalid-feedback">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}" class="required">Email Address</label>
+            {{ form.email }}
+            <p class="form-help">Used for login and communication</p>
+            {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Academic Details -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3 class="form-section-title">Academic Details</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.course.id_for_label }}" class="required">Course</label>
+            {{ form.course }}
+            {% if form.course.errors %}<div class="invalid-feedback">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.session.id_for_label }}" class="required">Session</label>
+            {{ form.session }}
+            {% if form.session.errors %}<div class="invalid-feedback">{{ form.session.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.course_type.id_for_label }}">Course Type</label>
+            {{ form.course_type }}
+            {% if form.course_type.errors %}<div class="invalid-feedback">{{ form.course_type.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.roll_number.id_for_label }}" class="required">Roll Number</label>
+            {{ form.roll_number }}
+            <p class="form-help">Used for login (e.g., CSE2024001)</p>
+            {% if form.roll_number.errors %}<div class="invalid-feedback">{{ form.roll_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_number.id_for_label }}">Admission Number</label>
+            {{ form.admission_number }}
+            {% if form.admission_number.errors %}<div class="invalid-feedback">{{ form.admission_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+            {{ form.admission_date }}
+            {% if form.admission_date.errors %}<div class="invalid-feedback">{{ form.admission_date.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: Parent Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="form-section-title">Parent / Guardian Information</h3>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.father_name.id_for_label }}">Father's Name</label>
+            {{ form.father_name }}
+            {% if form.father_name.errors %}<div class="invalid-feedback">{{ form.father_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.father_mobile.id_for_label }}">Father's Mobile</label>
+            {{ form.father_mobile }}
+            {% if form.father_mobile.errors %}<div class="invalid-feedback">{{ form.father_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.mother_name.id_for_label }}">Mother's Name</label>
+            {{ form.mother_name }}
+            {% if form.mother_name.errors %}<div class="invalid-feedback">{{ form.mother_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_mobile.id_for_label }}">Mother's Mobile</label>
+            {{ form.mother_mobile }}
+            {% if form.mother_mobile.errors %}<div class="invalid-feedback">{{ form.mother_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.guardian_name.id_for_label }}">Guardian Name (Optional)</label>
+            {{ form.guardian_name }}
+            <p class="form-help">If different from parents</p>
+            {% if form.guardian_name.errors %}<div class="invalid-feedback">{{ form.guardian_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.guardian_mobile.id_for_label }}">Guardian Mobile (Optional)</label>
+            {{ form.guardian_mobile }}
+            {% if form.guardian_mobile.errors %}<div class="invalid-feedback">{{ form.guardian_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 4: Document Uploads -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="form-section-title">Document Uploads</h3>
+    </div>
+    
+    <div class="document-grid">
+        <!-- Photo -->
+        <div class="document-item" data-field="photo">
+            <i class="fas fa-image fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Photo</h5>
+            <label for="{{ form.photo.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.photo }}
+            <div class="file-name-display mt-2" data-display="photo">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.photo.errors %}<div class="invalid-feedback">{{ form.photo.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Signature -->
+        <div class="document-item" data-field="signature">
+            <i class="fas fa-signature fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Signature</h5>
+            <label for="{{ form.signature.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.signature }}
+            <div class="file-name-display mt-2" data-display="signature">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.signature.errors %}<div class="invalid-feedback">{{ form.signature.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Aadhaar Card -->
+        <div class="document-item" data-field="aadhaar_card">
+            <i class="fas fa-id-card fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Aadhaar Card</h5>
+            <label for="{{ form.aadhaar_card.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.aadhaar_card }}
+            <div class="file-name-display mt-2" data-display="aadhaar_card">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF/Image</p>
+            {% if form.aadhaar_card.errors %}<div class="invalid-feedback">{{ form.aadhaar_card.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Income Certificate -->
+        <div class="document-item" data-field="income_certificate">
+            <i class="fas fa-file-invoice-dollar fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Income Certificate</h5>
+            <label for="{{ form.income_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.income_certificate }}
+            <div class="file-name-display mt-2" data-display="income_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.income_certificate.errors %}<div class="invalid-feedback">{{ form.income_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Transfer Certificate -->
+        <div class="document-item" data-field="transfer_certificate">
+            <i class="fas fa-file-alt fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Transfer Certificate</h5>
+            <label for="{{ form.transfer_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.transfer_certificate }}
+            <div class="file-name-display mt-2" data-display="transfer_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.transfer_certificate.errors %}<div class="invalid-feedback">{{ form.transfer_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- 10th/12th Certificate -->
+        <div class="document-item" data-field="tenth_certificate">
+            <i class="fas fa-certificate fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">10th/12th Certificate</h5>
+            <label for="{{ form.tenth_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.tenth_certificate }}
+            <div class="file-name-display mt-2" data-display="tenth_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.tenth_certificate.errors %}<div class="invalid-feedback">{{ form.tenth_certificate.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    console.log('========================================');
+    console.log('Simplified Student Form LOADED');
+    console.log('jQuery version:', $.fn.jquery);
+    console.log('Form element:', $('form').length, 'found');
+    console.log('========================================');
+    
+    // File upload handling
+    $('input[type="file"]').on('change', function() {
+        console.log('File input changed:', this.name);
+        const file = this.files[0];
+        const fieldName = $(this).attr('name');
+        const displayElement = $(`[data-display="${fieldName}"]`);
+        const documentItem = $(`[data-field="${fieldName}"]`);
+        
+        if (file) {
+            displayElement.text(file.name);
+            documentItem.addClass('has-file');
+            
+            // File validation
+            const maxSize = fieldName === 'photo' || fieldName === 'signature' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File size exceeds ${maxSize / (1024*1024)}MB limit`);
+                $(this).val('');
+                displayElement.text('No file chosen');
+                documentItem.removeClass('has-file');
+            }
+        } else {
+            displayElement.text('No file chosen');
+            documentItem.removeClass('has-file');
+        }
+    });
+    
+    // Form submission handling
+    const form = $('form');
+    const submitButton = form.find('button[type="submit"]');
+    let isSubmitting = false;
+    
+    console.log('Submit button found:', submitButton.length);
+    
+    form.on('submit', function(e) {
+        console.log('========================================');
+        console.log('FORM SUBMIT EVENT TRIGGERED');
+        console.log('isSubmitting:', isSubmitting);
+        console.log('Form element:', this);
+        console.log('Form action:', $(this).attr('action'));
+        console.log('Form method:', $(this).attr('method'));
+        console.log('Form enctype:', $(this).attr('enctype'));
+        
+        if (isSubmitting) {
+            console.warn('Already submitting, preventing duplicate submission');
+            e.preventDefault();
+            return false;
+        }
+        
+        // Check required fields (only non-file inputs)
+        console.log('Checking required fields...');
+        let hasErrors = false;
+        let errorFields = [];
+        
+        $('input[required]:not([type="file"]), select[required]').each(function() {
+            const fieldName = $(this).attr('name') || 'unnamed';
+            const fieldValue = $(this).val();
+            
+            if (!fieldValue || fieldValue === '') {
+                hasErrors = true;
+                errorFields.push(fieldName);
+                $(this).css('border-color', '#ef4444');
+                console.error(`✗ Required field empty: ${fieldName}`);
+            } else {
+                $(this).css('border-color', '#e2e8f0');
+                console.log(`✓ Field OK: ${fieldName} = ${fieldValue.substring(0, 20)}${fieldValue.length > 20 ? '...' : ''}`);
+            }
+        });
+        
+        if (hasErrors) {
+            console.error('========================================');
+            console.error('FORM VALIDATION FAILED');
+            console.error('Empty required fields:', errorFields);
+            console.error('========================================');
+            e.preventDefault();
+            
+            // Scroll to first error field
+            const firstErrorField = $('input[required]:not([type="file"]), select[required]').filter(function() {
+                return !$(this).val() || $(this).val() === '';
+            }).first();
+            
+            if (firstErrorField.length) {
+                $('html, body').animate({
+                    scrollTop: firstErrorField.offset().top - 100
+                }, 300);
+                firstErrorField.focus();
+            }
+            
+            alert('Please fill all required fields: ' + errorFields.join(', '));
+            return false;
+        }
+        
+        // Show loading state
+        console.log('✓ Validation passed, submitting form...');
+        console.log('✓ Allowing form to submit naturally to server');
+        isSubmitting = true;
+        submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Saving...');
+        console.log('Form will now submit to:', form.attr('action') || 'current URL');
+        console.log('Method:', form.attr('method') || 'GET');
+        console.log('Form data being submitted:');
+        console.log('  - First name:', $('input[name="first_name"]').val());
+        console.log('  - Last name:', $('input[name="last_name"]').val());
+        console.log('  - Email:', $('input[name="email"]').val());
+        console.log('  - Roll number:', $('input[name="roll_number"]').val());
+        console.log('========================================');
+        
+        // Add a small delay to see if form actually submits
+        setTimeout(function() {
+            console.log('Form submission timeout - checking if still on page...');
+        }, 2000);
+    });
+    
+    // Clear errors on input
+    $('input, select').on('input change', function() {
+        $(this).css('border-color', '#e2e8f0');
+    });
+    
+    console.log('========================================');
+    console.log('✓ All form handlers initialized successfully');
+    console.log('✓ File upload handlers:', $('input[type="file"]').length, 'attached');
+    console.log('✓ Submit handler attached to form');
+    console.log('Ready to accept form submissions!');
+    console.log('========================================');
+});
+</script>
+
+{% endblock form_content %}
+
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<style>
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    
+    .form-section-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        margin-right: 1rem;
+    }
+    
+    .form-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-field {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-field label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-field label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 4px;
+    }
+    
+    .form-control {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .form-control:focus {
+        outline: none !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    .file-upload-wrapper {
+        position: relative;
+    }
+    
+    .file-upload-label {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: transform 0.2s;
+    }
+    
+    .file-upload-label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .file-upload-input {
+        display: none !important;
+    }
+    
+    .file-name-display {
+        display: inline-block;
+        margin-left: 1rem;
+        color: #6b7280;
+        font-size: 14px;
+    }
+    
+    .form-help {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 13px;
+        margin-top: 0.25rem;
+    }
+    
+    .document-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .document-item {
+        border: 2px dashed #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    
+    .document-item:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+    
+    .document-item.has-file {
+        border-color: #10b981;
+        border-style: solid;
+        background: #f0fdf4;
+    }
+    
+    @media (max-width: 768px) {
+        .form-row,
+        .form-row-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block form_icon %}fas fa-user-graduate{% endblock %}
+{% block form_title %}{% if student_id %}Edit Student{% else %}Add Student{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Fill in the essential student information" }}{% endblock %}
+
+{% block cancel_url %}{% url 'manage_student' %}{% endblock %}
+{% block submit_text %}Save Student{% endblock %}
+
+{% block form_content %}
+
+<!-- Section 1: Basic Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <h3 class="form-section-title">Basic Information</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.first_name.id_for_label }}" class="required">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.last_name.id_for_label }}" class="required">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.gender.id_for_label }}" class="required">Gender</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<div class="invalid-feedback">{{ form.gender.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="required">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {% if form.date_of_birth.errors %}<div class="invalid-feedback">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mobile_number.id_for_label }}" class="required">Mobile Number</label>
+            {{ form.mobile_number }}
+            {% if form.mobile_number.errors %}<div class="invalid-feedback">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}" class="required">Email Address</label>
+            {{ form.email }}
+            <p class="form-help">Used for login and communication</p>
+            {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Academic Details -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3 class="form-section-title">Academic Details</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.course.id_for_label }}" class="required">Course</label>
+            {{ form.course }}
+            {% if form.course.errors %}<div class="invalid-feedback">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.session.id_for_label }}" class="required">Session</label>
+            {{ form.session }}
+            {% if form.session.errors %}<div class="invalid-feedback">{{ form.session.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.course_type.id_for_label }}">Course Type</label>
+            {{ form.course_type }}
+            {% if form.course_type.errors %}<div class="invalid-feedback">{{ form.course_type.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.roll_number.id_for_label }}" class="required">Roll Number</label>
+            {{ form.roll_number }}
+            <p class="form-help">Used for login (e.g., CSE2024001)</p>
+            {% if form.roll_number.errors %}<div class="invalid-feedback">{{ form.roll_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_number.id_for_label }}">Admission Number</label>
+            {{ form.admission_number }}
+            {% if form.admission_number.errors %}<div class="invalid-feedback">{{ form.admission_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+            {{ form.admission_date }}
+            {% if form.admission_date.errors %}<div class="invalid-feedback">{{ form.admission_date.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: Parent Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="form-section-title">Parent / Guardian Information</h3>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.father_name.id_for_label }}">Father's Name</label>
+            {{ form.father_name }}
+            {% if form.father_name.errors %}<div class="invalid-feedback">{{ form.father_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.father_mobile.id_for_label }}">Father's Mobile</label>
+            {{ form.father_mobile }}
+            {% if form.father_mobile.errors %}<div class="invalid-feedback">{{ form.father_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.mother_name.id_for_label }}">Mother's Name</label>
+            {{ form.mother_name }}
+            {% if form.mother_name.errors %}<div class="invalid-feedback">{{ form.mother_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_mobile.id_for_label }}">Mother's Mobile</label>
+            {{ form.mother_mobile }}
+            {% if form.mother_mobile.errors %}<div class="invalid-feedback">{{ form.mother_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.guardian_name.id_for_label }}">Guardian Name (Optional)</label>
+            {{ form.guardian_name }}
+            <p class="form-help">If different from parents</p>
+            {% if form.guardian_name.errors %}<div class="invalid-feedback">{{ form.guardian_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.guardian_mobile.id_for_label }}">Guardian Mobile (Optional)</label>
+            {{ form.guardian_mobile }}
+            {% if form.guardian_mobile.errors %}<div class="invalid-feedback">{{ form.guardian_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 4: Document Uploads -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="form-section-title">Document Uploads</h3>
+    </div>
+    
+    <div class="document-grid">
+        <!-- Photo -->
+        <div class="document-item" data-field="photo">
+            <i class="fas fa-image fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Photo</h5>
+            <label for="{{ form.photo.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.photo }}
+            <div class="file-name-display mt-2" data-display="photo">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.photo.errors %}<div class="invalid-feedback">{{ form.photo.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Signature -->
+        <div class="document-item" data-field="signature">
+            <i class="fas fa-signature fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Signature</h5>
+            <label for="{{ form.signature.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.signature }}
+            <div class="file-name-display mt-2" data-display="signature">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.signature.errors %}<div class="invalid-feedback">{{ form.signature.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Aadhaar Card -->
+        <div class="document-item" data-field="aadhaar_card">
+            <i class="fas fa-id-card fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Aadhaar Card</h5>
+            <label for="{{ form.aadhaar_card.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.aadhaar_card }}
+            <div class="file-name-display mt-2" data-display="aadhaar_card">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF/Image</p>
+            {% if form.aadhaar_card.errors %}<div class="invalid-feedback">{{ form.aadhaar_card.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Income Certificate -->
+        <div class="document-item" data-field="income_certificate">
+            <i class="fas fa-file-invoice-dollar fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Income Certificate</h5>
+            <label for="{{ form.income_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.income_certificate }}
+            <div class="file-name-display mt-2" data-display="income_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.income_certificate.errors %}<div class="invalid-feedback">{{ form.income_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Transfer Certificate -->
+        <div class="document-item" data-field="transfer_certificate">
+            <i class="fas fa-file-alt fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Transfer Certificate</h5>
+            <label for="{{ form.transfer_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.transfer_certificate }}
+            <div class="file-name-display mt-2" data-display="transfer_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.transfer_certificate.errors %}<div class="invalid-feedback">{{ form.transfer_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- 10th/12th Certificate -->
+        <div class="document-item" data-field="tenth_certificate">
+            <i class="fas fa-certificate fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">10th/12th Certificate</h5>
+            <label for="{{ form.tenth_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.tenth_certificate }}
+            <div class="file-name-display mt-2" data-display="tenth_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.tenth_certificate.errors %}<div class="invalid-feedback">{{ form.tenth_certificate.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    console.log('========================================');
+    console.log('Simplified Student Form LOADED');
+    console.log('jQuery version:', $.fn.jquery);
+    console.log('Form element:', $('form').length, 'found');
+    console.log('========================================');
+    
+    // File upload handling
+    $('input[type="file"]').on('change', function() {
+        console.log('File input changed:', this.name);
+        const file = this.files[0];
+        const fieldName = $(this).attr('name');
+        const displayElement = $(`[data-display="${fieldName}"]`);
+        const documentItem = $(`[data-field="${fieldName}"]`);
+        
+        if (file) {
+            displayElement.text(file.name);
+            documentItem.addClass('has-file');
+            
+            // File validation
+            const maxSize = fieldName === 'photo' || fieldName === 'signature' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File size exceeds ${maxSize / (1024*1024)}MB limit`);
+                $(this).val('');
+                displayElement.text('No file chosen');
+                documentItem.removeClass('has-file');
+            }
+        } else {
+            displayElement.text('No file chosen');
+            documentItem.removeClass('has-file');
+        }
+    });
+    
+    // Form submission handling
+    const form = $('form');
+    const submitButton = form.find('button[type="submit"]');
+    let isSubmitting = false;
+    
+    console.log('Submit button found:', submitButton.length);
+    
+    form.on('submit', function(e) {
+        console.log('========================================');
+        console.log('FORM SUBMIT EVENT TRIGGERED');
+        console.log('isSubmitting:', isSubmitting);
+        console.log('Form element:', this);
+        console.log('Form action:', $(this).attr('action'));
+        console.log('Form method:', $(this).attr('method'));
+        console.log('Form enctype:', $(this).attr('enctype'));
+        
+        if (isSubmitting) {
+            console.warn('Already submitting, preventing duplicate submission');
+            e.preventDefault();
+            return false;
+        }
+        
+        // Check required fields (only non-file inputs)
+        console.log('Checking required fields...');
+        let hasErrors = false;
+        let errorFields = [];
+        
+        $('input[required]:not([type="file"]), select[required]').each(function() {
+            const fieldName = $(this).attr('name') || 'unnamed';
+            const fieldValue = $(this).val();
+            
+            if (!fieldValue || fieldValue === '') {
+                hasErrors = true;
+                errorFields.push(fieldName);
+                $(this).css('border-color', '#ef4444');
+                console.error(`✗ Required field empty: ${fieldName}`);
+            } else {
+                $(this).css('border-color', '#e2e8f0');
+                console.log(`✓ Field OK: ${fieldName} = ${fieldValue.substring(0, 20)}${fieldValue.length > 20 ? '...' : ''}`);
+            }
+        });
+        
+        if (hasErrors) {
+            console.error('========================================');
+            console.error('FORM VALIDATION FAILED');
+            console.error('Empty required fields:', errorFields);
+            console.error('========================================');
+            e.preventDefault();
+            
+            // Scroll to first error field
+            const firstErrorField = $('input[required]:not([type="file"]), select[required]').filter(function() {
+                return !$(this).val() || $(this).val() === '';
+            }).first();
+            
+            if (firstErrorField.length) {
+                $('html, body').animate({
+                    scrollTop: firstErrorField.offset().top - 100
+                }, 300);
+                firstErrorField.focus();
+            }
+            
+            alert('Please fill all required fields: ' + errorFields.join(', '));
+            return false;
+        }
+        
+        // Show loading state
+        console.log('✓ Validation passed, submitting form...');
+        console.log('✓ Allowing form to submit naturally to server');
+        isSubmitting = true;
+        submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Saving...');
+        console.log('Form will now submit to:', form.attr('action') || 'current URL');
+        console.log('Method:', form.attr('method') || 'GET');
+        console.log('Form data being submitted:');
+        console.log('  - First name:', $('input[name="first_name"]').val());
+        console.log('  - Last name:', $('input[name="last_name"]').val());
+        console.log('  - Email:', $('input[name="email"]').val());
+        console.log('  - Roll number:', $('input[name="roll_number"]').val());
+        console.log('========================================');
+        
+        // Add a small delay to see if form actually submits
+        setTimeout(function() {
+            console.log('Form submission timeout - checking if still on page...');
+        }, 2000);
+    });
+    
+    // Clear errors on input
+    $('input, select').on('input change', function() {
+        $(this).css('border-color', '#e2e8f0');
+    });
+    
+    console.log('========================================');
+    console.log('✓ All form handlers initialized successfully');
+    console.log('✓ File upload handlers:', $('input[type="file"]').length, 'attached');
+    console.log('✓ Submit handler attached to form');
+    console.log('Ready to accept form submissions!');
+    console.log('========================================');
+});
+</script>
+
+{% endblock form_content %}
+
+
+
+
+
+
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<style>
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    
+    .form-section-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        margin-right: 1rem;
+    }
+    
+    .form-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-field {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-field label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-field label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 4px;
+    }
+    
+    .form-control {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .form-control:focus {
+        outline: none !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    .file-upload-wrapper {
+        position: relative;
+    }
+    
+    .file-upload-label {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: transform 0.2s;
+    }
+    
+    .file-upload-label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .file-upload-input {
+        display: none !important;
+    }
+    
+    .file-name-display {
+        display: inline-block;
+        margin-left: 1rem;
+        color: #6b7280;
+        font-size: 14px;
+    }
+    
+    .form-help {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 13px;
+        margin-top: 0.25rem;
+    }
+    
+    .document-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .document-item {
+        border: 2px dashed #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    
+    .document-item:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+    
+    .document-item.has-file {
+        border-color: #10b981;
+        border-style: solid;
+        background: #f0fdf4;
+    }
+    
+    @media (max-width: 768px) {
+        .form-row,
+        .form-row-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block form_icon %}fas fa-user-graduate{% endblock %}
+{% block form_title %}{% if student_id %}Edit Student{% else %}Add Student{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Fill in the essential student information" }}{% endblock %}
+
+{% block cancel_url %}{% url 'manage_student' %}{% endblock %}
+{% block submit_text %}Save Student{% endblock %}
+
+{% block form_content %}
+
+<!-- Section 1: Basic Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <h3 class="form-section-title">Basic Information</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.first_name.id_for_label }}" class="required">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.last_name.id_for_label }}" class="required">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.gender.id_for_label }}" class="required">Gender</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<div class="invalid-feedback">{{ form.gender.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="required">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {% if form.date_of_birth.errors %}<div class="invalid-feedback">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mobile_number.id_for_label }}" class="required">Mobile Number</label>
+            {{ form.mobile_number }}
+            {% if form.mobile_number.errors %}<div class="invalid-feedback">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}" class="required">Email Address</label>
+            {{ form.email }}
+            <p class="form-help">Used for login and communication</p>
+            {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Academic Details -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3 class="form-section-title">Academic Details</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.course.id_for_label }}" class="required">Course</label>
+            {{ form.course }}
+            {% if form.course.errors %}<div class="invalid-feedback">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.session.id_for_label }}" class="required">Session</label>
+            {{ form.session }}
+            {% if form.session.errors %}<div class="invalid-feedback">{{ form.session.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.course_type.id_for_label }}">Course Type</label>
+            {{ form.course_type }}
+            {% if form.course_type.errors %}<div class="invalid-feedback">{{ form.course_type.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.roll_number.id_for_label }}" class="required">Roll Number</label>
+            {{ form.roll_number }}
+            <p class="form-help">Used for login (e.g., CSE2024001)</p>
+            {% if form.roll_number.errors %}<div class="invalid-feedback">{{ form.roll_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_number.id_for_label }}">Admission Number</label>
+            {{ form.admission_number }}
+            {% if form.admission_number.errors %}<div class="invalid-feedback">{{ form.admission_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+            {{ form.admission_date }}
+            {% if form.admission_date.errors %}<div class="invalid-feedback">{{ form.admission_date.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: Parent Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="form-section-title">Parent / Guardian Information</h3>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.father_name.id_for_label }}">Father's Name</label>
+            {{ form.father_name }}
+            {% if form.father_name.errors %}<div class="invalid-feedback">{{ form.father_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.father_mobile.id_for_label }}">Father's Mobile</label>
+            {{ form.father_mobile }}
+            {% if form.father_mobile.errors %}<div class="invalid-feedback">{{ form.father_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.mother_name.id_for_label }}">Mother's Name</label>
+            {{ form.mother_name }}
+            {% if form.mother_name.errors %}<div class="invalid-feedback">{{ form.mother_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_mobile.id_for_label }}">Mother's Mobile</label>
+            {{ form.mother_mobile }}
+            {% if form.mother_mobile.errors %}<div class="invalid-feedback">{{ form.mother_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.guardian_name.id_for_label }}">Guardian Name (Optional)</label>
+            {{ form.guardian_name }}
+            <p class="form-help">If different from parents</p>
+            {% if form.guardian_name.errors %}<div class="invalid-feedback">{{ form.guardian_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.guardian_mobile.id_for_label }}">Guardian Mobile (Optional)</label>
+            {{ form.guardian_mobile }}
+            {% if form.guardian_mobile.errors %}<div class="invalid-feedback">{{ form.guardian_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 4: Document Uploads -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="form-section-title">Document Uploads</h3>
+    </div>
+    
+    <div class="document-grid">
+        <!-- Photo -->
+        <div class="document-item" data-field="photo">
+            <i class="fas fa-image fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Photo</h5>
+            <label for="{{ form.photo.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.photo }}
+            <div class="file-name-display mt-2" data-display="photo">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.photo.errors %}<div class="invalid-feedback">{{ form.photo.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Signature -->
+        <div class="document-item" data-field="signature">
+            <i class="fas fa-signature fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Signature</h5>
+            <label for="{{ form.signature.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.signature }}
+            <div class="file-name-display mt-2" data-display="signature">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.signature.errors %}<div class="invalid-feedback">{{ form.signature.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Aadhaar Card -->
+        <div class="document-item" data-field="aadhaar_card">
+            <i class="fas fa-id-card fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Aadhaar Card</h5>
+            <label for="{{ form.aadhaar_card.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.aadhaar_card }}
+            <div class="file-name-display mt-2" data-display="aadhaar_card">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF/Image</p>
+            {% if form.aadhaar_card.errors %}<div class="invalid-feedback">{{ form.aadhaar_card.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Income Certificate -->
+        <div class="document-item" data-field="income_certificate">
+            <i class="fas fa-file-invoice-dollar fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Income Certificate</h5>
+            <label for="{{ form.income_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.income_certificate }}
+            <div class="file-name-display mt-2" data-display="income_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.income_certificate.errors %}<div class="invalid-feedback">{{ form.income_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Transfer Certificate -->
+        <div class="document-item" data-field="transfer_certificate">
+            <i class="fas fa-file-alt fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Transfer Certificate</h5>
+            <label for="{{ form.transfer_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.transfer_certificate }}
+            <div class="file-name-display mt-2" data-display="transfer_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.transfer_certificate.errors %}<div class="invalid-feedback">{{ form.transfer_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- 10th/12th Certificate -->
+        <div class="document-item" data-field="tenth_certificate">
+            <i class="fas fa-certificate fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">10th/12th Certificate</h5>
+            <label for="{{ form.tenth_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.tenth_certificate }}
+            <div class="file-name-display mt-2" data-display="tenth_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.tenth_certificate.errors %}<div class="invalid-feedback">{{ form.tenth_certificate.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    console.log('========================================');
+    console.log('Simplified Student Form LOADED');
+    console.log('jQuery version:', $.fn.jquery);
+    console.log('Form element:', $('form').length, 'found');
+    console.log('========================================');
+    
+    // File upload handling
+    $('input[type="file"]').on('change', function() {
+        console.log('File input changed:', this.name);
+        const file = this.files[0];
+        const fieldName = $(this).attr('name');
+        const displayElement = $(`[data-display="${fieldName}"]`);
+        const documentItem = $(`[data-field="${fieldName}"]`);
+        
+        if (file) {
+            displayElement.text(file.name);
+            documentItem.addClass('has-file');
+            
+            // File validation
+            const maxSize = fieldName === 'photo' || fieldName === 'signature' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File size exceeds ${maxSize / (1024*1024)}MB limit`);
+                $(this).val('');
+                displayElement.text('No file chosen');
+                documentItem.removeClass('has-file');
+            }
+        } else {
+            displayElement.text('No file chosen');
+            documentItem.removeClass('has-file');
+        }
+    });
+    
+    // Form submission handling
+    const form = $('form');
+    const submitButton = form.find('button[type="submit"]');
+    let isSubmitting = false;
+    
+    console.log('Submit button found:', submitButton.length);
+    
+    form.on('submit', function(e) {
+        console.log('========================================');
+        console.log('FORM SUBMIT EVENT TRIGGERED');
+        console.log('isSubmitting:', isSubmitting);
+        console.log('Form element:', this);
+        console.log('Form action:', $(this).attr('action'));
+        console.log('Form method:', $(this).attr('method'));
+        console.log('Form enctype:', $(this).attr('enctype'));
+        
+        if (isSubmitting) {
+            console.warn('Already submitting, preventing duplicate submission');
+            e.preventDefault();
+            return false;
+        }
+        
+        // Check required fields (only non-file inputs)
+        console.log('Checking required fields...');
+        let hasErrors = false;
+        let errorFields = [];
+        
+        $('input[required]:not([type="file"]), select[required]').each(function() {
+            const fieldName = $(this).attr('name') || 'unnamed';
+            const fieldValue = $(this).val();
+            
+            if (!fieldValue || fieldValue === '') {
+                hasErrors = true;
+                errorFields.push(fieldName);
+                $(this).css('border-color', '#ef4444');
+                console.error(`✗ Required field empty: ${fieldName}`);
+            } else {
+                $(this).css('border-color', '#e2e8f0');
+                console.log(`✓ Field OK: ${fieldName} = ${fieldValue.substring(0, 20)}${fieldValue.length > 20 ? '...' : ''}`);
+            }
+        });
+        
+        if (hasErrors) {
+            console.error('========================================');
+            console.error('FORM VALIDATION FAILED');
+            console.error('Empty required fields:', errorFields);
+            console.error('========================================');
+            e.preventDefault();
+            
+            // Scroll to first error field
+            const firstErrorField = $('input[required]:not([type="file"]), select[required]').filter(function() {
+                return !$(this).val() || $(this).val() === '';
+            }).first();
+            
+            if (firstErrorField.length) {
+                $('html, body').animate({
+                    scrollTop: firstErrorField.offset().top - 100
+                }, 300);
+                firstErrorField.focus();
+            }
+            
+            alert('Please fill all required fields: ' + errorFields.join(', '));
+            return false;
+        }
+        
+        // Show loading state
+        console.log('✓ Validation passed, submitting form...');
+        console.log('✓ Allowing form to submit naturally to server');
+        isSubmitting = true;
+        submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Saving...');
+        console.log('Form will now submit to:', form.attr('action') || 'current URL');
+        console.log('Method:', form.attr('method') || 'GET');
+        console.log('Form data being submitted:');
+        console.log('  - First name:', $('input[name="first_name"]').val());
+        console.log('  - Last name:', $('input[name="last_name"]').val());
+        console.log('  - Email:', $('input[name="email"]').val());
+        console.log('  - Roll number:', $('input[name="roll_number"]').val());
+        console.log('========================================');
+        
+        // Add a small delay to see if form actually submits
+        setTimeout(function() {
+            console.log('Form submission timeout - checking if still on page...');
+        }, 2000);
+    });
+    
+    // Clear errors on input
+    $('input, select').on('input change', function() {
+        $(this).css('border-color', '#e2e8f0');
+    });
+    
+    console.log('========================================');
+    console.log('✓ All form handlers initialized successfully');
+    console.log('✓ File upload handlers:', $('input[type="file"]').length, 'attached');
+    console.log('✓ Submit handler attached to form');
+    console.log('Ready to accept form submissions!');
+    console.log('========================================');
+});
+</script>
+
+{% endblock form_content %}
+
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<style>
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    
+    .form-section-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        margin-right: 1rem;
+    }
+    
+    .form-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a202c;
+        margin: 0;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-field {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-field label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-field label.required::after {
+        content: '*';
+        color: #ef4444;
+        margin-left: 4px;
+    }
+    
+    .form-control {
+        display: block !important;
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        transition: all 0.2s !important;
+    }
+    
+    .form-control:focus {
+        outline: none !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    .file-upload-wrapper {
+        position: relative;
+    }
+    
+    .file-upload-label {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: transform 0.2s;
+    }
+    
+    .file-upload-label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .file-upload-input {
+        display: none !important;
+    }
+    
+    .file-name-display {
+        display: inline-block;
+        margin-left: 1rem;
+        color: #6b7280;
+        font-size: 14px;
+    }
+    
+    .form-help {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    
+    .invalid-feedback {
+        color: #ef4444;
+        font-size: 13px;
+        margin-top: 0.25rem;
+    }
+    
+    .document-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .document-item {
+        border: 2px dashed #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    
+    .document-item:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+    
+    .document-item.has-file {
+        border-color: #10b981;
+        border-style: solid;
+        background: #f0fdf4;
+    }
+    
+    @media (max-width: 768px) {
+        .form-row,
+        .form-row-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block form_icon %}fas fa-user-graduate{% endblock %}
+{% block form_title %}{% if student_id %}Edit Student{% else %}Add Student{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Fill in the essential student information" }}{% endblock %}
+
+{% block cancel_url %}{% url 'manage_student' %}{% endblock %}
+{% block submit_text %}Save Student{% endblock %}
+
+{% block form_content %}
+
+<!-- Section 1: Basic Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-user"></i>
+        </div>
+        <h3 class="form-section-title">Basic Information</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.first_name.id_for_label }}" class="required">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.last_name.id_for_label }}" class="required">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.gender.id_for_label }}" class="required">Gender</label>
+            {{ form.gender }}
+            {% if form.gender.errors %}<div class="invalid-feedback">{{ form.gender.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="required">Date of Birth</label>
+            {{ form.date_of_birth }}
+            {% if form.date_of_birth.errors %}<div class="invalid-feedback">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mobile_number.id_for_label }}" class="required">Mobile Number</label>
+            {{ form.mobile_number }}
+            {% if form.mobile_number.errors %}<div class="invalid-feedback">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.email.id_for_label }}" class="required">Email Address</label>
+            {{ form.email }}
+            <p class="form-help">Used for login and communication</p>
+            {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Academic Details -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3 class="form-section-title">Academic Details</h3>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.course.id_for_label }}" class="required">Course</label>
+            {{ form.course }}
+            {% if form.course.errors %}<div class="invalid-feedback">{{ form.course.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.session.id_for_label }}" class="required">Session</label>
+            {{ form.session }}
+            {% if form.session.errors %}<div class="invalid-feedback">{{ form.session.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.course_type.id_for_label }}">Course Type</label>
+            {{ form.course_type }}
+            {% if form.course_type.errors %}<div class="invalid-feedback">{{ form.course_type.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
+            <label for="{{ form.roll_number.id_for_label }}" class="required">Roll Number</label>
+            {{ form.roll_number }}
+            <p class="form-help">Used for login (e.g., CSE2024001)</p>
+            {% if form.roll_number.errors %}<div class="invalid-feedback">{{ form.roll_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_number.id_for_label }}">Admission Number</label>
+            {{ form.admission_number }}
+            {% if form.admission_number.errors %}<div class="invalid-feedback">{{ form.admission_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+            {{ form.admission_date }}
+            {% if form.admission_date.errors %}<div class="invalid-feedback">{{ form.admission_date.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: Parent Information -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="form-section-title">Parent / Guardian Information</h3>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.father_name.id_for_label }}">Father's Name</label>
+            {{ form.father_name }}
+            {% if form.father_name.errors %}<div class="invalid-feedback">{{ form.father_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.father_mobile.id_for_label }}">Father's Mobile</label>
+            {{ form.father_mobile }}
+            {% if form.father_mobile.errors %}<div class="invalid-feedback">{{ form.father_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.mother_name.id_for_label }}">Mother's Name</label>
+            {{ form.mother_name }}
+            {% if form.mother_name.errors %}<div class="invalid-feedback">{{ form.mother_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.mother_mobile.id_for_label }}">Mother's Mobile</label>
+            {{ form.mother_mobile }}
+            {% if form.mother_mobile.errors %}<div class="invalid-feedback">{{ form.mother_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    
+    <div class="form-row-2">
+        <div class="form-field">
+            <label for="{{ form.guardian_name.id_for_label }}">Guardian Name (Optional)</label>
+            {{ form.guardian_name }}
+            <p class="form-help">If different from parents</p>
+            {% if form.guardian_name.errors %}<div class="invalid-feedback">{{ form.guardian_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="form-field">
+            <label for="{{ form.guardian_mobile.id_for_label }}">Guardian Mobile (Optional)</label>
+            {{ form.guardian_mobile }}
+            {% if form.guardian_mobile.errors %}<div class="invalid-feedback">{{ form.guardian_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Section 4: Document Uploads -->
+<div class="form-section">
+    <div class="form-section-header">
+        <div class="form-section-icon">
+            <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="form-section-title">Document Uploads</h3>
+    </div>
+    
+    <div class="document-grid">
+        <!-- Photo -->
+        <div class="document-item" data-field="photo">
+            <i class="fas fa-image fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Photo</h5>
+            <label for="{{ form.photo.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.photo }}
+            <div class="file-name-display mt-2" data-display="photo">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.photo.errors %}<div class="invalid-feedback">{{ form.photo.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Signature -->
+        <div class="document-item" data-field="signature">
+            <i class="fas fa-signature fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Signature</h5>
+            <label for="{{ form.signature.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.signature }}
+            <div class="file-name-display mt-2" data-display="signature">No file chosen</div>
+            <p class="form-help">Max 2MB, JPG/PNG</p>
+            {% if form.signature.errors %}<div class="invalid-feedback">{{ form.signature.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Aadhaar Card -->
+        <div class="document-item" data-field="aadhaar_card">
+            <i class="fas fa-id-card fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Aadhaar Card</h5>
+            <label for="{{ form.aadhaar_card.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.aadhaar_card }}
+            <div class="file-name-display mt-2" data-display="aadhaar_card">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF/Image</p>
+            {% if form.aadhaar_card.errors %}<div class="invalid-feedback">{{ form.aadhaar_card.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Income Certificate -->
+        <div class="document-item" data-field="income_certificate">
+            <i class="fas fa-file-invoice-dollar fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Income Certificate</h5>
+            <label for="{{ form.income_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.income_certificate }}
+            <div class="file-name-display mt-2" data-display="income_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.income_certificate.errors %}<div class="invalid-feedback">{{ form.income_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- Transfer Certificate -->
+        <div class="document-item" data-field="transfer_certificate">
+            <i class="fas fa-file-alt fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">Transfer Certificate</h5>
+            <label for="{{ form.transfer_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.transfer_certificate }}
+            <div class="file-name-display mt-2" data-display="transfer_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.transfer_certificate.errors %}<div class="invalid-feedback">{{ form.transfer_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        
+        <!-- 10th/12th Certificate -->
+        <div class="document-item" data-field="tenth_certificate">
+            <i class="fas fa-certificate fa-2x mb-2" style="color: #667eea;"></i>
+            <h5 class="mb-2" style="font-size: 14px; font-weight: 600;">10th/12th Certificate</h5>
+            <label for="{{ form.tenth_certificate.id_for_label }}" class="file-upload-label">
+                <i class="fas fa-upload"></i> Choose File
+            </label>
+            {{ form.tenth_certificate }}
+            <div class="file-name-display mt-2" data-display="tenth_certificate">No file chosen</div>
+            <p class="form-help">Max 5MB, PDF</p>
+            {% if form.tenth_certificate.errors %}<div class="invalid-feedback">{{ form.tenth_certificate.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    console.log('========================================');
+    console.log('Simplified Student Form LOADED');
+    console.log('jQuery version:', $.fn.jquery);
+    console.log('Form element:', $('form').length, 'found');
+    console.log('========================================');
+    
+    // File upload handling
+    $('input[type="file"]').on('change', function() {
+        console.log('File input changed:', this.name);
+        const file = this.files[0];
+        const fieldName = $(this).attr('name');
+        const displayElement = $(`[data-display="${fieldName}"]`);
+        const documentItem = $(`[data-field="${fieldName}"]`);
+        
+        if (file) {
+            displayElement.text(file.name);
+            documentItem.addClass('has-file');
+            
+            // File validation
+            const maxSize = fieldName === 'photo' || fieldName === 'signature' ? 2 * 1024 * 1024 : 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File size exceeds ${maxSize / (1024*1024)}MB limit`);
+                $(this).val('');
+                displayElement.text('No file chosen');
+                documentItem.removeClass('has-file');
+            }
+        } else {
+            displayElement.text('No file chosen');
+            documentItem.removeClass('has-file');
+        }
+    });
+    
+    // Form submission handling
+    const form = $('form');
+    const submitButton = form.find('button[type="submit"]');
+    let isSubmitting = false;
+    
+    console.log('Submit button found:', submitButton.length);
+    
+    form.on('submit', function(e) {
+        console.log('========================================');
+        console.log('FORM SUBMIT EVENT TRIGGERED');
+        console.log('isSubmitting:', isSubmitting);
+        console.log('Form element:', this);
+        console.log('Form action:', $(this).attr('action'));
+        console.log('Form method:', $(this).attr('method'));
+        console.log('Form enctype:', $(this).attr('enctype'));
+        
+        if (isSubmitting) {
+            console.warn('Already submitting, preventing duplicate submission');
+            e.preventDefault();
+            return false;
+        }
+        
+        // Check required fields (only non-file inputs)
+        console.log('Checking required fields...');
+        let hasErrors = false;
+        let errorFields = [];
+        
+        $('input[required]:not([type="file"]), select[required]').each(function() {
+            const fieldName = $(this).attr('name') || 'unnamed';
+            const fieldValue = $(this).val();
+            
+            if (!fieldValue || fieldValue === '') {
+                hasErrors = true;
+                errorFields.push(fieldName);
+                $(this).css('border-color', '#ef4444');
+                console.error(`✗ Required field empty: ${fieldName}`);
+            } else {
+                $(this).css('border-color', '#e2e8f0');
+                console.log(`✓ Field OK: ${fieldName} = ${fieldValue.substring(0, 20)}${fieldValue.length > 20 ? '...' : ''}`);
+            }
+        });
+        
+        if (hasErrors) {
+            console.error('========================================');
+            console.error('FORM VALIDATION FAILED');
+            console.error('Empty required fields:', errorFields);
+            console.error('========================================');
+            e.preventDefault();
+            
+            // Scroll to first error field
+            const firstErrorField = $('input[required]:not([type="file"]), select[required]').filter(function() {
+                return !$(this).val() || $(this).val() === '';
+            }).first();
+            
+            if (firstErrorField.length) {
+                $('html, body').animate({
+                    scrollTop: firstErrorField.offset().top - 100
+                }, 300);
+                firstErrorField.focus();
+            }
+            
+            alert('Please fill all required fields: ' + errorFields.join(', '));
+            return false;
+        }
+        
+        // Show loading state
+        console.log('✓ Validation passed, submitting form...');
+        console.log('✓ Allowing form to submit naturally to server');
+        isSubmitting = true;
+        submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Saving...');
+        console.log('Form will now submit to:', form.attr('action') || 'current URL');
+        console.log('Method:', form.attr('method') || 'GET');
+        console.log('Form data being submitted:');
+        console.log('  - First name:', $('input[name="first_name"]').val());
+        console.log('  - Last name:', $('input[name="last_name"]').val());
+        console.log('  - Email:', $('input[name="email"]').val());
+        console.log('  - Roll number:', $('input[name="roll_number"]').val());
+        console.log('========================================');
+        
+        // Add a small delay to see if form actually submits
+        setTimeout(function() {
+            console.log('Form submission timeout - checking if still on page...');
+        }, 2000);
+    });
+    
+    // Clear errors on input
+    $('input, select').on('input change', function() {
+        $(this).css('border-color', '#e2e8f0');
+    });
+    
+    console.log('========================================');
+    console.log('✓ All form handlers initialized successfully');
+    console.log('✓ File upload handlers:', $('input[type="file"]').length, 'attached');
+    console.log('✓ Submit handler attached to form');
+    console.log('Ready to accept form submissions!');
+    console.log('========================================');
+});
+</script>
+
+{% endblock form_content %}
+
+
+
+
+
+
+
+
+
+

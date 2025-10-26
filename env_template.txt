@@ -32,5 +32,8 @@ EMAIL_HOST_PASSWORD=your-16-character-app-password
 # Optional: Database URL (for deployment)
 # DATABASE_URL=postgresql://postgres.yqwszaekwucrnnjuadtp:oiXsUCnflSlzH7zH@aws-1-ap-south-1.pooler.supabase.com:6543/postgres
 
-
-
+# Supabase Storage Configuration (for Document Uploads)
+# Get these values from your Supabase project settings
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_KEY=your-anon-or-service-role-key-here
+SUPABASE_BUCKET=student-documents

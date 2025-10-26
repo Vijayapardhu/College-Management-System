@@ -1,0 +1,705 @@
+/* Casual College Theme - Fun & Approachable Design */
+
+:root {
+    /* Casual College Colors */
+    --college-primary: #2563eb;
+    --college-primary-light: #60a5fa;
+    --college-primary-dark: #1e40af;
+    --college-accent: #059669;
+    --college-accent-light: #34d399;
+    --college-warning: #f59e0b;
+    --college-danger: #ef4444;
+    --college-purple: #8b5cf6;
+    --college-pink: #ec4899;
+    --college-orange: #f97316;
+    
+    /* Casual Neutrals */
+    --college-bg: #f8fafc;
+    --college-card: #ffffff;
+    --college-text: #334155;
+    --college-text-light: #64748b;
+    --college-border: #e2e8f0;
+}
+
+/* Fun Background Patterns */
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(5, 150, 105, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Fun Metric Cards */
+.metric-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px !important;
+    border: 2px solid #e2e8f0;
+    padding: 1.5rem !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--college-primary), var(--college-accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.metric-card:hover::before {
+    transform: scaleX(1);
+}
+
+.metric-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 4px rgba(37, 99, 235, 0.1);
+    border-color: var(--college-primary);
+}
+
+.metric-card-primary {
+    border-left: 4px solid var(--college-primary) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+}
+
+.metric-card-success {
+    border-left: 4px solid var(--college-accent) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+}
+
+.metric-card-warning {
+    border-left: 4px solid var(--college-warning) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+}
+
+.metric-card-info {
+    border-left: 4px solid var(--college-purple) !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+}
+
+/* Fun Dashboard Cards */
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 16px !important;
+    border: 2px solid #e2e8f0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    border-color: var(--college-primary);
+    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+    border-bottom: 2px solid #e2e8f0;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.dashboard-card-title {
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+}
+
+/* Playful Icons */
+.metric-icon {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    border-radius: 14px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem !important;
+    background: linear-gradient(135deg, currentColor 0%, currentColor 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover .metric-icon {
+    transform: rotate(8deg) scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.metric-icon-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+.metric-icon-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.metric-icon-warning {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+}
+
+.metric-icon-error {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
+}
+
+.metric-icon-info {
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+}
+
+/* Fun Metric Values */
+.metric-value {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, var(--college-primary) 0%, var(--college-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+}
+
+.metric-label {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Casual Buttons */
+.btn {
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-outline {
+    background: white !important;
+    border: 2px solid #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+.btn-outline:hover {
+    border-color: var(--college-primary) !important;
+    color: var(--college-primary) !important;
+    background: #eff6ff !important;
+}
+
+/* Fun Badges */
+.badge {
+    padding: 0.375rem 0.75rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.025em;
+}
+
+.badge-primary {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    color: #1e40af !important;
+}
+
+.badge-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+    color: #065f46 !important;
+}
+
+.badge-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    color: #92400e !important;
+}
+
+.badge-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+    color: #991b1b !important;
+}
+
+/* Playful Navigation */
+.nav-item {
+    border-radius: 12px !important;
+    margin-bottom: 0.375rem;
+    transition: all 0.2s ease;
+}
+
+.nav-item-inactive {
+    color: #64748b !important;
+}
+
+.nav-item-inactive:hover {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+    color: #2563eb !important;
+    transform: translateX(4px);
+}
+
+.nav-item-active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.nav-section-header {
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 1rem !important;
+    margin-top: 1rem;
+}
+
+/* Fun Alerts */
+.alert {
+    border-radius: 12px !important;
+    border-left: 4px solid !important;
+    padding: 1rem 1.25rem !important;
+    backdrop-filter: blur(8px);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, rgba(209, 250, 229, 0.9) 0%, rgba(167, 243, 208, 0.8) 100%) !important;
+    border-left-color: #059669 !important;
+    color: #065f46 !important;
+}
+
+.alert-error {
+    background: linear-gradient(135deg, rgba(254, 226, 226, 0.9) 0%, rgba(254, 202, 202, 0.8) 100%) !important;
+    border-left-color: #ef4444 !important;
+    color: #991b1b !important;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.9) 0%, rgba(253, 230, 138, 0.8) 100%) !important;
+    border-left-color: #f59e0b !important;
+    color: #92400e !important;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(219, 234, 254, 0.9) 0%, rgba(191, 219, 254, 0.8) 100%) !important;
+    border-left-color: #3b82f6 !important;
+    color: #1e40af !important;
+}
+
+/* Fun Tables */
+.modern-table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modern-table thead {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.modern-table th {
+    font-weight: 700 !important;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+}
+
+.modern-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.modern-table tbody tr:hover {
+    background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+    transform: scale(1.01);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Casual Form Inputs */
+.form-input,
+.form-select,
+.form-textarea {
+    border-radius: 12px !important;
+    border: 2px solid #e2e8f0 !important;
+    padding: 0.875rem 1.125rem !important;
+    font-size: 0.9375rem !important;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: var(--college-primary) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1) !important;
+    transform: translateY(-1px);
+}
+
+.form-label {
+    font-weight: 600 !important;
+    color: #475569;
+    font-size: 0.875rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Playful Sidebar */
+#sidebar {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    border-right: 2px solid #e2e8f0 !important;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Fun Top Nav */
+header nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid #e2e8f0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Animated Gradient Headers */
+.gradient-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Fun Progress Bars */
+.progress-bar {
+    height: 12px;
+    border-radius: 8px;
+    background: #e2e8f0;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--college-primary), var(--college-accent));
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Casual Stat Cards with Emojis */
+.stat-emoji {
+    font-size: 3rem;
+    display: inline-block;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Fun Action Cards */
+.action-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.action-card:hover {
+    transform: translateY(-8px) rotate(1deg);
+    border-color: var(--college-primary);
+    box-shadow: 0 16px 32px rgba(37, 99, 235, 0.2);
+}
+
+.action-card-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover .action-card-icon {
+    transform: scale(1.15) rotate(-8deg);
+}
+
+/* Notification Badges with Pulse */
+.notification-badge {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+/* Fun Charts Container */
+.chart-container {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #fefce8 100%);
+    border-radius: 12px;
+}
+
+/* Casual Search Bar */
+#global-search {
+    border-radius: 24px !important;
+    padding-left: 3rem !important;
+    background: #f8fafc !important;
+    border: 2px solid #e2e8f0 !important;
+    transition: all 0.2s ease;
+}
+
+#global-search:focus {
+    background: white !important;
+    border-color: var(--college-primary) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1) !important;
+    transform: scale(1.02);
+}
+
+/* User Avatar with Fun Border */
+.user-avatar {
+    border: 3px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1) rotate(5deg);
+    border-color: var(--college-primary);
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+}
+
+/* Breadcrumb Styling */
+nav[aria-label="Breadcrumb"] {
+    padding: 0.5rem 0;
+}
+
+nav[aria-label="Breadcrumb"] a {
+    color: #64748b;
+    transition: all 0.2s ease;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+nav[aria-label="Breadcrumb"] a:hover {
+    background: #eff6ff;
+    color: var(--college-primary);
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    border-bottom: 2px solid #e2e8f0;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-item {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.tab-item:hover {
+    color: var(--college-primary);
+    background: #eff6ff;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab-item-active {
+    color: var(--college-primary);
+    border-bottom-color: var(--college-primary);
+}
+
+/* Fun Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top-color: var(--college-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Decorative Elements */
+.decoration-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.6;
+    animation: blob 7s infinite;
+}
+
+@keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+/* Calendar Style Dates */
+.calendar-date {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #bfdbfe;
+    transition: all 0.2s ease;
+}
+
+.calendar-date:hover {
+    transform: scale(1.1) rotate(5deg);
+    border-color: var(--college-primary);
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+}
+
+.calendar-day {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--college-primary);
+}
+
+.calendar-month {
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+/* Student/Staff Cards with Photos */
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+    background-size: 200% 100%;
+    animation: gradientMove 3s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--college-primary);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .metric-card {
+        padding: 1.25rem !important;
+    }
+    
+    .metric-value {
+        font-size: 2rem !important;
+    }
+    
+    .btn {
+        padding: 0.625rem 1.25rem !important;
+    }
+}
+
+

@@ -167,7 +167,7 @@
                     </p>
                 </div>
                 <div class="col-md-6 text-end">
-                    <a href="{% url 'add_student' %}" class="btn btn-professional-primary">
+                    <a href="{% url 'add_student' %}" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i>Add New Student
                     </a>
                     <button class="btn btn-outline-primary" onclick="exportTableToExcel()">
@@ -179,26 +179,16 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="card-professional">
-                    <div class="card-header-professional">
+                <div class="card">
+                    <div class="card-header">
                         <h3 class="card-title">
                             <i class="fas fa-table me-2"></i>Student Records
                             <span class="badge bg-light text-dark ms-2" id="studentCount">{{ students|length }}</span>
                         </h3>
                     </div>
                     
-                    <div class="card-body-professional">
+                    <div class="card-body">
                         {% if students %}
-                        <!-- Loading skeleton (shown while table initializes) -->
-                        <div id="tableLoader" style="display: none;">
-                            <div class="text-center p-4">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <p class="mt-2 text-muted">Loading students...</p>
-                            </div>
-                        </div>
-
                         <!-- Actual table -->
                         <div id="tableContent">
                             <table id="example2" class="table table-bordered table-hover data-table">
@@ -300,13 +290,11 @@
 <script>
 $(document).ready(function() {
     // Initialize tooltips
-    $('[data-bs-toggle="tooltip"]').tooltip();
+    if (typeof $.fn.tooltip !== 'undefined') {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    }
 
     {% if students %}
-    // Show loading skeleton briefly
-    $('#tableLoader').show();
-    $('#tableContent').hide();
-
     // Initialize DataTable with enhanced features
     const table = $('#example2').DataTable({
         responsive: true,
@@ -330,12 +318,14 @@ $(document).ready(function() {
         },
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
         initComplete: function() {
-            // Hide loader, show table
-            $('#tableLoader').hide();
-            $('#tableContent').fadeIn();
-            
-            // Show success message
-            window.toast.info(`Loaded ${this.api().data().length} students`);
+            // Console log for debugging
+            console.log('DataTable loaded successfully with ' + this.api().data().length + ' students');
+        },
+        drawCallback: function() {
+            // Re-initialize tooltips after table draw
+            if (typeof $.fn.tooltip !== 'undefined') {
+                $('[data-bs-toggle="tooltip"]').tooltip();
+            }
         }
     });
 
@@ -345,17 +335,9 @@ $(document).ready(function() {
         const url = $(this).attr('href');
         const studentName = $(this).data('student-name');
 
-        ConfirmationDialog.show({
-            title: 'Delete Student',
-            message: `Are you sure you want to delete <strong>${studentName}</strong>? This action cannot be undone and will remove all associated records.`,
-            type: 'danger',
-            confirmText: 'Yes, Delete',
-            cancelText: 'Cancel',
-            onConfirm: () => {
-                window.loader.showPageLoader('Deleting student...');
-                window.location.href = url;
-            }
-        });
+        if (confirm('Are you sure you want to delete ' + studentName + '? This action cannot be undone and will remove all associated records.')) {
+            window.location.href = url;
+        }
     });
 
     // Add export to Excel functionality
@@ -363,12 +345,12 @@ $(document).ready(function() {
         const data = table.rows({ search: 'applied' }).data().toArray();
         
         if (data.length === 0) {
-            window.toast.warning('No data to export');
+            alert('No data to export');
             return;
         }
 
-        window.toast.info('Export functionality will be implemented using DataTables buttons');
-        // Note: Full Excel export requires DataTables Buttons extension
+        alert('Export functionality requires DataTables Buttons extension. Redirecting to print view...');
+        window.print();
     };
 
     // Update count badge on filter
@@ -377,16 +359,6 @@ $(document).ready(function() {
         $('#studentCount').text(count);
     });
     {% endif %}
-
-    // Show success message if student was added/edited
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('added') === 'true') {
-        window.toast.success('Student added successfully!');
-    } else if (urlParams.get('updated') === 'true') {
-        window.toast.success('Student updated successfully!');
-    } else if (urlParams.get('deleted') === 'true') {
-        window.toast.success('Student deleted successfully!');
-    }
 });
 </script>
 {% endblock custom_js %}

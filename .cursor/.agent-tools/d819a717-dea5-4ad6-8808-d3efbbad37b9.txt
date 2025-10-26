@@ -1,0 +1,38 @@
+Uncommented: path("admin/scholarship/add/", hod_views.add_scholarship, name='add_scholarship'                                                                   
+Uncommented: path("admin/scholarship/applications/", hod_views.scholarship_applications, name                                                                   
+Uncommented: path("admin/scholarship/application/<int:app_id>/review/", hod_views.review_scho                                                                   
+Uncommented: path("admin/scholarship/application/<int:app_id>/disburse/", hod_views.disburse_                                                                   
+Uncommented: path("admin/timetable/add/", hod_views.add_timetable, name='add_timetable'),                                                                       
+Uncommented: path("admin/department/add/", hod_views.add_department, name='add_department'),                                                                    
+Uncommented: path("admin/department/<int:dept_id>/edit/", hod_views.edit_department, name='ed                                                                   
+Uncommented: path("admin/program/add/", hod_views.add_program, name='add_program'),                                                                             
+Uncommented: path("admin/program/<int:program_id>/edit/", hod_views.edit_program, name='edit_                                                                   
+Uncommented: path("admin/add-admin/", hod_views.add_admin, name='add_admin'),
+Uncommented: path("admin/edit-admin/<int:admin_id>/", hod_views.edit_admin, name='edit_admin'                                                                   
+Uncommented: path("admin/delete-admin/<int:admin_id>/", hod_views.delete_admin, name='delete_                                                                   
+Uncommented: path("admin/ai-report/generate/", hod_views.generate_ai_report, name='generate_a                                                                   
+Uncommented: path('admin/online_exams/create/', hod_views.create_online_exam, name='create_on                                                                   
+Uncommented: path('admin/online_exams/<int:exam_id>/questions/', hod_views.add_exam_questions                                                                   
+Uncommented: path('admin/certificates/issue/', hod_views.issue_certificate, name='issue_certi                                                                   
+Uncommented: path('admin/internships/<int:internship_id>/approve/', hod_views.approve_interns                                                                   
+Uncommented: path('admin/activities/create/', hod_views.create_activity, name='create_activit                                                                   
+Uncommented: path('admin/gate_passes/<int:pass_id>/approve/', hod_views.approve_gate_pass, na                                                                   
+Uncommented: path('admin/disciplinary/add/', hod_views.add_disciplinary_action, name='add_dis                                                                   
+Uncommented: path('admin/ragging/<int:incident_id>/assign/', hod_views.assign_ragging_investi                                                                   
+Uncommented: path('admin/council/add/', hod_views.add_council_member, name='add_council_membe                                                                   
+Uncommented: path('admin/classrooms/add/', hod_views.add_classroom, name='add_classroom'),                                                                      
+Uncommented: path('admin/classrooms/<int:classroom_id>/edit/', hod_views.edit_classroom, name                                                                   
+Uncommented: path('admin/classrooms/bookings/', hod_views.manage_classroom_bookings, name='ma                                                                   
+Uncommented: path('admin/classrooms/book/', hod_views.book_classroom, name='book_classroom'),                                                                   
+Uncommented: path('admin/classrooms/bookings/<int:booking_id>/approve/', hod_views.approve_cl                                                                   
+Uncommented: path('admin/classrooms/schedule/', hod_views.classroom_schedule, name='classroom                                                                   
+Uncommented: path('admin/classrooms/maintenance/', hod_views.classroom_maintenance, name='cla                                                                   
+Uncommented: path('admin/classrooms/maintenance/report/', hod_views.report_maintenance, name=                                                                   
+Uncommented: path("add-public-link/", hod_views.add_public_link, name='add_public_link'),                                                                       
+Uncommented: path("edit-public-link/<int:link_id>/", hod_views.edit_public_link, name='edit_p                                                                   
+Uncommented: path("delete-public-link/<int:link_id>/", hod_views.delete_public_link, name='de                                                                   
+Uncommented: path("toggle-link-status/<int:link_id>/", hod_views.toggle_link_status, name='to                                                                   
+Uncommented: path("reorder-public-links/", hod_views.reorder_public_links, name='reorder_publ                                                                   
+Uncommented: path("reports-hub/", hod_views.reports_hub, name='reports_hub'),   
+
+All paths uncommented!

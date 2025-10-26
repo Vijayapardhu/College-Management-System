@@ -165,8 +165,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'main_app.CustomUser'
 AUTHENTICATION_BACKENDS = [
-    'main_app.EmailBackend.EmailBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    'main_app.auth_backends.RollNumberOrEmailBackend',  # Allows login with roll number or email
+    'main_app.EmailBackend.EmailBackend',  # Legacy email backend
+    'django.contrib.auth.backends.ModelBackend',  # Default Django backend
 ]
 TIME_ZONE = 'Africa/Lagos'
 
@@ -181,6 +182,24 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='tqocekqesdmzgjnx')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='EduVision <23404.cms@gmail.com>')
 
+# Supabase Storage Configuration
+SUPABASE_URL = config('SUPABASE_URL', default='https://yqwszaekwucrnnjuadtp.supabase.co')
+SUPABASE_KEY = config('SUPABASE_KEY', default='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlxd3N6YWVrd3Vjcm5uanVhZHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwODgxNTAsImV4cCI6MjA3NTY2NDE1MH0.IJV-scS2EUSb4Ow4nWpc1dWAMyB1JFltzuoQ-smnw3w')
+SUPABASE_BUCKET = config('SUPABASE_BUCKET', default='media')
+
+# Validate Supabase configuration if needed
+if not SUPABASE_URL or not SUPABASE_KEY:
+    import warnings
+    warnings.warn(
+        "Supabase configuration missing. Document uploads will not work. "
+        "Set SUPABASE_URL and SUPABASE_KEY in your .env file.",
+        RuntimeWarning
+    )
+
+# Configure Supabase Storage as default for FileField
+if SUPABASE_URL and SUPABASE_KEY:
+    DEFAULT_FILE_STORAGE = 'main_app.storage_backends.SupabaseStorage'
+
 # Use WhiteNoise without compression for development
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage' if not DEBUG else 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -190,3 +209,41 @@ if config('DATABASE_URL', default=''):
     DATABASES['default'].update(prod_db)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Logging Configuration - Shows debug logs in terminal
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'main_app': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+

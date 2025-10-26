@@ -93,12 +93,13 @@ class FormSettings(forms.ModelForm):
 
 
 class CustomUserForm(FormSettings):
+    username = forms.CharField(required=True)
     email = forms.EmailField(required=True)
     gender = forms.ChoiceField(choices=[('M', 'Male'), ('F', 'Female')])
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
     address = forms.CharField(widget=forms.Textarea)
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
     widget = {
         'password': forms.PasswordInput(),
     }
@@ -131,37 +132,156 @@ class CustomUserForm(FormSettings):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'gender',  'password', 'address' ]
+        fields = ['username', 'first_name', 'last_name', 'email', 'gender', 'password', 'address']
 
 
-class StudentForm(CustomUserForm):
+class StudentForm(forms.ModelForm):
+    """
+    Simplified Student Form with only essential fields
+    Handles basic info, academic details, parent info, and document uploads
+    """
+    
+    # Basic Information fields from CustomUser
+    first_name = forms.CharField(
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter first name'})
+    )
+    last_name = forms.CharField(
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter last name'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'student@example.com'})
+    )
+    gender = forms.ChoiceField(
+        choices=[('', 'Select Gender'), ('M', 'Male'), ('F', 'Female'), ('O', 'Other')],
+        required=True
+    )
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'placeholder': 'YYYY-MM-DD'})
+    )
+    mobile_number = forms.CharField(
+        max_length=15,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': '+91 1234567890'})
+    )
+    
+    # Document upload fields (will be handled by Supabase)
+    photo = forms.FileField(
+        required=False,
+        help_text='Upload student photo (Max 2MB, JPG/PNG)',
+        widget=forms.FileInput(attrs={'accept': 'image/*'})
+    )
+    signature = forms.FileField(
+        required=False,
+        help_text='Upload signature (Max 2MB, JPG/PNG)',
+        widget=forms.FileInput(attrs={'accept': 'image/*'})
+    )
+    aadhaar_card = forms.FileField(
+        required=False,
+        help_text='Upload Aadhaar Card (Max 5MB, PDF/Image)',
+        widget=forms.FileInput(attrs={'accept': 'image/*,application/pdf'})
+    )
+    income_certificate = forms.FileField(
+        required=False,
+        help_text='Upload Income Certificate (Max 5MB, PDF)',
+        widget=forms.FileInput(attrs={'accept': 'application/pdf'})
+    )
+    transfer_certificate = forms.FileField(
+        required=False,
+        help_text='Upload Transfer Certificate (Max 5MB, PDF)',
+        widget=forms.FileInput(attrs={'accept': 'application/pdf'})
+    )
+    tenth_certificate = forms.FileField(
+        required=False,
+        help_text='Upload 10th/12th Certificate (Max 5MB, PDF)',
+        widget=forms.FileInput(attrs={'accept': 'application/pdf'})
+    )
+    
     def __init__(self, *args, **kwargs):
         super(StudentForm, self).__init__(*args, **kwargs)
-
-    class Meta(CustomUserForm.Meta):
+        
+        # Add Bootstrap classes to all form fields
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Select):
+                field.widget.attrs['class'] = 'form-control form-select'
+            elif isinstance(field.widget, forms.widgets.Textarea):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['rows'] = 3
+            elif isinstance(field.widget, forms.widgets.FileInput):
+                field.widget.attrs['class'] = 'form-control file-upload-input'
+            elif isinstance(field.widget, forms.widgets.CheckboxInput):
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+        
+        # If editing existing student, populate user fields
+        if self.instance and self.instance.pk and hasattr(self.instance, 'admin'):
+            self.fields['first_name'].initial = self.instance.admin.first_name
+            self.fields['last_name'].initial = self.instance.admin.last_name
+            self.fields['email'].initial = self.instance.admin.email
+            self.fields['gender'].initial = self.instance.admin.gender
+            self.fields['date_of_birth'].initial = self.instance.date_of_birth
+    
+    def clean_email(self):
+        """Validate email uniqueness"""
+        email = self.cleaned_data.get('email', '').lower()
+        
+        if self.instance.pk:  # Editing existing student
+            # Check if email changed and if new email already exists
+            if hasattr(self.instance, 'admin'):
+                if self.instance.admin.email != email:
+                    if CustomUser.objects.filter(email=email).exists():
+                        raise forms.ValidationError("This email is already registered")
+        else:  # Creating new student
+            if CustomUser.objects.filter(email=email).exists():
+                raise forms.ValidationError("This email is already registered")
+        
+        return email
+    
+    def clean_roll_number(self):
+        """Validate roll number uniqueness"""
+        roll_number = self.cleaned_data.get('roll_number', '').upper()
+        
+        if self.instance.pk:  # Editing
+            if Student.objects.filter(roll_number=roll_number).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError("This roll number is already assigned")
+        else:  # Creating new
+            if roll_number and Student.objects.filter(roll_number=roll_number).exists():
+                raise forms.ValidationError("This roll number is already assigned")
+        
+        return roll_number
+    
+    class Meta:
         model = Student
-        fields = CustomUserForm.Meta.fields + [
-            'course', 'session', 'course_type', 'admission_year', 'roll_number', 'admission_number',
-            'date_of_birth', 'nationality', 'religion', 'blood_group', 'mobile_number', 
-            'alternate_mobile', 'aadhaar_number', 'pan_number', 'medical_conditions',
-            'mother_tongue', 'hobbies', 'achievements', 'admission_mode', 'admission_quota', 
-            'admission_fee_paid', 'admission_date', 'caste_category', 'income_certificate_number', 
-            'annual_family_income', 'is_disabled', 'disability_percentage', 'scholarship_applied', 
-            'scholarship_name', 'permanent_address', 'permanent_city', 'permanent_state', 
-            'permanent_pincode', 'current_address', 'current_city', 'current_state', 
-            'current_pincode', 'father_name', 'father_occupation', 'father_mobile',
-            'mother_name', 'mother_occupation', 'mother_mobile', 'guardian_name', 
-            'guardian_relation', 'guardian_mobile', 'tenth_board', 'tenth_school', 
-            'tenth_year', 'tenth_marks_total', 'tenth_marks_obtained', 'tenth_percentage', 
-            'tenth_cgpa', 'entrance_exam_name', 'entrance_exam_year', 'entrance_exam_rank', 
-            'entrance_exam_score', 'entrance_category_rank', 'bank_account_number', 
-            'bank_ifsc_code', 'bank_name', 'emergency_contact_name', 'emergency_contact_relation', 
-            'emergency_contact_mobile', 'hostel_required', 'transport_required', 'photo', 
-            'signature', 'tenth_certificate', 'transfer_certificate', 'migration_certificate', 
-            'character_certificate', 'caste_certificate', 'income_certificate', 
-            'disability_certificate', 'aadhaar_card', 'pan_card', 'bank_passbook', 
-            'birth_certificate', 'entrance_exam_scorecard', 'student_status', 'remarks'
+        fields = [
+            # Academic Details
+            'course', 'session', 'roll_number', 'admission_number', 
+            'admission_date', 'course_type',
+            # Parent Details  
+            'father_name', 'father_mobile', 'mother_name', 'mother_mobile',
+            'guardian_name', 'guardian_mobile',
+            # Student-specific fields
+            'date_of_birth', 'mobile_number',
         ]
+        widgets = {
+            'course': forms.Select(attrs={'class': 'form-control'}),
+            'session': forms.Select(attrs={'class': 'form-control'}),
+            'roll_number': forms.TextInput(attrs={'placeholder': 'e.g., CSE2024001', 'class': 'form-control'}),
+            'admission_number': forms.TextInput(attrs={'placeholder': 'e.g., ADM2024001', 'class': 'form-control'}),
+            'admission_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'course_type': forms.Select(attrs={'class': 'form-control'}),
+            'father_name': forms.TextInput(attrs={'placeholder': 'Father\'s full name', 'class': 'form-control'}),
+            'father_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'mother_name': forms.TextInput(attrs={'placeholder': 'Mother\'s full name', 'class': 'form-control'}),
+            'mother_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'guardian_name': forms.TextInput(attrs={'placeholder': 'Guardian name (if applicable)', 'class': 'form-control'}),
+            'guardian_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+        }
 
 
 class AdminForm(CustomUserForm):
@@ -197,7 +317,7 @@ class StaffForm(CustomUserForm):
             'course', 'department', 'designation', 'employee_id', 'qualification', 'specialization',
             'experience_years', 'mobile_number', 'alternate_mobile', 'emergency_contact',
             'date_of_birth', 'date_of_joining', 'date_of_retirement', 'status',
-            'blood_group', 'aadhaar_number', 'pan_number', 'bank_account_number',
+            'blood_group', 'aadhaar_number', 'bank_account_number',
             'bank_ifsc_code', 'bank_name', 'resume', 'remarks'
         ]
 
@@ -287,7 +407,7 @@ class StudentEditForm(CustomUserForm):
         fields = CustomUserForm.Meta.fields + [
             'course', 'session', 'course_type', 'admission_year', 'roll_number', 'admission_number',
             'date_of_birth', 'nationality', 'religion', 'blood_group', 'mobile_number', 
-            'alternate_mobile', 'aadhaar_number', 'pan_number', 'medical_conditions',
+            'alternate_mobile', 'aadhaar_number', 'medical_conditions',
             'mother_tongue', 'hobbies', 'achievements', 'admission_mode', 'admission_quota', 
             'admission_fee_paid', 'admission_date', 'caste_category', 'income_certificate_number', 
             'annual_family_income', 'is_disabled', 'disability_percentage', 'scholarship_applied', 
@@ -303,7 +423,7 @@ class StudentEditForm(CustomUserForm):
             'emergency_contact_mobile', 'hostel_required', 'transport_required', 'photo', 
             'signature', 'tenth_certificate', 'transfer_certificate', 'migration_certificate', 
             'character_certificate', 'caste_certificate', 'income_certificate', 
-            'disability_certificate', 'aadhaar_card', 'pan_card', 'bank_passbook', 
+            'disability_certificate', 'aadhaar_card', 'bank_passbook', 
             'birth_certificate', 'entrance_exam_scorecard', 'student_status', 'remarks'
         ] 
 
