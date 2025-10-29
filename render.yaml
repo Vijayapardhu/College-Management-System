@@ -14,7 +14,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: ALLOWED_HOSTS
-          value: eduvision-web.onrender.com
+        value: eduvision-web.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
         value: https://eduvision-web.onrender.com
     plan: free
