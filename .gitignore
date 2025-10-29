@@ -68,8 +68,9 @@ test_report.json
 .cache/
 .pytest_cache/
 
-# Duplicate directories
+# Duplicate directories and submodules
 student-management-using-django/
+**/student-management-using-django/**
 
 # Temporary files
 *.tmp
