@@ -15,6 +15,7 @@ class RollNumberOrEmailBackend(ModelBackend):
     Authenticates users using either:
     1. Email address
     2. Roll number (for students)
+    3. Employee ID (for staff/management)
     
     Usage in login view:
     authenticate(request, username=email_or_roll, password=password)
@@ -39,11 +40,27 @@ class RollNumberOrEmailBackend(ModelBackend):
                     )
                     user = student.admin
                 except Student.DoesNotExist:
-                    # If not found as roll number, try as username (fallback)
+                    # If not found as roll number, try employee ID (for staff)
                     try:
-                        user = CustomUser.objects.get(username__iexact=username_lower)
-                    except CustomUser.DoesNotExist:
-                        pass
+                        from .models import Staff
+                        staff = Staff.objects.select_related('admin').get(
+                            employee_id__iexact=username_lower
+                        )
+                        user = staff.admin
+                    except:
+                        # Try management employee ID
+                        try:
+                            from .models import Management
+                            management = Management.objects.select_related('admin').get(
+                                employee_id__iexact=username_lower
+                            )
+                            user = management.admin
+                        except:
+                            # If not found as employee ID, try as username (fallback)
+                            try:
+                                user = CustomUser.objects.get(username__iexact=username_lower)
+                            except CustomUser.DoesNotExist:
+                                pass
         
         except CustomUser.DoesNotExist:
             # No user found
