@@ -36,6 +36,15 @@ CSRF_TRUSTED_ORIGINS = [
     'https://897961e7bc49.ngrok-free.app',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
+    'https://eduvision-cms.onrender.com',
+    'http://eduvision-cms.onrender.com',
+    'https://eduvision-cms.onrender.io',
+    'http://eduvision-cms.onrender.io',
+    'https://eduvision-cms.onrender.net',
+    'http://eduvision-cms.onrender.net',
+    'https://eduvision-cms.onrender.org',
+    'http://eduvision-cms.onrender.org',
+    'https://eduvision-cms.onrender.com.br',
 ]
 
 # Add custom CSRF trusted origins from environment

@@ -17,5 +17,23 @@ services:
         value: eduvision-cms.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
         value: https://eduvision-cms.onrender.com
+      - key: DATABASE_URL
+        value: postgresql://postgres.pjlxqktbgtxzztxhhiqr:Pardhu@8421@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.smtp.EmailBackend
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_HOST_USER
+        value: 23404.cms@gmail.com
+      - key: EMAIL_HOST_PASSWORD
+        value: cuezzxokrxxzdnnv
+      - key: EMAIL_USE_TLS
+        value: True
+      - key: DEFAULT_FROM_EMAIL
+        value: EduVision <23404.cms@gmail.com>
+      - key: EMAIL_TIMEOUT
+        value: 10
     plan: free
 
