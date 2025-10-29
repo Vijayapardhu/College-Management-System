@@ -1,0 +1,41 @@
+{% load static %}
+<div class="content-card">
+    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <h3 class="card-title" style="margin:0;">Enrolled Subjects</h3>
+        {% if student.class_group %}
+        <span class="badge badge-primary">Class: {{ student.class_group }}</span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if subjects %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Semester</th>
+                        <th>Department</th>
+                        <th>Faculty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sub in subjects %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ sub.name }}</td>
+                        <td>{% if sub.semester %}{{ sub.semester }}{% else %}-{% endif %}</td>
+                        <td>{{ sub.department.name|default:'-' }}</td>
+                        <td>{% if sub.staff and sub.staff.admin %}{{ sub.staff.admin.first_name }} {{ sub.staff.admin.last_name }}{% else %}-{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted" style="margin:0;">No subjects enrolled.</p>
+        {% endif %}
+    </div>
+</div>
+
+

@@ -12,7 +12,11 @@ admin.site.register(CustomUser, UserModel)
 admin.site.register(Admin)
 admin.site.register(Management)
 admin.site.register(Staff)
-admin.site.register(Student)
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('admin', 'roll_number', 'course', 'department', 'current_semester')
+    search_fields = ('admin__first_name', 'admin__last_name', 'roll_number', 'admin__email')
+    list_filter = ('department', 'course', 'current_semester', 'student_status')
 admin.site.register(Course)
 admin.site.register(Subject)
 admin.site.register(Session)
@@ -93,6 +97,30 @@ admin.site.register(DiscussionReply)
 # University Management
 admin.site.register(Department)
 admin.site.register(Program)
+# New academic linkage models
+@admin.register(ClassGroup)
+class ClassGroupAdmin(admin.ModelAdmin):
+    list_display = ('department', 'course', 'academic_year', 'section', 'session', 'class_teacher', 'proctor', 'is_active')
+    list_filter = ('department', 'course', 'academic_year', 'section', 'session', 'is_active')
+    search_fields = ('department__name', 'course__name', 'section__name', 'session__session_name')
+
+@admin.register(Enrollment)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'subject', 'enrolled_at')
+    list_filter = ('subject__department', 'subject__semester')
+    search_fields = ('student__admin__first_name', 'student__admin__last_name', 'subject__name')
+
+@admin.register(Curriculum)
+class CurriculumAdmin(admin.ModelAdmin):
+    list_display = ('session_year', 'version', 'is_active', 'created_at')
+    list_filter = ('session_year', 'is_active')
+    search_fields = ('version',)
+
+@admin.register(Marks)
+class MarksAdmin(admin.ModelAdmin):
+    list_display = ('student', 'subject', 'assessment_type', 'marks_obtained', 'total_marks', 'assessed_on')
+    list_filter = ('assessment_type', 'subject__department', 'subject__semester')
+    search_fields = ('student__admin__first_name', 'student__admin__last_name', 'subject__name')
 admin.site.register(Hostel)
 admin.site.register(HostelAllocation)
 admin.site.register(HostelVisitorLog)
@@ -112,7 +140,11 @@ admin.site.register(Exam)
 admin.site.register(ExamSchedule)
 admin.site.register(Invigilator)
 admin.site.register(AdmitCard)
-admin.site.register(Timetable)
+@admin.register(Timetable)
+class TimetableAdmin(admin.ModelAdmin):
+    list_display = ('session', 'course', 'semester', 'department', 'class_group', 'weekday', 'period', 'subject', 'staff')
+    list_filter = ('session', 'course', 'semester', 'department', 'class_group', 'weekday')
+    search_fields = ('subject__name', 'staff__admin__first_name', 'staff__admin__last_name')
 
 # Placement Cell
 admin.site.register(Company)

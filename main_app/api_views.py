@@ -27,6 +27,17 @@ from .models import (
     Alumni, Management, AdmissionApplication
 )
 
+from .serializers import (
+    SubjectSerializer,
+    TimetableSerializer,
+    CurriculumSubjectSerializer,
+)
+from .utils.query_helpers import (
+    get_enrolled_subjects_for_student,
+    get_class_timetable,
+    get_curriculum_subjects,
+)
+
 
 def get_token_for_user(user):
     """Generate JWT token for user"""

@@ -404,6 +404,15 @@
                 </div>
             </div>
 
+            <!-- Enrolled Subjects -->
+            {% with subjects=student.subjects.all %}
+            <div class="info-grid">
+                <div class="info-card" style="grid-column: 1 / -1;">
+                    {% include 'includes/_student_enrolled_subjects.html' with student=student subjects=subjects %}
+                </div>
+            </div>
+            {% endwith %}
+
             <!-- Parent Information -->
             <div class="info-card">
                 <h3 class="info-card-title">

@@ -1,0 +1,43 @@
+{% load static %}
+<div class="content-card">
+    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <h3 class="card-title" style="margin:0;">Class Timetable</h3>
+        {% if class_group %}
+        <span class="badge badge-info">{{ class_group }}</span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if slots %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Weekday</th>
+                        <th>Period</th>
+                        <th>Time</th>
+                        <th>Subject</th>
+                        <th>Faculty</th>
+                        <th>Room</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in slots %}
+                    <tr>
+                        <td class="text-capitalize">{{ t.weekday }}</td>
+                        <td>{{ t.period }}</td>
+                        <td>{{ t.start_time }} - {{ t.end_time }}</td>
+                        <td>{{ t.subject.name }}</td>
+                        <td>{% if t.staff and t.staff.admin %}{{ t.staff.admin.first_name }} {{ t.staff.admin.last_name }}{% else %}-{% endif %}</td>
+                        <td>{{ t.room_number|default:'-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted" style="margin:0;">No timetable entries.</p>
+        {% endif %}
+    </div>
+</div>
+
+

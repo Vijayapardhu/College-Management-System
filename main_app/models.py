@@ -101,7 +101,10 @@ class Department(models.Model):
     """University Departments"""
     name = models.CharField(max_length=200, unique=True)
     code = models.CharField(max_length=20, unique=True)
-    hod = models.ForeignKey('Staff', on_delete=models.SET_NULL, null=True, blank=True, related_name='headed_department')
+    # Link to Management (One Management can have many Departments)
+    management = models.ForeignKey('Management', on_delete=models.SET_NULL, null=True, blank=True, related_name='departments')
+    # HOD must be unique per Department (One-to-One)
+    hod = models.OneToOneField('Staff', on_delete=models.SET_NULL, null=True, blank=True, related_name='headed_department')
     contact_email = models.EmailField(blank=True)
     contact_number = models.CharField(max_length=15, blank=True)
     description = models.TextField(blank=True)
@@ -217,6 +220,8 @@ class ClassGroup(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='class_groups')
     
     class_teacher = models.ForeignKey('Staff', on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_classes')
+    # Proctor (one staff can proctor at most one class group)
+    proctor = models.OneToOneField('Staff', on_delete=models.SET_NULL, null=True, blank=True, related_name='proctored_class')
     
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -353,6 +358,9 @@ class Student(models.Model):
     hostel_required = models.BooleanField(default=False)
     transport_required = models.BooleanField(default=False)
     scholarship_applied = models.BooleanField(default=False)
+
+    # Subject Enrollments (through table defined below)
+    subjects = models.ManyToManyField('Subject', through='Enrollment', blank=True, related_name='enrolled_students')
     scholarship_name = models.CharField(max_length=200, blank=True)
     bank_account_number = models.CharField(max_length=50, blank=True)
     bank_ifsc_code = models.CharField(max_length=20, blank=True)
@@ -519,8 +527,16 @@ class Staff(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length=120)
-    staff = models.ForeignKey(Staff,on_delete=models.CASCADE,)
+    # Faculty/Instructor
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='subjects')
+    # Legacy mapping (kept for backward compatibility)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    # Department and curriculum context
+    department = models.ForeignKey('Department', on_delete=models.SET_NULL, null=True, blank=True, related_name='subjects')
+    # Optional curriculum/versioning (added below)
+    curriculum = models.ForeignKey('Curriculum', on_delete=models.SET_NULL, null=True, blank=True, related_name='subjects')
+    # Semester number for this subject
+    semester = models.PositiveSmallIntegerField(null=True, blank=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -528,9 +544,73 @@ class Subject(models.Model):
         return self.name
 
 
+class Curriculum(models.Model):
+    """Curriculum versioning for subjects/programs"""
+    session_year = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='curricula')
+    version = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('session_year', 'version')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.session_year} - {self.version}"
+
+
+class Enrollment(models.Model):
+    """Student-Subject enrollments"""
+    student = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='enrollments')
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE, related_name='enrollments')
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'subject')
+        indexes = [
+            models.Index(fields=['student'], name='enroll_student_idx'),
+            models.Index(fields=['subject'], name='enroll_subject_idx'),
+        ]
+
+    def __str__(self):
+        return f"{self.student.admin.first_name} - {self.subject.name}"
+
+
+class Marks(models.Model):
+    """Assessment marks per student and subject"""
+    ASSESSMENT_TYPE_CHOICES = (
+        ('IA1', 'Internal Assessment 1'),
+        ('IA2', 'Internal Assessment 2'),
+        ('QUIZ', 'Quiz'),
+        ('MID', 'Mid Semester'),
+        ('ENDSEM', 'End Semester'),
+    )
+
+    student = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='marks')
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE, related_name='marks')
+    assessment_type = models.CharField(max_length=10, choices=ASSESSMENT_TYPE_CHOICES)
+    marks_obtained = models.DecimalField(max_digits=6, decimal_places=2)
+    total_marks = models.DecimalField(max_digits=6, decimal_places=2, default=100)
+    assessed_on = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('student', 'subject', 'assessment_type')
+        indexes = [
+            models.Index(fields=['assessment_type'], name='marks_assessment_type_idx'),
+            models.Index(fields=['student', 'subject'], name='marks_student_subject_idx'),
+        ]
+
+    def __str__(self):
+        return f"{self.student.admin.first_name} - {self.subject.name} ({self.assessment_type})"
+
 class Attendance(models.Model):
     session = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
     subject = models.ForeignKey(Subject, on_delete=models.DO_NOTHING)
+    # Optional class-group context for reporting/filters
+    class_group = models.ForeignKey('ClassGroup', on_delete=models.SET_NULL, null=True, blank=True, related_name='attendance_records')
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -1753,6 +1833,9 @@ class Timetable(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='timetables')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='timetables')
     semester = models.IntegerField(choices=SemesterResult.SEMESTER_CHOICES)
+    # New context FKs (optional to avoid breaking existing data)
+    department = models.ForeignKey('Department', on_delete=models.SET_NULL, null=True, blank=True, related_name='timetables')
+    class_group = models.ForeignKey('ClassGroup', on_delete=models.SET_NULL, null=True, blank=True, related_name='timetables')
     
     weekday = models.CharField(max_length=20, choices=WEEKDAY_CHOICES)
     period = models.CharField(max_length=5, choices=PERIOD_CHOICES)
@@ -1773,7 +1856,9 @@ class Timetable(models.Model):
     
     class Meta:
         ordering = ['weekday', 'period']
-        unique_together = ('session', 'course', 'semester', 'weekday', 'period')
+        unique_together = (
+            ('session', 'course', 'semester', 'weekday', 'period'),
+        )
 
 
 class Company(models.Model):
