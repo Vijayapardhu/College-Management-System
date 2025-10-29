@@ -1,8 +1,81 @@
-.vscode
-.idea
-*.pyc
-media/
-main_app/migrations/*
-!main_app/migrations/0001_initial.py
-db.sqlite3
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
 
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+/media
+/static
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development scripts (not needed in production)
+add_*.py
+fix_*.py
+populate_*.py
+generate_*.py
+create_env_file.py
+update_ngrok_url.py
+validate_*.py
+test_with_playwright.py
+*.bat
+
+# Documentation PDFs (keep source docs)
+*.pdf
+!README.md
+
+# Logs
+logs/
+*.log
+
+# Test files
+test_report.json
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Duplicate directories
+student-management-using-django/
+
+# Temporary files
+*.tmp
+*.bak
+*~
+tatic*
+
+# Screenshots (optional - you may want to keep these)
+# screenshots/
+# ss/

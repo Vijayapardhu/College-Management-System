@@ -1,0 +1,60 @@
+# Slugignore - Files to exclude from Render deployment
+# This reduces slug size and speeds up deployment
+
+# Documentation
+*.md
+!README.md
+!RENDER_DEPLOYMENT.md
+
+# Screenshots
+screenshots/
+ss/
+
+# Logs
+logs/
+*.log
+
+# Test files
+tests/
+*_test.py
+test_*.py
+
+# Development
+.vscode/
+.idea/
+*.pyc
+__pycache__/
+
+# Monitoring (not needed on Render)
+monitoring/
+
+# Scripts (not needed in production)
+scripts/
+
+# Duplicate directories
+student-management-using-django/
+
+# Development docs
+docs/
+DEVELOPER_GUIDE.md
+BEGINNER_GUIDE.md
+CHAT_FEATURES_IMPLEMENTED.md
+SUPABASE_SETUP.md
+REQUIREMENTS_GUIDE.md
+DEPLOYMENT_CHECKLIST.md
+
+# Docker files (not needed on Render)
+Dockerfile
+docker-compose.yml
+nginx.conf
+redis.conf
+
+# Local database
+db.sqlite3
+*.sqlite3
+
+# Environment templates
+.env.example
+env_template.txt
+production.env
+

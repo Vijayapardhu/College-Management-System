@@ -99,28 +99,28 @@ WSGI_APPLICATION = 'student_management_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
-        'NAME': config('DB_NAME', default=str(BASE_DIR / 'db.sqlite3')),
-        'USER': config('DB_USER', default=''),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default=''),
-        'PORT': config('DB_PORT', default=''),
+# For Render: Use DATABASE_URL if available (from Render PostgreSQL), otherwise use config values
+DATABASE_URL = config('DATABASE_URL', default=None)
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-    # PostgreSQL/Supabase (set DB_ENGINE=django.db.backends.postgresql in .env)
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': config('DB_NAME', default='postgres'),
-    #     'USER': config('DB_USER', default='postgres.yqwszaekwucrnnjuadtp'),
-    #     'PASSWORD': config('DB_PASSWORD', default='oiXsUCnflSlzH7zH'),
-    #     'HOST': config('DB_HOST', default='aws-1-ap-south-1.pooler.supabase.com'),
-    #     'PORT': config('DB_PORT', default='6543'),
-    #     'OPTIONS': {
-    #         'sslmode': config('DB_SSL_MODE', default='require'),
-    #     },
-    # }
-}
+else:
+    # Development: SQLite or manual PostgreSQL config
+    DATABASES = {
+        'default': {
+            'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
+            'NAME': config('DB_NAME', default=str(BASE_DIR / 'db.sqlite3')),
+            'USER': config('DB_USER', default=''),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default=''),
+            'PORT': config('DB_PORT', default=''),
+        }
+    }
 
 
 # Password validation
@@ -204,13 +204,14 @@ if not SUPABASE_URL or not SUPABASE_KEY:
 if SUPABASE_URL and SUPABASE_KEY:
     DEFAULT_FILE_STORAGE = 'main_app.storage_backends.SupabaseStorage'
 
-# Use WhiteNoise without compression for development
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage' if not DEBUG else 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
-# Update database configuration from DATABASE_URL environment variable (for production)
-if config('DATABASE_URL', default=''):
-    prod_db = dj_database_url.config(conn_max_age=500)
-    DATABASES['default'].update(prod_db)
+# Static Files Storage - Use WhiteNoise for production
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    # Make sure STATIC_ROOT is set for production
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+else:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Logging Configuration - Shows debug logs in terminal

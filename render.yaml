@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: eduvision-college-management
+    env: python
+    buildCommand: chmod +x build.sh && ./build.sh || pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn student_management_system.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: student_management_system.settings
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+    plan: free
+
+databases:
+  - name: eduvision-postgres
+    databaseName: eduvision
+    user: eduvision_user
+    plan: free
+
+disks:
+  - name: eduvision-media-disk
+    mountPath: /opt/render/project/src/media
+    sizeGB: 1
+

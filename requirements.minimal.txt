@@ -1,0 +1,45 @@
+# EduVision CMS - Minimal Production Requirements (Faster Deployment)
+# Use this if you want faster builds on Render
+
+# Core Django
+Django==4.2.11
+djangorestframework==3.14.0
+
+# Database
+psycopg2-binary==2.9.11
+dj-database-url==2.1.0
+
+# Production Server
+gunicorn==21.2.0
+whitenoise==6.6.0
+
+# Security
+djangorestframework-simplejwt==5.3.0
+
+# File Handling
+Pillow==10.2.0
+supabase==2.3.4
+
+# Forms
+django-crispy-forms==2.1
+crispy-bootstrap4==2023.1
+
+# Reports (Essential)
+reportlab==4.0.9
+openpyxl==3.1.2
+
+# Configuration
+python-decouple==3.8
+pytz==2024.1
+
+# HTTP
+requests==2.31.0
+
+# Date Utils
+python-dateutil==2.8.2
+
+# Required dependencies
+asgiref==3.7.2
+sqlparse==0.4.4
+certifi==2024.2.2
+
