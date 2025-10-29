@@ -7,8 +7,8 @@
 
 # REQUIRED - Django Settings
 DEBUG=False
-ALLOWED_HOSTS=eduvision.onrender.com
-CSRF_TRUSTED_ORIGINS=https://eduvision.onrender.com
+ALLOWED_HOSTS=eduvision-web.onrender.com
+CSRF_TRUSTED_ORIGINS=https://eduvision-web.onrender.com
 
 # REQUIRED - Supabase Database
 # Get from: Supabase Dashboard → Settings → Database → Connection String

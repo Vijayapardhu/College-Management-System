@@ -1,7 +1,7 @@
 # EduVision - Render Deployment Guide
 
 ## 🎯 Your Configuration
-- **URL:** `https://eduvision.onrender.com`
+- **URL:** `https://eduvision-web.onrender.com`
 - **Database:** Supabase PostgreSQL
 - **Storage:** Supabase Storage
 - **Platform:** Render Free Tier
@@ -66,8 +66,8 @@ Copy these to Render (replace with your values):
 
 ```
 DEBUG=False
-ALLOWED_HOSTS=eduvision.onrender.com
-CSRF_TRUSTED_ORIGINS=https://eduvision.onrender.com
+ALLOWED_HOSTS=eduvision-web.onrender.com
+CSRF_TRUSTED_ORIGINS=https://eduvision-web.onrender.com
 DATABASE_URL=postgresql://postgres.[YOUR-PROJECT]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
 SUPABASE_URL=https://xxxxx.supabase.co
 SUPABASE_KEY=your-supabase-anon-key
@@ -88,7 +88,7 @@ See `render-env-template.txt` for complete list.
 - [ ] Environment variables added
 - [ ] Deployment successful
 - [ ] Superuser created
-- [ ] App accessible at eduvision.onrender.com
+- [ ] App accessible at eduvision-web.onrender.com
 
 ---
 
@@ -126,5 +126,5 @@ For detailed instructions, see:
 
 **Ready?** Follow `DEPLOYMENT_STEPS.md` to deploy in 10 minutes!
 
-Your app will be live at: **https://eduvision.onrender.com**
+Your app will be live at: **https://eduvision-web.onrender.com**
 

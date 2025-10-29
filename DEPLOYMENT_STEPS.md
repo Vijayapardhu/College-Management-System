@@ -64,7 +64,7 @@ Fill in these settings:
 
 | Setting | Value |
 |---------|-------|
-| **Name** | `eduvision` |
+| **Name** | `eduvision-web` |
 | **Region** | Choose closest to you |
 | **Branch** | `main` |
 | **Root Directory** | (leave empty) |
@@ -80,8 +80,8 @@ Click **Advanced** → **Add Environment Variable**
 
 ```
 DEBUG=False
-ALLOWED_HOSTS=eduvision.onrender.com
-CSRF_TRUSTED_ORIGINS=https://eduvision.onrender.com
+ALLOWED_HOSTS=eduvision-web.onrender.com
+CSRF_TRUSTED_ORIGINS=https://eduvision-web.onrender.com
 
 DATABASE_URL=postgresql://postgres.[YOUR-PROJECT]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
 DB_ENGINE=django.db.backends.postgresql
