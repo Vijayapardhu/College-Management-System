@@ -1,0 +1,39 @@
+# ==============================================================================
+# RENDER ENVIRONMENT VARIABLES TEMPLATE
+# ==============================================================================
+# Copy these variables to Render Dashboard → Your Service → Environment
+# Replace placeholder values with your actual credentials
+# ==============================================================================
+
+# REQUIRED - Django Settings
+DEBUG=False
+ALLOWED_HOSTS=eduvision.onrender.com
+CSRF_TRUSTED_ORIGINS=https://eduvision.onrender.com
+
+# REQUIRED - Supabase Database
+# Get from: Supabase Dashboard → Settings → Database → Connection String
+DATABASE_URL=postgresql://postgres.[PROJECT-ID]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
+DB_ENGINE=django.db.backends.postgresql
+
+# REQUIRED - Supabase Storage
+# Get from: Supabase Dashboard → Settings → API
+SUPABASE_URL=https://[your-project-id].supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (your anon key)
+SUPABASE_BUCKET=media
+
+# OPTIONAL - Email Configuration (for notifications)
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=EduVision <your-email@gmail.com>
+
+# ==============================================================================
+# NOTES:
+# - SECRET_KEY: Leave empty - Render auto-generates
+# - PYTHON_VERSION: Already set in render.yaml
+# - Do NOT add quotes around values in Render dashboard
+# ==============================================================================
+

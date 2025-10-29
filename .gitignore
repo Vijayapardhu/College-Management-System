@@ -35,7 +35,8 @@ db.sqlite3-journal
 .env
 .env.local
 .env.*.local
-*.env
+.env.*
+!render-env-template.txt
 
 # OS
 .DS_Store
