@@ -265,6 +265,21 @@ urlpatterns = [
     path("staff/messages/", message_views.view_messages, name='staff_messages'),
     path("student/messages/", message_views.view_messages, name='student_messages'),
     
+    # WhatsApp-like Chat System URLs
+    path("chat/", chat_system_views.chat_home, name='chat_home'),
+    path("chat/messages/<str:chat_type>/<int:chat_id>/", chat_system_views.get_chat_messages, name='get_chat_messages'),
+    path("chat/send/", chat_system_views.send_message, name='chat_send_message'),
+    path("chat/message/<int:message_id>/delete/", chat_system_views.delete_message, name='chat_delete_message'),
+    path("chat/group/create/", chat_system_views.create_group, name='create_chat_group'),
+    path("chat/group/<int:group_id>/settings/", chat_system_views.group_settings, name='group_settings'),
+    path("chat/group/<int:group_id>/update/", chat_system_views.update_group_settings, name='update_group_settings'),
+    path("chat/group/<int:group_id>/add-member/", chat_system_views.add_group_member, name='add_group_member'),
+    path("chat/group/<int:group_id>/remove/<int:user_id>/", chat_system_views.remove_group_member, name='remove_group_member'),
+    path("chat/group/<int:group_id>/leave/", chat_system_views.leave_group, name='leave_group'),
+    path("chat/message/<int:message_id>/react/", chat_system_views.add_reaction, name='add_message_reaction'),
+    path("chat/message/<int:message_id>/unreact/", chat_system_views.remove_reaction, name='remove_message_reaction'),
+    path("chat/search/", chat_system_views.search_messages, name='search_chat_messages'),
+    
     # Study Materials - Staff
     path("staff/material/upload/", resource_views.staff_upload_material, name='staff_upload_material'),
     path("staff/materials/", resource_views.staff_view_materials, name='staff_view_materials'),
