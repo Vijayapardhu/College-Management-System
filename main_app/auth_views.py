@@ -62,17 +62,25 @@ def handle_login(request, data):
     
     # Authenticate user
     try:
-        user = EmailBackend().authenticate(username=email_or_id, password=password)
+        backend = EmailBackend()
+        user = backend.authenticate(request, username=email_or_id, password=password)
+        
+        print(f"[AUTH] Attempting login for: {email_or_id}")
+        print(f"[AUTH] User found: {user is not None}")
+        
+        if not user:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid email/ID or password'
+            })
+        
+        print(f"[AUTH] Successfully authenticated user: {user.email}")
+        
     except Exception as e:
+        print(f"[AUTH] Authentication error: {e}")
         return JsonResponse({
             'success': False,
             'message': f'Authentication error: {str(e)}'
-        })
-    
-    if not user:
-        return JsonResponse({
-            'success': False,
-            'message': 'Invalid email/ID or password. Default password is: aditya'
         })
     
     # Generate OTP
@@ -133,7 +141,7 @@ def handle_verify_otp(request, data):
             request.session.pop('otp_id', None)
             
             # Login user
-            login(request, user, backend='main_app.EmailBackend.EmailBackend')
+            login(request, user, backend='main_app.EmailBackend')
             
             # Get dashboard URL
             dashboard_url = get_dashboard_url(user)
