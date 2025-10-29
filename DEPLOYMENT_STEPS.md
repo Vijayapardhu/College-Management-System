@@ -118,7 +118,7 @@ Once deployment is complete:
    - Password (twice)
 
 #### B. Test Your App
-1. Visit: `https://eduvision.onrender.com`
+1. Visit: `https://eduvision-web.onrender.com`
 2. Should see the login page
 3. Try logging in with superuser credentials
 
@@ -128,7 +128,7 @@ Once deployment is complete:
 
 After deployment, verify:
 
-- [ ] ✅ App loads at `https://eduvision.onrender.com`
+- [ ] ✅ App loads at `https://eduvision-web.onrender.com`
 - [ ] ✅ No error messages on homepage
 - [ ] ✅ Static files (CSS/JS) are loading
 - [ ] ✅ Can login to admin panel (`/admin`)
@@ -143,7 +143,7 @@ After deployment, verify:
 ### Issue 1: "DisallowedHost" Error
 **Fix:** Add to environment variables:
 ```
-ALLOWED_HOSTS=eduvision.onrender.com,.onrender.com
+ALLOWED_HOSTS=eduvision-web.onrender.com,.onrender.com
 ```
 
 ### Issue 2: Database Connection Failed
@@ -232,7 +232,7 @@ When you push new code:
 
 ## ✅ You're Done!
 
-Your app is live at: **https://eduvision.onrender.com**
+Your app is live at: **https://eduvision-web.onrender.com**
 
 Enjoy your deployment! 🎉
 

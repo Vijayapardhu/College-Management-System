@@ -1,7 +1,7 @@
 # Render Deployment with Supabase (Quick Setup)
 
 ## 🚀 Your Setup
-- **URL:** `https://eduvision.onrender.com`
+- **URL:** `https://eduvision-web.onrender.com`
 - **Database:** Supabase PostgreSQL
 - **Storage:** Supabase Storage
 - **Platform:** Render (Free Tier)
@@ -34,7 +34,7 @@
 2. Click **New +** → **Web Service**
 3. Connect your GitHub repository
 4. Configure:
-   - **Name:** `eduvision` (this gives you `eduvision.onrender.com`)
+   - **Name:** `eduvision-web` (this gives you `eduvision-web.onrender.com`)
    - **Environment:** Python 3
    - **Branch:** `main` (or your branch)
    - **Build Command:** 
@@ -55,8 +55,8 @@ Click **Advanced** → **Add Environment Variable** and add these:
 # Django Settings
 DEBUG=False
 SECRET_KEY=(leave it - Render auto-generates)
-ALLOWED_HOSTS=eduvision.onrender.com
-CSRF_TRUSTED_ORIGINS=https://eduvision.onrender.com
+ALLOWED_HOSTS=eduvision-web.onrender.com
+CSRF_TRUSTED_ORIGINS=https://eduvision-web.onrender.com
 
 # Supabase Database (from Step 1)
 DATABASE_URL=postgresql://postgres.[PROJECT_ID]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres
@@ -87,7 +87,7 @@ DEFAULT_FROM_EMAIL=EduVision <your-email@gmail.com>
 
 1. Click **Create Web Service**
 2. Wait 3-5 minutes for deployment
-3. Your app will be live at: `https://eduvision.onrender.com`
+3. Your app will be live at: `https://eduvision-web.onrender.com`
 
 ---
 
@@ -111,8 +111,8 @@ After deployment completes:
 |----------|-------|----------|
 | `DEBUG` | `False` | ✅ Yes |
 | `SECRET_KEY` | (auto-generated) | ✅ Yes |
-| `ALLOWED_HOSTS` | `eduvision.onrender.com` | ✅ Yes |
-| `CSRF_TRUSTED_ORIGINS` | `https://eduvision.onrender.com` | ✅ Yes |
+| `ALLOWED_HOSTS` | `eduvision-web.onrender.com` | ✅ Yes |
+| `CSRF_TRUSTED_ORIGINS` | `https://eduvision-web.onrender.com` | ✅ Yes |
 | `DATABASE_URL` | Your Supabase connection string | ✅ Yes |
 | `SUPABASE_URL` | Your Supabase project URL | ✅ Yes |
 | `SUPABASE_KEY` | Your Supabase anon key | ✅ Yes |
@@ -150,7 +150,7 @@ After deployment completes:
 
 ## 🎯 Post-Deployment Checklist
 
-- [ ] App loads at `https://eduvision.onrender.com`
+- [ ] App loads at `https://eduvision-web.onrender.com`
 - [ ] Admin login works (`/admin`)
 - [ ] Database connections working
 - [ ] File uploads working (test with an image)
@@ -197,5 +197,5 @@ After deployment completes:
 
 **Your app is ready! 🎉**
 
-Access it at: **https://eduvision.onrender.com**
+Access it at: **https://eduvision-web.onrender.com**
 
