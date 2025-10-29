@@ -103,7 +103,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'request_new_certificate' %}" 
+                            <a href="{% url 'student_request_certificate' %}" 
                                class="nav-subitem group">
                                 <i class="fas fa-file-signature" style="color: #a78bfa;"></i>
                                 <span>Request New</span>
@@ -204,8 +204,64 @@
     </ul>
 </nav>
 
-<!-- Certificates Dropdown Styles -->
+<!-- Navigation Styles -->
 <style>
+    /* Navigation Items */
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        font-size: 0.9375rem;
+        font-weight: 400;
+        border-left: 3px solid transparent;
+        position: relative;
+    }
+
+    .nav-item-inactive {
+        color: rgba(255, 255, 255, 0.8);
+        background: transparent;
+    }
+
+    .nav-item-inactive:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        border-left-color: rgba(255, 255, 255, 0.3);
+        transform: translateX(2px);
+    }
+
+    .nav-item-active {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+        color: white !important;
+        border-left-color: white;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-item-active .nav-icon {
+        transform: scale(1.1);
+    }
+
+    html.dark .nav-item-active {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(30, 64, 175, 0.15) 100%);
+        color: #60a5fa !important;
+    }
+
+    .nav-icon {
+        width: 1.25rem;
+        text-align: center;
+        font-size: 1rem;
+        transition: transform 0.2s;
+    }
+
+    .nav-text {
+        flex: 1;
+    }
+
+    /* Certificates Dropdown */
     .nav-dropdown {
         position: relative;
     }
@@ -301,10 +357,32 @@
         return false;
     }
 
-    // Auto-expand dropdown if on a certificates page
+    // Auto-highlight active navigation based on current page
     document.addEventListener('DOMContentLoaded', function() {
         const currentPath = window.location.pathname;
         
+        // Remove all active states first
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('nav-item-active');
+            item.classList.add('nav-item-inactive');
+        });
+        
+        // Find and highlight the current page
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && href !== '#') {
+                // Extract pathname from href
+                const linkPath = new URL(href, window.location.origin).pathname;
+                
+                // Check if current path matches
+                if (currentPath === linkPath || currentPath.startsWith(linkPath + '/')) {
+                    item.classList.remove('nav-item-inactive');
+                    item.classList.add('nav-item-active');
+                }
+            }
+        });
+        
+        // Handle certificates dropdown - auto-expand if on a certificates page
         if (currentPath.includes('certificate')) {
             const dropdown = document.querySelector('.nav-dropdown');
             if (dropdown) {
@@ -314,10 +392,23 @@
             // Highlight active submenu item
             const submenuItems = document.querySelectorAll('.nav-subitem');
             submenuItems.forEach(item => {
-                if (item.href && window.location.href.includes(item.href.split('?')[0])) {
-                    item.classList.add('active');
+                if (item.href) {
+                    const linkPath = new URL(item.href, window.location.origin).pathname;
+                    if (currentPath === linkPath || currentPath.startsWith(linkPath.split('?')[0])) {
+                        item.classList.add('active');
+                    }
                 }
             });
+        }
+        
+        // Handle other dropdowns if needed
+        // Special handling for home/dashboard
+        if (currentPath === '/student/home/' || currentPath === '/student/home') {
+            const homeLink = document.querySelector('a[href*="student_home"]');
+            if (homeLink) {
+                homeLink.classList.remove('nav-item-inactive');
+                homeLink.classList.add('nav-item-active');
+            }
         }
     });
 </script>

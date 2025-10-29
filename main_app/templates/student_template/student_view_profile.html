@@ -67,6 +67,7 @@
         height: 180px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         display: flex;
         align-items: center;
@@ -121,6 +122,7 @@
 
     .profile-badge {
         background: rgba(255, 255, 255, 0.25);
+        -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         padding: 0.75rem 1.25rem;
         border-radius: 30px;
@@ -400,8 +402,18 @@
                 {% endif %}
                 {% if student.session %}
                 <span class="profile-badge">
-                    <i class="fas fa-calendar"></i>
-                    {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                    <i class="fas fa-calendar-alt"></i>
+                    {% if student.session.session_start_year and student.session.session_end_year %}
+                        {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                    {% else %}
+                        Current Session
+                    {% endif %}
+                </span>
+                {% endif %}
+                {% if student.current_semester %}
+                <span class="profile-badge">
+                    <i class="fas fa-book-reader"></i>
+                    Semester {{ student.current_semester }}
                 </span>
                 {% endif %}
             </div>
@@ -435,6 +447,28 @@
         <div class="info-item">
             <span class="info-label">Course</span>
             <span class="info-value">{{ student.course.name|default:"Not Assigned" }}</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Academic Year</span>
+            <span class="info-value">
+                {% if student.session and student.session.session_start_year and student.session.session_end_year %}
+                    {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                {% else %}
+                    Current Academic Year
+                {% endif %}
+            </span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Current Semester</span>
+            <span class="info-value">
+                {% if student.current_semester %}
+                    Semester {{ student.current_semester }}
+                {% else %}
+                    Not Available
+                {% endif %}
+            </span>
         </div>
         
         {% if student.address %}

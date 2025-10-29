@@ -1,0 +1,487 @@
+{% extends "main_app/base.html" %}
+{% load static %}
+{% block title %}Create New Group - EduVision{% endblock %}
+{% block page_title %}Create New Group{% endblock %}
+
+{% block custom_css %}
+<style>
+    .create-group-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 25px;
+        border-bottom: none;
+    }
+
+    .card-header h3 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .card-header h3 i {
+        font-size: 2rem;
+    }
+
+    .card-header p {
+        margin: 10px 0 0 0;
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        padding: 35px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+    .members-section {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px dashed #d1d5db;
+    }
+
+    .member-search {
+        margin-bottom: 20px;
+    }
+
+    .members-list {
+        max-height: 400px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .member-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .member-item:hover {
+        background: #f0f9ff;
+        border-color: #3b82f6;
+        transform: translateX(4px);
+    }
+
+    .member-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #3b82f6;
+    }
+
+    .member-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .member-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .member-info {
+        flex: 1;
+    }
+
+    .member-name {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 2px;
+    }
+
+    .member-email {
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .member-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-admin {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .badge-faculty {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .badge-student {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .selected-count {
+        background: #3b82f6;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 2px solid #e5e7eb;
+    }
+
+    .btn-submit {
+        flex: 1;
+        padding: 14px 30px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-cancel {
+        padding: 14px 30px;
+        background: #f3f4f6;
+        color: #374151;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel:hover {
+        background: #e5e7eb;
+    }
+
+    .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        font-size: 0.9rem;
+        color: #1e40af;
+    }
+
+    .info-box i {
+        margin-right: 8px;
+    }
+
+    /* Scrollbar styling */
+    .members-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .members-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .members-list::-webkit-scrollbar-thumb {
+        background: #3b82f6;
+        border-radius: 10px;
+    }
+
+    .members-list::-webkit-scrollbar-thumb:hover {
+        background: #2563eb;
+    }
+
+    /* Loading state */
+    .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid white;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="create-group-container">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <i class="fas fa-users"></i>
+                        Create New Group
+                    </h3>
+                    <p>Start a group conversation with your classmates, teachers, or colleagues</p>
+                </div>
+
+                <div class="card-body">
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Tip:</strong> You can add more members later from the group settings page.
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" id="createGroupForm">
+                        {% csrf_token %}
+
+                        <!-- Group Name -->
+                        <div class="form-group">
+                            <label for="groupName" class="form-label">
+                                <i class="fas fa-tag me-2"></i>Group Name *
+                            </label>
+                            <input type="text" class="form-control" id="groupName" name="name" 
+                                   placeholder="Enter group name (e.g., CS Class 2024)" 
+                                   required maxlength="100">
+                        </div>
+
+                        <!-- Group Description -->
+                        <div class="form-group">
+                            <label for="groupDescription" class="form-label">
+                                <i class="fas fa-align-left me-2"></i>Description (Optional)
+                            </label>
+                            <textarea class="form-control" id="groupDescription" name="description" 
+                                      rows="3" placeholder="What is this group about?" maxlength="500"></textarea>
+                            <small class="text-muted">Maximum 500 characters</small>
+                        </div>
+
+                        <!-- Group Type -->
+                        <div class="form-group">
+                            <label for="groupType" class="form-label">
+                                <i class="fas fa-shield-alt me-2"></i>Group Type
+                            </label>
+                            <select class="form-select" id="groupType" name="group_type">
+                                <option value="private">Private - Only invited members can join</option>
+                                <option value="public">Public - Anyone can join</option>
+                            </select>
+                        </div>
+
+                        <!-- Group Icon (Optional) -->
+                        <div class="form-group">
+                            <label for="groupIcon" class="form-label">
+                                <i class="fas fa-image me-2"></i>Group Icon (Optional)
+                            </label>
+                            <input type="file" class="form-control" id="groupIcon" name="group_icon" 
+                                   accept="image/*">
+                            <small class="text-muted">Recommended size: 200x200 pixels</small>
+                        </div>
+
+                        <!-- Add Members -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user-plus me-2"></i>Add Members
+                            </label>
+                            <div class="members-section">
+                                <div class="member-search">
+                                    <input type="text" class="form-control" id="memberSearch" 
+                                           placeholder="Search members by name or email..." 
+                                           onkeyup="filterMembers()">
+                                </div>
+
+                                <div class="selected-count" id="selectedCount">
+                                    <i class="fas fa-users me-2"></i>0 members selected
+                                </div>
+
+                                <div class="members-list" id="membersList">
+                                    {% for user in available_users %}
+                                    <label class="member-item" for="member_{{ user.id }}">
+                                        <input type="checkbox" name="members" value="{{ user.id }}" 
+                                               id="member_{{ user.id }}" onchange="updateCount()">
+                                        
+                                        <div class="member-avatar">
+                                            {% if user.profile_pic %}
+                                            <img src="{{ user.profile_pic.url }}" alt="{{ user.get_full_name }}">
+                                            {% else %}
+                                            {{ user.first_name|first }}{{ user.last_name|first }}
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="member-info">
+                                            <div class="member-name">{{ user.get_full_name }}</div>
+                                            <div class="member-email">{{ user.email }}</div>
+                                        </div>
+                                        
+                                        {% if user.user_type == '1' %}
+                                        <span class="member-badge badge-admin">Admin</span>
+                                        {% elif user.user_type == '2' %}
+                                        <span class="member-badge badge-faculty">Faculty</span>
+                                        {% elif user.user_type == '3' %}
+                                        <span class="member-badge badge-student">Student</span>
+                                        {% endif %}
+                                    </label>
+                                    {% endfor %}
+
+                                    {% if not available_users %}
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-users-slash fa-3x mb-3"></i>
+                                        <p>No users available to add to the group.</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="button-group">
+                            <button type="button" class="btn-cancel" onclick="window.location.href='{% url 'chat_home' %}'">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn-submit" id="submitBtn">
+                                <i class="fas fa-check me-2"></i>Create Group
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    // Update selected count
+    function updateCount() {
+        const checkboxes = document.querySelectorAll('input[name="members"]:checked');
+        const count = checkboxes.length;
+        document.getElementById('selectedCount').innerHTML = 
+            `<i class="fas fa-users me-2"></i>${count} member${count !== 1 ? 's' : ''} selected`;
+    }
+
+    // Filter members by search
+    function filterMembers() {
+        const search = document.getElementById('memberSearch').value.toLowerCase();
+        const members = document.querySelectorAll('.member-item');
+        
+        members.forEach(member => {
+            const name = member.querySelector('.member-name').textContent.toLowerCase();
+            const email = member.querySelector('.member-email').textContent.toLowerCase();
+            
+            if (name.includes(search) || email.includes(search)) {
+                member.style.display = 'flex';
+            } else {
+                member.style.display = 'none';
+            }
+        });
+    }
+
+    // Form validation and submission
+    document.getElementById('createGroupForm').addEventListener('submit', function(e) {
+        const groupName = document.getElementById('groupName').value.trim();
+        
+        if (!groupName) {
+            e.preventDefault();
+            alert('Please enter a group name');
+            document.getElementById('groupName').focus();
+            return false;
+        }
+
+        // Show loading state
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<div class="spinner"></div> Creating Group...';
+    });
+
+    // Select All / Deselect All
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + A to select all
+        if ((e.ctrlKey || e.metaKey) && e.key === 'a' && e.target.id === 'memberSearch') {
+            e.preventDefault();
+            const checkboxes = document.querySelectorAll('input[name="members"]');
+            checkboxes.forEach(cb => {
+                if (cb.closest('.member-item').style.display !== 'none') {
+                    cb.checked = true;
+                }
+            });
+            updateCount();
+        }
+    });
+</script>
+{% endblock %}
+

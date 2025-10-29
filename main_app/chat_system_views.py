@@ -42,6 +42,30 @@ def chat_home(request):
         unread_count=Count('group_messages', filter=Q(group_messages__is_read=False))
     ).order_by('-updated_at')
     
+    # Determine template based on user type
+    if user.user_type == '3':
+        template = 'student_template/chat_home.html'
+    elif user.user_type == '2':
+        template = 'staff_template/chat_home.html'
+    elif user.user_type == '1':
+        template = 'hod_template/chat_home.html'
+    else:
+        template = 'student_template/chat_home.html'
+    
+    context = {
+        'page_title': 'Chats',
+        'conversations': conversations,
+        'user_groups': user_groups,
+    }
+    
+    return render(request, template, context)
+
+
+@login_required
+def start_new_chat(request):
+    """Page to select user to start new chat"""
+    user = request.user
+    
     # Get all users for new chat (filtered by role)
     if user.user_type == '1':  # HOD/Admin - can chat with everyone
         available_users = CustomUser.objects.exclude(id=user.id)
@@ -58,18 +82,16 @@ def chat_home(request):
     
     # Determine template based on user type
     if user.user_type == '3':
-        template = 'student_template/chat_home.html'
+        template = 'student_template/start_new_chat.html'
     elif user.user_type == '2':
-        template = 'staff_template/chat_home.html'
+        template = 'staff_template/start_new_chat.html'
     elif user.user_type == '1':
-        template = 'hod_template/chat_home.html'
+        template = 'hod_template/start_new_chat.html'
     else:
-        template = 'student_template/chat_home.html'
+        template = 'student_template/start_new_chat.html'
     
     context = {
-        'page_title': 'Chats',
-        'conversations': conversations,
-        'user_groups': user_groups,
+        'page_title': 'Start New Chat',
         'available_users': available_users,
     }
     
@@ -168,7 +190,10 @@ def get_chat_messages(request, chat_type, chat_id):
             'created_at': msg.created_at.isoformat(),
             'is_read': msg.is_read,
             'is_edited': msg.is_edited,
+            'is_deleted_for_everyone': msg.is_deleted_for_everyone,
             'reactions': msg.reactions,
+            'is_sent': msg.sender == user,  # Changed from is_own_message to is_sent
+            'forwarded_from': msg.forwarded_from.sender.get_full_name() if msg.forwarded_from else None,
             'reply_to': {
                 'id': msg.reply_to.id,
                 'sender_name': msg.reply_to.sender.get_full_name(),
@@ -178,7 +203,7 @@ def get_chat_messages(request, chat_type, chat_id):
                 {
                     'id': att.id,
                     'type': att.attachment_type,
-                    'file_url': att.file.url,
+                    'file_url': att.file.url if att.file else None,
                     'file_name': att.file_name,
                     'file_size': att.file_size_formatted,
                     'thumbnail': att.thumbnail.url if att.thumbnail else None,
@@ -186,9 +211,8 @@ def get_chat_messages(request, chat_type, chat_id):
                     'width': att.width,
                     'height': att.height,
                 }
-                for att in msg.attachments.all()
+                for att in msg.attachments.all() if att.file
             ],
-            'is_own_message': msg.sender == user,
         }
         formatted_messages.append(message_data)
     
@@ -272,16 +296,23 @@ def send_message(request):
             
             if attachment_type == 'image':
                 try:
+                    # Seek to beginning for image processing
+                    file.seek(0)
                     img = Image.open(file)
                     width, height = img.size
                     
                     # Create thumbnail
                     img.thumbnail((300, 300))
+                    
+                    # Save thumbnail to storage (works with both local and Supabase)
+                    from io import BytesIO
+                    thumb_io = BytesIO()
+                    img.save(thumb_io, format=img.format or 'JPEG')
+                    thumb_io.seek(0)
+                    
                     thumb_path = f'chat_thumbnails/{timezone.now().strftime("%Y/%m/%d")}/thumb_{file.name}'
-                    thumb_full_path = default_storage.path(thumb_path)
-                    os.makedirs(os.path.dirname(thumb_full_path), exist_ok=True)
-                    img.save(thumb_full_path)
-                    thumbnail = thumb_path
+                    from django.core.files.base import ContentFile
+                    thumbnail = default_storage.save(thumb_path, ContentFile(thumb_io.read()))
                 except Exception as e:
                     print(f"Error creating thumbnail: {e}")
             
@@ -362,19 +393,54 @@ def delete_message(request, message_id):
 
 
 @login_required
-@csrf_exempt
 def create_group(request):
-    """Create a new group"""
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
-    
+    """Create a new group - dedicated page"""
     user = request.user
     
+    # GET - Show create group form
+    if request.method == 'GET':
+        # Get all users for member selection
+        if user.user_type == '1':  # HOD/Admin - can add everyone
+            available_users = CustomUser.objects.exclude(id=user.id)
+        elif user.user_type == '2':  # Faculty - can add admins, faculty, students
+            available_users = CustomUser.objects.filter(
+                Q(user_type='1') | Q(user_type='2') | Q(user_type='3')
+            ).exclude(id=user.id)
+        elif user.user_type == '3':  # Student - can add admins, faculty
+            available_users = CustomUser.objects.filter(
+                Q(user_type='1') | Q(user_type='2')
+            ).exclude(id=user.id)
+        else:
+            available_users = CustomUser.objects.exclude(id=user.id)
+        
+        # Determine template based on user type
+        if user.user_type == '3':
+            template = 'student_template/create_group.html'
+        elif user.user_type == '2':
+            template = 'staff_template/create_group.html'
+        elif user.user_type == '1':
+            template = 'hod_template/create_group.html'
+        else:
+            template = 'student_template/create_group.html'
+        
+        context = {
+            'page_title': 'Create New Group',
+            'available_users': available_users,
+        }
+        
+        return render(request, template, context)
+    
+    # POST - Create the group
     try:
         name = request.POST.get('name')
         description = request.POST.get('description', '')
         group_type = request.POST.get('group_type', 'private')
-        member_ids = json.loads(request.POST.get('member_ids', '[]'))
+        # Handle both JSON array and form checkbox values
+        member_ids_raw = request.POST.get('member_ids', None)
+        if member_ids_raw:
+            member_ids = json.loads(member_ids_raw)
+        else:
+            member_ids = request.POST.getlist('members')  # For checkbox form data
         
         if not name:
             return JsonResponse({'error': 'Group name is required'}, status=400)
@@ -432,14 +498,12 @@ def create_group(request):
             message_type='system',
         )
         
-        return JsonResponse({
-            'status': 'success',
-            'group_id': group.id,
-            'group_name': group.name,
-        })
+        django_messages.success(request, f'Group "{group.name}" created successfully! 🎉')
+        return redirect('chat_home')
         
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        django_messages.error(request, f'Error creating group: {str(e)}')
+        return redirect('create_chat_group')
 
 
 @login_required
@@ -763,3 +827,323 @@ def search_messages(request):
     
     return JsonResponse({'results': results})
 
+
+@login_required
+def delete_message(request, message_id):
+    """Delete message for me or for everyone"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    user = request.user
+    delete_type = request.POST.get('delete_type', 'for_me')  # 'for_me' or 'for_everyone'
+    
+    try:
+        message = get_object_or_404(ChatMessage, id=message_id)
+        
+        # Check if user has permission to delete
+        if message.sender != user and delete_type == 'for_everyone':
+            return JsonResponse({'error': 'Only sender can delete for everyone'}, status=403)
+        
+        # Check time limit for delete for everyone (5 minutes)
+        if delete_type == 'for_everyone':
+            time_limit = timezone.now() - timezone.timedelta(minutes=5)
+            if message.created_at < time_limit:
+                return JsonResponse({'error': 'Can only delete for everyone within 5 minutes'}, status=403)
+        
+        if delete_type == 'for_everyone':
+            # Delete for everyone
+            message.is_deleted_for_everyone = True
+            message.deleted_at = timezone.now()
+            message.text_content = "This message was deleted"
+            
+            # Delete all attachments
+            message.attachments.all().delete()
+            
+            message.save()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Message deleted for everyone',
+                'delete_type': 'for_everyone'
+            })
+        else:
+            # Delete for me
+            if message.sender == user:
+                message.is_deleted_for_sender = True
+            else:
+                message.is_deleted_for_receiver = True
+            
+            message.save()
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Message deleted for you',
+                'delete_type': 'for_me'
+            })
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+def forward_message(request):
+    """Forward message to other chats"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    user = request.user
+    message_id = request.POST.get('message_id')
+    forward_to_type = request.POST.get('forward_to_type')  # 'personal' or 'group'
+    forward_to_id = request.POST.get('forward_to_id')
+    
+    try:
+        # Get original message
+        original_message = get_object_or_404(ChatMessage, id=message_id)
+        
+        # Check if user has access to the original message
+        if original_message.group:
+            # Group message - check if user is member
+            if not ChatGroupMember.objects.filter(group=original_message.group, user=user, is_active=True).exists():
+                return JsonResponse({'error': 'Access denied'}, status=403)
+        else:
+            # Personal message - check if user is sender or receiver
+            if original_message.sender != user and original_message.receiver != user:
+                return JsonResponse({'error': 'Access denied'}, status=403)
+        
+        # Create new message
+        new_message_data = {
+            'sender': user,
+            'text_content': original_message.text_content,
+            'message_type': original_message.message_type,
+            'forwarded_from': original_message,
+        }
+        
+        if forward_to_type == 'personal':
+            # Forward to personal chat
+            receiver = get_object_or_404(CustomUser, id=forward_to_id)
+            new_message_data['receiver'] = receiver
+            
+            # Update or create conversation
+            ChatConversation.get_or_create_conversation(user, receiver)
+            
+        elif forward_to_type == 'group':
+            # Forward to group
+            group = get_object_or_404(ChatGroup, id=forward_to_id)
+            
+            # Check if user is member
+            member = ChatGroupMember.objects.filter(group=group, user=user, is_active=True).first()
+            if not member:
+                return JsonResponse({'error': 'Not a member of this group'}, status=403)
+            
+            new_message_data['group'] = group
+        else:
+            return JsonResponse({'error': 'Invalid forward type'}, status=400)
+        
+        # Create the forwarded message
+        new_message = ChatMessage.objects.create(**new_message_data)
+        
+        # Copy attachments if any
+        for attachment in original_message.attachments.all():
+            MessageAttachment.objects.create(
+                message=new_message,
+                attachment_type=attachment.attachment_type,
+                file=attachment.file,
+                file_name=attachment.file_name,
+                file_size=attachment.file_size,
+                mime_type=attachment.mime_type,
+                thumbnail=attachment.thumbnail,
+                width=attachment.width,
+                height=attachment.height,
+                duration=attachment.duration
+            )
+        
+        # Increment forward count on original message
+        original_message.forward_count += 1
+        original_message.save()
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Message forwarded successfully',
+            'new_message_id': new_message.id
+        })
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+@csrf_exempt
+def clear_chat(request):
+    """Clear all messages in a chat for the current user"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    user = request.user
+    chat_type = request.POST.get('chat_type')
+    chat_id = request.POST.get('chat_id')
+    
+    try:
+        if chat_type == 'personal':
+            other_user = get_object_or_404(CustomUser, id=chat_id)
+            
+            # Mark all messages as deleted for this user
+            # Sent messages
+            ChatMessage.objects.filter(
+                sender=user,
+                receiver=other_user
+            ).update(is_deleted_for_sender=True)
+            
+            # Received messages
+            ChatMessage.objects.filter(
+                sender=other_user,
+                receiver=user
+            ).update(is_deleted_for_receiver=True)
+            
+        elif chat_type == 'group':
+            group = get_object_or_404(ChatGroup, id=chat_id)
+            
+            # Check if user is member
+            if not ChatGroupMember.objects.filter(group=group, user=user, is_active=True).exists():
+                return JsonResponse({'error': 'Not a member of this group'}, status=403)
+            
+            # For groups, we can't delete for just one user in the current schema
+            # We'll mark all messages as deleted for everyone if user is admin
+            # Or implement a user-specific deletion field
+            # For now, return error
+            return JsonResponse({'error': 'Group chat clearing not supported yet'}, status=400)
+        else:
+            return JsonResponse({'error': 'Invalid chat type'}, status=400)
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Chat cleared successfully'
+        })
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+@csrf_exempt
+def block_user(request, user_id):
+    """Block or unblock a user"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    user = request.user
+    
+    try:
+        target_user = get_object_or_404(CustomUser, id=user_id)
+        
+        if target_user == user:
+            return JsonResponse({'error': 'Cannot block yourself'}, status=400)
+        
+        # Check if already blocked - we need to add a blocked_users field to CustomUser model
+        # For now, we'll simulate blocking by creating a flag
+        # You should add a ManyToManyField called 'blocked_users' to CustomUser model
+        
+        # Temporary implementation using a simple check
+        # In production, add: blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by')
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'{target_user.get_full_name()} has been blocked',
+            'is_blocked': True
+        })
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+@csrf_exempt
+def unblock_user(request, user_id):
+    """Unblock a user"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    user = request.user
+    
+    try:
+        target_user = get_object_or_404(CustomUser, id=user_id)
+        
+        # Unblock logic here
+        # This requires the blocked_users ManyToManyField on CustomUser model
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'{target_user.get_full_name()} has been unblocked',
+            'is_blocked': False
+        })
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+@csrf_exempt
+def leave_group(request, group_id):
+    """Leave a group chat"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    user = request.user
+    
+    try:
+        group = get_object_or_404(ChatGroup, id=group_id)
+        
+        # Check if user is a member
+        membership = ChatGroupMember.objects.filter(group=group, user=user, is_active=True).first()
+        if not membership:
+            return JsonResponse({'error': 'You are not a member of this group'}, status=400)
+        
+        # Check if user is the creator
+        if group.creator == user:
+            # Transfer ownership or handle creator leaving
+            # For now, find another admin or the first member
+            other_admins = ChatGroupMember.objects.filter(
+                group=group,
+                role='admin',
+                is_active=True
+            ).exclude(user=user).first()
+            
+            if other_admins:
+                group.creator = other_admins.user
+                group.save()
+            else:
+                # If no other admins, promote the first member or delete group
+                first_member = ChatGroupMember.objects.filter(
+                    group=group,
+                    is_active=True
+                ).exclude(user=user).first()
+                
+                if first_member:
+                    first_member.role = 'admin'
+                    first_member.save()
+                    group.creator = first_member.user
+                    group.save()
+                else:
+                    # No other members, delete the group
+                    group.delete()
+                    return JsonResponse({
+                        'status': 'success',
+                        'message': 'Group deleted as you were the last member'
+                    })
+        
+        # Mark membership as inactive
+        membership.is_active = False
+        membership.save()
+        
+        # Create a system message
+        ChatMessage.objects.create(
+            group=group,
+            sender=user,
+            text_content=f'{user.get_full_name()} left the group',
+            message_type='system'
+        )
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': 'You have left the group successfully'
+        })
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

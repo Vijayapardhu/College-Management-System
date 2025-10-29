@@ -467,6 +467,52 @@ def custom_report_builder(request):
                 'pending': pending,
                 'total': collected + pending
             }
+        
+        elif report_type == 'student_list':
+            query = Student.objects.select_related('admin', 'course', 'session')
+            
+            if course_id:
+                query = query.filter(course_id=course_id)
+            
+            if department_id:
+                query = query.filter(course__department_id=department_id)
+            
+            session_id = request.GET.get('session')
+            if session_id:
+                query = query.filter(session_id=session_id)
+            
+            total_students = query.count()
+            active_students = query.filter(student_status='active').count()
+            inactive_students = total_students - active_students
+            
+            # Get course-wise breakdown
+            courses_breakdown = {}
+            for student in query:
+                course_name = student.course.name if student.course else 'No Course'
+                courses_breakdown[course_name] = courses_breakdown.get(course_name, 0) + 1
+            
+            report_data = {
+                'type': 'Student List Report',
+                'total_students': total_students,
+                'active_students': active_students,
+                'inactive_students': inactive_students,
+                'courses_breakdown': courses_breakdown,
+                'students': query[:100]  # Limit to 100 for display
+            }
+        
+        elif report_type == 'staff_list':
+            query = Staff.objects.select_related('admin', 'department')
+            
+            if department_id:
+                query = query.filter(department_id=department_id)
+            
+            total_staff = query.count()
+            
+            report_data = {
+                'type': 'Staff List Report',
+                'total_staff': total_staff,
+                'staff_members': query
+            }
     
     context = {
         'page_title': 'Custom Report Builder',
@@ -508,8 +554,15 @@ def export_report(request):
         messages.error(request, 'Access denied')
         return redirect('login')
     
-    export_format = request.GET.get('format', 'csv')
-    report_type = request.GET.get('type', 'attendance')
+    export_format = request.GET.get('export', request.GET.get('format', 'csv'))
+    report_type = request.GET.get('report_type', request.GET.get('type', 'attendance'))
+    
+    # Get filter parameters
+    course_id = request.GET.get('course')
+    department_id = request.GET.get('department')
+    session_id = request.GET.get('session')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
     
     # Available report types
     available_reports = [
@@ -521,44 +574,217 @@ def export_report(request):
         {'value': 'fee_defaulters', 'name': 'Fee Defaulters Report'}
     ]
     
-    if request.GET.get('download'):
-        # Generate and download report
+    # Auto-generate export if format is specified
+    if export_format and export_format in ['csv', 'pdf', 'excel']:
+        from datetime import datetime
         import csv
-        from io import StringIO
         
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = f'attachment; filename="{report_type}_{datetime.now().strftime("%Y%m%d")}.csv"'
+        if export_format == 'csv':
+            # CSV Export
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="{report_type}_{datetime.now().strftime("%Y%m%d")}.csv"'
+            writer = csv.writer(response)
         
-        writer = csv.writer(response)
+        elif export_format == 'pdf':
+            # PDF Export using reportlab
+            from io import BytesIO
+            try:
+                from reportlab.lib import colors
+                from reportlab.lib.pagesizes import letter, A4
+                from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+                from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+                from reportlab.lib.units import inch
+                has_reportlab = True
+            except ImportError:
+                has_reportlab = False
+            
+            if not has_reportlab:
+                # Fallback to CSV if PDF library not available
+                messages.warning(request, 'PDF export not available. Downloading as CSV instead.')
+                export_format = 'csv'
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = f'attachment; filename="{report_type}_{datetime.now().strftime("%Y%m%d")}.csv"'
+                writer = csv.writer(response)
+            else:
+                response = HttpResponse(content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="{report_type}_{datetime.now().strftime("%Y%m%d")}.pdf"'
         
-        if report_type == 'attendance':
-            writer.writerow(['Student Name', 'Roll Number', 'Course', 'Present', 'Total', 'Percentage'])
-            for student in Student.objects.all()[:100]:
-                records = AttendanceReport.objects.filter(student=student)
-                if records.exists():
-                    present = records.filter(status=True).count()
-                    total = records.count()
-                    percentage = round((present / total) * 100, 2) if total > 0 else 0
+        elif export_format == 'excel':
+            # Excel Export - fallback to CSV for now
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = f'attachment; filename="{report_type}_{datetime.now().strftime("%Y%m%d")}.xls"'
+            writer = csv.writer(response)
+        
+        if export_format in ['csv', 'excel']:
+            if report_type == 'attendance':
+                writer.writerow(['Student Name', 'Roll Number', 'Course', 'Present', 'Total', 'Percentage'])
+                for student in Student.objects.all()[:100]:
+                    records = AttendanceReport.objects.filter(student=student)
+                    if records.exists():
+                        present = records.filter(status=True).count()
+                        total = records.count()
+                        percentage = round((present / total) * 100, 2) if total > 0 else 0
+                        writer.writerow([
+                            f"{student.admin.first_name} {student.admin.last_name}",
+                            student.roll_number,
+                            student.course.name,
+                            present,
+                            total,
+                            percentage
+                        ])
+            
+            elif report_type == 'student_list':
+                writer.writerow(['Roll Number', 'Name', 'Course', 'Session', 'Email', 'Mobile', 'Status'])
+                
+                # Apply filters
+                query = Student.objects.select_related('admin', 'course', 'session')
+                if course_id:
+                    query = query.filter(course_id=course_id)
+                if department_id:
+                    query = query.filter(course__department_id=department_id)
+                if session_id:
+                    query = query.filter(session_id=session_id)
+                
+                for student in query:
+                    session_str = f"{student.session.session_start_year}-{student.session.session_end_year}" if student.session else 'N/A'
                     writer.writerow([
-                        f"{student.admin.first_name} {student.admin.last_name}",
                         student.roll_number,
-                        student.course.name,
-                        present,
-                        total,
-                        percentage
+                        f"{student.admin.first_name} {student.admin.last_name}",
+                        student.course.name if student.course else 'N/A',
+                        session_str,
+                        student.admin.email,
+                        student.mobile_number or 'N/A',
+                        student.student_status.title() if student.student_status else 'Active'
                     ])
         
-        elif report_type == 'student_list':
-            writer.writerow(['Name', 'Roll Number', 'Course', 'Email', 'Mobile', 'Status'])
-            for student in Student.objects.select_related('admin', 'course'):
-                writer.writerow([
-                    f"{student.admin.first_name} {student.admin.last_name}",
-                    student.roll_number,
-                    student.course.name,
-                    student.admin.email,
-                    student.mobile_number or 'N/A',
-                    'Active' if student.admin.is_active else 'Inactive'
-                ])
+        elif report_type == 'staff_list':
+            if export_format in ['csv', 'excel']:
+                writer.writerow(['Employee ID', 'Name', 'Department', 'Email', 'Mobile'])
+                
+                # Apply filters
+                query = Staff.objects.select_related('admin', 'department')
+                if department_id:
+                    query = query.filter(department_id=department_id)
+                
+                for staff in query:
+                    writer.writerow([
+                        staff.employee_id or 'N/A',
+                        f"{staff.admin.first_name} {staff.admin.last_name}",
+                        staff.department.name if staff.department else 'N/A',
+                        staff.admin.email,
+                        staff.mobile_number or 'N/A'
+                    ])
+        
+        # Handle PDF generation using reportlab
+        if export_format == 'pdf' and has_reportlab:
+            buffer = BytesIO()
+            doc = SimpleDocTemplate(buffer, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+            
+            # Title
+            title_style = ParagraphStyle(
+                'CustomTitle',
+                parent=styles['Heading1'],
+                fontSize=24,
+                textColor=colors.HexColor('#1e40af'),
+                spaceAfter=30,
+            )
+            
+            # Get data for PDF
+            if report_type == 'student_list':
+                elements.append(Paragraph('Student List Report', title_style))
+                elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y at %H:%M')}", styles['Normal']))
+                elements.append(Spacer(1, 0.3*inch))
+                
+                # Apply filters
+                query = Student.objects.select_related('admin', 'course', 'session')
+                if course_id:
+                    query = query.filter(course_id=course_id)
+                if department_id:
+                    query = query.filter(course__department_id=department_id)
+                if session_id:
+                    query = query.filter(session_id=session_id)
+                
+                # Create table data
+                table_data = [['Roll No', 'Name', 'Course', 'Session', 'Email', 'Status']]
+                
+                for student in query:
+                    session_str = f"{student.session.session_start_year}-{student.session.session_end_year}" if student.session else 'N/A'
+                    status = student.student_status.title() if student.student_status else 'Active'
+                    table_data.append([
+                        student.roll_number,
+                        student.admin.get_full_name()[:30],  # Truncate for PDF
+                        (student.course.name if student.course else 'N/A')[:25],
+                        session_str,
+                        student.admin.email[:30],
+                        status
+                    ])
+                
+                # Create table
+                table = Table(table_data)
+                table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1e40af')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 10),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                    ('FONTSIZE', (0, 1), (-1, -1), 8),
+                    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f0f9ff')]),
+                ]))
+                
+                elements.append(table)
+            
+            elif report_type == 'staff_list':
+                elements.append(Paragraph('Staff List Report', title_style))
+                elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y at %H:%M')}", styles['Normal']))
+                elements.append(Spacer(1, 0.3*inch))
+                
+                # Apply filters
+                query = Staff.objects.select_related('admin', 'department')
+                if department_id:
+                    query = query.filter(department_id=department_id)
+                
+                # Create table data
+                table_data = [['Employee ID', 'Name', 'Department', 'Email', 'Mobile']]
+                
+                for staff in query:
+                    table_data.append([
+                        staff.employee_id or 'N/A',
+                        staff.admin.get_full_name()[:30],
+                        (staff.department.name if staff.department else 'N/A')[:25],
+                        staff.admin.email[:30],
+                        staff.mobile_number or 'N/A'
+                    ])
+                
+                # Create table
+                table = Table(table_data)
+                table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1e40af')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 10),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                    ('FONTSIZE', (0, 1), (-1, -1), 8),
+                    ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f0f9ff')]),
+                ]))
+                
+                elements.append(table)
+            
+            # Build PDF
+            doc.build(elements)
+            pdf = buffer.getvalue()
+            buffer.close()
+            response.write(pdf)
+            return response
         
         return response
     

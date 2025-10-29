@@ -1,0 +1,23 @@
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-bd98ff8d-18b6-4eac-96ad-2842830c035b.ps1:97 char:659
++ ... olor Cyan ; Write-Host "  �o" Added 'rating' field (0-5 stars)" ; Wri ...
++                                                             ~~~~~
+Unexpected token 'stars' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-bd98ff8d-18b6-4eac-96ad-2842830c035b.ps1:97 char:658
++ ... roundColor Cyan ; Write-Host "  �o" Added 'rating' field (0-5 stars)" ...
++                                                                  ~
+Missing closing ')' in expression.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-bd98ff8d-18b6-4eac-96ad-2842830c035b.ps1:97 char:664
++ ... lor Cyan ; Write-Host "  �o" Added 'rating' field (0-5 stars)" ; Writ ...
++                                                                 ~
+Unexpected token ')' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-bd98ff8d-18b6-4eac-96ad-2842830c035b.ps1:97 char:683
++ ... ite-Host "  �o" Added 'category' field (Academic, Facility, Staff, Ot ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unexpected token '�o" Added 'category' field (Academic, Facility, Staff, Other)"' in expression or statement.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-bd98ff8d-18b6-4eac-96ad-2842830c035b.ps1:146 char:123
++ ... ata\Local\Temp\ps-state-out-b333adc6-d482-41dd-b3d9-db709a651a56.txt"
++                                                                         ~
+The string is missing the terminator: ".
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : UnexpectedToken
+ 

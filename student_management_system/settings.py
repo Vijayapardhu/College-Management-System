@@ -101,20 +101,24 @@ WSGI_APPLICATION = 'student_management_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config('DB_NAME', default='postgres'),
-        'USER': config('DB_USER', default='postgres.yqwszaekwucrnnjuadtp'),
-        'PASSWORD': config('DB_PASSWORD', default='oiXsUCnflSlzH7zH'),
-        'HOST': config('DB_HOST', default='aws-1-ap-south-1.pooler.supabase.com'),
-        'PORT': config('DB_PORT', default='6543'),
-        'OPTIONS': {
-            'sslmode': config('DB_SSL_MODE', default='require'),
-        },
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': config('DB_NAME', default=str(BASE_DIR / 'db.sqlite3')),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default=''),
+        'PORT': config('DB_PORT', default=''),
     }
-    # SQLite backup (set DB_ENGINE=django.db.backends.sqlite3 in .env)
+    # PostgreSQL/Supabase (set DB_ENGINE=django.db.backends.postgresql in .env)
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': config('DB_NAME', default='postgres'),
+    #     'USER': config('DB_USER', default='postgres.yqwszaekwucrnnjuadtp'),
+    #     'PASSWORD': config('DB_PASSWORD', default='oiXsUCnflSlzH7zH'),
+    #     'HOST': config('DB_HOST', default='aws-1-ap-south-1.pooler.supabase.com'),
+    #     'PORT': config('DB_PORT', default='6543'),
+    #     'OPTIONS': {
+    #         'sslmode': config('DB_SSL_MODE', default='require'),
+    #     },
     # }
 }
 

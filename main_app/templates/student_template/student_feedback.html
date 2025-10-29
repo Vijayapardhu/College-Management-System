@@ -1,84 +1,781 @@
 {% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock %}
+{% block title %}Feedback{% endblock %}
+{% block page_title %}Student Feedback{% endblock %}
+
+{% block custom_css %}
+<style>
+    :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    html.dark {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #475569;
+    }
+
+    body {
+        background: var(--bg-primary);
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-header p {
+        margin: 0;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .stat-card.total::before {
+        background: linear-gradient(90deg, #1e40af, #3b82f6);
+    }
+
+    .stat-card.replied::before {
+        background: linear-gradient(90deg, #059669, #10b981);
+    }
+
+    .stat-card.pending::before {
+        background: linear-gradient(90deg, #d97706, #f59e0b);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-card.total .stat-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    html.dark .stat-card.total .stat-icon {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
+
+    .stat-card.replied .stat-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    html.dark .stat-card.replied .stat-icon {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+    }
+
+    .stat-card.pending .stat-icon {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    html.dark .stat-card.pending .stat-icon {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .feedback-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .card-title i {
+        color: #3b82f6;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-label .required {
+        color: #ef4444;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.875rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .rating-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .rating-star {
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-primary);
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: all 0.2s;
+    }
+
+    .rating-star:hover,
+    .rating-star.active {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-color: #3b82f6;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.875rem;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        color: #1e40af;
+    }
+
+    html.dark .info-box {
+        background: rgba(59, 130, 246, 0.1);
+        color: #93c5fd;
+    }
+
+    .feedback-item {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .feedback-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border-color: #3b82f6;
+    }
+
+    .feedback-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 0.75rem;
+    }
+
+    .feedback-date {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+    }
+
+    .feedback-date i {
+        color: #3b82f6;
+    }
+
+    .feedback-content {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+    }
+
+    .feedback-reply {
+        background: rgba(59, 130, 246, 0.05);
+        border-left: 3px solid #3b82f6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    html.dark .feedback-reply {
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    .reply-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #3b82f6;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .reply-content {
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.875rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .status-badge.replied {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #10b981;
+    }
+
+    html.dark .status-badge.replied {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+        border-color: #10b981;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #f59e0b;
+    }
+
+    html.dark .status-badge.pending {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+        border-color: #f59e0b;
+    }
+
+    .rating-display {
+        display: flex;
+        gap: 0.25rem;
+        margin-top: 0.5rem;
+    }
+
+    .rating-display i {
+        color: #fbbf24;
+        font-size: 1rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    html.dark .empty-state-icon {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+    }
+
+    .empty-state-icon i {
+        font-size: 3rem;
+        color: #3b82f6;
+    }
+
+    html.dark .empty-state-icon i {
+        color: #93c5fd;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem 0;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin: 0;
+    }
+
+    .category-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .category-option {
+        position: relative;
+    }
+
+    .category-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .category-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        background: var(--bg-primary);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+    }
+
+    .category-option input[type="radio"]:checked + .category-label {
+        background: rgba(59, 130, 246, 0.05);
+        border-color: #3b82f6;
+    }
+
+    .category-label:hover {
+        border-color: #3b82f6;
+        transform: translateY(-2px);
+    }
+
+    .category-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #3b82f6;
+    }
+
+    .category-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    @media (max-width: 1024px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-selector {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<section class="content">
     <div class="container-fluid">
         <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-comment-dots me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Share your feedback and suggestions with the management
-            </p>
+    <div class="page-header">
+        <h1><i class="fas fa-comment-dots"></i> Student Feedback</h1>
+        <p>Share your thoughts and help us improve your experience</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="stat-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-value">{{ total_feedbacks|default:"0" }}</div>
+            <div class="stat-label">Total Feedback</div>
         </div>
 
-        <div class="row">
-            <!-- Feedback Form -->
-            <div class="col-lg-5">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 style="font-size: 18px;">Submit New Feedback</h3>
-                    </div>
-                    <div class="card-body-professional">
-                        {% include "main_app/form_template.html" with messages=messages form=form button_text="Submit Feedback"%}
+        <div class="stat-card replied">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-value">{{ replied_feedbacks|default:"0" }}</div>
+            <div class="stat-label">Replied</div>
+        </div>
+
+        <div class="stat-card pending">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-value">{{ pending_feedbacks|default:"0" }}</div>
+            <div class="stat-label">Pending Reply</div>
+        </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+        <!-- Feedback Form -->
+        <div class="feedback-card">
+            <h2 class="card-title">
+                <i class="fas fa-pen"></i>
+                Submit New Feedback
+            </h2>
+
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Note:</strong> Your feedback helps us improve. We review all submissions and respond within 48 hours.
+        </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Feedback Category <span class="required">*</span>
+                    </label>
+                    <div class="category-selector">
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-academic" value="academic" required>
+                            <label for="cat-academic" class="category-label">
+                                <i class="fas fa-graduation-cap category-icon"></i>
+                                <span class="category-name">Academic</span>
+                            </label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-facility" value="facility">
+                            <label for="cat-facility" class="category-label">
+                                <i class="fas fa-building category-icon"></i>
+                                <span class="category-name">Facility</span>
+                            </label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-staff" value="staff">
+                            <label for="cat-staff" class="category-label">
+                                <i class="fas fa-user-tie category-icon"></i>
+                                <span class="category-name">Staff</span>
+                            </label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" name="category" id="cat-other" value="other">
+                            <label for="cat-other" class="category-label">
+                                <i class="fas fa-ellipsis-h category-icon"></i>
+                                <span class="category-name">Other</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Rate Your Experience <span class="required">*</span>
+                    </label>
+                    <div class="rating-group">
+                        <input type="hidden" name="rating" id="rating-value" required>
+                        <button type="button" class="rating-star" data-rating="1">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button type="button" class="rating-star" data-rating="2">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button type="button" class="rating-star" data-rating="3">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button type="button" class="rating-star" data-rating="4">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button type="button" class="rating-star" data-rating="5">
+                            <i class="fas fa-star"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_feedback" class="form-label">
+                        Your Feedback <span class="required">*</span>
+                    </label>
+                    {{ form.feedback }}
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Feedback
+                </button>
+            </form>
             </div>
 
             <!-- Feedback History -->
-            <div class="col-lg-7">
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 style="font-size: 18px;">My Feedback History</h3>
-                    </div>
-                    <div style="padding: 0;">
+        <div class="feedback-card">
+            <h2 class="card-title">
+                <i class="fas fa-history"></i>
+                My Feedback History
+            </h2>
+
                         {% if feedbacks %}
-                        <div class="table-responsive">
-                            <table class="table table-professional mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Feedback</th>
-                                        <th>Reply</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
                                     {% for feedback in feedbacks %}
-                                    <tr>
-                                        <td><strong>{{forloop.counter}}</strong></td>
-                                        <td>{{feedback.feedback|truncatewords:15}}</td>
-                                        <td>
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <div class="feedback-date">
+                            <i class="fas fa-calendar"></i>
+                            {{ feedback.created_at|date:"M d, Y - h:i A" }}
+                        </div>
                                             {% if feedback.reply %}
-                                            <div style="color: #0f7c4f;">
-                                                <i class="fas fa-check-circle me-1"></i>{{feedback.reply|truncatewords:10}}
-                                            </div>
+                        <span class="status-badge replied">
+                            <i class="fas fa-check"></i> Replied
+                        </span>
                                             {% else %}
-                                            <span class="badge-professional-warning">
-                                                <i class="fas fa-clock me-1"></i>Pending
+                        <span class="status-badge pending">
+                            <i class="fas fa-clock"></i> Pending
                                             </span>
                                             {% endif %}
-                                        </td>
-                                        <td>{{feedback.created_at|date:"d M Y"}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <div class="empty-state-professional">
-                            <i class="fas fa-comment-dots"></i>
-                            <h4>No Feedback Yet</h4>
-                            <p>Submit your first feedback using the form</p>
-                        </div>
-                        {% endif %}
                     </div>
+
+                    {% if feedback.rating %}
+                    <div class="rating-display">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= feedback.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                                    {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="feedback-content">
+                        {{ feedback.feedback }}
+                    </div>
+
+                    {% if feedback.reply %}
+                    <div class="feedback-reply">
+                        <div class="reply-label">
+                            <i class="fas fa-reply"></i>
+                            Management Response
+                        </div>
+                        <div class="reply-content">
+                            {{ feedback.reply }}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-comment-slash"></i>
+                </div>
+                <h3>No Feedback Yet</h3>
+                <p>Submit your first feedback using the form on the left</p>
             </div>
+            {% endif %}
         </div>
     </div>
-</section>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    // Rating system
+    const ratingStars = document.querySelectorAll('.rating-star');
+    const ratingValue = document.getElementById('rating-value');
+
+    ratingStars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.getAttribute('data-rating');
+            ratingValue.value = rating;
+
+            // Update star display
+            ratingStars.forEach(s => {
+                const starRating = parseInt(s.getAttribute('data-rating'));
+                if (starRating <= parseInt(rating)) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+
+        star.addEventListener('mouseenter', function() {
+            const rating = this.getAttribute('data-rating');
+            ratingStars.forEach(s => {
+                const starRating = parseInt(s.getAttribute('data-rating'));
+                if (starRating <= parseInt(rating)) {
+                    s.style.transform = 'scale(1.1)';
+                } else {
+                    s.style.transform = 'scale(1)';
+                }
+            });
+        });
+
+        star.addEventListener('mouseleave', function() {
+            ratingStars.forEach(s => {
+                if (!s.classList.contains('active')) {
+                    s.style.transform = 'scale(1)';
+                }
+            });
+        });
+    });
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!ratingValue.value) {
+            e.preventDefault();
+            alert('Please select a rating');
+            return false;
+        }
+
+        const category = document.querySelector('input[name="category"]:checked');
+        if (!category) {
+            e.preventDefault();
+            alert('Please select a feedback category');
+            return false;
+        }
+    });
+</script>
 {% endblock %}

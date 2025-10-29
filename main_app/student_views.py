@@ -191,25 +191,39 @@ def student_apply_leave(request):
 def student_feedback(request):
     form = FeedbackStudentForm(request.POST or None)
     student = get_object_or_404(Student, admin_id=request.user.id)
-    context = {
-        'form': form,
-        'feedbacks': FeedbackStudent.objects.filter(student=student),
-        'page_title': 'Student Feedback'
-
-    }
+    
     if request.method == 'POST':
         if form.is_valid():
             try:
                 obj = form.save(commit=False)
                 obj.student = student
+                # Get additional fields from POST data
+                obj.rating = request.POST.get('rating', 0)
+                obj.category = request.POST.get('category', 'general')
                 obj.save()
-                messages.success(
-                    request, "Feedback submitted for review")
+                messages.success(request, "Feedback submitted successfully! We'll review it shortly.")
                 return redirect(reverse('student_feedback'))
-            except Exception:
-                messages.error(request, "Could not Submit!")
+            except Exception as e:
+                messages.error(request, f"Could not submit feedback: {str(e)}")
         else:
-            messages.error(request, "Form has errors!")
+            messages.error(request, "Please fill all required fields!")
+    
+    # Get feedback data
+    feedbacks = FeedbackStudent.objects.filter(student=student).order_by('-created_at')
+    
+    # Calculate statistics
+    total_feedbacks = feedbacks.count()
+    replied_feedbacks = feedbacks.exclude(reply='').count()
+    pending_feedbacks = feedbacks.filter(reply='').count()
+    
+    context = {
+        'form': form,
+        'feedbacks': feedbacks,
+        'page_title': 'Student Feedback',
+        'total_feedbacks': total_feedbacks,
+        'replied_feedbacks': replied_feedbacks,
+        'pending_feedbacks': pending_feedbacks,
+    }
     return render(request, "student_template/student_feedback.html", context)
 
 
@@ -269,9 +283,20 @@ def student_fcmtoken(request):
 def student_view_notification(request):
     student = get_object_or_404(Student, admin=request.user)
     notifications = NotificationStudent.objects.filter(student=student)
+    
+    # Calculate statistics
+    total_notifications = notifications.count()
+    unread_notifications = notifications.filter(is_read=False).count()
+    important_notifications = notifications.filter(is_important=True).count()
+    read_notifications = notifications.filter(is_read=True).count()
+    
     context = {
         'notifications': notifications,
-        'page_title': "View Notifications"
+        'page_title': "Notifications",
+        'total_notifications': total_notifications,
+        'unread_notifications': unread_notifications,
+        'important_notifications': important_notifications,
+        'read_notifications': read_notifications,
     }
     return render(request, "student_template/student_view_notification.html", context)
 
@@ -880,11 +905,22 @@ def student_exam_results(request):
 def student_my_certificates(request):
     """Student view their certificates"""
     student = get_object_or_404(Student, admin=request.user)
-    from main_app.models import Certificate
+    from main_app.models import StudentCertificate
+    
+    # Get all certificates
+    certificates = StudentCertificate.objects.filter(student=student).order_by('-uploaded_at')
+    
+    # Calculate statistics
+    total_certificates = certificates.count()
+    verified_certificates = 0  # Can be updated if you add a verification status field
+    pending_requests = 0  # Can be updated if you add a pending status
     
     context = {
         'page_title': 'My Certificates',
-        'certificates': Certificate.objects.filter(student=student).order_by('-issued_date')
+        'certificates': certificates,
+        'total_certificates': total_certificates,
+        'verified_certificates': verified_certificates,
+        'pending_requests': pending_requests,
     }
     return render(request, 'student_template/my_certificates.html', context)
 
@@ -1000,14 +1036,29 @@ def student_gate_pass(request):
             gate_pass.student = student
             gate_pass.status = 'pending'
             gate_pass.save()
-            messages.success(request, "Gate pass request submitted!")
-            return redirect('student_my_gate_passes')
+            messages.success(request, "Gate pass request submitted successfully!")
+            return redirect('student_gate_pass')
     else:
         form = GatePassForm()
     
+    # Get gate pass statistics
+    all_passes = GatePass.objects.filter(student=student)
+    total_passes = all_passes.count()
+    approved_passes = all_passes.filter(status='approved').count()
+    pending_passes = all_passes.filter(status='pending').count()
+    rejected_passes = all_passes.filter(status='rejected').count()
+    
+    # Get recent passes (last 5)
+    recent_passes = all_passes.order_by('-created_at')[:5]
+    
     context = {
-        'page_title': 'Apply for Gate Pass',
-        'form': form
+        'page_title': 'Gate Pass Management',
+        'form': form,
+        'total_passes': total_passes,
+        'approved_passes': approved_passes,
+        'pending_passes': pending_passes,
+        'rejected_passes': rejected_passes,
+        'recent_passes': recent_passes,
     }
     return render(request, 'student_template/gate_pass.html', context)
 

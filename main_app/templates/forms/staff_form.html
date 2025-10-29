@@ -3,12 +3,33 @@
 
 {% block custom_css %}
 <style>
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+    }
+
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+    }
+
     .form-card {
-        background: white;
+        background: var(--bg-primary);
         border-radius: 12px;
         padding: 2rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid var(--border-color);
+    }
+
+    html.dark .form-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
     }
 
     .section-header {
@@ -17,7 +38,7 @@
         gap: 1rem;
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 2px solid #f1f5f9;
+        border-bottom: 2px solid var(--border-color);
     }
 
     .section-icon {
@@ -35,7 +56,7 @@
     .section-title {
         font-size: 1.25rem;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-primary);
         margin: 0;
     }
 
@@ -53,10 +74,16 @@
         margin-bottom: 1.25rem;
     }
 
+    @media (max-width: 768px) {
+        .field-row-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+
     .field-item label {
         display: block;
         font-weight: 600;
-        color: #374151;
+        color: var(--text-primary);
         font-size: 0.875rem;
         margin-bottom: 0.5rem;
     }
@@ -72,11 +99,12 @@
     .field-item textarea {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
         font-size: 0.9375rem;
         transition: all 0.2s;
-        background: white;
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     .field-item input:focus,
@@ -87,9 +115,23 @@
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
+    /* Date picker styling */
+    input[type="date"] {
+        position: relative;
+        padding-right: 2.5rem;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        font-size: 1.125rem;
+        color: #3b82f6;
+    }
+
     .field-help {
         font-size: 0.8125rem;
-        color: #6b7280;
+        color: var(--text-secondary);
         margin-top: 0.25rem;
     }
 
@@ -156,7 +198,9 @@
     <div class="field-row">
         <div class="field-item">
             <label class="required">Date of Birth</label>
-            {{ form.date_of_birth }}
+            <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" 
+                   value="{{ form.date_of_birth.value|date:'Y-m-d'|default:'' }}" required>
+            <p class="field-help">Select birth date</p>
             {% if form.date_of_birth.errors %}<div class="error-message">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
@@ -167,6 +211,7 @@
         <div class="field-item">
             <label>Aadhaar Number</label>
             {{ form.aadhaar_number }}
+            <p class="field-help">12-digit number</p>
             {% if form.aadhaar_number.errors %}<div class="error-message">{{ form.aadhaar_number.errors.0 }}</div>{% endif %}
         </div>
     </div>
@@ -246,16 +291,21 @@
         <div class="field-item">
             <label>Course</label>
             {{ form.course }}
+            <p class="field-help">Assigned course/subject</p>
             {% if form.course.errors %}<div class="error-message">{{ form.course.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Date of Joining</label>
-            {{ form.date_of_joining }}
+            <input type="date" name="date_of_joining" id="id_date_of_joining" class="form-control" 
+                   value="{{ form.date_of_joining.value|date:'Y-m-d'|default:'' }}">
+            <p class="field-help">Select joining date</p>
             {% if form.date_of_joining.errors %}<div class="error-message">{{ form.date_of_joining.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Date of Retirement</label>
-            {{ form.date_of_retirement }}
+            <input type="date" name="date_of_retirement" id="id_date_of_retirement" class="form-control" 
+                   value="{{ form.date_of_retirement.value|date:'Y-m-d'|default:'' }}">
+            <p class="field-help">Expected retirement date</p>
             {% if form.date_of_retirement.errors %}<div class="error-message">{{ form.date_of_retirement.errors.0 }}</div>{% endif %}
         </div>
     </div>

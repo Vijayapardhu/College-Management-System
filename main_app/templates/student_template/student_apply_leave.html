@@ -14,7 +14,7 @@
         --text-muted: #64748b;
         --border-color: #e2e8f0;
         --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        --shadow-hover: 0 8px 20px rgba(30, 64, 175, 0.3);
+        --shadow-hover: 0 8px 20px rgba(59, 130, 246, 0.3);
     }
 
     html.dark {
@@ -41,11 +41,11 @@
         padding: 2rem;
         border-radius: 12px;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.2);
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
     }
 
     html.dark .page-header {
-        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.4);
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
     }
 
     .page-header h1 {
@@ -545,54 +545,3 @@
     });
 </script>
 {% endblock %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-
-                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Apply For Leave"%}
-                </div>
-                <!-- /.card -->
-<div class="card card-primary">
-    <div class="card-header"><h3 class="card-title">{{page_title}}</h3></div>
-   <div class="table">
-
-       <table class="table table-bordered">
-           <tr>
-               <th>ID</th>
-               <th>Date</th>
-               <th>Message</th>
-                <th>Status</th>
-        </tr>
-        {% for leave in leave_history %}
-        <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{leave.date}}</td>
-              <td>{{leave.message}}</td>
-              <td>
-                  
-                  {% if leave.status == 0 %}
-                  <span class="badge badge-warning">Pending</span>
-                  {% elif leave.status == 1 %}
-                  <span class="badge badge-success">Accepted</span>
-                  
-                    {% else %}
-                    <span class="badge badge-danger">Rejected</span>
-                    
-                    {% endif %}
-                    
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    </div>
-            </div>
-        </div>
-    </div>
-</section>{% endblock content %}

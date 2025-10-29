@@ -1,5 +1,7 @@
+{% extends "main_app/base.html" %}
+{% load static %}
 {% block title %}Dashboard{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}Home{% endblock %}
 
 {% block custom_css %}
 <style>
@@ -23,68 +25,77 @@
         background: var(--bg-primary);
     }
 
-    /* Welcome Section */
-    .welcome-section {
+    /* Page Header */
+    .page-header {
         background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        padding: 3rem 2rem;
+        padding: 2.5rem;
         border-radius: 16px;
         margin-bottom: 2rem;
+        color: white;
         box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
         position: relative;
         overflow: hidden;
     }
 
-    .welcome-section::before {
+    .page-header::before {
         content: '';
         position: absolute;
         top: -50%;
         right: -10%;
-        width: 400px;
-        height: 400px;
+        width: 300px;
+        height: 300px;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 50%;
     }
 
-    .welcome-content {
+    .page-header-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+    }
+
+    .page-header p {
+        margin: 0;
+        opacity: 0.95;
         position: relative;
         z-index: 1;
     }
 
-    .welcome-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: white;
-        margin-bottom: 0.75rem;
-    }
-
-    .welcome-subtitle {
-        font-size: 1.125rem;
-        color: rgba(255, 255, 255, 0.95);
-        margin-bottom: 1.5rem;
-    }
-
-    .welcome-badges {
+    .header-badges {
         display: flex;
-        gap: 1rem;
+        gap: 0.75rem;
         flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
     }
 
-    .welcome-badge {
+    .header-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.625rem 1rem;
-        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 8px;
         color: white;
         font-size: 0.875rem;
         font-weight: 500;
-    }
-
-    .welcome-badge i {
-        font-size: 1rem;
     }
 
     /* Stats Grid */
@@ -108,6 +119,10 @@
     .stat-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    html.dark .stat-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
 
     .stat-card::before {
@@ -135,147 +150,122 @@
         background: linear-gradient(90deg, #7c3aed, #a78bfa);
     }
 
-    .stat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
     .stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
     }
 
-    .stat-icon.blue {
+    .stat-card.blue .stat-icon {
         background: rgba(59, 130, 246, 0.1);
         color: #3b82f6;
     }
 
-    html.dark .stat-icon.blue {
+    html.dark .stat-card.blue .stat-icon {
         background: rgba(59, 130, 246, 0.2);
         color: #93c5fd;
     }
 
-    .stat-icon.green {
+    .stat-card.green .stat-icon {
         background: rgba(16, 185, 129, 0.1);
         color: #10b981;
     }
 
-    html.dark .stat-icon.green {
+    html.dark .stat-card.green .stat-icon {
         background: rgba(16, 185, 129, 0.2);
         color: #6ee7b7;
     }
 
-    .stat-icon.orange {
+    .stat-card.orange .stat-icon {
         background: rgba(245, 158, 11, 0.1);
         color: #f59e0b;
     }
 
-    html.dark .stat-icon.orange {
+    html.dark .stat-card.orange .stat-icon {
         background: rgba(245, 158, 11, 0.2);
         color: #fbbf24;
     }
 
-    .stat-icon.purple {
+    .stat-card.purple .stat-icon {
         background: rgba(139, 92, 246, 0.1);
         color: #8b5cf6;
     }
 
-    html.dark .stat-icon.purple {
+    html.dark .stat-card.purple .stat-icon {
         background: rgba(139, 92, 246, 0.2);
         color: #c4b5fd;
     }
 
-    .stat-change {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-    }
-
     .stat-value {
-        font-size: 2rem;
+        font-size: 2.5rem;
         font-weight: 700;
         color: var(--text-primary);
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+        line-height: 1;
     }
 
     .stat-label {
         font-size: 0.875rem;
         color: var(--text-secondary);
         font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    /* Attendance Ring */
-    .attendance-ring-card {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1.75rem;
-        text-align: center;
-        transition: all 0.3s;
-    }
-
-    .attendance-ring-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    }
-
-    .progress-ring-wrapper {
-        position: relative;
-        width: 140px;
-        height: 140px;
-        margin: 0 auto 1.5rem;
-    }
-
-    .progress-ring {
-        width: 100%;
-        height: 100%;
-        transform: rotate(-90deg);
-    }
-
-    .progress-ring circle {
-        fill: none;
-        stroke-width: 10;
-        stroke-linecap: round;
-    }
-
-    .progress-ring-bg {
-        stroke: var(--border-color);
-    }
-
-    .progress-ring-fill {
-        stroke: #10b981;
-        stroke-dasharray: 408;
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset 0.5s ease;
-    }
-
-    .progress-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-primary);
-    }
-
-    /* Subjects Grid */
-    .subjects-section {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 2rem;
+    /* Quick Actions */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
         margin-bottom: 2rem;
     }
 
+    .action-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .action-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+        border-color: #3b82f6;
+    }
+
+    html.dark .action-card:hover {
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
+    }
+
+    .action-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin: 0 auto 0.75rem;
+    }
+
+    .action-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    /* Section Title */
     .section-title {
         font-size: 1.5rem;
         font-weight: 700;
@@ -290,9 +280,40 @@
         color: #3b82f6;
     }
 
+    /* Content Sections */
+    .subjects-section {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .view-all-link {
+        font-size: 0.875rem;
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .view-all-link:hover {
+        color: #1e40af;
+    }
+
+    /* Subjects Grid */
     .subjects-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 1rem;
     }
 
@@ -304,7 +325,6 @@
         transition: all 0.3s;
         cursor: pointer;
         position: relative;
-        overflow: hidden;
     }
 
     .subject-card::before {
@@ -313,22 +333,24 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 4px;
+        width: 3px;
         background: linear-gradient(180deg, #3b82f6, #1e40af);
-        transition: width 0.3s;
     }
 
     .subject-card:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+        transform: translateX(6px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
         border-color: #3b82f6;
     }
 
-    .subject-header {
+    html.dark .subject-card:hover {
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .subject-content {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.75rem;
+        gap: 1rem;
     }
 
     .subject-icon {
@@ -340,7 +362,8 @@
         align-items: center;
         justify-content: center;
         color: #3b82f6;
-        font-size: 1.25rem;
+        font-size: 1.125rem;
+        flex-shrink: 0;
     }
 
     html.dark .subject-icon {
@@ -349,42 +372,13 @@
     }
 
     .subject-name {
-        font-size: 1rem;
+        font-size: 0.9375rem;
         font-weight: 600;
         color: var(--text-primary);
-        flex: 1;
+        line-height: 1.3;
     }
 
-    .subject-arrow {
-        color: #3b82f6;
-        font-size: 1.25rem;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .subject-card:hover .subject-arrow {
-        opacity: 1;
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 4rem 2rem;
-    }
-
-    .empty-state i {
-        font-size: 4rem;
-        color: var(--text-secondary);
-        opacity: 0.3;
-        margin-bottom: 1rem;
-    }
-
-    .empty-state p {
-        color: var(--text-secondary);
-        font-size: 1rem;
-        margin: 0;
-    }
-
-    /* Activity Card */
+    /* Activity List */
     .activity-card {
         background: var(--bg-secondary);
         border: 1px solid var(--border-color);
@@ -392,32 +386,38 @@
         padding: 2rem;
     }
 
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
     .activity-item {
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1rem;
+        padding: 1.25rem;
         background: var(--bg-primary);
         border-radius: 8px;
-        margin-bottom: 0.75rem;
+        border: 1px solid var(--border-color);
         transition: all 0.2s;
     }
 
     .activity-item:hover {
         background: rgba(59, 130, 246, 0.05);
-        transform: translateX(4px);
+        border-color: #3b82f6;
     }
 
     .activity-icon {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 8px;
         background: linear-gradient(135deg, #dbeafe, #bfdbfe);
         display: flex;
         align-items: center;
         justify-content: center;
         color: #3b82f6;
-        font-size: 1rem;
+        font-size: 1.125rem;
         flex-shrink: 0;
     }
 
@@ -428,246 +428,285 @@
 
     .activity-content {
         flex: 1;
-        min-width: 0;
     }
 
     .activity-title {
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
         font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 0.25rem;
     }
 
-    .activity-time {
-        font-size: 0.75rem;
+    .activity-meta {
+        font-size: 0.8125rem;
         color: var(--text-secondary);
     }
 
-    .activity-badge {
-        flex-shrink: 0;
-        padding: 0.375rem 0.75rem;
-        border-radius: 6px;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        background: #d1fae5;
-        color: #065f46;
+    .activity-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #3b82f6;
     }
 
-    html.dark .activity-badge {
-        background: rgba(16, 185, 129, 0.2);
-        color: #6ee7b7;
+    html.dark .activity-value {
+        color: #60a5fa;
     }
 
-    @media print {
-        .page-break-before {
-            page-break-before: always;
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state i {
+        font-size: 3.5rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        margin: 0;
+        font-size: 0.9375rem;
+    }
+
+    @media (max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (max-width: 768px) {
-        .welcome-section {
-            padding: 2rem 1.5rem;
+        .page-header {
+            padding: 1.5rem;
         }
 
-        .welcome-title {
-            font-size: 1.5rem;
-        }
-
-        .welcome-subtitle {
-            font-size: 1rem;
+        .page-header-content {
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .stats-grid {
             grid-template-columns: 1fr;
         }
 
+        .quick-actions {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
         .subjects-grid {
             grid-template-columns: 1fr;
         }
-
-        .activity-item {
-            flex-direction: column;
-            text-align: center;
-        }
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-title">
-                Welcome back, {{ request.user.first_name }}! 🎓
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <div>
+                <h1>
+                    <i class="fas fa-tachometer-alt"></i>
+                    Welcome back, {{ request.user.first_name }}!
+                </h1>
+                <p>Here's your academic overview for today</p>
             </div>
-            <div class="welcome-subtitle">
-                Ready to excel in your academic journey today
-            </div>
-            <div class="welcome-badges">
+            <div class="header-badges">
                 {% if student.roll_number %}
-                <span class="welcome-badge">
+                <span class="header-badge">
                     <i class="fas fa-id-card"></i>
-                    Roll: {{ student.roll_number }}
+                    {{ student.roll_number }}
                 </span>
                 {% endif %}
                 {% if student.course %}
-                <span class="welcome-badge">
+                <span class="header-badge">
                     <i class="fas fa-graduation-cap"></i>
-                    {{ student.course.name }}
+                    {{ student.course.name|truncatewords:4 }}
                 </span>
                 {% endif %}
-                {% if student.session %}
-                <span class="welcome-badge">
+                {% if student.session and student.session.session_start_year and student.session.session_end_year %}
+                <span class="header-badge">
                     <i class="fas fa-calendar"></i>
-                    Session {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                    {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
                 </span>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Stats Grid -->
+    <!-- Stats Cards -->
     <div class="stats-grid">
         <div class="stat-card blue">
-            <div class="stat-header">
-                <div class="stat-icon blue">
-                    <i class="fas fa-book-open"></i>
-                </div>
+            <div class="stat-icon">
+                <i class="fas fa-book-open"></i>
             </div>
             <div class="stat-value">{{ total_subject|default:"0" }}</div>
             <div class="stat-label">Total Subjects</div>
         </div>
 
         <div class="stat-card green">
-            <div class="stat-header">
-                <div class="stat-icon green">
-                    <i class="fas fa-check-circle"></i>
-                </div>
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
             </div>
             <div class="stat-value">{{ total_present|default:"0" }}</div>
             <div class="stat-label">Classes Attended</div>
         </div>
 
         <div class="stat-card orange">
-            <div class="stat-header">
-                <div class="stat-icon orange">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
+            <div class="stat-icon">
+                <i class="fas fa-calendar"></i>
             </div>
             <div class="stat-value">{{ total_attendance|default:"0" }}</div>
             <div class="stat-label">Total Classes</div>
         </div>
 
-        <div class="attendance-ring-card purple">
-            <div class="progress-ring-wrapper">
-                <svg class="progress-ring" viewBox="0 0 140 140">
-                    <circle class="progress-ring-bg" cx="70" cy="70" r="65"></circle>
-                    <circle class="progress-ring-fill" cx="70" cy="70" r="65" id="attendance-ring"></circle>
-                </svg>
-                <div class="progress-text" id="attendance-percent">{{ percent_present|default:"0" }}%</div>
+        <div class="stat-card purple">
+            <div class="stat-icon">
+                <i class="fas fa-percentage"></i>
             </div>
+            <div class="stat-value">{{ percent_present|default:"0" }}%</div>
             <div class="stat-label">Attendance Rate</div>
         </div>
     </div>
 
-    <!-- Subjects Section -->
-    <div class="subjects-section">
-        <h2 class="section-title">
-            <i class="fas fa-book"></i>
-            My Subjects
-        </h2>
-        
-        {% if subject_name %}
-        <div class="subjects-grid">
-            {% for subject in subject_name %}
-            <div class="subject-card" onclick="window.location.href='{% url 'student_view_attendance' %}'">
-                <div class="subject-header">
-                    <div class="subject-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="subject-name">{{ subject }}</div>
-                    <i class="fas fa-arrow-right subject-arrow"></i>
-                </div>
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{% url 'student_view_attendance' %}" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-calendar-check"></i>
             </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state">
-            <i class="fas fa-book-open"></i>
-            <p>No subjects assigned yet</p>
-        </div>
-        {% endif %}
+            <span class="action-label">Attendance</span>
+        </a>
+
+        <a href="{% url 'student_view_result' %}" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <span class="action-label">Results</span>
+        </a>
+
+        <a href="{% url 'student_apply_leave' %}" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-file-medical"></i>
+            </div>
+            <span class="action-label">Apply Leave</span>
+        </a>
+
+        <a href="{% url 'view_assignments' %}" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <span class="action-label">Assignments</span>
+        </a>
+
+        <a href="{% url 'student_view_timetable' %}" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <span class="action-label">Timetable</span>
+        </a>
+
+        <a href="{% url 'student_gate_pass' %}" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-id-card"></i>
+            </div>
+            <span class="action-label">Gate Pass</span>
+        </a>
     </div>
 
-    <!-- Academic Overview -->
-    <div class="activity-card">
-        <h2 class="section-title">
-            <i class="fas fa-chart-line"></i>
-            Academic Overview
-        </h2>
-
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-calendar-alt"></i>
+    <!-- Main Content -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- My Subjects Section -->
+            <div class="subjects-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-book"></i>
+                        My Subjects
+                    </h2>
+                    <a href="{% url 'student_view_attendance' %}" class="view-all-link">
+                        View Details <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                {% if subject_name %}
+                <div class="subjects-grid">
+                    {% for subject in subject_name %}
+                    <div class="subject-card" onclick="window.location.href='{% url 'student_view_attendance' %}'">
+                        <div class="subject-content">
+                            <div class="subject-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="subject-name">{{ subject }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-book-open"></i>
+                    <p>No subjects assigned yet</p>
+                </div>
+                {% endif %}
             </div>
-            <div class="activity-content">
-                <div class="activity-title">Total Classes Conducted</div>
-                <div class="activity-time">This semester</div>
-            </div>
-            <span class="activity-badge">{{ total_attendance|default:"0" }}</span>
         </div>
 
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-check"></i>
-            </div>
-            <div class="activity-content">
-                <div class="activity-title">Classes Attended</div>
-                <div class="activity-time">You were present</div>
-            </div>
-            <span class="activity-badge">{{ total_present|default:"0" }}</span>
-        </div>
+        <div class="col-lg-4">
+            <!-- Academic Stats -->
+            <div class="activity-card">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Academic Stats
+                </h2>
 
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-chart-pie"></i>
-            </div>
-            <div class="activity-content">
-                <div class="activity-title">Attendance Percentage</div>
-                <div class="activity-time">Current rate</div>
-            </div>
-            <span class="activity-badge">{{ percent_present|default:"0" }}%</span>
-        </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Total Classes</div>
+                            <div class="activity-meta">This semester</div>
+                        </div>
+                        <div class="activity-value">{{ total_attendance|default:"0" }}</div>
+                    </div>
 
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-book-open"></i>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Classes Attended</div>
+                            <div class="activity-meta">Present days</div>
+                        </div>
+                        <div class="activity-value">{{ total_present|default:"0" }}</div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Attendance Rate</div>
+                            <div class="activity-meta">Overall percentage</div>
+                        </div>
+                        <div class="activity-value">{{ percent_present|default:"0" }}%</div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Enrolled Subjects</div>
+                            <div class="activity-meta">Active courses</div>
+                        </div>
+                        <div class="activity-value">{{ total_subject|default:"0" }}</div>
+                    </div>
+                </div>
             </div>
-            <div class="activity-content">
-                <div class="activity-title">Enrolled Subjects</div>
-                <div class="activity-time">This semester</div>
-            </div>
-            <span class="activity-badge">{{ total_subject|default:"0" }}</span>
         </div>
     </div>
 </div>
-
-{% block custom_js %}
-<script>
-    // Update attendance ring
-    document.addEventListener('DOMContentLoaded', function() {
-        var percent = {{ percent_present|default:0 }};
-        var circumference = 2 * Math.PI * 65;
-        var offset = circumference - (percent / 100) * circumference;
-        
-        var ring = document.getElementById('attendance-ring');
-        if (ring) {
-            ring.style.strokeDasharray = circumference;
-            ring.style.strokeDashoffset = offset;
-        }
-    });
-</script>
-{% endblock custom_js %}
-{% endblock content %}
-
+{% endblock %}

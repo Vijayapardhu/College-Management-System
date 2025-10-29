@@ -1,0 +1,418 @@
+{% extends "main_app/base.html" %}
+{% load static %}
+{% block title %}Report Builder - EduVision{% endblock %}
+{% block page_title %}Report Builder{% endblock %}
+
+{% block custom_css %}
+<style>
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #111827;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+    }
+
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+    }
+
+    .reports-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        opacity: 0.95;
+        font-size: 1.05rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border-left: 4px solid #1e40af;
+        transition: all 0.3s;
+    }
+
+    html.dark .stat-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .stat-card.students { border-left-color: #3b82f6; }
+    .stat-card.staff { border-left-color: #10b981; }
+    .stat-card.courses { border-left-color: #f59e0b; }
+    .stat-card.sessions { border-left-color: #8b5cf6; }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-card.students .stat-icon { background: #dbeafe; color: #1e40af; }
+    .stat-card.staff .stat-icon { background: #d1fae5; color: #065f46; }
+    .stat-card.courses .stat-icon { background: #fef3c7; color: #92400e; }
+    .stat-card.sessions .stat-icon { background: #ede9fe; color: #5b21b6; }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .reports-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .report-card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        padding: 1.75rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        cursor: pointer;
+        border: 2px solid var(--border-color);
+        text-decoration: none;
+        display: block;
+    }
+
+    html.dark .report-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(30, 64, 175, 0.15);
+        border-color: #3b82f6;
+    }
+
+    .report-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .report-icon.blue { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+    .report-icon.green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+    .report-icon.orange { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+    .report-icon.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+    .report-icon.red { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+    .report-icon.indigo { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+
+    .report-title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .report-description {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+
+    .report-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .report-badge {
+        background: #3b82f6;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: #3b82f6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="reports-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-chart-bar me-3"></i>Report Builder</h1>
+                <p>Generate comprehensive reports and analytics for your institution</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card students">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="stat-value">{{ total_students|default:0 }}</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+
+                <div class="stat-card staff">
+                    <div class="stat-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="stat-value">{{ total_staff|default:0 }}</div>
+                    <div class="stat-label">Total Faculty</div>
+                </div>
+
+                <div class="stat-card courses">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-value">{{ total_courses|default:0 }}</div>
+                    <div class="stat-label">Total Courses</div>
+                </div>
+
+                <div class="stat-card sessions">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-value">{{ total_sessions|default:0 }}</div>
+                    <div class="stat-label">Active Sessions</div>
+                </div>
+            </div>
+
+            <!-- Quick Reports Section -->
+            <h2 class="section-title">
+                <i class="fas fa-bolt"></i>
+                Quick Reports
+            </h2>
+
+            <div class="reports-grid">
+                <a href="{% url 'custom_report_builder' %}?report_type=attendance" class="report-card">
+                    <div class="report-icon blue">
+                        📅
+                    </div>
+                    <div class="report-title">Attendance Report</div>
+                    <div class="report-description">
+                        Generate detailed attendance reports with filters by course, date range, and student.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Quick</span>
+                        <span><i class="fas fa-clock me-1"></i>2-3 mins</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'custom_report_builder' %}?report_type=performance" class="report-card">
+                    <div class="report-icon green">
+                        📊
+                    </div>
+                    <div class="report-title">Performance Report</div>
+                    <div class="report-description">
+                        Analyze student academic performance, grades, and examination results.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Quick</span>
+                        <span><i class="fas fa-clock me-1"></i>2-3 mins</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'custom_report_builder' %}?report_type=financial" class="report-card">
+                    <div class="report-icon orange">
+                        💰
+                    </div>
+                    <div class="report-title">Financial Report</div>
+                    <div class="report-description">
+                        Track fee collections, pending payments, and financial summaries.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Quick</span>
+                        <span><i class="fas fa-clock me-1"></i>3-5 mins</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'custom_report_builder' %}?report_type=student_list" class="report-card">
+                    <div class="report-icon purple">
+                        👥
+                    </div>
+                    <div class="report-title">Student Directory</div>
+                    <div class="report-description">
+                        Export complete student lists with contact information and enrollment details.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Quick</span>
+                        <span><i class="fas fa-clock me-1"></i>1-2 mins</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'custom_report_builder' %}?report_type=staff_list" class="report-card">
+                    <div class="report-icon red">
+                        👨‍🏫
+                    </div>
+                    <div class="report-title">Faculty Directory</div>
+                    <div class="report-description">
+                        Generate faculty lists with department, subjects, and contact information.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Quick</span>
+                        <span><i class="fas fa-clock me-1"></i>1-2 mins</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'custom_report_builder' %}" class="report-card">
+                    <div class="report-icon indigo">
+                        🔧
+                    </div>
+                    <div class="report-title">Custom Report Builder</div>
+                    <div class="report-description">
+                        Create custom reports with advanced filters and export options.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Advanced</span>
+                        <span><i class="fas fa-clock me-1"></i>5-10 mins</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Advanced Reports Section -->
+            <h2 class="section-title">
+                <i class="fas fa-cogs"></i>
+                Advanced Analytics
+            </h2>
+
+            <div class="reports-grid">
+                <a href="{% url 'analytics_dashboard' %}" class="report-card">
+                    <div class="report-icon blue">
+                        📈
+                    </div>
+                    <div class="report-title">Analytics Dashboard</div>
+                    <div class="report-description">
+                        View comprehensive analytics with charts, trends, and insights.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Live</span>
+                        <span><i class="fas fa-sync me-1"></i>Real-time</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'student_analytics_dashboard' %}" class="report-card">
+                    <div class="report-icon green">
+                        🎓
+                    </div>
+                    <div class="report-title">Student Analytics</div>
+                    <div class="report-description">
+                        Detailed student performance metrics, attendance patterns, and trends.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Live</span>
+                        <span><i class="fas fa-sync me-1"></i>Real-time</span>
+                    </div>
+                </a>
+
+                <a href="{% url 'class_performance_comparison' %}" class="report-card">
+                    <div class="report-icon purple">
+                        ⚖️
+                    </div>
+                    <div class="report-title">Class Comparison</div>
+                    <div class="report-description">
+                        Compare performance across different classes, courses, and sections.
+                    </div>
+                    <div class="report-meta">
+                        <span class="report-badge">Analysis</span>
+                        <span><i class="fas fa-chart-line me-1"></i>Comparative</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Add loading animation when clicking report cards
+    document.querySelectorAll('.report-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (!this.href.includes('#')) {
+                this.style.opacity = '0.6';
+                this.style.pointerEvents = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}
+

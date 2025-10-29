@@ -1,34 +1,33 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from .communication_models import ChatRoom, ChatMessage
-from .models import Student, Staff, Department, Course, Subject
+from .models import Student, Staff, Department, Course, Subject, ChatGroup, ChatMessage
 
 User = get_user_model()
 
 
 class CreateChatRoomForm(forms.ModelForm):
-    """Form for creating a new chat room"""
+    """Form for creating a new chat group (updated to use ChatGroup)"""
     participants = forms.ModelMultipleChoiceField(
         queryset=User.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        help_text="Select users to add to the chat room"
+        help_text="Select users to add to the chat group"
     )
     
     class Meta:
-        model = ChatRoom
-        fields = ['name', 'description', 'room_type']
+        model = ChatGroup
+        fields = ['name', 'description', 'group_type']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter room name'
+                'placeholder': 'Enter group name'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Enter room description (optional)'
+                'placeholder': 'Enter group description (optional)'
             }),
-            'room_type': forms.Select(attrs={
+            'group_type': forms.Select(attrs={
                 'class': 'form-control'
             }),
         }
@@ -132,13 +131,13 @@ class ChatSearchForm(forms.Form):
     )
     
     room = forms.ModelChoiceField(
-        queryset=ChatRoom.objects.none(),
+        queryset=ChatGroup.objects.none(),
         required=False,
-        empty_label="All Rooms",
+        empty_label="All Groups",
         widget=forms.Select(attrs={
             'class': 'form-control'
         }),
-        help_text="Filter by specific room"
+        help_text="Filter by specific group"
     )
     
     date_from = forms.DateField(
@@ -164,9 +163,9 @@ class ChatSearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         
         if user:
-            # Set available rooms to user's rooms only
-            self.fields['room'].queryset = ChatRoom.objects.filter(
-                participants=user,
+            # Set available groups to user's groups only
+            self.fields['room'].queryset = ChatGroup.objects.filter(
+                members__user=user,
                 is_active=True
             ).order_by('name')
     
@@ -251,8 +250,8 @@ class ClassGroupForm(forms.ModelForm):
     )
     
     class Meta:
-        model = ChatRoom
-        fields = ['name', 'description']
+        model = ChatGroup
+        fields = ['name', 'description', 'group_type']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -267,7 +266,7 @@ class ClassGroupForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['room_type'].initial = 'class'
+        self.fields['group_type'].initial = 'private'  # Class groups are private by default
     
     def clean_session(self):
         session = self.cleaned_data.get('session', '').strip()
@@ -297,8 +296,8 @@ class SubjectGroupForm(forms.ModelForm):
     )
     
     class Meta:
-        model = ChatRoom
-        fields = ['name', 'description']
+        model = ChatGroup
+        fields = ['name', 'description', 'group_type']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -313,7 +312,7 @@ class SubjectGroupForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['room_type'].initial = 'subject'
+        self.fields['group_type'].initial = 'private'  # Subject groups are private by default
 
 
 class EditMessageForm(forms.ModelForm):

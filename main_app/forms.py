@@ -261,12 +261,22 @@ class StudentForm(forms.ModelForm):
         fields = [
             # Academic Details
             'course', 'department', 'session', 'academic_year', 'section',
-            'roll_number', 'admission_number', 'admission_date', 'course_type',
+            'roll_number', 'admission_number', 'admission_date', 'admission_year', 'course_type',
+            'current_semester', 'student_status',
             # Parent Details  
-            'father_name', 'father_mobile', 'mother_name', 'mother_mobile',
-            'guardian_name', 'guardian_mobile',
+            'father_name', 'father_occupation', 'father_mobile',
+            'mother_name', 'mother_occupation', 'mother_mobile',
+            'guardian_name', 'guardian_relation', 'guardian_mobile',
             # Student-specific fields
-            'date_of_birth', 'mobile_number',
+            'date_of_birth', 'mobile_number', 'alternate_mobile', 'aadhaar_number',
+            'nationality', 'religion', 'blood_group', 'medical_conditions',
+            # Address
+            'permanent_address', 'permanent_city', 'permanent_state', 'permanent_pincode',
+            'current_address', 'current_city', 'current_state', 'current_pincode',
+            # Category & Additional
+            'caste_category', 'admission_mode', 'admission_quota',
+            'mother_tongue', 'hobbies', 'achievements',
+            'scholarship_applied', 'scholarship_name', 'annual_family_income',
         ]
         widgets = {
             'course': forms.Select(attrs={'class': 'form-control'}),
@@ -277,13 +287,42 @@ class StudentForm(forms.ModelForm):
             'roll_number': forms.TextInput(attrs={'placeholder': 'e.g., CSE2024001', 'class': 'form-control'}),
             'admission_number': forms.TextInput(attrs={'placeholder': 'e.g., ADM2024001', 'class': 'form-control'}),
             'admission_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'admission_year': forms.NumberInput(attrs={'placeholder': 'e.g., 2024', 'class': 'form-control'}),
             'course_type': forms.Select(attrs={'class': 'form-control'}),
+            'current_semester': forms.NumberInput(attrs={'placeholder': '1-8', 'class': 'form-control'}),
+            'student_status': forms.Select(attrs={'class': 'form-control'}),
             'father_name': forms.TextInput(attrs={'placeholder': 'Father\'s full name', 'class': 'form-control'}),
+            'father_occupation': forms.TextInput(attrs={'placeholder': 'Father\'s occupation', 'class': 'form-control'}),
             'father_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
             'mother_name': forms.TextInput(attrs={'placeholder': 'Mother\'s full name', 'class': 'form-control'}),
+            'mother_occupation': forms.TextInput(attrs={'placeholder': 'Mother\'s occupation', 'class': 'form-control'}),
             'mother_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
             'guardian_name': forms.TextInput(attrs={'placeholder': 'Guardian name (if applicable)', 'class': 'form-control'}),
+            'guardian_relation': forms.TextInput(attrs={'placeholder': 'Relation to student', 'class': 'form-control'}),
             'guardian_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'alternate_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'aadhaar_number': forms.TextInput(attrs={'placeholder': '12-digit Aadhaar number', 'class': 'form-control', 'maxlength': '12'}),
+            'nationality': forms.TextInput(attrs={'placeholder': 'e.g., Indian', 'class': 'form-control'}),
+            'religion': forms.TextInput(attrs={'placeholder': 'e.g., Hindu', 'class': 'form-control'}),
+            'blood_group': forms.TextInput(attrs={'placeholder': 'e.g., O+', 'class': 'form-control'}),
+            'medical_conditions': forms.Textarea(attrs={'placeholder': 'Any medical conditions or allergies', 'class': 'form-control', 'rows': 2}),
+            'permanent_address': forms.Textarea(attrs={'placeholder': 'Complete permanent address', 'class': 'form-control', 'rows': 2}),
+            'permanent_city': forms.TextInput(attrs={'placeholder': 'City', 'class': 'form-control'}),
+            'permanent_state': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control'}),
+            'permanent_pincode': forms.TextInput(attrs={'placeholder': 'Pincode', 'class': 'form-control', 'maxlength': '10'}),
+            'current_address': forms.Textarea(attrs={'placeholder': 'Complete current address', 'class': 'form-control', 'rows': 2}),
+            'current_city': forms.TextInput(attrs={'placeholder': 'City', 'class': 'form-control'}),
+            'current_state': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control'}),
+            'current_pincode': forms.TextInput(attrs={'placeholder': 'Pincode', 'class': 'form-control', 'maxlength': '10'}),
+            'caste_category': forms.Select(attrs={'class': 'form-control'}),
+            'admission_mode': forms.Select(attrs={'class': 'form-control'}),
+            'admission_quota': forms.Select(attrs={'class': 'form-control'}),
+            'mother_tongue': forms.TextInput(attrs={'placeholder': 'e.g., Telugu', 'class': 'form-control'}),
+            'hobbies': forms.Textarea(attrs={'placeholder': 'List hobbies', 'class': 'form-control', 'rows': 2}),
+            'achievements': forms.Textarea(attrs={'placeholder': 'Academic and extracurricular achievements', 'class': 'form-control', 'rows': 2}),
+            'scholarship_applied': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'scholarship_name': forms.TextInput(attrs={'placeholder': 'Name of scholarship', 'class': 'form-control'}),
+            'annual_family_income': forms.NumberInput(attrs={'placeholder': 'Annual income in INR', 'class': 'form-control'}),
         }
 
 
@@ -313,6 +352,17 @@ class ManagementForm(CustomUserForm):
 class StaffForm(CustomUserForm):
     def __init__(self, *args, **kwargs):
         super(StaffForm, self).__init__(*args, **kwargs)
+        # Add CSS classes to all fields
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.widgets.Select):
+                field.widget.attrs['class'] = 'form-control'
+            elif isinstance(field.widget, forms.widgets.Textarea):
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['rows'] = 3
+            elif isinstance(field.widget, forms.widgets.FileInput):
+                field.widget.attrs['class'] = 'form-control file-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
 
     class Meta(CustomUserForm.Meta):
         model = Staff
@@ -323,6 +373,24 @@ class StaffForm(CustomUserForm):
             'blood_group', 'aadhaar_number', 'bank_account_number',
             'bank_ifsc_code', 'bank_name', 'resume', 'remarks'
         ]
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'date_of_joining': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'date_of_retirement': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'mobile_number': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'alternate_mobile': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'emergency_contact': forms.TextInput(attrs={'placeholder': '+91 1234567890', 'class': 'form-control'}),
+            'employee_id': forms.TextInput(attrs={'placeholder': 'e.g., EMP001', 'class': 'form-control'}),
+            'aadhaar_number': forms.TextInput(attrs={'placeholder': '12-digit Aadhaar', 'maxlength': '12', 'class': 'form-control'}),
+            'qualification': forms.TextInput(attrs={'placeholder': 'e.g., M.Tech, Ph.D', 'class': 'form-control'}),
+            'specialization': forms.TextInput(attrs={'placeholder': 'e.g., Computer Science', 'class': 'form-control'}),
+            'experience_years': forms.NumberInput(attrs={'placeholder': '0', 'min': '0', 'class': 'form-control'}),
+            'bank_account_number': forms.TextInput(attrs={'placeholder': 'Account number', 'class': 'form-control'}),
+            'bank_ifsc_code': forms.TextInput(attrs={'placeholder': 'IFSC code', 'class': 'form-control'}),
+            'bank_name': forms.TextInput(attrs={'placeholder': 'Bank name', 'class': 'form-control'}),
+            'blood_group': forms.TextInput(attrs={'placeholder': 'e.g., O+, A+', 'class': 'form-control'}),
+            'remarks': forms.Textarea(attrs={'placeholder': 'Additional notes', 'rows': 3, 'class': 'form-control'}),
+        }
 
 
 class CourseForm(FormSettings):
@@ -347,13 +415,41 @@ class SubjectForm(FormSettings):
 class SessionForm(FormSettings):
     def __init__(self, *args, **kwargs):
         super(SessionForm, self).__init__(*args, **kwargs)
+        # Add CSS classes to form fields
+        for field_name, field in self.fields.items():
+            if field_name in ['start_year', 'end_year', 'session_name']:
+                field.widget.attrs['class'] = 'form-input'
 
     class Meta:
         model = Session
         fields = '__all__'
         widgets = {
-            'start_year': DateInput(attrs={'type': 'date'}),
-            'end_year': DateInput(attrs={'type': 'date'}),
+            'session_name': forms.TextInput(attrs={
+                'placeholder': 'e.g., C23, C24, C25',
+                'maxlength': '50',
+                'class': 'form-input'
+            }),
+            'start_year': forms.TextInput(attrs={
+                'placeholder': '2023',
+                'maxlength': '4',
+                'pattern': '[0-9]{4}',
+                'class': 'form-input',
+                'inputmode': 'numeric',
+                'type': 'text'
+            }),
+            'end_year': forms.TextInput(attrs={
+                'placeholder': '2026',
+                'maxlength': '4',
+                'pattern': '[0-9]{4}',
+                'class': 'form-input',
+                'inputmode': 'numeric',
+                'type': 'text'
+            }),
+            'session_start_year': forms.HiddenInput(),
+            'session_end_year': forms.HiddenInput(),
+            'is_active': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),
+            'updated_at': forms.HiddenInput(),
         }
 
 
@@ -742,9 +838,37 @@ class GatePassForm(FormSettings):
         fields = ['pass_type', 'reason', 'from_date', 'to_date', 'destination',
                   'parent_consent', 'parent_contact']
         widgets = {
-            'from_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'to_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'reason': forms.Textarea(attrs={'rows': 3}),
+            'pass_type': forms.Select(attrs={
+                'class': 'form-select',
+                'placeholder': 'Select pass type'
+            }),
+            'reason': forms.Textarea(attrs={
+                'rows': 4,
+                'class': 'form-control',
+                'placeholder': 'Please provide a detailed reason for your gate pass request...'
+            }),
+            'from_date': forms.DateTimeInput(attrs={
+                'type': 'datetime-local',
+                'class': 'form-control'
+            }),
+            'to_date': forms.DateTimeInput(attrs={
+                'type': 'datetime-local',
+                'class': 'form-control'
+            }),
+            'destination': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., Home, Hospital, Shopping Mall, etc.'
+            }),
+            'parent_consent': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'parent_contact': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter parent/guardian mobile number',
+                'type': 'tel',
+                'pattern': '[0-9]{10}',
+                'maxlength': '15'
+            }),
         }
 
 

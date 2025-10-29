@@ -17,7 +17,7 @@ from django.urls import path, include
 
 from main_app.EditResultView import EditResultView
 
-from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views, public_views, academic_structure_views, student_filters_views, advanced_features_views
+from . import hod_views, staff_views, student_views, views, proctor_views, event_views, message_views, resource_views, management_views, auth_views, admission_views, payroll_views, alumni_views, chat_views, placement_views, lms_views, analytics_views, performance_views, document_views, parent_views, gemini_views, public_views, academic_structure_views, student_filters_views, advanced_features_views, chat_system_views
 
 urlpatterns = [
     # New Clean Auth System (Single-Page Login with OTP)
@@ -33,6 +33,7 @@ urlpatterns = [
     
     # Action button URLs
     path("admin/student/<int:student_id>/view/", hod_views.view_student_detail, name='view_student_detail'),
+    path("admin/student/<int:student_id>/detail/", hod_views.view_student_detail, name='view_student_detail'),
     path("admin/student/<int:student_id>/edit/", hod_views.edit_student, name='edit_student'),
     path("admin/staff/<int:staff_id>/view/", hod_views.view_staff_detail, name='view_staff_detail'),
     path("admin/staff/<int:staff_id>/edit/", hod_views.edit_staff, name='edit_staff'),
@@ -251,34 +252,45 @@ urlpatterns = [
     # Event URLs - Proctor
     path("proctor/events/", event_views.proctor_view_events, name='proctor_view_events'),
     
-    # Messaging URLs (Common for all user types)
-    path("message/send/", message_views.send_message, name='send_message'),
-    path("messages/", message_views.view_messages, name='view_messages'),
-    path("message/<int:message_id>/", message_views.view_message, name='view_message'),
-    path("message/<int:message_id>/reply/", message_views.reply_message, name='reply_message'),
-    path("message/<int:message_id>/delete/", message_views.delete_message, name='delete_message'),
-    path("message/<int:message_id>/mark_read/", message_views.mark_message_read, name='mark_message_read'),
-    path("messages/mark_all_read/", message_views.mark_all_read, name='mark_all_read'),
+    # WhatsApp-like Chat System URLs (Primary messaging interface)
+    path("messages/", chat_system_views.chat_home, name='view_messages'),  # Main messages URL
+    path("chat/", chat_system_views.chat_home, name='chat_home'),  # Alias
+    path("chat/start/", chat_system_views.start_new_chat, name='start_new_chat'),
     
     # Alias URLs for different user types
-    path("admin/messages/", message_views.view_messages, name='admin_messages'),
-    path("staff/messages/", message_views.view_messages, name='staff_messages'),
-    path("student/messages/", message_views.view_messages, name='student_messages'),
+    path("admin/messages/", chat_system_views.chat_home, name='admin_messages'),
+    path("staff/messages/", chat_system_views.chat_home, name='staff_messages'),
+    path("student/messages/", chat_system_views.chat_home, name='student_messages'),
+    path("proctor/messages/", chat_system_views.chat_home, name='proctor_messages'),
     
-    # WhatsApp-like Chat System URLs
-    path("chat/", chat_system_views.chat_home, name='chat_home'),
+    # Chat API endpoints
     path("chat/messages/<str:chat_type>/<int:chat_id>/", chat_system_views.get_chat_messages, name='get_chat_messages'),
     path("chat/send/", chat_system_views.send_message, name='chat_send_message'),
     path("chat/message/<int:message_id>/delete/", chat_system_views.delete_message, name='chat_delete_message'),
+    path("chat/message/forward/", chat_system_views.forward_message, name='chat_forward_message'),
+    path("chat/clear/", chat_system_views.clear_chat, name='clear_chat'),
+    path("chat/user/<int:user_id>/block/", chat_system_views.block_user, name='block_user'),
+    path("chat/user/<int:user_id>/unblock/", chat_system_views.unblock_user, name='unblock_user'),
+    
+    # Group management
     path("chat/group/create/", chat_system_views.create_group, name='create_chat_group'),
     path("chat/group/<int:group_id>/settings/", chat_system_views.group_settings, name='group_settings'),
     path("chat/group/<int:group_id>/update/", chat_system_views.update_group_settings, name='update_group_settings'),
     path("chat/group/<int:group_id>/add-member/", chat_system_views.add_group_member, name='add_group_member'),
     path("chat/group/<int:group_id>/remove/<int:user_id>/", chat_system_views.remove_group_member, name='remove_group_member'),
     path("chat/group/<int:group_id>/leave/", chat_system_views.leave_group, name='leave_group'),
+    
+    # Message reactions and search
     path("chat/message/<int:message_id>/react/", chat_system_views.add_reaction, name='add_message_reaction'),
     path("chat/message/<int:message_id>/unreact/", chat_system_views.remove_reaction, name='remove_message_reaction'),
     path("chat/search/", chat_system_views.search_messages, name='search_chat_messages'),
+    
+    # Legacy message system (backup - can be removed if not needed)
+    path("legacy/message/send/", message_views.send_message, name='legacy_send_message'),
+    path("legacy/messages/", message_views.view_messages, name='legacy_view_messages'),
+    path("legacy/message/<int:message_id>/", message_views.view_message, name='legacy_view_message'),
+    path("legacy/message/<int:message_id>/reply/", message_views.reply_message, name='legacy_reply_message'),
+    path("legacy/message/<int:message_id>/delete/", message_views.delete_message, name='legacy_delete_message'),
     
     # Study Materials - Staff
     path("staff/material/upload/", resource_views.staff_upload_material, name='staff_upload_material'),

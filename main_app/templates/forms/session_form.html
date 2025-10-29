@@ -1,372 +1,447 @@
 {% extends "forms/base_form.html" %}
 {% load static %}
 
+{% block page_title %}{% if session_id %}Edit Session{% else %}Add Session{% endif %}{% endblock %}
+
 {% block custom_css %}
+<!-- Force no cache -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style>
-    .form-card {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --accent-blue: #3b82f6;
+        --accent-dark: #1e40af;
+        --error-color: #ef4444;
     }
 
-    .section-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f1f5f9;
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
     }
 
-    .section-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #0891b2, #06b6d4);
-        color: white;
+    .session-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .session-card {
+        background: var(--bg-primary);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--border-color);
+    }
+
+    html.dark .session-card {
+        box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .session-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .session-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #3b82f6, #1e40af);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
     }
 
-    .section-title {
-        font-size: 1.25rem;
+    .session-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .session-title {
+        font-size: 1.75rem;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .session-subtitle {
+        font-size: 0.9375rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+
+    .form-group {
+        margin-bottom: 1.75rem;
+    }
+
+    .form-group:last-of-type {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.625rem;
+    }
+
+    .form-label.required::after {
+        content: '*';
+        color: var(--error-color);
+        margin-left: 0.375rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+
+    .form-input::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.6;
+    }
+
+    .form-input:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-input:hover:not(:focus) {
+        border-color: #94a3b8;
+    }
+
+    .form-help {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+    }
+
+    .form-error {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.8125rem;
+        color: var(--error-color);
+        font-weight: 500;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--border-color);
+    }
+
+    .btn {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-cancel {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+    }
+
+    .btn-cancel:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #3b82f6, #1e40af);
+        color: white;
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-submit:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .session-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .session-title {
+            font-size: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Remove date picker and number spinners */
+    input[name="start_year"]::-webkit-calendar-picker-indicator,
+    input[name="end_year"]::-webkit-calendar-picker-indicator {
+        display: none;
+    }
+
+    input[name="start_year"]::-webkit-inner-spin-button,
+    input[name="start_year"]::-webkit-outer-spin-button,
+    input[name="end_year"]::-webkit-inner-spin-button,
+    input[name="end_year"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
         margin: 0;
     }
 
-    .field-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .field-row-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.25rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .field-item label {
-        display: block;
-        font-weight: 600;
-        color: #374151;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .field-item label.required::after {
-        content: '*';
-        color: #ef4444;
-        margin-left: 0.25rem;
-    }
-
-    .field-item input[type="text"],
-    .field-item input[type="number"],
-    .field-item input[type="date"],
-    .field-item select {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 0.9375rem;
-        transition: all 0.2s;
-        background: white;
-    }
-
-    .field-item input:focus,
-    .field-item select:focus {
-        outline: none;
-        border-color: #0891b2;
-        box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
-    }
-
-    .field-help {
-        font-size: 0.8125rem;
-        color: #6b7280;
-        margin-top: 0.25rem;
-    }
-
-    .error-message {
-        color: #ef4444;
-        font-size: 0.8125rem;
-        margin-top: 0.25rem;
-    }
-
-    /* Toggle Switch Styling */
-    .toggle-container {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        background: #f8fafc;
-        border-radius: 8px;
-        border: 2px solid #e5e7eb;
-    }
-
-    .toggle-switch {
-        position: relative;
-        width: 52px;
-        height: 28px;
-    }
-
-    .toggle-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #cbd5e1;
-        transition: 0.3s;
-        border-radius: 28px;
-    }
-
-    .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 20px;
-        width: 20px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: 0.3s;
-        border-radius: 50%;
-    }
-
-    .toggle-switch input:checked + .toggle-slider {
-        background: linear-gradient(135deg, #0891b2, #06b6d4);
-    }
-
-    .toggle-switch input:checked + .toggle-slider:before {
-        transform: translateX(24px);
-    }
-
-    .toggle-label {
-        font-weight: 600;
-        color: #374151;
-        font-size: 0.9375rem;
-    }
-
-    .toggle-description {
-        font-size: 0.8125rem;
-        color: #6b7280;
-        margin-top: 0.25rem;
-    }
-
-    .info-box {
-        background: #cffafe;
-        border-left: 4px solid #0891b2;
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-    }
-
-    .info-box-title {
-        font-weight: 600;
-        color: #0e7490;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .info-box-text {
-        color: #155e75;
-        font-size: 0.875rem;
-        line-height: 1.5;
+    input[name="start_year"],
+    input[name="end_year"] {
+        -webkit-appearance: none;
+        -moz-appearance: textfield;
     }
 </style>
 {% endblock %}
 
 {% block form_icon %}fas fa-calendar-alt{% endblock %}
-{% block form_title %}{% if session_id %}Edit Session{% else %}Add New Session{% endif %}{% endblock %}
-{% block form_subtitle %}{{ page_title|default:"Configure academic session/batch details" }}{% endblock %}
+{% block form_title %}{% if session_id %}Edit Session{% else %}Add Session{% endif %}{% endblock %}
+{% block form_subtitle %}{{ page_title }}{% endblock %}
 
 {% block cancel_url %}{% url 'manage_session' %}{% endblock %}
 {% block submit_text %}{% if session_id %}Update Session{% else %}Save Session{% endif %}{% endblock %}
 
 {% block form_content %}
 
-<!-- Info Box -->
-<div class="info-box">
-    <div class="info-box-title">
-        <i class="fas fa-info-circle"></i>
-        About Sessions
-    </div>
-    <div class="info-box-text">
-        A session represents an academic batch (e.g., C23 for students who joined in 2023). 
-        Use format like C23, C24, C25 for easy identification.
-    </div>
-</div>
+<div class="session-container">
+    <div class="session-card">
+        <!-- Header -->
+        <div class="session-header">
+            <div class="session-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h2 class="session-title">Session Information</h2>
+            <p class="session-subtitle">
+                Create academic batch using format like C23, C24, C25 for students joining in 2023, 2024, 2025
+            </p>
+        </div>
 
-<!-- Session Details -->
-<div class="form-card">
-    <div class="section-header">
-        <div class="section-icon">
-            <i class="fas fa-calendar-alt"></i>
+        <!-- Session Name -->
+        <div class="form-group">
+            <label for="id_session_name" class="form-label required">Session Name / Batch Code</label>
+            <input type="text" name="session_name" id="id_session_name" class="form-input" 
+                   value="{{ form.session_name.value|default:'' }}" 
+                   placeholder="e.g., C23, C24, C25" 
+                   maxlength="50" required>
+            <span class="form-help">Example: C23, C24, C25</span>
+            {% if form.session_name.errors %}
+                <span class="form-error">{{ form.session_name.errors.0 }}</span>
+            {% endif %}
         </div>
-        <h3 class="section-title">Session Details</h3>
-    </div>
-    
-    <div class="field-row">
-        <div class="field-item">
-            <label class="required">Session Name/Batch Code</label>
-            {{ form.session_name }}
-            <p class="field-help">Example: C23, C24, C25 (C = Current year joined)</p>
-            {% if form.session_name.errors %}<div class="error-message">{{ form.session_name.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="field-item">
-            <label class="required">Start Year</label>
-            {{ form.start_year }}
-            <p class="field-help">Year students joined (e.g., 2023)</p>
-            {% if form.start_year.errors %}<div class="error-message">{{ form.start_year.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="field-item">
-            <label class="required">End Year</label>
-            {{ form.end_year }}
-            <p class="field-help">Expected graduation year (e.g., 2026)</p>
-            {% if form.end_year.errors %}<div class="error-message">{{ form.end_year.errors.0 }}</div>{% endif %}
-        </div>
-    </div>
-</div>
 
-<!-- Legacy Date Fields (Optional) -->
-<div class="form-card">
-    <div class="section-header">
-        <div class="section-icon">
-            <i class="fas fa-calendar-day"></i>
+        <!-- Start Year -->
+        <div class="form-group">
+            <label for="id_start_year" class="form-label required">Start Year</label>
+            <input type="text" name="start_year" id="id_start_year" class="form-input" 
+                   value="{{ form.start_year.value|default:'' }}" 
+                   placeholder="2023" 
+                   maxlength="4" 
+                   pattern="[0-9]{4}" 
+                   inputmode="numeric" required>
+            <span class="form-help">Year students joined (e.g., 2023)</span>
+            {% if form.start_year.errors %}
+                <span class="form-error">{{ form.start_year.errors.0 }}</span>
+            {% endif %}
         </div>
-        <h3 class="section-title">Session Date Range (Optional - Legacy)</h3>
-    </div>
-    
-    <div class="field-row-2">
-        <div class="field-item">
-            <label>Session Start Date</label>
+
+        <!-- End Year -->
+        <div class="form-group">
+            <label for="id_end_year" class="form-label required">End Year</label>
+            <input type="text" name="end_year" id="id_end_year" class="form-input" 
+                   value="{{ form.end_year.value|default:'' }}" 
+                   placeholder="2026" 
+                   maxlength="4" 
+                   pattern="[0-9]{4}" 
+                   inputmode="numeric" required>
+            <span class="form-help">Expected graduation year (e.g., 2026)</span>
+            {% if form.end_year.errors %}
+                <span class="form-error">{{ form.end_year.errors.0 }}</span>
+            {% endif %}
+        </div>
+
+        <!-- Hidden fields for legacy compatibility -->
+        <div style="display: none;">
             {{ form.session_start_year }}
-            <p class="field-help">Optional: Exact start date of session</p>
-            {% if form.session_start_year.errors %}<div class="error-message">{{ form.session_start_year.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="field-item">
-            <label>Session End Date</label>
             {{ form.session_end_year }}
-            <p class="field-help">Optional: Exact end date of session</p>
-            {% if form.session_end_year.errors %}<div class="error-message">{{ form.session_end_year.errors.0 }}</div>{% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- Session Status -->
-<div class="form-card">
-    <div class="section-header">
-        <div class="section-icon">
-            <i class="fas fa-toggle-on"></i>
-        </div>
-        <h3 class="section-title">Session Status</h3>
-    </div>
-    
-    <div class="toggle-container">
-        <label class="toggle-switch">
             {{ form.is_active }}
-            <span class="toggle-slider"></span>
-        </label>
-        <div>
-            <div class="toggle-label">Active Session</div>
-            <div class="toggle-description">Enable this session for student enrollment and operations</div>
+            {{ form.created_at }}
+            {{ form.updated_at }}
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <a href="{% url 'manage_session' %}" class="btn btn-cancel">
+                <i class="fas fa-times"></i>
+                Cancel
+            </a>
+            <button type="submit" class="btn btn-submit" id="submitBtn">
+                <i class="fas fa-save"></i>
+                {% if session_id %}Update Session{% else %}Save Session{% endif %}
+            </button>
         </div>
     </div>
 </div>
 
 <script>
-// Form validation
-document.querySelector('form').addEventListener('submit', function(e) {
+// Form validation and handling
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
     const sessionName = document.querySelector('input[name="session_name"]');
     const startYear = document.querySelector('input[name="start_year"]');
     const endYear = document.querySelector('input[name="end_year"]');
-    
-    let isValid = true;
-    let firstError = null;
-    
-    // Validate required fields
-    if (!sessionName.value) {
-        isValid = false;
-        sessionName.style.borderColor = '#ef4444';
-        if (!firstError) firstError = sessionName;
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Ensure year fields only accept numbers
+    [startYear, endYear].forEach(input => {
+        if (input) {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                if (this.value.length > 4) {
+                    this.value = this.value.slice(0, 4);
+                }
+            });
+        }
+    });
+
+    // Auto-generate session name from start year
+    if (startYear && sessionName) {
+        startYear.addEventListener('blur', function() {
+            if (this.value.length === 4 && !sessionName.value) {
+                const year = this.value.slice(-2);
+                sessionName.value = `C${year}`;
+            }
+        });
     }
-    
-    if (!startYear.value) {
-        isValid = false;
-        startYear.style.borderColor = '#ef4444';
-        if (!firstError) firstError = startYear;
-    }
-    
-    if (!endYear.value) {
-        isValid = false;
-        endYear.style.borderColor = '#ef4444';
-        if (!firstError) firstError = endYear;
-    }
-    
-    // Validate year range
-    if (startYear.value && endYear.value) {
-        const start = parseInt(startYear.value);
-        const end = parseInt(endYear.value);
-        
-        if (end <= start) {
+
+    // Clear error styling on input
+    document.querySelectorAll('.form-input').forEach(input => {
+        input.addEventListener('input', function() {
+            this.style.borderColor = 'var(--border-color)';
+        });
+    });
+
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const errors = [];
+
+        // Validate session name
+        if (!sessionName.value.trim()) {
             isValid = false;
-            alert('End year must be greater than start year!');
-            endYear.focus();
+            sessionName.style.borderColor = 'var(--error-color)';
+            errors.push('Session Name is required');
+        }
+
+        // Validate start year
+        if (!startYear.value) {
+            isValid = false;
+            startYear.style.borderColor = 'var(--error-color)';
+            errors.push('Start Year is required');
+        } else {
+            const yearRegex = /^[0-9]{4}$/;
+            if (!yearRegex.test(startYear.value)) {
+                isValid = false;
+                startYear.style.borderColor = 'var(--error-color)';
+                errors.push('Start Year must be a 4-digit number');
+            } else {
+                const year = parseInt(startYear.value);
+                if (year < 2000 || year > 2099) {
+                    isValid = false;
+                    startYear.style.borderColor = 'var(--error-color)';
+                    errors.push('Start Year must be between 2000 and 2099');
+                }
+            }
+        }
+
+        // Validate end year
+        if (!endYear.value) {
+            isValid = false;
+            endYear.style.borderColor = 'var(--error-color)';
+            errors.push('End Year is required');
+        } else {
+            const yearRegex = /^[0-9]{4}$/;
+            if (!yearRegex.test(endYear.value)) {
+                isValid = false;
+                endYear.style.borderColor = 'var(--error-color)';
+                errors.push('End Year must be a 4-digit number');
+            } else {
+                const year = parseInt(endYear.value);
+                if (year < 2000 || year > 2099) {
+                    isValid = false;
+                    endYear.style.borderColor = 'var(--error-color)';
+                    errors.push('End Year must be between 2000 and 2099');
+                }
+            }
+        }
+
+        // Validate year range
+        if (startYear.value && endYear.value) {
+            const start = parseInt(startYear.value);
+            const end = parseInt(endYear.value);
+            
+            if (end <= start) {
+                isValid = false;
+                endYear.style.borderColor = 'var(--error-color)';
+                errors.push('End Year must be greater than Start Year');
+            }
+        }
+
+        // Show errors and prevent submission
+        if (!isValid) {
             e.preventDefault();
+            alert('Please fix the following errors:\n\n' + errors.join('\n'));
             return false;
         }
-    }
-    
-    if (!isValid) {
-        e.preventDefault();
-        alert('Please fill all required fields marked with *');
-        if (firstError) {
-            firstError.focus();
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return false;
-    }
-    
-    // Show loading state
-    const submitBtn = document.querySelector('button[type="submit"]');
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-    submitBtn.disabled = true;
-});
 
-// Clear error styling on input
-document.querySelectorAll('input, select').forEach(field => {
-    field.addEventListener('input', function() {
-        this.style.borderColor = '#e5e7eb';
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
     });
 });
-
-// Auto-generate session name from start year
-const startYearInput = document.querySelector('input[name="start_year"]');
-const sessionNameInput = document.querySelector('input[name="session_name"]');
-
-if (startYearInput && sessionNameInput) {
-    startYearInput.addEventListener('blur', function() {
-        if (this.value && !sessionNameInput.value) {
-            const year = this.value.slice(-2); // Last 2 digits
-            sessionNameInput.value = `C${year}`;
-        }
-    });
-}
 </script>
 
 {% endblock %}

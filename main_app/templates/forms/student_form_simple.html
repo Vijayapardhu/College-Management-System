@@ -3,18 +3,41 @@
 
 {% block custom_css %}
 <style>
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+        --accent-blue: #3b82f6;
+        --accent-dark: #1e40af;
+        --success: #10b981;
+        --error: #ef4444;
+    }
+
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+        --accent-blue: #3b82f6;
+        --accent-dark: #1e40af;
+    }
+
     .form-header-custom {
-        background: white;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         border-radius: 16px;
         padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
+        color: white;
     }
 
     .form-header-custom h1 {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 700;
-        color: #1f2937;
+        color: white;
         margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
@@ -22,72 +45,102 @@
     }
 
     .form-header-custom p {
-        color: #6b7280;
-        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.9375rem;
         margin: 0;
     }
 
     .form-card {
-        background: white;
+        background: var(--bg-primary);
         border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid var(--border-color);
+    }
+
+    html.dark .form-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
     }
 
     .section-header {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f1f5f9;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--border-color);
     }
 
     .section-icon {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         border-radius: 10px;
         background: linear-gradient(135deg, #3b82f6, #1e40af);
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
+        flex-shrink: 0;
     }
 
     .section-title {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-primary);
         margin: 0;
     }
 
     .field-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 1.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .field-row-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .field-row-3 {
+            grid-template-columns: 1fr;
+        }
     }
 
     .field-row-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1.25rem;
-        margin-bottom: 1.25rem;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .field-row-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .field-item {
+        display: flex;
+        flex-direction: column;
     }
 
     .field-item label {
         display: block;
         font-weight: 600;
-        color: #374151;
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-size: 0.8125rem;
+        margin-bottom: 0.375rem;
     }
 
     .field-item label.required::after {
         content: '*';
-        color: #ef4444;
+        color: var(--error);
         margin-left: 0.25rem;
     }
 
@@ -95,31 +148,37 @@
     .field-item select,
     .field-item textarea {
         width: 100%;
-        padding: 0.75rem 1rem;
-        border: 2px solid #e5e7eb;
+        padding: 0.625rem 0.875rem;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
-        font-size: 0.9375rem;
+        font-size: 0.875rem;
         transition: all 0.2s;
-        background: white;
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     .field-item input:focus,
     .field-item select:focus,
     .field-item textarea:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: var(--accent-blue);
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
+    .field-item textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
     .field-help {
-        font-size: 0.8125rem;
-        color: #6b7280;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
         margin-top: 0.25rem;
     }
 
     .error-message {
-        color: #ef4444;
-        font-size: 0.8125rem;
+        color: var(--error);
+        font-size: 0.75rem;
         margin-top: 0.25rem;
     }
 
@@ -127,16 +186,20 @@
         display: flex;
         justify-content: flex-end;
         gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid #f1f5f9;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid var(--border-color);
+        position: sticky;
+        bottom: 0;
+        background: var(--bg-primary);
+        z-index: 10;
     }
 
     .btn-action {
-        padding: 0.875rem 2rem;
+        padding: 0.75rem 1.75rem;
         border-radius: 10px;
         font-weight: 600;
-        font-size: 1rem;
+        font-size: 0.9375rem;
         border: none;
         cursor: pointer;
         display: inline-flex;
@@ -147,14 +210,14 @@
     }
 
     .btn-cancel {
-        background: white;
-        color: #64748b;
-        border: 2px solid #e5e7eb;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
     }
 
     .btn-cancel:hover {
-        border-color: #cbd5e1;
-        background: #f8fafc;
+        background: var(--border-color);
+        transform: translateY(-2px);
     }
 
     .btn-submit {
@@ -167,15 +230,39 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
     }
+
+    .btn-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .collapsible-section {
+        margin-bottom: 1rem;
+    }
+
+    .collapse-toggle {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .collapse-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .collapse-content.active {
+        max-height: 2000px;
+    }
 </style>
 {% endblock %}
 
 {% block form_icon %}fas fa-user-graduate{% endblock %}
 {% block form_title %}{% if student_id %}Edit Student{% else %}Add New Student{% endif %}{% endblock %}
-{% block form_subtitle %}{{ page_title|default:"Complete all fields to register a new student" }}{% endblock %}
+{% block form_subtitle %}{{ page_title|default:"Complete all required fields to register a new student" }}{% endblock %}
 
 {% block cancel_url %}{% url 'manage_student' %}{% endblock %}
-{% block submit_text %}Save Student{% endblock %}
+{% block submit_text %}{% if student_id %}Update Student{% else %}Save Student{% endif %}{% endblock %}
 
 {% block form_content %}
 
@@ -215,13 +302,49 @@
         <div class="field-item">
             <label class="required">Email Address</label>
             {{ form.email }}
-            <p class="field-help">Used for login and communication</p>
+            <p class="field-help">Used for login</p>
             {% if form.email.errors %}<div class="error-message">{{ form.email.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label class="required">Mobile Number</label>
             {{ form.mobile_number }}
             {% if form.mobile_number.errors %}<div class="error-message">{{ form.mobile_number.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div class="field-row">
+        <div class="field-item">
+            <label>Alternate Mobile</label>
+            {{ form.alternate_mobile|default_if_none:"" }}
+            {% if form.alternate_mobile.errors %}<div class="error-message">{{ form.alternate_mobile.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Aadhaar Number</label>
+            {{ form.aadhaar_number|default_if_none:"" }}
+            {% if form.aadhaar_number.errors %}<div class="error-message">{{ form.aadhaar_number.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Blood Group</label>
+            {{ form.blood_group|default_if_none:"" }}
+            {% if form.blood_group.errors %}<div class="error-message">{{ form.blood_group.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div class="field-row">
+        <div class="field-item">
+            <label>Nationality</label>
+            {{ form.nationality|default_if_none:"" }}
+            {% if form.nationality.errors %}<div class="error-message">{{ form.nationality.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Religion</label>
+            {{ form.religion|default_if_none:"" }}
+            {% if form.religion.errors %}<div class="error-message">{{ form.religion.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Medical Conditions</label>
+            {{ form.medical_conditions|default_if_none:"" }}
+            {% if form.medical_conditions.errors %}<div class="error-message">{{ form.medical_conditions.errors.0 }}</div>{% endif %}
         </div>
     </div>
 </div>
@@ -239,13 +362,12 @@
         <div class="field-item">
             <label class="required">Course/Program</label>
             {{ form.course }}
-            <p class="field-help">Select the program (e.g., B.Tech CSE)</p>
+            <p class="field-help">Select the program</p>
             {% if form.course.errors %}<div class="error-message">{{ form.course.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Department</label>
             {{ form.department }}
-            <p class="field-help">Department the student belongs to</p>
             {% if form.department.errors %}<div class="error-message">{{ form.department.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
@@ -259,19 +381,16 @@
         <div class="field-item">
             <label class="required">Session/Batch</label>
             {{ form.session }}
-            <p class="field-help">e.g., C23 (2023-2026), C24 (2024-2027)</p>
             {% if form.session.errors %}<div class="error-message">{{ form.session.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Current Year</label>
             {{ form.academic_year }}
-            <p class="field-help">1st Year, 2nd Year, 3rd Year</p>
             {% if form.academic_year.errors %}<div class="error-message">{{ form.academic_year.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Section</label>
             {{ form.section }}
-            <p class="field-help">Section A, B, C, D</p>
             {% if form.section.errors %}<div class="error-message">{{ form.section.errors.0 }}</div>{% endif %}
         </div>
     </div>
@@ -280,7 +399,7 @@
         <div class="field-item">
             <label class="required">Roll Number</label>
             {{ form.roll_number }}
-            <p class="field-help">Used for login (e.g., CSE2024001)</p>
+            <p class="field-help">Used for login</p>
             {% if form.roll_number.errors %}<div class="error-message">{{ form.roll_number.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
@@ -289,9 +408,27 @@
             {% if form.admission_number.errors %}<div class="error-message">{{ form.admission_number.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
+            <label>Admission Year</label>
+            {{ form.admission_year|default_if_none:"" }}
+            {% if form.admission_year.errors %}<div class="error-message">{{ form.admission_year.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div class="field-row">
+        <div class="field-item">
             <label>Admission Date</label>
             {{ form.admission_date }}
             {% if form.admission_date.errors %}<div class="error-message">{{ form.admission_date.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Current Semester</label>
+            {{ form.current_semester|default_if_none:"" }}
+            {% if form.current_semester.errors %}<div class="error-message">{{ form.current_semester.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Student Status</label>
+            {{ form.student_status|default_if_none:"" }}
+            {% if form.student_status.errors %}<div class="error-message">{{ form.student_status.errors.0 }}</div>{% endif %}
         </div>
     </div>
 </div>
@@ -305,11 +442,16 @@
         <h3 class="section-title">Parent / Guardian Information</h3>
     </div>
     
-    <div class="field-row-2">
+    <div class="field-row-3">
         <div class="field-item">
             <label>Father's Name</label>
             {{ form.father_name }}
             {% if form.father_name.errors %}<div class="error-message">{{ form.father_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Father's Occupation</label>
+            {{ form.father_occupation|default_if_none:"" }}
+            {% if form.father_occupation.errors %}<div class="error-message">{{ form.father_occupation.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Father's Mobile</label>
@@ -318,11 +460,16 @@
         </div>
     </div>
     
-    <div class="field-row-2">
+    <div class="field-row-3">
         <div class="field-item">
             <label>Mother's Name</label>
             {{ form.mother_name }}
             {% if form.mother_name.errors %}<div class="error-message">{{ form.mother_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Mother's Occupation</label>
+            {{ form.mother_occupation|default_if_none:"" }}
+            {% if form.mother_occupation.errors %}<div class="error-message">{{ form.mother_occupation.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Mother's Mobile</label>
@@ -331,17 +478,200 @@
         </div>
     </div>
     
-    <div class="field-row-2">
+    <div class="field-row-3">
         <div class="field-item">
-            <label>Guardian Name (Optional)</label>
+            <label>Guardian Name</label>
             {{ form.guardian_name }}
             <p class="field-help">If different from parents</p>
             {% if form.guardian_name.errors %}<div class="error-message">{{ form.guardian_name.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
-            <label>Guardian Mobile (Optional)</label>
+            <label>Guardian Relation</label>
+            {{ form.guardian_relation|default_if_none:"" }}
+            {% if form.guardian_relation.errors %}<div class="error-message">{{ form.guardian_relation.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Guardian Mobile</label>
             {{ form.guardian_mobile }}
             {% if form.guardian_mobile.errors %}<div class="error-message">{{ form.guardian_mobile.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Address Information -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3 class="section-title">Address Information</h3>
+    </div>
+    
+    <h4 style="color: var(--text-primary); font-size: 0.9375rem; margin: 1rem 0 0.75rem 0; font-weight: 600;">Permanent Address</h4>
+    <div class="field-row">
+        <div class="field-item" style="grid-column: 1 / -1;">
+            <label>Permanent Address</label>
+            {{ form.permanent_address|default_if_none:"" }}
+            {% if form.permanent_address.errors %}<div class="error-message">{{ form.permanent_address.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    <div class="field-row-3">
+        <div class="field-item">
+            <label>City</label>
+            {{ form.permanent_city|default_if_none:"" }}
+            {% if form.permanent_city.errors %}<div class="error-message">{{ form.permanent_city.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>State</label>
+            {{ form.permanent_state|default_if_none:"" }}
+            {% if form.permanent_state.errors %}<div class="error-message">{{ form.permanent_state.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Pincode</label>
+            {{ form.permanent_pincode|default_if_none:"" }}
+            {% if form.permanent_pincode.errors %}<div class="error-message">{{ form.permanent_pincode.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <h4 style="color: var(--text-primary); font-size: 0.9375rem; margin: 1.25rem 0 0.75rem 0; font-weight: 600;">Current Address</h4>
+    <div class="field-row">
+        <div class="field-item" style="grid-column: 1 / -1;">
+            <label>Current Address</label>
+            {{ form.current_address|default_if_none:"" }}
+            {% if form.current_address.errors %}<div class="error-message">{{ form.current_address.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+    <div class="field-row-3">
+        <div class="field-item">
+            <label>City</label>
+            {{ form.current_city|default_if_none:"" }}
+            {% if form.current_city.errors %}<div class="error-message">{{ form.current_city.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>State</label>
+            {{ form.current_state|default_if_none:"" }}
+            {% if form.current_state.errors %}<div class="error-message">{{ form.current_state.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Pincode</label>
+            {{ form.current_pincode|default_if_none:"" }}
+            {% if form.current_pincode.errors %}<div class="error-message">{{ form.current_pincode.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Category & Additional Info -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <h3 class="section-title">Category & Additional Information</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>Caste Category</label>
+            {{ form.caste_category|default_if_none:"" }}
+            {% if form.caste_category.errors %}<div class="error-message">{{ form.caste_category.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Admission Mode</label>
+            {{ form.admission_mode|default_if_none:"" }}
+            {% if form.admission_mode.errors %}<div class="error-message">{{ form.admission_mode.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Admission Quota</label>
+            {{ form.admission_quota|default_if_none:"" }}
+            {% if form.admission_quota.errors %}<div class="error-message">{{ form.admission_quota.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div class="field-row">
+        <div class="field-item">
+            <label>Mother Tongue</label>
+            {{ form.mother_tongue|default_if_none:"" }}
+            {% if form.mother_tongue.errors %}<div class="error-message">{{ form.mother_tongue.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Hobbies</label>
+            {{ form.hobbies|default_if_none:"" }}
+            {% if form.hobbies.errors %}<div class="error-message">{{ form.hobbies.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Achievements</label>
+            {{ form.achievements|default_if_none:"" }}
+            {% if form.achievements.errors %}<div class="error-message">{{ form.achievements.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div class="field-row">
+        <div class="field-item">
+            <label>Scholarship Applied</label>
+            {{ form.scholarship_applied|default_if_none:"" }}
+            {% if form.scholarship_applied.errors %}<div class="error-message">{{ form.scholarship_applied.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Scholarship Name</label>
+            {{ form.scholarship_name|default_if_none:"" }}
+            {% if form.scholarship_name.errors %}<div class="error-message">{{ form.scholarship_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Annual Family Income</label>
+            {{ form.annual_family_income|default_if_none:"" }}
+            {% if form.annual_family_income.errors %}<div class="error-message">{{ form.annual_family_income.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Documents Upload -->
+<div class="form-card">
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-file-upload"></i>
+        </div>
+        <h3 class="section-title">Documents Upload</h3>
+    </div>
+    
+    <div class="field-row">
+        <div class="field-item">
+            <label>Photo</label>
+            {{ form.photo }}
+            <p class="field-help">Max 2MB, JPG/PNG</p>
+            {% if form.photo.errors %}<div class="error-message">{{ form.photo.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Signature</label>
+            {{ form.signature }}
+            <p class="field-help">Max 2MB, JPG/PNG</p>
+            {% if form.signature.errors %}<div class="error-message">{{ form.signature.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Aadhaar Card</label>
+            {{ form.aadhaar_card }}
+            <p class="field-help">Max 5MB, PDF/Image</p>
+            {% if form.aadhaar_card.errors %}<div class="error-message">{{ form.aadhaar_card.errors.0 }}</div>{% endif %}
+        </div>
+    </div>
+
+    <div class="field-row">
+        <div class="field-item">
+            <label>10th Certificate</label>
+            {{ form.tenth_certificate }}
+            <p class="field-help">Max 5MB, PDF</p>
+            {% if form.tenth_certificate.errors %}<div class="error-message">{{ form.tenth_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Transfer Certificate</label>
+            {{ form.transfer_certificate }}
+            <p class="field-help">Max 5MB, PDF</p>
+            {% if form.transfer_certificate.errors %}<div class="error-message">{{ form.transfer_certificate.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="field-item">
+            <label>Income Certificate</label>
+            {{ form.income_certificate }}
+            <p class="field-help">Max 5MB, PDF</p>
+            {% if form.income_certificate.errors %}<div class="error-message">{{ form.income_certificate.errors.0 }}</div>{% endif %}
         </div>
     </div>
 </div>
@@ -352,32 +682,55 @@
         <i class="fas fa-times"></i>
         Cancel
     </a>
-    <button type="submit" class="btn-action btn-submit">
+    <button type="submit" class="btn-action btn-submit" id="submitButton">
         <i class="fas fa-save"></i>
-        Save Student
+        {% if student_id %}Update Student{% else %}Save Student{% endif %}
     </button>
 </div>
 
+<!-- Progress Indicator -->
+<div style="position: fixed; bottom: 20px; right: 20px; background: var(--bg-primary); padding: 1rem 1.5rem; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: none; border: 2px solid var(--border-color); z-index: 9999;" id="saveProgress">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="spinner-border text-primary" role="status" style="width: 1.5rem; height: 1.5rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span style="color: var(--text-primary); font-weight: 600;">Saving student...</span>
+    </div>
+</div>
+
 <script>
-// Form validation
+// Form validation and progress indicator
 document.querySelector('form').addEventListener('submit', function(e) {
     const requiredFields = document.querySelectorAll('input[required]:not([type="file"]), select[required]');
     let isValid = true;
     let firstError = null;
+    let emptyFields = [];
     
     requiredFields.forEach(field => {
-        if (!field.value) {
+        if (!field.value || field.value.trim() === '') {
             isValid = false;
             field.style.borderColor = '#ef4444';
+            const label = field.closest('.field-item').querySelector('label');
+            if (label) {
+                emptyFields.push(label.textContent.replace('*', '').trim());
+            }
             if (!firstError) firstError = field;
         } else {
-            field.style.borderColor = '#e5e7eb';
+            field.style.borderColor = 'var(--border-color)';
         }
     });
     
     if (!isValid) {
         e.preventDefault();
-        alert('Please fill all required fields marked with *');
+        
+        // Show detailed error message
+        let errorMsg = 'Please fill all required fields marked with *:\n\n';
+        emptyFields.forEach((field, index) => {
+            errorMsg += `${index + 1}. ${field}\n`;
+        });
+        
+        alert(errorMsg);
+        
         if (firstError) {
             firstError.focus();
             firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -386,27 +739,26 @@ document.querySelector('form').addEventListener('submit', function(e) {
     }
     
     // Show loading state
-    const submitBtn = document.querySelector('.btn-submit');
+    const submitBtn = document.getElementById('submitButton');
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
     submitBtn.disabled = true;
+    
+    // Show progress indicator
+    const progressDiv = document.getElementById('saveProgress');
+    if (progressDiv) {
+        progressDiv.style.display = 'block';
+    }
 });
 
 // Clear error styling on input
-document.querySelectorAll('input, select').forEach(field => {
+document.querySelectorAll('input, select, textarea').forEach(field => {
     field.addEventListener('input', function() {
-        this.style.borderColor = '#e5e7eb';
+        this.style.borderColor = 'var(--border-color)';
+    });
+    
+    field.addEventListener('focus', function() {
+        this.style.borderColor = '#3b82f6';
     });
 });
 </script>
-
-{% endif %}
 {% endblock %}
-
-
-
-
-
-
-
-
-

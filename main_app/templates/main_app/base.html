@@ -159,23 +159,8 @@
             font-size: 1.1rem;
         }
 
-        /* Mobile Sidebar Toggle */
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 1100;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        @media (max-width: 768px) {
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
             }
@@ -184,7 +169,7 @@
                 transform: translateX(0);
             }
 
-            .sidebar-toggle {
+            .sidebar-toggle-btn {
                 display: block;
             }
 
@@ -228,6 +213,38 @@
         html.dark .navbar-custom {
             background: #1e293b;
             border-bottom-color: #334155;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sidebar-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all var(--transition-speed);
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        html.dark .sidebar-toggle-btn:hover {
+            background: #334155;
+        }
+
+        @media (min-width: 993px) {
+            .sidebar-toggle-btn {
+                display: none;
+            }
         }
 
         .navbar-title {
@@ -478,11 +495,6 @@
     </style>
 </head>
 <body>
-    <!-- Mobile Sidebar Toggle -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
     <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
@@ -565,7 +577,12 @@
         <div class="main-content">
             <!-- Top Navbar -->
             <nav class="navbar-custom">
-                <h1 class="navbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                <div class="navbar-left">
+                    <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="navbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                </div>
                 
                 <div class="navbar-actions">
                     <!-- Theme Toggle -->

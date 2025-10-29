@@ -1,0 +1,499 @@
+{% extends "main_app/base.html" %}
+{% load static %}
+{% block title %}Start New Chat - EduVision{% endblock %}
+{% block page_title %}Start New Chat{% endblock %}
+
+{% block custom_css %}
+<style>
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #111827;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+    }
+
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+    }
+
+    .start-chat-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background: var(--bg-primary);
+    }
+
+    html.dark .card {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 25px;
+        border-bottom: none;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .card-header h3 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .card-header h3 i {
+        font-size: 2rem;
+    }
+
+    .card-header p {
+        margin: 10px 0 0 0;
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        padding: 35px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .filter-tab {
+        padding: 10px 18px;
+        border: 2px solid var(--border-color);
+        background: var(--bg-primary);
+        color: var(--text-secondary);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-tab:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+        transform: translateY(-2px);
+    }
+
+    .filter-tab.active {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .filter-tab.active:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+    }
+
+    .filter-tab i {
+        font-size: 1rem;
+    }
+
+    .search-box {
+        margin-bottom: 25px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 14px 20px 14px 50px;
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+    .search-box {
+        position: relative;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    .users-list {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .user-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        background: var(--bg-primary);
+        border: 2px solid var(--border-color);
+        transition: all 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--text-primary);
+    }
+
+    .user-item:hover {
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+        border-color: #3b82f6;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+    }
+
+    html.dark .user-item:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 64, 175, 0.15) 100%);
+    }
+
+    .user-avatar {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .user-info {
+        flex: 1;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+        font-size: 1.05rem;
+    }
+
+    .user-email {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .user-badge {
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .badge-admin {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .badge-faculty {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .badge-student {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .user-arrow {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        transition: transform 0.2s;
+    }
+
+    .user-item:hover .user-arrow {
+        transform: translateX(5px);
+        color: #3b82f6;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        color: var(--text-primary);
+        margin-bottom: 10px;
+    }
+
+    /* Scrollbar */
+    .users-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .users-list::-webkit-scrollbar-track {
+        background: var(--bg-secondary);
+        border-radius: 10px;
+    }
+
+    .users-list::-webkit-scrollbar-thumb {
+        background: #3b82f6;
+        border-radius: 10px;
+    }
+
+    .users-list::-webkit-scrollbar-thumb:hover {
+        background: #2563eb;
+    }
+
+    .back-button {
+        margin-bottom: 20px;
+    }
+
+    .btn-back {
+        padding: 12px 24px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="start-chat-container">
+            <div class="back-button">
+                <a href="{% url 'chat_home' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Chats
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <i class="fas fa-comment-dots"></i>
+                        Start New Chat
+                    </h3>
+                    <p>Select a person to start a conversation</p>
+                </div>
+
+                <div class="card-body">
+                    <!-- Filter Tabs -->
+                    <div class="filter-tabs">
+                        <button type="button" class="filter-tab active" onclick="filterByRole('all')" data-role="all">
+                            <i class="fas fa-users"></i>
+                            All
+                        </button>
+                        <button type="button" class="filter-tab" onclick="filterByRole('3')" data-role="3">
+                            <i class="fas fa-user-graduate"></i>
+                            Students
+                        </button>
+                        <button type="button" class="filter-tab" onclick="filterByRole('2')" data-role="2">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            Teachers
+                        </button>
+                        <button type="button" class="filter-tab" onclick="filterByRole('1')" data-role="1">
+                            <i class="fas fa-user-shield"></i>
+                            Admin
+                        </button>
+                        <button type="button" class="filter-tab" onclick="filterByRole('other')" data-role="other">
+                            <i class="fas fa-ellipsis-h"></i>
+                            Others
+                        </button>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="userSearch" placeholder="Search by name or email..." onkeyup="filterUsers()">
+                    </div>
+
+                    <!-- Users List -->
+                    <div class="users-list" id="usersList">
+                        {% for user in available_users %}
+                        <div class="user-item" data-user-type="{{ user.user_type }}" onclick="startChatWithUser({{ user.id }})">
+                            <div class="user-avatar">
+                                {% if user.profile_pic %}
+                                <img src="{{ user.profile_pic.url }}" alt="{{ user.get_full_name }}">
+                                {% else %}
+                                {{ user.first_name|first }}{{ user.last_name|first }}
+                                {% endif %}
+                            </div>
+                            
+                            <div class="user-info">
+                                <div class="user-name">{{ user.get_full_name }}</div>
+                                <div class="user-email">{{ user.email }}</div>
+                            </div>
+                            
+                            {% if user.user_type == '1' %}
+                            <span class="user-badge badge-admin">Admin</span>
+                            {% elif user.user_type == '2' %}
+                            <span class="user-badge badge-faculty">Faculty</span>
+                            {% elif user.user_type == '3' %}
+                            <span class="user-badge badge-student">Student</span>
+                            {% endif %}
+
+                            <i class="fas fa-chevron-right user-arrow"></i>
+                        </div>
+                        {% endfor %}
+
+                        {% if not available_users %}
+                        <div class="empty-state">
+                            <i class="fas fa-users-slash"></i>
+                            <h3>No Users Available</h3>
+                            <p>There are no users available to chat with at the moment.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    // Current filter state
+    let currentRoleFilter = 'all';
+
+    // Filter users by role
+    function filterByRole(role) {
+        currentRoleFilter = role;
+        
+        // Update active tab
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelector(`.filter-tab[data-role="${role}"]`).classList.add('active');
+        
+        // Apply filters
+        applyFilters();
+    }
+
+    // Filter users by search
+    function filterUsers() {
+        applyFilters();
+    }
+
+    // Apply both role and search filters
+    function applyFilters() {
+        const search = document.getElementById('userSearch').value.toLowerCase();
+        const users = document.querySelectorAll('.user-item');
+        let visibleCount = 0;
+        
+        users.forEach(user => {
+            const name = user.querySelector('.user-name').textContent.toLowerCase();
+            const email = user.querySelector('.user-email').textContent.toLowerCase();
+            const userType = user.getAttribute('data-user-type');
+            
+            // Check search filter
+            const matchesSearch = name.includes(search) || email.includes(search);
+            
+            // Check role filter
+            let matchesRole = false;
+            if (currentRoleFilter === 'all') {
+                matchesRole = true;
+            } else if (currentRoleFilter === 'other') {
+                matchesRole = !['1', '2', '3'].includes(userType);
+            } else {
+                matchesRole = userType === currentRoleFilter;
+            }
+            
+            // Show/hide based on both filters
+            if (matchesSearch && matchesRole) {
+                user.style.display = 'flex';
+                visibleCount++;
+            } else {
+                user.style.display = 'none';
+            }
+        });
+        
+        // Update filter tab to show count
+        const activeTab = document.querySelector('.filter-tab.active');
+        const icon = activeTab.querySelector('i').cloneNode(true);
+        const text = activeTab.textContent.trim().split(' ')[0];
+        activeTab.innerHTML = '';
+        activeTab.appendChild(icon);
+        activeTab.appendChild(document.createTextNode(` ${text} (${visibleCount})`));
+    }
+
+    // Initialize filter counts on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        applyFilters();
+    });
+
+    // Start chat with selected user
+    function startChatWithUser(userId) {
+        if (!userId) {
+            alert('Invalid user selected');
+            return;
+        }
+        
+        // Store the selected user ID in localStorage
+        localStorage.setItem('openChatWithUser', userId);
+        
+        // Redirect to chat home
+        window.location.href = "{% url 'chat_home' %}";
+    }
+</script>
+{% endblock %}
+

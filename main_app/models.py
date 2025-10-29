@@ -572,11 +572,27 @@ class LeaveReportStaff(models.Model):
 
 
 class FeedbackStudent(models.Model):
+    CATEGORY_CHOICES = (
+        ('academic', 'Academic'),
+        ('facility', 'Facility'),
+        ('staff', 'Staff'),
+        ('general', 'General'),
+        ('other', 'Other'),
+    )
+    
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     feedback = models.TextField()
-    reply = models.TextField()
+    reply = models.TextField(blank=True, default='')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='general')
+    rating = models.IntegerField(default=0, choices=[(i, i) for i in range(0, 6)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.student.admin.first_name} - {self.category} ({self.rating}★)"
 
 
 class FeedbackStaff(models.Model):
@@ -595,10 +611,27 @@ class NotificationStaff(models.Model):
 
 
 class NotificationStudent(models.Model):
+    NOTIFICATION_TYPES = (
+        ('info', 'Information'),
+        ('success', 'Success'),
+        ('warning', 'Warning'),
+        ('error', 'Error'),
+    )
+    
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, blank=True, null=True)
     message = models.TextField()
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default='info')
+    is_read = models.BooleanField(default=False)
+    is_important = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.student.admin.first_name} - {self.title or self.message[:50]}"
 
 
 class StudentResult(models.Model):

@@ -7,7 +7,7 @@
 <style>
     /* Base Styles */
     .content-wrapper {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         min-height: 100vh;
         padding: 2rem 0;
     }
@@ -32,7 +32,7 @@
     .page-header-modern h1 {
         font-size: 2rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -56,7 +56,7 @@
         margin-bottom: 2rem;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.1);
     }
 
     .message-card:hover {
@@ -65,7 +65,7 @@
     }
 
     .message-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         padding: 2rem;
         color: white;
     }
@@ -149,13 +149,13 @@
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
         overflow: hidden;
-        border: 1px solid rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.1);
     }
 
     .replies-header {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
         padding: 1.5rem 2rem;
-        border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
     }
 
     .replies-header h3 {
@@ -183,7 +183,7 @@
     }
 
     .reply-item.own-reply {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
     }
 
     .reply-header {
@@ -203,7 +203,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -235,13 +235,13 @@
         border-radius: 20px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        border: 1px solid rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.1);
     }
 
     .reply-form-header {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
         padding: 1.5rem 2rem;
-        border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
     }
 
     .reply-form-header h3 {
@@ -283,8 +283,8 @@
 
     .form-control-modern:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #1e40af;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .reply-form-footer {
@@ -313,25 +313,25 @@
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         color: white;
     }
 
     .btn-secondary {
         background: white;
-        color: #667eea;
-        border: 2px solid #667eea;
+        color: #1e40af;
+        border: 2px solid #1e40af;
     }
 
     .btn-secondary:hover {
-        background: #667eea;
+        background: #1e40af;
         color: white;
     }
 
@@ -533,7 +533,7 @@
                     </div>
                     <span class="reply-sender-name">
                         {{ reply.sender.first_name }} {{ reply.sender.last_name }}
-                        {% if reply.sender == request.user %}<span style="color: #667eea;">(You)</span>{% endif %}
+                        {% if reply.sender == request.user %}<span style="color: #1e40af;">(You)</span>{% endif %}
                     </span>
                 </div>
                 <span class="reply-time">

@@ -1,0 +1,730 @@
+{% extends "main_app/base.html" %}
+{% load static %}
+{% block title %}Custom Report Builder - EduVision{% endblock %}
+{% block page_title %}Custom Report Builder{% endblock %}
+
+{% block custom_css %}
+<style>
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #111827;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+    }
+
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+    }
+
+    .report-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        opacity: 0.95;
+        font-size: 1.05rem;
+    }
+
+    .back-button {
+        margin-bottom: 20px;
+    }
+
+    .btn-back {
+        padding: 12px 24px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+    }
+
+    .filters-card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+
+    html.dark .filters-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .filters-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .filters-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-generate {
+        padding: 14px 30px;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .btn-generate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+    }
+
+    .btn-export {
+        padding: 14px 30px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-export:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+    }
+
+    .results-card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+
+    html.dark .results-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .results-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .results-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .results-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: var(--bg-secondary);
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 2px solid var(--border-color);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3b82f6;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        color: var(--text-primary);
+        margin-bottom: 10px;
+    }
+
+    .report-types {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .report-type-tab {
+        padding: 12px 24px;
+        border: 2px solid var(--border-color);
+        background: var(--bg-primary);
+        color: var(--text-secondary);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .report-type-tab:hover {
+        border-color: #3b82f6;
+        color: #3b82f6;
+        transform: translateY(-2px);
+    }
+
+    .report-type-tab.active {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    /* Data Table Styles */
+    .data-table-wrapper {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        margin-top: 2rem;
+    }
+
+    html.dark .data-table-wrapper {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table thead tr {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    }
+
+    .data-table thead th {
+        padding: 16px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: white;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.2s;
+    }
+
+    .data-table tbody tr:hover {
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+    }
+
+    html.dark .data-table tbody tr:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%);
+    }
+
+    .data-table tbody td {
+        padding: 14px 12px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+    }
+
+    .data-table tbody td.secondary {
+        color: var(--text-secondary);
+    }
+
+    .data-table tbody td.primary {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-badge.active {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: #065f46;
+    }
+
+    .status-badge.inactive {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+    }
+
+    .table-info {
+        text-align: center;
+        color: var(--text-secondary);
+        margin-top: 0;
+        padding: 1rem;
+        font-size: 0.9rem;
+        background: var(--bg-secondary);
+    }
+
+    .table-info i {
+        color: #3b82f6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="report-container">
+            <div class="back-button">
+                <a href="{% url 'report_builder' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Reports
+                </a>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-sliders-h me-3"></i>Report Builder</h1>
+                <p>Create detailed reports with advanced filters and export options</p>
+            </div>
+
+            <!-- Report Type Selector -->
+            <div class="report-types">
+                <a href="?report_type=attendance" class="report-type-tab {% if report_type == 'attendance' %}active{% endif %}">
+                    <i class="fas fa-calendar-check"></i>
+                    Attendance
+                </a>
+                <a href="?report_type=performance" class="report-type-tab {% if report_type == 'performance' %}active{% endif %}">
+                    <i class="fas fa-chart-line"></i>
+                    Performance
+                </a>
+                <a href="?report_type=financial" class="report-type-tab {% if report_type == 'financial' %}active{% endif %}">
+                    <i class="fas fa-dollar-sign"></i>
+                    Financial
+                </a>
+                <a href="?report_type=student_list" class="report-type-tab {% if report_type == 'student_list' %}active{% endif %}">
+                    <i class="fas fa-user-graduate"></i>
+                    Student List
+                </a>
+                <a href="?report_type=staff_list" class="report-type-tab {% if report_type == 'staff_list' %}active{% endif %}">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Staff List
+                </a>
+            </div>
+
+            <!-- Filters Card -->
+            <div class="filters-card">
+                <div class="filters-header">
+                    <i class="fas fa-filter" style="color: #3b82f6; font-size: 1.5rem;"></i>
+                    <h2>Report Filters</h2>
+                </div>
+
+                <form method="GET" id="reportForm">
+                    <input type="hidden" name="report_type" value="{{ report_type }}">
+                    <input type="hidden" name="generate" value="1">
+
+                    <div class="filter-grid">
+                        {% if report_type == 'attendance' or report_type == 'performance' or report_type == 'student_list' %}
+                        <div class="form-group">
+                            <label for="course" class="form-label">
+                                <i class="fas fa-book me-2"></i>Course
+                            </label>
+                            <select name="course" id="course" class="form-select">
+                                <option value="">All Courses</option>
+                                {% for course in courses %}
+                                <option value="{{ course.id }}" {% if filters.course == course.id|stringformat:"s" %}selected{% endif %}>{{ course.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        {% if report_type == 'attendance' or report_type == 'performance' or report_type == 'student_list' or report_type == 'staff_list' %}
+                        <div class="form-group">
+                            <label for="department" class="form-label">
+                                <i class="fas fa-building me-2"></i>Department
+                            </label>
+                            <select name="department" id="department" class="form-select">
+                                <option value="">All Departments</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}" {% if filters.department == dept.id|stringformat:"s" %}selected{% endif %}>{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        {% if report_type == 'attendance' or report_type == 'financial' %}
+                        <div class="form-group">
+                            <label for="start_date" class="form-label">
+                                <i class="fas fa-calendar me-2"></i>Start Date
+                            </label>
+                            <input type="date" name="start_date" id="start_date" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="end_date" class="form-label">
+                                <i class="fas fa-calendar me-2"></i>End Date
+                            </label>
+                            <input type="date" name="end_date" id="end_date" class="form-control">
+                        </div>
+                        {% endif %}
+
+                        {% if report_type == 'student_list' %}
+                        <div class="form-group">
+                            <label for="session" class="form-label">
+                                <i class="fas fa-calendar-alt me-2"></i>Session
+                            </label>
+                            <select name="session" id="session" class="form-select">
+                                <option value="">All Sessions</option>
+                                {% for session in sessions %}
+                                <option value="{{ session.id }}">{{ session.session_start_year }} - {{ session.session_end_year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-generate">
+                            <i class="fas fa-play"></i>
+                            Generate Report
+                        </button>
+                        {% if report_data %}
+                        <button type="button" class="btn-export" onclick="exportReport('pdf')">
+                            <i class="fas fa-file-pdf"></i>
+                            Export PDF
+                        </button>
+                        <button type="button" class="btn-export" onclick="exportReport('excel')">
+                            <i class="fas fa-file-excel"></i>
+                            Export Excel
+                        </button>
+                        <button type="button" class="btn-export" onclick="exportReport('csv')">
+                            <i class="fas fa-file-csv"></i>
+                            Export CSV
+                        </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results Card -->
+            {% if report_data %}
+            <div class="results-card">
+                <div class="results-header">
+                    <h2><i class="fas fa-chart-bar me-2"></i>{{ report_data.type }}</h2>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">
+                        <i class="fas fa-clock me-1"></i>
+                        Generated at {{ now|date:"M d, Y H:i" }}
+                    </span>
+                </div>
+
+                <div class="results-stats">
+                    {% if report_type == 'attendance' %}
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.total_records }}</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #10b981;">{{ report_data.present }}</div>
+                        <div class="stat-label">Present</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #ef4444;">{{ report_data.absent }}</div>
+                        <div class="stat-label">Absent</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.percentage }}%</div>
+                        <div class="stat-label">Attendance Rate</div>
+                    </div>
+                    
+                    {% elif report_type == 'performance' %}
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.total_results }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.avg_marks }}</div>
+                        <div class="stat-label">Average Marks</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.pass_rate }}%</div>
+                        <div class="stat-label">Pass Rate</div>
+                    </div>
+                    
+                    {% elif report_type == 'financial' %}
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #10b981;">₹{{ report_data.collected|floatformat:2 }}</div>
+                        <div class="stat-label">Collected</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #ef4444;">₹{{ report_data.pending|floatformat:2 }}</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">₹{{ report_data.total|floatformat:2 }}</div>
+                        <div class="stat-label">Total Amount</div>
+                    </div>
+                    
+                    {% elif report_type == 'student_list' %}
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.total_students }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #10b981;">{{ report_data.active_students }}</div>
+                        <div class="stat-label">Active Students</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #ef4444;">{{ report_data.inactive_students }}</div>
+                        <div class="stat-label">Inactive Students</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: #8b5cf6;">{{ report_data.courses_breakdown|length }}</div>
+                        <div class="stat-label">Courses</div>
+                    </div>
+                    
+                    {% elif report_type == 'staff_list' %}
+                    <div class="stat-box">
+                        <div class="stat-value">{{ report_data.total_staff }}</div>
+                        <div class="stat-label">Total Faculty</div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Student List Table -->
+                {% if report_type == 'student_list' and report_data.students %}
+                <div class="data-table-wrapper">
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Name</th>
+                                    <th>Course</th>
+                                    <th>Session</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in report_data.students %}
+                                <tr>
+                                    <td class="primary">{{ student.roll_number }}</td>
+                                    <td class="primary">{{ student.admin.get_full_name }}</td>
+                                    <td class="secondary">{{ student.course.name|default:"-" }}</td>
+                                    <td class="secondary">
+                                        {% if student.session and student.session.session_start_year and student.session.session_end_year %}
+                                            {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td class="secondary">{{ student.admin.email }}</td>
+                                    <td class="secondary">{{ student.mobile_number|default:"-" }}</td>
+                                    <td>
+                                        <span class="status-badge {% if student.student_status == 'active' %}active{% else %}inactive{% endif %}">
+                                            {{ student.student_status|title|default:"Active" }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if report_data.total_students > 100 %}
+                    <div class="table-info">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Showing first 100 students. Export to view all {{ report_data.total_students }} students.
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                <!-- Staff List Table -->
+                {% if report_type == 'staff_list' and report_data.staff_members %}
+                <div class="data-table-wrapper">
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for staff in report_data.staff_members %}
+                                <tr>
+                                    <td class="primary">{{ staff.employee_id|default:"-" }}</td>
+                                    <td class="primary">{{ staff.admin.get_full_name }}</td>
+                                    <td class="secondary">{{ staff.department.name|default:"-" }}</td>
+                                    <td class="secondary">{{ staff.admin.email }}</td>
+                                    <td class="secondary">{{ staff.mobile_number|default:"-" }}</td>
+                                    <td>
+                                        <span class="status-badge active">
+                                            Active
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="results-card">
+                <div class="empty-state">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>No Report Generated Yet</h3>
+                    <p>Select your filters above and click "Generate Report" to view results</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    function exportReport(format) {
+        const form = document.getElementById('reportForm');
+        const formData = new FormData(form);
+        
+        // Build query string
+        const params = new URLSearchParams(formData);
+        params.append('export', format);
+        
+        // Open in new tab
+        window.open(`{% url 'export_report' %}?${params.toString()}`, '_blank');
+    }
+
+    // Set today as max date for date inputs
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+        input.setAttribute('max', today);
+    });
+</script>
+{% endblock %}
+

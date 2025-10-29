@@ -1,197 +1,562 @@
 {% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{ page_title|default:"Page" }}{% endblock %}
+{% block title %}Student Details - {{ student.admin.get_full_name }}{% endblock %}
+{% block page_title %}Student Details{% endblock %}
 
-{% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="card-professional">
-            <div class="card-header-professional">
-                <h3><i class="fas fa-file-alt me-2"></i>{{ page_title|default:"Content" }}</h3>
-            </div>
-            <div style="padding: 20px;">
-                <!-- Content goes here -->
-                <p>This template needs to be completed with proper content.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
+{% block custom_css %}
 <style>
-.card-professional {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-.card-header-professional {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e5e5e5;
-    padding: 15px 20px;
-}
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --text-primary: #1f2937;
+        --text-secondary: #6b7280;
+        --border-color: #e5e7eb;
+    }
+
+    html.dark {
+        --bg-primary: #1e293b;
+        --bg-secondary: #0f172a;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #334155;
+    }
+
+    .detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    .back-button {
+        margin-bottom: 20px;
+    }
+
+    .btn-back {
+        padding: 12px 24px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background: var(--border-color);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .profile-content {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2rem;
+        position: relative;
+        z-index: 1;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .profile-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+    }
+
+    .profile-avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        font-size: 4rem;
+        font-weight: 700;
+        color: white;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-info h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-email {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin-bottom: 1rem;
+    }
+
+    .profile-badges {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .profile-badge {
+        background: rgba(255, 255, 255, 0.25);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-card {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid var(--border-color);
+    }
+
+    html.dark .info-card {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .info-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .info-card-title i {
+        color: #3b82f6;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .btn-edit-full {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .btn-edit-full:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+    }
+
+    .btn-delete-full {
+        background: var(--bg-secondary);
+        color: #dc2626;
+        border: 2px solid #dc2626;
+    }
+
+    .btn-delete-full:hover {
+        background: #dc2626;
+        color: white;
+    }
 </style>
 {% endblock %}
 
-<!-- Student Detail -->
-<div class="space-y-6">
-    <!-- Student Profile Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-8 text-white">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-6">
-                <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
-                    {% if student.admin.profile_pic %}
-                        <img src="{{ student.admin.profile_pic.url }}" alt="{{ student.admin.first_name }}" class="w-24 h-24 rounded-2xl object-cover">
-                    {% else %}
-                        <span class="text-4xl font-bold">
-                            {{ student.admin.first_name|first|default:"S"|upper }}{{ student.admin.last_name|first|default:"T"|upper }}
-                        </span>
-                    {% endif %}
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">{{ student.admin.first_name|default:"Student" }} {{ student.admin.last_name|default:"Name" }}</h1>
-                    <p class="text-blue-100 mb-3">{{ student.admin.email|default:"student@example.com" }}</p>
-                    <div class="flex items-center space-x-4 text-sm">
-                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
-                            <i class="fas fa-id-card mr-1"></i> Roll: {{ student.roll_number|default:"Not Assigned" }}
-                        </span>
-                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
-                            <i class="fas fa-graduation-cap mr-1"></i> {{ student.course.name|default:"No Course" }}
-                        </span>
-                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
-                            <i class="fas fa-calendar mr-1"></i> {{ student.session_year_id.session_start_year|default:"2024" }}-{{ student.session_year_id.session_end_year|default:"2025" }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="flex flex-col space-y-2">
-                <a href="{% url 'edit_student' student.id %}" class="btn bg-white text-blue-600 hover:bg-blue-50">
-                    <i class="fas fa-edit mr-2"></i>Edit Profile
+{% block content %}
+<div class="content-wrapper">
+    <section class="content">
+        <div class="detail-container">
+            <div class="back-button">
+                <a href="{% url 'manage_student' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Students
                 </a>
-                <button onclick="exportStudentData()" class="btn bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30">
-                    <i class="fas fa-download mr-2"></i>Export Data
-                </button>
             </div>
-        </div>
-    </div>
 
-    <!-- Academic Performance -->
-    <div class="grid md:grid-cols-4 gap-6">
-        <div class="metric-card metric-card-success">
-            <div class="metric-icon metric-icon-success">
-                <i class="fas fa-percentage"></i>
-            </div>
-            <div class="metric-value">{{ attendance_percentage|default:"85" }}%</div>
-            <div class="metric-label">Attendance</div>
-        </div>
-
-        <div class="metric-card metric-card-primary">
-            <div class="metric-icon metric-icon-primary">
-                <i class="fas fa-star"></i>
-            </div>
-            <div class="metric-value">{{ average_marks|default:"78.5" }}</div>
-            <div class="metric-label">Average Marks</div>
-        </div>
-
-        <div class="metric-card metric-card-info">
-            <div class="metric-icon metric-icon-info">
-                <i class="fas fa-tasks"></i>
-            </div>
-            <div class="metric-value">{{ assignments_completed|default:"12" }}/{{ total_assignments|default:"15" }}</div>
-            <div class="metric-label">Assignments</div>
-        </div>
-
-        <div class="metric-card metric-card-warning">
-            <div class="metric-icon metric-icon-warning">
-                <i class="fas fa-coins"></i>
-            </div>
-            <div class="metric-value">₹{{ fees_pending|default:"5000" }}</div>
-            <div class="metric-label">Fees Pending</div>
-        </div>
-    </div>
-
-    <!-- Tabs -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div class="border-b border-gray-200">
-            <nav class="flex space-x-4 p-4">
-                <button class="tab-item tab-item-active" onclick="showTab('overview')">Overview</button>
-                <button class="tab-item" onclick="showTab('attendance')">Attendance</button>
-                <button class="tab-item" onclick="showTab('results')">Results</button>
-                <button class="tab-item" onclick="showTab('fees')">Fees</button>
-                <button class="tab-item" onclick="showTab('activities')">Activities</button>
-            </nav>
-        </div>
-
-        <!-- Tab Content -->
-        <div class="p-6">
-            <div id="tab-overview">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Student Overview</h3>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-3">Personal Information</h4>
-                        <dl class="space-y-2">
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Full Name</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.admin.first_name }} {{ student.admin.last_name }}</dd>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Email</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.admin.email }}</dd>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Gender</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.gender|default:"Not Specified" }}</dd>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Date of Birth</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.date_of_birth|default:"Not Specified" }}</dd>
-                            </div>
-                        </dl>
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-content">
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar">
+                            {% if student.admin.profile_pic %}
+                            <img src="{{ student.admin.profile_pic.url }}" alt="{{ student.admin.get_full_name }}">
+                            {% else %}
+                            {{ student.admin.first_name|first }}{{ student.admin.last_name|first }}
+                            {% endif %}
+                        </div>
                     </div>
-                    <div>
-                        <h4 class="font-semibold text-gray-700 mb-3">Academic Information</h4>
-                        <dl class="space-y-2">
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Course</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.course.name }}</dd>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Roll Number</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.roll_number }}</dd>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Session</dt>
-                                <dd class="font-semibold text-gray-900">{{ student.session_year_id.session_start_year }}-{{ student.session_year_id.session_end_year }}</dd>
-                            </div>
-                            <div class="flex justify-between py-2 border-b border-gray-100">
-                                <dt class="text-gray-600">Status</dt>
-                                <dd><span class="badge badge-success">Active</span></dd>
-                            </div>
-                        </dl>
+                    
+                    <div class="profile-info">
+                        <h1>{{ student.admin.get_full_name }}</h1>
+                        <p class="profile-email">{{ student.admin.email }}</p>
+                        <div class="profile-badges">
+                            <span class="profile-badge">
+                                <i class="fas fa-id-card"></i>
+                                Roll: {{ student.roll_number }}
+                            </span>
+                            {% if student.course %}
+                            <span class="profile-badge">
+                                <i class="fas fa-graduation-cap"></i>
+                                {{ student.course.name }}
+                            </span>
+                            {% endif %}
+                            {% if student.session %}
+                            <span class="profile-badge">
+                                <i class="fas fa-calendar-alt"></i>
+                                {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                            </span>
+                            {% endif %}
+                            {% if student.current_semester %}
+                            <span class="profile-badge">
+                                <i class="fas fa-book-reader"></i>
+                                Semester {{ student.current_semester }}
+                            </span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Information Grid -->
+            <div class="info-grid">
+                <!-- Personal Information -->
+                <div class="info-card">
+                    <h3 class="info-card-title">
+                        <i class="fas fa-user-circle"></i>
+                        Personal Information
+                    </h3>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Full Name</span>
+                            <span class="detail-value">{{ student.admin.get_full_name }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value">{{ student.admin.email }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Date of Birth</span>
+                            <span class="detail-value">{{ student.date_of_birth|date:"M d, Y"|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Mobile Number</span>
+                            <span class="detail-value">{{ student.mobile_number|default:"-" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Blood Group</span>
+                            <span class="detail-value">{{ student.blood_group|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Nationality</span>
+                            <span class="detail-value">{{ student.nationality|default:"-" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="info-card">
+                    <h3 class="info-card-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Academic Information
+                    </h3>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Roll Number</span>
+                            <span class="detail-value">{{ student.roll_number }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Course</span>
+                            <span class="detail-value">{{ student.course.name|default:"-" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Session</span>
+                            <span class="detail-value">
+                                {% if student.session %}
+                                    {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Current Semester</span>
+                            <span class="detail-value">Semester {{ student.current_semester|default:"-" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Department</span>
+                            <span class="detail-value">{{ student.department.name|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Academic Year</span>
+                            <span class="detail-value">{{ student.academic_year.name|default:"-" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parent Information -->
+            <div class="info-card">
+                <h3 class="info-card-title">
+                    <i class="fas fa-users"></i>
+                    Parent / Guardian Information
+                </h3>
+                
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Father's Name</span>
+                        <span class="detail-value">{{ student.father_name|default:"-" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Father's Mobile</span>
+                        <span class="detail-value">{{ student.father_mobile|default:"-" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Father's Occupation</span>
+                        <span class="detail-value">{{ student.father_occupation|default:"-" }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Mother's Name</span>
+                        <span class="detail-value">{{ student.mother_name|default:"-" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mother's Mobile</span>
+                        <span class="detail-value">{{ student.mother_mobile|default:"-" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mother's Occupation</span>
+                        <span class="detail-value">{{ student.mother_occupation|default:"-" }}</span>
+                    </div>
+                </div>
+                
+                {% if student.guardian_name %}
+                <div class="detail-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Guardian Name</span>
+                        <span class="detail-value">{{ student.guardian_name }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Guardian Mobile</span>
+                        <span class="detail-value">{{ student.guardian_mobile|default:"-" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Guardian Relation</span>
+                        <span class="detail-value">{{ student.guardian_relation|default:"-" }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+<br>
+            <!-- Contact Information -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3 class="info-card-title">
+                        <i class="fas fa-address-card"></i>
+                        Contact Information
+                    </h3>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Mobile</span>
+                            <span class="detail-value">{{ student.mobile_number|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Alternate Mobile</span>
+                            <span class="detail-value">{{ student.alternate_mobile|default:"-" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-label">Current Address</span>
+                        <span class="detail-value">{{ student.current_address|default:"-" }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">City</span>
+                            <span class="detail-value">{{ student.current_city|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">State</span>
+                            <span class="detail-value">{{ student.current_state|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Pincode</span>
+                            <span class="detail-value">{{ student.current_pincode|default:"-" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admission Information -->
+                <div class="info-card">
+                    <h3 class="info-card-title">
+                        <i class="fas fa-file-signature"></i>
+                        Admission Details
+                    </h3>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Admission Number</span>
+                            <span class="detail-value">{{ student.admission_number|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Admission Date</span>
+                            <span class="detail-value">{{ student.admission_date|date:"M d, Y"|default:"-" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Admission Mode</span>
+                            <span class="detail-value">{{ student.admission_mode|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Admission Quota</span>
+                            <span class="detail-value">{{ student.admission_quota|default:"-" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Caste Category</span>
+                            <span class="detail-value">{{ student.get_caste_category_display|default:"-" }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value">
+                                <span style="padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; {% if student.student_status == 'active' %}background: #d1fae5; color: #065f46;{% else %}background: #fee2e2; color: #991b1b;{% endif %}">
+                                    {{ student.student_status|title|default:"Active" }}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'edit_student' student.id %}" class="btn-action btn-edit-full">
+                    <i class="fas fa-edit"></i>
+                    Edit Student
+                </a>
+                <a href="{% url 'manage_student' %}" class="btn-action btn-delete-full">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Students
+                </a>
+            </div>
         </div>
-    </div>
+    </section>
 </div>
-{% endblock content %}
-
-{% block custom_js %}
-<script>
-function showTab(tabName) {
-    // Update active tab
-    document.querySelectorAll('.tab-item').forEach(tab => {
-        tab.classList.remove('tab-item-active');
-    });
-    event.target.classList.add('tab-item-active');
-    
-    // Show/hide content
-    console.log('Showing tab:', tabName);
-}
-
-function exportStudentData() {
-    alert('Exporting student data...');
-}
-</script>
-{% endblock custom_js %}
-
-
+{% endblock %}

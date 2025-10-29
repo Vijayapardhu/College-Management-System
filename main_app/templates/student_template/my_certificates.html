@@ -703,7 +703,7 @@
             <p class="action-subtitle">Add your personal certificates</p>
         </a>
 
-        <a href="{% url 'request_new_certificate' %}" class="action-card">
+        <a href="{% url 'student_request_certificate' %}" class="action-card">
             <div class="action-icon">
                 <i class="fas fa-file-signature"></i>
         </div>
@@ -729,19 +729,15 @@
                 
                 <div class="cert-header">
                     <div>
-                        <h3 class="cert-title">{{ cert.name|default:cert.certificate_type|title }}</h3>
+                        <h3 class="cert-title">{{ cert.certificate_title }}</h3>
                         <p class="cert-type">
                             <i class="fas fa-tag"></i>
-                            <span>{{ cert.certificate_type|title }}</span>
+                            <span>{{ cert.get_certificate_type_display }}</span>
                         </p>
                     </div>
-                    <span class="status-badge {{ cert.status }}">
-                        {% if cert.status == 'verified' %}
-                            <i class="fas fa-check"></i>
-                                    {% else %}
-                            <i class="fas fa-clock"></i>
-                        {% endif %}
-                        {{ cert.status|upper }}
+                    <span class="status-badge verified">
+                        <i class="fas fa-check"></i>
+                        Uploaded
                     </span>
                 </div>
 
@@ -749,11 +745,15 @@
                 <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
                     <i class="fas fa-calendar"></i> Issued: {{ cert.issue_date|date:"M d, Y" }}
                 </p>
-                                    {% endif %}
+                {% endif %}
 
-                {% if cert.file %}
+                <p style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 1rem;">
+                    <i class="fas fa-upload"></i> Uploaded: {{ cert.uploaded_at|date:"M d, Y" }}
+                </p>
+
+                {% if cert.certificate_file %}
                 <div class="cert-actions">
-                    <a href="{{ cert.file.url }}" class="btn-download" target="_blank">
+                    <a href="{{ cert.certificate_file.url }}" class="btn-download" target="_blank">
                         <i class="fas fa-download"></i>
                         Download
                     </a>
@@ -761,7 +761,7 @@
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
-                                    {% endif %}
+                {% endif %}
             </div>
                             {% endfor %}
                 </div>
@@ -791,14 +791,14 @@
             </button>
         </div>
 
-        <form method="POST" action="{% url 'upload_certificate' %}" enctype="multipart/form-data" id="uploadForm">
+        <form method="POST" action="{% url 'student_request_certificate' %}" enctype="multipart/form-data" id="uploadForm">
             {% csrf_token %}
             
             <div class="form-group">
                 <label class="form-label">
                     Certificate Name <span class="required">*</span>
                 </label>
-                <input type="text" name="name" class="form-control" placeholder="e.g., B.Tech Degree Certificate" required>
+                <input type="text" name="certificate_title" class="form-control" placeholder="e.g., B.Tech Degree Certificate" required>
             </div>
 
             <div class="form-group">
@@ -828,7 +828,7 @@
                     Upload File <span class="required">*</span>
                 </label>
                 <div class="file-upload">
-                    <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <input type="file" name="certificate_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
                     <p class="file-hint">
                         <i class="fas fa-info-circle"></i>
                         Accepted formats: PDF, JPG, PNG (Max 5MB)

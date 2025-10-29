@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from django.template import loader; t = loader.get_template('student_template/home_content.html'); print('Template loaded successfully')
+                                            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 12, in get_template
+    engines = _engine_list(using)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader.py", line 66, in _engine_list
+    return engines.all() if using is None else [engines[using]]
+           ~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\utils.py", line 94, in all
+    return [self[alias] for alias in self]
+                                     ^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\utils.py", line 91, in __iter__
+    return iter(self.templates)
+                ^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\utils.py", line 28, in templates
+    self._templates = settings.TEMPLATES
+                      ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\conf\__init__.py", line 102, in __getattr__
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\conf\__init__.py", line 82, in _setup
+    raise ImproperlyConfigured(
+    ...<4 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: Requested setting TEMPLATES, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.
