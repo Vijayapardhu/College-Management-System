@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: eduvision-college-management
+    name: eduvision
     env: python
-    buildCommand: chmod +x build.sh && ./build.sh || pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: gunicorn student_management_system.wsgi:application
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    startCommand: gunicorn student_management_system.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -13,16 +13,9 @@ services:
         value: False
       - key: SECRET_KEY
         generateValue: true
+      - key: ALLOWED_HOSTS
+        value: eduvision.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://eduvision.onrender.com
     plan: free
-
-databases:
-  - name: eduvision-postgres
-    databaseName: eduvision
-    user: eduvision_user
-    plan: free
-
-disks:
-  - name: eduvision-media-disk
-    mountPath: /opt/render/project/src/media
-    sizeGB: 1
 
