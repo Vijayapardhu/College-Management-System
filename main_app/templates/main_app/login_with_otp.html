@@ -123,6 +123,130 @@
             color: #1f2937;
             font-family: 'Courier New', monospace;
         }
+        
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 576px) {
+            .auth-container {
+                padding: 15px 10px;
+            }
+            
+            .auth-card {
+                padding: 25px 20px;
+                border-radius: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .otp-boxes {
+                gap: 6px;
+                margin: 15px 0;
+                flex-wrap: nowrap;
+            }
+            
+            .otp-box {
+                width: 40px;
+                height: 50px;
+                font-size: 20px;
+                border-radius: 8px;
+            }
+            
+            .otp-boxes span {
+                font-size: 1.5rem !important;
+                margin: 0 2px;
+            }
+            
+            .timer {
+                font-size: 1.2rem;
+                margin: 10px 0;
+            }
+            
+            .otp-display {
+                padding: 15px 10px;
+                margin: 10px 0;
+            }
+            
+            .otp-display-code {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .btn-primary {
+                padding: 12px 10px;
+                font-size: 0.95rem;
+            }
+            
+            h3 {
+                font-size: 1.5rem !important;
+            }
+            
+            .form-control {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Extra small devices (very small phones) */
+        @media (max-width: 360px) {
+            .auth-container {
+                padding: 10px 5px;
+            }
+            
+            .auth-card {
+                padding: 20px 15px;
+            }
+            
+            .logo h1 {
+                font-size: 1.75rem;
+            }
+            
+            .otp-boxes {
+                gap: 4px;
+            }
+            
+            .otp-box {
+                width: 36px;
+                height: 46px;
+                font-size: 18px;
+            }
+            
+            .otp-boxes span {
+                font-size: 1.2rem !important;
+                margin: 0;
+            }
+            
+            .otp-display-code {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .timer {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Landscape mobile phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                min-height: auto;
+                padding: 20px 0;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            
+            .auth-card {
+                padding: 20px;
+            }
+            
+            .otp-boxes {
+                margin: 10px 0;
+            }
+        }
     </style>
 </head>
 <body>

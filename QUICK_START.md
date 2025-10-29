@@ -27,7 +27,7 @@ git push origin main
 1. Dashboard → **New +** → **Web Service**
 2. Connect your GitHub repo
 3. Settings:
-   - **Name**: `eduvision-cms`
+   - **Name**: `eduvision-web`
    - **Build Command**: 
      ```
      pip install -r requirements.txt && python manage.py collectstatic --noinput
@@ -43,8 +43,8 @@ Click **Environment** tab and add:
 ```
 DEBUG=False
 SECRET_KEY=(auto-generated - leave as is)
-ALLOWED_HOSTS=your-app-name.onrender.com
-CSRF_TRUSTED_ORIGINS=https://your-app-name.onrender.com
+ALLOWED_HOSTS=eduvision-web.onrender.com
+CSRF_TRUSTED_ORIGINS=https://eduvision-web.onrender.com
 ```
 
 ## Step 7: Link Database
@@ -68,7 +68,7 @@ python manage.py createsuperuser
 ```
 
 ## ✅ Done!
-Access your app at: `https://your-app-name.onrender.com`
+Access your app at: `https://eduvision-web.onrender.com`
 
 ---
 
