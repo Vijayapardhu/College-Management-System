@@ -198,9 +198,8 @@
     <div class="field-row">
         <div class="field-item">
             <label class="required">Date of Birth</label>
-            <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" 
-                   value="{{ form.date_of_birth.value|date:'Y-m-d'|default:'' }}" required>
-            <p class="field-help">Select birth date</p>
+            {{ form.date_of_birth }}
+            <p class="field-help">Select birth date (required)</p>
             {% if form.date_of_birth.errors %}<div class="error-message">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
@@ -296,15 +295,13 @@
         </div>
         <div class="field-item">
             <label>Date of Joining</label>
-            <input type="date" name="date_of_joining" id="id_date_of_joining" class="form-control" 
-                   value="{{ form.date_of_joining.value|date:'Y-m-d'|default:'' }}">
+            {{ form.date_of_joining }}
             <p class="field-help">Select joining date</p>
             {% if form.date_of_joining.errors %}<div class="error-message">{{ form.date_of_joining.errors.0 }}</div>{% endif %}
         </div>
         <div class="field-item">
             <label>Date of Retirement</label>
-            <input type="date" name="date_of_retirement" id="id_date_of_retirement" class="form-control" 
-                   value="{{ form.date_of_retirement.value|date:'Y-m-d'|default:'' }}">
+            {{ form.date_of_retirement }}
             <p class="field-help">Expected retirement date</p>
             {% if form.date_of_retirement.errors %}<div class="error-message">{{ form.date_of_retirement.errors.0 }}</div>{% endif %}
         </div>

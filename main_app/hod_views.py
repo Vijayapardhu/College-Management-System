@@ -539,28 +539,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -588,11 +580,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -6440,28 +6439,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -6489,11 +6480,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -10314,28 +10312,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -10363,11 +10353,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -14188,28 +14185,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -14237,11 +14226,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -18062,28 +18058,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -18111,11 +18099,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -21936,28 +21931,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -21985,11 +21972,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -25810,28 +25804,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -25859,11 +25845,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -29684,28 +29677,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -29733,11 +29718,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -33558,28 +33550,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -33607,11 +33591,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -37432,28 +37423,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -37481,11 +37464,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
@@ -41306,28 +41296,20 @@ def edit_staff(request, staff_id):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            address = form.cleaned_data.get('address')
-            username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             gender = form.cleaned_data.get('gender')
-            password = form.cleaned_data.get('password') or None
             course = form.cleaned_data.get('course')
-            passport = request.FILES.get('profile_pic') or None
             try:
+                # Update CustomUser fields
                 user = CustomUser.objects.get(id=staff.admin.id)
-                user.username = username
-                user.email = email
-                if password != None:
-                    user.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
+                user.email = email
+                user.username = email  # Use email as username
                 user.gender = gender
-                user.address = address
+                # Keep existing address or use empty string
+                if not user.address:
+                    user.address = ''
                 user.save()
                 
                 # Update staff fields
@@ -41355,11 +41337,18 @@ def edit_staff(request, staff_id):
                 staff.remarks = form.cleaned_data.get('remarks')
                 staff.save()
                 messages.success(request, "Successfully Updated")
-                return redirect(reverse('edit_staff', args=[staff_id]))
+                return redirect(reverse('manage_staff'))
             except Exception as e:
                 messages.error(request, "Could Not Update " + str(e))
+                return render(request, "forms/staff_form.html", context)
         else:
-            messages.error(request, "Please fill form properly")
+            # Show specific field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').title()}: {error}")
+            messages.error(request, "Please correct the errors above")
+            return render(request, "forms/staff_form.html", context)
+    
     return render(request, "forms/staff_form.html", context)
 
 
