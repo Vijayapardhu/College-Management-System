@@ -1,0 +1,27 @@
+Starting template fix process...
+Found 26 templates to fix
+
+Traceback (most recent call last):
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\fix_incomplete_templates.py", line 204, in fix_template
+    print(f"\u2713 Fixed: {filepath}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\fix_incomplete_templates.py", line 271, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\fix_incomplete_templates.py", line 254, in main
+    result = fix_template(template)
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\fix_incomplete_templates.py", line 210, in fix_template
+    print(f"\u2717 Error fixing {filepath}: {e}")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2717' in position 0: character maps to <undefined>

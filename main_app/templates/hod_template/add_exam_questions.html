@@ -1,10 +1,33 @@
-{% extends 'forms/base_form.html' %}
+{% extends "main_app/base.html" %}
+{% load static %}
+{% block page_title %}{{ page_title|default:"Page" }}{% endblock %}
 
-{% block form_icon %}fas fa-question-circle{% endblock %}
-{% block form_title %}Add Exam Questions{% endblock %}
-{% block form_subtitle %}Create question bank for examination{% endblock %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="card-professional">
+            <div class="card-header-professional">
+                <h3><i class="fas fa-file-alt me-2"></i>{{ page_title|default:"Content" }}</h3>
+            </div>
+            <div style="padding: 20px;">
+                <!-- Content goes here -->
+                <p>This template needs to be completed with proper content.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-{% block cancel_url %}{% url 'manage_exams' %}{% endblock %}
-{% block submit_text %}Save Questions{% endblock %}
-
-
+<style>
+.card-professional {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.card-header-professional {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 15px 20px;
+}
+</style>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block page_title %}Enhanced Student Dashboard{% endblock %}
 
@@ -246,7 +246,7 @@
 
 <style>
 .welcome-header {
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border: 1px solid #e5e5e5;
     border-left: 4px solid #003d82;
     border-radius: 4px;
@@ -277,7 +277,7 @@
 }
 
 .metric-card {
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border: 1px solid #e5e5e5;
     border-left: 4px solid;
     border-radius: 4px;
@@ -464,19 +464,5 @@
     font-size: 11px;
 }
 </style>
-{% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% endblock %}
 

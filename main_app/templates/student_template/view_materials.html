@@ -1,0 +1,426 @@
+{% extends "main_app/base.html" %}
+{% load static %}
+{% block title %}Study Materials{% endblock %}
+{% block page_title %}Study Materials{% endblock %}
+
+{% block custom_css %}
+<style>
+    .page-header-modern {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 8px 32px rgba(30, 64, 175, 0.3);
+    }
+
+    .page-header-modern h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header-modern p {
+        margin: 0;
+        opacity: 0.95;
+    }
+
+    .materials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .material-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    html.dark .material-card {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .material-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .material-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f8fafc;
+    }
+
+    html.dark .material-header {
+        background: #0f172a;
+        border-bottom-color: #475569;
+    }
+
+    .material-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.875rem;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .badge-notes {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    html.dark .badge-notes {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+    }
+
+    .badge-assignment {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    html.dark .badge-assignment {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+
+    .badge-reference {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    html.dark .badge-reference {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+    }
+
+    .badge-video {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    html.dark .badge-video {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+    }
+
+    .material-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    html.dark .material-title {
+        color: #f1f5f9;
+    }
+
+    .material-body {
+        padding: 1.25rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .material-description {
+        color: #64748b;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        flex: 1;
+    }
+
+    html.dark .material-description {
+        color: #94a3b8;
+    }
+
+    .material-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem 1.25rem;
+        background: #f8fafc;
+        border-top: 1px solid #e5e7eb;
+        font-size: 0.8125rem;
+        color: #64748b;
+    }
+
+    html.dark .material-meta {
+        background: #0f172a;
+        border-top-color: #475569;
+        color: #94a3b8;
+    }
+
+    .material-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .material-meta-item i {
+        color: #3b82f6;
+        width: 16px;
+    }
+
+    .material-footer {
+        padding: 1.25rem;
+        background: white;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    html.dark .material-footer {
+        background: #1e293b;
+        border-top-color: #475569;
+    }
+
+    .btn-download {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+        color: white;
+    }
+
+    .btn-view-video {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+    }
+
+    .btn-view-video:hover {
+        box-shadow: 0 8px 16px rgba(220, 38, 38, 0.3);
+    }
+
+    .filter-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e5e7eb;
+    }
+
+    html.dark .filter-bar {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .filter-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .filter-group select {
+        padding: 0.625rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        background: white;
+        color: #0f172a;
+    }
+
+    html.dark .filter-group select {
+        background: #0f172a;
+        color: #f1f5f9;
+        border-color: #475569;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+    }
+
+    html.dark .empty-state {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 2rem;
+        background: #eff6ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #3b82f6;
+    }
+
+    html.dark .empty-state-icon {
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.75rem;
+    }
+
+    html.dark .empty-state h3 {
+        color: #f1f5f9;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    html.dark .empty-state p {
+        color: #94a3b8;
+    }
+
+    @media (max-width: 768px) {
+        .materials-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-group {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header-modern">
+    <h1>
+        <i class="fas fa-book-open"></i>
+        Study Materials
+    </h1>
+    <p>Access lecture notes, assignments, references, and video materials for your courses</p>
+</div>
+
+<!-- Filters -->
+<div class="filter-bar">
+    <form method="get" class="filter-group">
+        <select name="subject" onchange="this.form.submit()">
+            <option value="">All Subjects</option>
+            {% for subject in subjects %}
+            <option value="{{ subject.id }}" {% if request.GET.subject == subject.id|stringformat:"s" %}selected{% endif %}>
+                {{ subject.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="type" onchange="this.form.submit()">
+            <option value="">All Types</option>
+            <option value="notes" {% if request.GET.type == 'notes' %}selected{% endif %}>Lecture Notes</option>
+            <option value="assignment" {% if request.GET.type == 'assignment' %}selected{% endif %}>Assignments</option>
+            <option value="reference" {% if request.GET.type == 'reference' %}selected{% endif %}>References</option>
+            <option value="video" {% if request.GET.type == 'video' %}selected{% endif %}>Video Lessons</option>
+        </select>
+
+        <input type="text" name="search" placeholder="Search materials..." value="{{ request.GET.search }}" 
+               class="form-control" style="padding: 0.625rem 1rem; border-radius: 8px;">
+    </form>
+</div>
+
+<!-- Materials Grid -->
+{% if materials %}
+<div class="materials-grid">
+    {% for material in materials %}
+    <div class="material-card">
+        <div class="material-header">
+            <span class="material-type-badge badge-{{ material.material_type }}">
+                {% if material.material_type == 'notes' %}
+                    <i class="fas fa-file-alt"></i> Lecture Notes
+                {% elif material.material_type == 'assignment' %}
+                    <i class="fas fa-tasks"></i> Assignment
+                {% elif material.material_type == 'reference' %}
+                    <i class="fas fa-book"></i> Reference
+                {% else %}
+                    <i class="fas fa-video"></i> Video Lesson
+                {% endif %}
+            </span>
+            <h3 class="material-title">{{ material.title }}</h3>
+        </div>
+
+        <div class="material-body">
+            {% if material.description %}
+            <p class="material-description">{{ material.description|truncatewords:20 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="material-meta">
+            <div class="material-meta-item">
+                <i class="fas fa-book"></i>
+                <span>{{ material.subject.name }}</span>
+            </div>
+            <div class="material-meta-item">
+                <i class="fas fa-user-tie"></i>
+                <span>{{ material.uploaded_by.admin.first_name }} {{ material.uploaded_by.admin.last_name }}</span>
+            </div>
+            <div class="material-meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>{{ material.created_at|date:"M d, Y" }}</span>
+            </div>
+        </div>
+
+        <div class="material-footer">
+            {% if material.material_type == 'video' and material.youtube_url %}
+                <a href="{{ material.youtube_url }}" target="_blank" class="btn-download btn-view-video">
+                    <i class="fab fa-youtube"></i>
+                    Watch Video
+                </a>
+            {% elif material.file %}
+                <a href="{{ material.file.url }}" download class="btn-download">
+                    <i class="fas fa-download"></i>
+                    Download Material
+                </a>
+            {% elif material.reference_links %}
+                <a href="{{ material.reference_links }}" target="_blank" class="btn-download">
+                    <i class="fas fa-external-link-alt"></i>
+                    Open Link
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">
+        <i class="fas fa-book-open"></i>
+    </div>
+    <h3>No Study Materials Available</h3>
+    <p>Your faculty will upload study materials here. Check back soon!</p>
+</div>
+{% endif %}
+{% endblock %}
+

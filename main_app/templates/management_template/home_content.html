@@ -1,13 +1,15 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block title %}Management Dashboard{% endblock %}
 {% block page_title %}Management Dashboard{% endblock %}
 
 {% block custom_css %}
 <style>
+    body { background: #0a0a0a; }
+<style>
     .dashboard-container {
         padding: 2rem;
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
         min-height: 100vh;
     }
 
@@ -17,7 +19,7 @@
 
     /* Welcome Section */
     .welcome-section {
-        background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         border-radius: 20px;
         padding: 2.5rem;
         margin-bottom: 2rem;
@@ -81,12 +83,12 @@
     }
 
     .stat-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 16px;
         padding: 1.75rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         transition: all 0.3s ease;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #333;
     }
 
     html.dark .stat-card {
@@ -162,7 +164,7 @@
     }
 
     .alert-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-left: 4px solid;
         border-radius: 12px;
         padding: 1.5rem;
@@ -222,7 +224,7 @@
     }
 
     .action-btn {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 2px solid #e2e8f0;
         border-radius: 12px;
         padding: 1.5rem;
@@ -281,11 +283,11 @@
     }
 
     .card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 16px;
         padding: 1.5rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        border: 1px solid #333;
     }
 
     html.dark .card {
@@ -313,7 +315,7 @@
         gap: 1rem;
         padding: 1rem;
         border-radius: 8px;
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
         margin-bottom: 0.75rem;
         transition: all 0.3s ease;
     }
@@ -390,7 +392,7 @@
         color: #b91c1c;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
@@ -730,646 +732,10 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
-    // Animate stats on load
-    document.addEventListener('DOMContentLoaded', function() {
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues.forEach(stat => {
-            stat.style.opacity = '0';
-            stat.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                stat.style.transition = 'all 0.6s ease';
-                stat.style.opacity = '1';
-                stat.style.transform = 'translateY(0)';
-            }, 100);
-        });
-    });
-</script>
-{% endblock custom_js %}
-
-    }
-
-    html.dark .stat-value {
-        color: #f1f5f9;
-    }
-
-    .stat-label {
-        font-size: 0.875rem;
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    .stat-change {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        font-weight: 600;
-    }
-
-    .stat-change.positive {
-        background: #d1fae5;
-        color: #059669;
-    }
-
-    /* Alert Cards */
-    .alerts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .alert-card {
-        background: white;
-        border-left: 4px solid;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .alert-card.warning {
-        border-left-color: #ea580c;
-    }
-
-    .alert-card.danger {
-        border-left-color: #dc2626;
-    }
-
-    html.dark .alert-card {
-        background: #1e293b;
-    }
-
-    .alert-title {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    html.dark .alert-title {
-        color: #f1f5f9;
-    }
-
-    .alert-message {
-        font-size: 0.875rem;
-        color: #64748b;
-    }
-
-    /* Quick Actions */
-    .section-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    html.dark .section-title {
-        color: #f1f5f9;
-    }
-
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .action-btn {
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        text-decoration: none;
-        color: #0f172a;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    html.dark .action-btn {
-        background: #1e293b;
-        border-color: #334155;
-        color: #f1f5f9;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border-color: #dc2626;
-        color: #dc2626;
-    }
-
-    .action-btn-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #dc2626, #ef4444);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.75rem;
-    }
-
-    .action-btn-text {
-        font-weight: 600;
-        font-size: 0.875rem;
-    }
-
-    /* Two Column Layout */
-    .two-col-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    @media (max-width: 768px) {
-        .two-col-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .card {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
-    }
-
-    html.dark .card {
-        background: #1e293b;
-        border-color: #334155;
-    }
-
-    .card-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    html.dark .card-title {
-        color: #f1f5f9;
-    }
-
-    /* Activity Item */
-    .activity-item {
-        display: flex;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
-        background: #f8fafc;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-    }
-
-    html.dark .activity-item {
-        background: #0f172a;
-    }
-
-    .activity-item:hover {
-        background: #fee2e2;
-    }
-
-    html.dark .activity-item:hover {
-        background: #1e293b;
-    }
-
-    .activity-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: #fee2e2;
-        color: #dc2626;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .activity-content {
-        flex: 1;
-    }
-
-    .activity-title {
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-        font-size: 0.875rem;
-    }
-
-    html.dark .activity-title {
-        color: #f1f5f9;
-    }
-
-    .activity-time {
-        font-size: 0.75rem;
-        color: #64748b;
-    }
-
-    .badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-
-    .badge-success { background: #d1fae5; color: #059669; }
-    .badge-warning { background: #fed7aa; color: #ea580c; }
-    .badge-danger { background: #fee2e2; color: #dc2626; }
-
-    .view-all-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #dc2626;
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-decoration: none;
-        margin-top: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .view-all-link:hover {
-        gap: 0.75rem;
-        color: #b91c1c;
-    }
-</style>
-{% endblock custom_css %}
-
-{% block content %}
-<div class="dashboard-container">
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-title">
-                Welcome, {{ request.user.first_name }}! 🏛️
-            </div>
-            <div class="welcome-subtitle">
-                Oversee and manage all institutional operations from here
-            </div>
-            <div class="welcome-badges">
-                <span class="welcome-badge">
-                    <i class="fas fa-shield-alt"></i>
-                    Management Authority
-                </span>
-                <span class="welcome-badge">
-                    <i class="fas fa-calendar"></i>
-                    {{ current_date|date:"l, F d, Y" }}
-                </span>
-                <span class="welcome-badge">
-                    <i class="fas fa-building"></i>
-                    {{ total_departments }} Departments
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Critical Alerts -->
-    {% if fee_defaulters_count > 0 or overdue_books > 0 or pending_grievances > 0 %}
-    <div class="alerts-grid">
-        {% if fee_defaulters_count > 0 %}
-        <div class="alert-card danger">
-            <div class="alert-title">
-                <i class="fas fa-exclamation-triangle"></i>
-                Fee Defaulters Alert
-            </div>
-            <div class="alert-message">
-                {{ fee_defaulters_count }} student(s) have pending fee payments
-                <a href="{% url 'management_fee_defaulters' %}" style="color: #dc2626; text-decoration: underline; font-weight: 600;">View Details</a>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if overdue_books > 0 %}
-        <div class="alert-card warning">
-            <div class="alert-title">
-                <i class="fas fa-book"></i>
-                Overdue Library Books
-            </div>
-            <div class="alert-message">
-                {{ overdue_books }} book(s) are overdue
-                <a href="{% url 'management_library_issues' %}" style="color: #ea580c; text-decoration: underline; font-weight: 600;">View Details</a>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if pending_grievances > 0 %}
-        <div class="alert-card warning">
-            <div class="alert-title">
-                <i class="fas fa-clipboard-list"></i>
-                Pending Grievances
-            </div>
-            <div class="alert-message">
-                {{ pending_grievances }} grievance(s) require attention
-                <a href="{% url 'management_grievances' %}" style="color: #ea580c; text-decoration: underline; font-weight: 600;">View Details</a>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-    {% endif %}
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon blue">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> Active
-                </span>
-            </div>
-            <div class="stat-value">{{ total_students }}</div>
-            <div class="stat-label">Total Students</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon green">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-check"></i> {{ total_staff }}
-                </span>
-            </div>
-            <div class="stat-value">{{ total_staff }}</div>
-            <div class="stat-label">Faculty & Staff</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon orange">
-                    <i class="fas fa-rupee-sign"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-chart-line"></i> Revenue
-                </span>
-            </div>
-            <div class="stat-value">₹{{ total_fees_collected|floatformat:0 }}</div>
-            <div class="stat-label">Fees Collected</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon red">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <span class="stat-change positive">
-                    <i class="fas fa-clock"></i> Pending
-                </span>
-            </div>
-            <div class="stat-value">₹{{ pending_fees|floatformat:0 }}</div>
-            <div class="stat-label">Pending Fees</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon purple">
-                    <i class="fas fa-bus"></i>
-                </div>
-                <span class="stat-change positive">
-                    {{ transport_utilization }}/{{ total_transport }}
-                </span>
-            </div>
-            <div class="stat-value">{{ total_transport }}</div>
-            <div class="stat-label">Transport Routes</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon cyan">
-                    <i class="fas fa-home"></i>
-                </div>
-                <span class="stat-change positive">
-                    {{ hostel_occupancy }}/{{ total_hostel_capacity }}
-                </span>
-            </div>
-            <div class="stat-value">{{ total_hostels }}</div>
-            <div class="stat-label">Hostels</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon blue">
-                    <i class="fas fa-book"></i>
-                </div>
-                <span class="stat-change positive">
-                    {{ books_issued }} Issued
-                </span>
-            </div>
-            <div class="stat-value">{{ total_library_books }}</div>
-            <div class="stat-label">Library Books</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon green">
-                    <i class="fas fa-gift"></i>
-            </div>
-                <span class="stat-change positive">
-                    {{ pending_scholarship_apps }} Pending
-                </span>
-            </div>
-            <div class="stat-value">{{ active_scholarships }}</div>
-            <div class="stat-label">Scholarships</div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div>
-        <h2 class="section-title">
-            <i class="fas fa-bolt"></i>
-            Quick Actions
-        </h2>
-        <div class="actions-grid">
-            <a href="{% url 'management_transport' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-bus"></i>
-                </div>
-                <div class="action-btn-text">Transport Management</div>
-            </a>
-
-            <a href="{% url 'management_hostels' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-home"></i>
-                </div>
-                <div class="action-btn-text">Hostel Management</div>
-            </a>
-
-            <a href="{% url 'management_library' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="action-btn-text">Library Management</div>
-            </a>
-
-            <a href="{% url 'management_fee_structure' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-rupee-sign"></i>
-                </div>
-                <div class="action-btn-text">Fee Management</div>
-            </a>
-
-            <a href="{% url 'management_scholarships' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-gift"></i>
-                </div>
-                <div class="action-btn-text">Scholarships</div>
-            </a>
-
-            <a href="{% url 'management_grievances' %}" class="action-btn">
-                <div class="action-btn-icon">
-                    <i class="fas fa-clipboard-list"></i>
-                </div>
-                <div class="action-btn-text">Grievances</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Two Column Layout -->
-    <div class="two-col-grid">
-        <!-- Recent Fee Payments -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-money-bill-wave"></i>
-                Recent Fee Payments
-            </h3>
-
-            {% if recent_fee_payments %}
-                {% for payment in recent_fee_payments %}
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-rupee-sign"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">
-                            {{ payment.student.admin.first_name }} {{ payment.student.admin.last_name }}
-                        </div>
-                        <div class="activity-time">₹{{ payment.amount_paid }} - {{ payment.payment_date|timesince }} ago</div>
-                    </div>
-                    <span class="badge badge-success">{{ payment.payment_status }}</span>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p style="text-align: center; color: #94a3b8; padding: 2rem;">No recent payments</p>
-            {% endif %}
-
-            <a href="{% url 'management_fee_payments' %}" class="view-all-link">
-                View All Payments
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-
-        <!-- Recent Grievances -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fas fa-clipboard-list"></i>
-                Recent Grievances
-            </h3>
-
-            {% if recent_grievances %}
-                {% for grievance in recent_grievances %}
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <i class="fas fa-exclamation"></i>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">{{ grievance.subject }}</div>
-                        <div class="activity-time">
-                            {{ grievance.submitted_by.first_name }} - {{ grievance.submitted_at|timesince }} ago
-                        </div>
-            </div>
-                    <span class="badge {% if grievance.status == 'resolved' %}badge-success{% elif grievance.status == 'submitted' %}badge-warning{% else %}badge-danger{% endif %}">
-                        {{ grievance.get_status_display }}
-                </span>
-            </div>
-                {% endfor %}
-            {% else %}
-                <p style="text-align: center; color: #94a3b8; padding: 2rem;">No recent grievances</p>
-            {% endif %}
-
-            <a href="{% url 'management_grievances' %}" class="view-all-link">
-                View All Grievances
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-
-    <!-- Operational Overview -->
-    <div class="card">
-        <h3 class="card-title">
-            <i class="fas fa-chart-bar"></i>
-            Operational Overview
-        </h3>
-        <div class="actions-grid">
-            <div class="action-btn" style="cursor: default; border-color: #e2e8f0;">
-                <div class="activity-icon">
-                    <i class="fas fa-bus"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Transport Utilization</div>
-                    <div class="activity-time">{{ transport_utilization }} students using transport</div>
-                </div>
-            </div>
-
-            <div class="action-btn" style="cursor: default; border-color: #e2e8f0;">
-                <div class="activity-icon">
-                    <i class="fas fa-home"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Hostel Occupancy</div>
-                    <div class="activity-time">{{ hostel_occupancy }}/{{ total_hostel_capacity }} rooms occupied</div>
-                </div>
-            </div>
-
-            <div class="action-btn" style="cursor: default; border-color: #e2e8f0;">
-                <div class="activity-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-title">Library Circulation</div>
-                    <div class="activity-time">{{ books_issued }} books currently issued</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock content %}
-
-{% block custom_js %}
-<script>
-    // Animate stats on load
-    document.addEventListener('DOMContentLoaded', function() {
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues.forEach(stat => {
-            stat.style.opacity = '0';
-            stat.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                stat.style.transition = 'all 0.6s ease';
-                stat.style.opacity = '1';
-                stat.style.transform = 'translateY(0)';
-            }, 100);
-        });
-    });
-</script>
-{% endblock custom_js %}
 document.addEventListener('DOMContentLoaded', function() {
     // Animate counters
     document.querySelectorAll('[data-count]').forEach(counter => {
@@ -1392,6 +758,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}
 
 

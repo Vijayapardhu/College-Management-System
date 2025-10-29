@@ -1,0 +1,45 @@
+t" | Select-Object -First 44                                                                                                            
+âœ… Fixed main_app/templates\forms\alumni_form.html
+âœ… Fixed main_app/templates\forms\class_group_form.html
+âœ… Fixed main_app/templates\forms\course_form.html
+âœ… Fixed main_app/templates\forms\department_form.html
+âœ… Fixed main_app/templates\forms\management_form.html
+âœ… Fixed main_app/templates\forms\simple_form.html
+âœ… Fixed main_app/templates\forms\study_material_form.html
+âœ… Fixed main_app/templates\hod_template\ai_student_insights.html
+âœ… Fixed main_app/templates\hod_template\at_risk_students.html
+âœ… Fixed main_app/templates\hod_template\bulk_promote_students.html
+âœ… Fixed main_app/templates\hod_template\class_performance_comparison.html
+âœ… Fixed main_app/templates\hod_template\manage_academic_years.html
+âœ… Fixed main_app/templates\hod_template\manage_sections.html
+âœ… Fixed main_app/templates\hod_template\send_message.html
+âœ… Fixed main_app/templates\hod_template\student_analytics_dashboard.html
+âœ… Fixed main_app/templates\hod_template\view_message.html
+âœ… Fixed main_app/templates\main_app\base.html
+âœ… Fixed main_app/templates\management_template\home_content.html
+âœ… Fixed main_app/templates\parent_template\home.html
+âœ… Fixed main_app/templates\staff_template\attendance_analytics.html
+âœ… Fixed main_app/templates\staff_template\attendance_qr.html
+âœ… Fixed main_app/templates\staff_template\bulk_attendance_import.html
+âœ… Fixed main_app/templates\staff_template\bulk_marks_import.html
+âœ… Fixed main_app/templates\staff_template\generate_qr.html
+âœ… Fixed main_app/templates\staff_template\messages.html
+âœ… Fixed main_app/templates\staff_template\modern_dashboard.html
+âœ… Fixed main_app/templates\staff_template\send_message.html
+âœ… Fixed main_app/templates\staff_template\staff_take_attendance.html
+âœ… Fixed main_app/templates\staff_template\view_message.html
+âœ… Fixed main_app/templates\staff_template\view_timetable.html
+âœ… Fixed main_app/templates\student_template\messages.html
+âœ… Fixed main_app/templates\student_template\send_message.html
+âœ… Fixed main_app/templates\student_template\student_view_attendance.html
+âœ… Fixed main_app/templates\student_template\student_view_result.html
+âœ… Fixed main_app/templates\student_template\view_assignments.html
+âœ… Fixed main_app/templates\student_template\view_message.html
+âœ… Fixed main_app/templates\student_template\view_timetable.html
+âœ… Fixed main_app/templates\student_template\document_locker\detail.html
+âœ… Fixed main_app/templates\student_template\document_locker\search.html
+âœ… Fixed main_app/templates\student_template\document_locker\upload.html
+
+============================================================
+âœ… Checked 421 templates
+âœ… Fixed 40 templates with orphan endblocks

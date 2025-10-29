@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block page_title %}Academic Operations{% endblock %}
 
@@ -18,6 +18,4 @@
         <a href="{% url 'reports_hub' %}" class="action-card"><div class="action-card-icon bg-gradient-to-br from-indigo-100 to-indigo-200"><span class="text-3xl">📄</span></div><h3 class="text-lg font-bold">Reports</h3><p class="text-sm text-gray-600">Generate reports</p></a>
     </div>
 </div>
-{% endblock content %}
-
-
+{% endblock %}

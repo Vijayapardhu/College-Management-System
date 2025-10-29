@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Notification Center{% endblock page_title %}
+{% block page_title %}Notification Center{% endblock %}
 
 {% block content %}
 <!-- Notification Center -->
@@ -147,7 +147,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -193,6 +193,6 @@ function filterNotifications(type) {
     border-left: 4px solid #e5e7eb;
 }
 </style>
-{% endblock custom_js %}
+{% endblock %}
 
 

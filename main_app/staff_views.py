@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from django.contrib import messages
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse
@@ -1530,6 +1531,40 @@ def view_submissions(request):
 
 
 @login_required(login_url='login')
+def grade_assignment(request, submission_id):
+    """Grade an assignment submission"""
+    staff = get_object_or_404(Staff, admin=request.user)
+    submission = get_object_or_404(AssignmentSubmission, id=submission_id, assignment__staff=staff)
+    
+    if request.method == 'POST':
+        marks_obtained = request.POST.get('marks_obtained')
+        feedback = request.POST.get('feedback', '')
+        
+        if marks_obtained:
+            try:
+                submission.marks_obtained = float(marks_obtained)
+                submission.feedback = feedback
+                submission.status = 'graded'
+                submission.graded_by = staff
+                submission.graded_at = timezone.now()
+                submission.save()
+                
+                messages.success(request, f'Assignment graded successfully for {submission.student.admin.get_full_name()}')
+                return redirect('view_submissions')
+            except ValueError:
+                messages.error(request, 'Invalid marks value')
+        else:
+            messages.error(request, 'Please enter marks')
+    
+    context = {
+        'page_title': 'Grade Assignment',
+        'submission': submission,
+        'staff': staff
+    }
+    return render(request, 'staff_template/grade_assignment.html', context)
+
+
+@login_required(login_url='login')
 def create_online_exam(request):
     """Staff create online exam"""
     staff = get_object_or_404(Staff, admin=request.user)
@@ -1565,7 +1600,6 @@ def my_online_exams(request):
         'staff': staff
     }
     return render(request, 'staff_template/my_online_exams.html', context)
-
 
 @login_required(login_url='login')
 def view_students(request):
@@ -1676,4 +1710,5 @@ def staff_attendance_history(request):
     }
     
     return render(request, 'staff_template/staff_attendance_history.html', context)
+
 

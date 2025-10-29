@@ -1,4 +1,4 @@
-﻿{% extends 'forms/base_form.html' %}
+﻿{% extends "forms/base_form.html" %}
 {% load static %}
 
 {% block custom_css %}
@@ -171,7 +171,7 @@
 {% endblock %}
 
 {% block form_icon %}fas fa-user-graduate{% endblock %}
-{% block form_title %}{% if student_id %}Edit Student{% else %}Add New Student{% endblock %}{% endblock %}
+{% block form_title %}{% if student_id %}Edit Student{% else %}Add New Student{% endif %}{% endblock %}
 {% block form_subtitle %}{{ page_title|default:"Complete all fields to register a new student" }}{% endblock %}
 
 {% block cancel_url %}{% url 'manage_student' %}{% endblock %}
@@ -399,4 +399,14 @@ document.querySelectorAll('input, select').forEach(field => {
 });
 </script>
 
-{% endblock form_content %}
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+

@@ -85,12 +85,38 @@
                         <span class="nav-text">Gate Pass</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'student_request_certificate' %}" 
-                       class="nav-item nav-item-inactive group">
+                <!-- Certificates Dropdown -->
+                <li class="nav-dropdown">
+                    <a href="#" 
+                       class="nav-item nav-item-inactive group nav-dropdown-toggle"
+                       onclick="event.preventDefault(); toggleCertificatesDropdown(); return false;">
                         <i class="nav-icon fas fa-certificate"></i>
                         <span class="nav-text">Certificates</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
                     </a>
+                    <ul class="nav-submenu" id="certificates-submenu">
+                        <li>
+                            <a href="{% url 'my_certificates' %}" 
+                               class="nav-subitem group">
+                                <i class="fas fa-folder-open" style="color: #3b82f6;"></i>
+                                <span>My Certificates</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'request_new_certificate' %}" 
+                               class="nav-subitem group">
+                                <i class="fas fa-file-signature" style="color: #a78bfa;"></i>
+                                <span>Request New</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'my_certificates' %}?upload=true" 
+                               class="nav-subitem group">
+                                <i class="fas fa-cloud-upload-alt" style="color: #10b981;"></i>
+                                <span>Upload Certificate</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{% url 'student_view_fee_structure' %}" 
@@ -177,3 +203,121 @@
         </li>
     </ul>
 </nav>
+
+<!-- Certificates Dropdown Styles -->
+<style>
+    .nav-dropdown {
+        position: relative;
+    }
+
+    .dropdown-arrow {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.75rem;
+        transition: transform 0.3s ease;
+    }
+
+    .nav-dropdown.active .dropdown-arrow {
+        transform: translateY(-50%) rotate(180deg);
+    }
+
+    .nav-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: 1.5rem;
+        margin-top: 0.25rem;
+        list-style: none;
+        padding: 0;
+    }
+
+    .nav-dropdown.active .nav-submenu {
+        max-height: 300px;
+    }
+
+    .nav-subitem {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.625rem 1rem;
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+        color: rgba(148, 163, 184, 0.9);
+        font-size: 0.875rem;
+        text-decoration: none;
+        margin-bottom: 0.25rem;
+    }
+
+    .nav-subitem:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        transform: translateX(4px);
+    }
+
+    .nav-subitem i {
+        font-size: 1rem;
+        width: 1.25rem;
+        text-align: center;
+    }
+
+    html.dark .nav-subitem {
+        color: rgba(203, 213, 225, 0.9);
+    }
+
+    html.dark .nav-subitem:hover {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+    }
+
+    .nav-dropdown-toggle {
+        position: relative;
+    }
+
+    .nav-dropdown-toggle:hover {
+        background: rgba(59, 130, 246, 0.08);
+    }
+
+    .nav-subitem.active {
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+        color: #3b82f6;
+        font-weight: 500;
+    }
+
+    html.dark .nav-subitem.active {
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%);
+        color: #60a5fa;
+    }
+</style>
+
+<!-- Certificates Dropdown JavaScript -->
+<script>
+    function toggleCertificatesDropdown() {
+        const dropdown = document.querySelector('.nav-dropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('active');
+        }
+        return false;
+    }
+
+    // Auto-expand dropdown if on a certificates page
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        
+        if (currentPath.includes('certificate')) {
+            const dropdown = document.querySelector('.nav-dropdown');
+            if (dropdown) {
+                dropdown.classList.add('active');
+            }
+            
+            // Highlight active submenu item
+            const submenuItems = document.querySelectorAll('.nav-subitem');
+            submenuItems.forEach(item => {
+                if (item.href && window.location.href.includes(item.href.split('?')[0])) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    });
+</script>

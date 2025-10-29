@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}View Timetable{% endblock page_title %}
+{% block page_title %}View Timetable{% endblock %}
 
 {% block content %}
 <!-- Timetable View -->
@@ -118,7 +118,7 @@
         </table>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -134,6 +134,6 @@ function printTimetable() {
     }
 }
 </style>
-{% endblock custom_js %}
+{% endblock %}
 
 

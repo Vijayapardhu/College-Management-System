@@ -1,0 +1,1935 @@
+================================================================================
+Django Template Syntax Fixer
+================================================================================
+
+[INFO] Found 430 template file(s)
+
+[FIXED] main_app\templates\admission\make_decision.html
+[FIXED] main_app\templates\admission\review_applications.html
+[FIXED] main_app\templates\admission\view_application.html
+[FIXED] main_app\templates\alumni\alumni_profile.html
+[FIXED] main_app\templates\analytics\attendance.html
+[FIXED] main_app\templates\analytics\dashboard.html
+[FIXED] main_app\templates\analytics\report_builder.html
+[FIXED] main_app\templates\chat_interface.html
+[FIXED] main_app\templates\common\notification_center.html
+[OK] main_app\templates\communication\chat_interface.html
+[FIXED] main_app\templates\communication\communication_hub.html
+[FIXED] main_app\templates\components\enhanced_table.html
+[OK] main_app\templates\components\forms.html
+[OK] main_app\templates\components\tables.html
+[OK] main_app\templates\components\widgets.html
+[FIXED] main_app\templates\forms\academic_year_form.html
+[FIXED] main_app\templates\forms\alumni_form.html
+[FIXED] main_app\templates\forms\base_form.html
+[FIXED] main_app\templates\forms\class_group_form.html
+[FIXED] main_app\templates\forms\company_form.html
+[FIXED] main_app\templates\forms\course_form.html
+[FIXED] main_app\templates\forms\department_form.html
+[FIXED] main_app\templates\forms\enhanced_form_template.html
+[FIXED] main_app\templates\forms\management_form.html
+[FIXED] main_app\templates\forms\section_form.html
+[FIXED] main_app\templates\forms\session_form.html
+[FIXED] main_app\templates\forms\simple_form.html
+[FIXED] main_app\templates\forms\staff_form.html
+[FIXED] main_app\templates\forms\student_form.html
+[FIXED] main_app\templates\forms\student_form_simple.html
+[FIXED] main_app\templates\forms\study_material_form.html
+[FIXED] main_app\templates\forms\subject_form.html
+[FIXED] main_app\templates\hod_template\academic_operations.html
+[OK] main_app\templates\hod_template\academic_performance_analytics.html
+[FIXED] main_app\templates\hod_template\add_admin.html
+[OK] main_app\templates\hod_template\add_classroom.html
+[OK] main_app\templates\hod_template\add_company.html
+[FIXED] main_app\templates\hod_template\add_council_member.html
+[FIXED] main_app\templates\hod_template\add_course_template.html
+[FIXED] main_app\templates\hod_template\add_department.html
+[FIXED] main_app\templates\hod_template\add_disciplinary_action.html
+[FIXED] main_app\templates\hod_template\add_exam.html
+[FIXED] main_app\templates\hod_template\add_exam_questions.html
+[FIXED] main_app\templates\hod_template\add_exam_schedule.html
+[FIXED] main_app\templates\hod_template\add_fee_structure.html
+[FIXED] main_app\templates\hod_template\add_hostel.html
+[FIXED] main_app\templates\hod_template\add_library_book.html
+[FIXED] main_app\templates\hod_template\add_placement_drive.html
+[FIXED] main_app\templates\hod_template\add_program.html
+[OK] main_app\templates\hod_template\add_public_link.html
+[FIXED] main_app\templates\hod_template\add_scholarship.html
+[FIXED] main_app\templates\hod_template\add_semester_result.html
+[FIXED] main_app\templates\hod_template\add_session_template.html
+[FIXED] main_app\templates\hod_template\add_staff_template.html
+[FIXED] main_app\templates\hod_template\add_student_extended.html
+[FIXED] main_app\templates\hod_template\add_student_fixed.html
+[FIXED] main_app\templates\hod_template\add_student_template.html
+[FIXED] main_app\templates\hod_template\add_subject_template.html
+[FIXED] main_app\templates\hod_template\add_timetable.html
+[FIXED] main_app\templates\hod_template\add_transport.html
+[FIXED] main_app\templates\hod_template\admin_dashboard_fixed.html
+[FIXED] main_app\templates\hod_template\admin_view_attendance.html
+[FIXED] main_app\templates\hod_template\admin_view_profile.html
+[OK] main_app\templates\hod_template\advanced_reports.html
+[FIXED] main_app\templates\hod_template\ai_student_insights.html
+[FIXED] main_app\templates\hod_template\allocate_hostel.html
+[FIXED] main_app\templates\hod_template\allocate_transport.html
+[FIXED] main_app\templates\hod_template\analytics_dashboard.html
+[FIXED] main_app\templates\hod_template\announcements.html
+[FIXED] main_app\templates\hod_template\approval_center.html
+[OK] main_app\templates\hod_template\approval_statistics.html
+[OK] main_app\templates\hod_template\approval_timeline.html
+[FIXED] main_app\templates\hod_template\assign_grievance.html
+[FIXED] main_app\templates\hod_template\assign_invigilators.html
+[FIXED] main_app\templates\hod_template\assign_proctor.html
+[OK] main_app\templates\hod_template\at_risk_students.html
+[OK] main_app\templates\hod_template\attendance_analytics.html
+[FIXED] main_app\templates\hod_template\book_classroom.html
+[FIXED] main_app\templates\hod_template\bulk_operations.html
+[OK] main_app\templates\hod_template\bulk_promote_students.html
+[FIXED] main_app\templates\hod_template\bulk_student_upload.html
+[OK] main_app\templates\hod_template\cache_analysis.html
+[OK] main_app\templates\hod_template\chat_interface.html
+[FIXED] main_app\templates\hod_template\check_timetable_conflicts.html
+[OK] main_app\templates\hod_template\class_performance_comparison.html
+[OK] main_app\templates\hod_template\classroom_availability.html
+[OK] main_app\templates\hod_template\classroom_booking_approvals.html
+[FIXED] main_app\templates\hod_template\classroom_bookings.html
+[FIXED] main_app\templates\hod_template\classroom_form.html
+[FIXED] main_app\templates\hod_template\classroom_maintenance.html
+[OK] main_app\templates\hod_template\classroom_schedule.html
+[OK] main_app\templates\hod_template\clear_cache.html
+[OK] main_app\templates\hod_template\comprehensive_dashboard.html
+[FIXED] main_app\templates\hod_template\create_activity.html
+[FIXED] main_app\templates\hod_template\create_announcement.html
+[FIXED] main_app\templates\hod_template\create_event.html
+[FIXED] main_app\templates\hod_template\create_online_exam.html
+[OK] main_app\templates\hod_template\custom_report_builder.html
+[FIXED] main_app\templates\hod_template\custom_report_generator.html
+[OK] main_app\templates\hod_template\database_analysis.html
+[FIXED] main_app\templates\hod_template\delete_admin.html
+[FIXED] main_app\templates\hod_template\department_analytics.html
+[OK] main_app\templates\hod_template\department_comparison.html
+[OK] main_app\templates\hod_template\department_form.html
+[FIXED] main_app\templates\hod_template\department_management.html
+[OK] main_app\templates\hod_template\department_performance.html
+[FIXED] main_app\templates\hod_template\disburse_scholarship.html
+[FIXED] main_app\templates\hod_template\discussions.html
+[FIXED] main_app\templates\hod_template\edit_admin.html
+[OK] main_app\templates\hod_template\edit_classroom.html
+[FIXED] main_app\templates\hod_template\edit_company.html
+[FIXED] main_app\templates\hod_template\edit_course_template.html
+[FIXED] main_app\templates\hod_template\edit_department.html
+[FIXED] main_app\templates\hod_template\edit_fee_structure.html
+[FIXED] main_app\templates\hod_template\edit_library_book.html
+[FIXED] main_app\templates\hod_template\edit_program.html
+[FIXED] main_app\templates\hod_template\edit_session_template.html
+[FIXED] main_app\templates\hod_template\edit_staff_template.html
+[FIXED] main_app\templates\hod_template\edit_student_template.html
+[FIXED] main_app\templates\hod_template\edit_subject_template.html
+[FIXED] main_app\templates\hod_template\edit_transport.html
+[FIXED] main_app\templates\hod_template\enhanced_dashboard.html
+[OK] main_app\templates\hod_template\error_logs.html
+[FIXED] main_app\templates\hod_template\exam_analytics.html
+[OK] main_app\templates\hod_template\export_performance_data.html
+[OK] main_app\templates\hod_template\export_report.html
+[FIXED] main_app\templates\hod_template\faculty_performance.html
+[FIXED] main_app\templates\hod_template\fee_defaulters.html
+[OK] main_app\templates\hod_template\financial_analytics.html
+[FIXED] main_app\templates\hod_template\generate_admit_cards.html
+[FIXED] main_app\templates\hod_template\home_content.html
+[OK] main_app\templates\hod_template\hostel_allocations.html
+[FIXED] main_app\templates\hod_template\hostel_visitor_logs.html
+[FIXED] main_app\templates\hod_template\issue_certificate.html
+[FIXED] main_app\templates\hod_template\issue_library_book.html
+[FIXED] main_app\templates\hod_template\library_issues.html
+[FIXED] main_app\templates\hod_template\lms\dashboard.html
+[FIXED] main_app\templates\hod_template\manage_academic_years.html
+[FIXED] main_app\templates\hod_template\manage_admins.html
+[FIXED] main_app\templates\hod_template\manage_alumni.html
+[FIXED] main_app\templates\hod_template\manage_certificates.html
+[FIXED] main_app\templates\hod_template\manage_class_groups.html
+[FIXED] main_app\templates\hod_template\manage_classrooms.html
+[OK] main_app\templates\hod_template\manage_companies.html
+[FIXED] main_app\templates\hod_template\manage_course.html
+[FIXED] main_app\templates\hod_template\manage_departments.html
+[FIXED] main_app\templates\hod_template\manage_disciplinary_actions.html
+[FIXED] main_app\templates\hod_template\manage_exam_schedule.html
+[FIXED] main_app\templates\hod_template\manage_exams.html
+[FIXED] main_app\templates\hod_template\manage_fee_structure.html
+[FIXED] main_app\templates\hod_template\manage_gate_passes.html
+[FIXED] main_app\templates\hod_template\manage_hostels.html
+[FIXED] main_app\templates\hod_template\manage_internships.html
+[FIXED] main_app\templates\hod_template\manage_library.html
+[FIXED] main_app\templates\hod_template\manage_online_exams.html
+[FIXED] main_app\templates\hod_template\manage_placement_drives.html
+[FIXED] main_app\templates\hod_template\manage_proctors.html
+[FIXED] main_app\templates\hod_template\manage_programs.html
+[FIXED] main_app\templates\hod_template\manage_public_links.html
+[FIXED] main_app\templates\hod_template\manage_ragging_incidents.html
+[FIXED] main_app\templates\hod_template\manage_results.html
+[OK] main_app\templates\hod_template\manage_scholarships.html
+[FIXED] main_app\templates\hod_template\manage_sections.html
+[FIXED] main_app\templates\hod_template\manage_session.html
+[FIXED] main_app\templates\hod_template\manage_sports_activities.html
+[FIXED] main_app\templates\hod_template\manage_staff.html
+[FIXED] main_app\templates\hod_template\manage_student.html
+[FIXED] main_app\templates\hod_template\manage_student_council.html
+[FIXED] main_app\templates\hod_template\manage_subject.html
+[FIXED] main_app\templates\hod_template\manage_timetable.html
+[FIXED] main_app\templates\hod_template\manage_transport.html
+[FIXED] main_app\templates\hod_template\messages.html
+[FIXED] main_app\templates\hod_template\modern_dashboard.html
+[OK] main_app\templates\hod_template\optimization_recommendations.html
+[OK] main_app\templates\hod_template\optimize_static.html
+[OK] main_app\templates\hod_template\performance_dashboard.html
+[FIXED] main_app\templates\hod_template\program_form.html
+[FIXED] main_app\templates\hod_template\public_link_form.html
+[FIXED] main_app\templates\hod_template\publish_result.html
+[FIXED] main_app\templates\hod_template\record_fee_payment.html
+[OK] main_app\templates\hod_template\report_builder.html
+[OK] main_app\templates\hod_template\report_maintenance.html
+[FIXED] main_app\templates\hod_template\reports_hub.html
+[FIXED] main_app\templates\hod_template\resolve_grievance.html
+[FIXED] main_app\templates\hod_template\resource_stats.html
+[FIXED] main_app\templates\hod_template\return_library_book.html
+[FIXED] main_app\templates\hod_template\review_scholarship_application.html
+[FIXED] main_app\templates\hod_template\scholarship_applications.html
+[FIXED] main_app\templates\hod_template\send_message.html
+[OK] main_app\templates\hod_template\slow_queries.html
+[FIXED] main_app\templates\hod_template\staff_detail.html
+[FIXED] main_app\templates\hod_template\staff_feedback_template.html
+[OK] main_app\templates\hod_template\staff_leave_approvals.html
+[FIXED] main_app\templates\hod_template\staff_leave_view.html
+[FIXED] main_app\templates\hod_template\staff_notification.html
+[OK] main_app\templates\hod_template\student_analytics_dashboard.html
+[FIXED] main_app\templates\hod_template\student_detail.html
+[FIXED] main_app\templates\hod_template\student_feedback_template.html
+[OK] main_app\templates\hod_template\student_leave_approvals.html
+[FIXED] main_app\templates\hod_template\student_leave_view.html
+[FIXED] main_app\templates\hod_template\student_notification.html
+[OK] main_app\templates\hod_template\system_resources.html
+[OK] main_app\templates\hod_template\timetable_conflicts.html
+[FIXED] main_app\templates\hod_template\timetable_dashboard.html
+[FIXED] main_app\templates\hod_template\timetable_edit.html
+[FIXED] main_app\templates\hod_template\timetable_form.html
+[OK] main_app\templates\hod_template\timetable_statistics.html
+[FIXED] main_app\templates\hod_template\timetable_view.html
+[FIXED] main_app\templates\hod_template\transport_allocations.html
+[FIXED] main_app\templates\hod_template\update_application_status.html
+[FIXED] main_app\templates\hod_template\user_management_hub.html
+[FIXED] main_app\templates\hod_template\view_all_assignments.html
+[FIXED] main_app\templates\hod_template\view_discussion.html
+[FIXED] main_app\templates\hod_template\view_events.html
+[FIXED] main_app\templates\hod_template\view_fee_payments.html
+[FIXED] main_app\templates\hod_template\view_grievances.html
+[FIXED] main_app\templates\hod_template\view_message.html
+[FIXED] main_app\templates\hod_template\view_placement_applications.html
+[FIXED] main_app\templates\hod_template\view_resources.html
+[OK] main_app\templates\hod_template\view_timetable.html
+[OK] main_app\templates\includes\floating_ai_assistant.html
+[OK] main_app\templates\lms\lms_dashboard.html
+[OK] main_app\templates\main_app\base.html
+[OK] main_app\templates\main_app\footer.html
+[OK] main_app\templates\main_app\form_template.html
+[OK] main_app\templates\main_app\index.html
+[OK] main_app\templates\main_app\login.html
+[FIXED] main_app\templates\main_app\login_single_page.html
+[OK] main_app\templates\main_app\login_with_otp.html
+[OK] main_app\templates\main_app\public_data.html
+[OK] main_app\templates\main_app\public_roll_verify.html
+[OK] main_app\templates\main_app\public_student_info.html
+[OK] main_app\templates\main_app\sidebar_template.html
+[OK] main_app\templates\main_app\verify_otp.html
+[OK] main_app\templates\management_template\academic_oversight.html
+[OK] main_app\templates\management_template\add_fee_structure.html
+[OK] main_app\templates\management_template\add_hostel.html
+[OK] main_app\templates\management_template\add_library_book.html
+[OK] main_app\templates\management_template\add_scholarship.html
+[OK] main_app\templates\management_template\add_transport.html
+[OK] main_app\templates\management_template\allocate_hostel.html
+[OK] main_app\templates\management_template\allocate_transport.html
+[OK] main_app\templates\management_template\assign_grievance.html
+[OK] main_app\templates\management_template\chat_interface.html
+[OK] main_app\templates\management_template\disburse_scholarship.html
+[OK] main_app\templates\management_template\edit_fee_structure.html
+[OK] main_app\templates\management_template\edit_library_book.html
+[OK] main_app\templates\management_template\edit_transport.html
+[OK] main_app\templates\management_template\fee_defaulters.html
+[OK] main_app\templates\management_template\financial_reports.html
+[FIXED] main_app\templates\management_template\home_content.html
+[OK] main_app\templates\management_template\hostel_allocations.html
+[OK] main_app\templates\management_template\hostel_visitor_logs.html
+[OK] main_app\templates\management_template\institutional_kpis.html
+[OK] main_app\templates\management_template\issue_library_book.html
+[OK] main_app\templates\management_template\library_issues.html
+[OK] main_app\templates\management_template\manage_fee_structure.html
+[OK] main_app\templates\management_template\manage_hostels.html
+[OK] main_app\templates\management_template\manage_library.html
+[OK] main_app\templates\management_template\manage_scholarships.html
+[OK] main_app\templates\management_template\manage_transport.html
+[OK] main_app\templates\management_template\operational_reports.html
+[OK] main_app\templates\management_template\record_fee_payment.html
+[OK] main_app\templates\management_template\resolve_grievance.html
+[OK] main_app\templates\management_template\return_library_book.html
+[OK] main_app\templates\management_template\review_scholarship_application.html
+[OK] main_app\templates\management_template\scholarship_applications.html
+[OK] main_app\templates\management_template\transport_allocations.html
+[OK] main_app\templates\management_template\view_fee_payments.html
+[OK] main_app\templates\management_template\view_grievances.html
+[FIXED] main_app\templates\management_template\view_profile.html
+[OK] main_app\templates\navigation\hod_nav.html
+[OK] main_app\templates\navigation\management_nav.html
+[OK] main_app\templates\navigation\sidebar_user.html
+[OK] main_app\templates\navigation\staff_nav.html
+[OK] main_app\templates\navigation\student_nav.html
+[OK] main_app\templates\parent_template\child_detail.html
+[FIXED] main_app\templates\parent_template\home.html
+[OK] main_app\templates\parent_template\link_student.html
+[FIXED] main_app\templates\parent_template\parent_home.html
+[OK] main_app\templates\parent_template\send_message.html
+[OK] main_app\templates\parent_template\view_assignments.html
+[OK] main_app\templates\parent_template\view_attendance.html
+[OK] main_app\templates\parent_template\view_fees.html
+[OK] main_app\templates\parent_template\view_profile.html
+[OK] main_app\templates\parent_template\view_results.html
+[FIXED] main_app\templates\payroll\process_payroll.html
+[OK] main_app\templates\performance\dashboard.html
+[FIXED] main_app\templates\placement\company_management.html
+[FIXED] main_app\templates\placement\placement_dashboard.html
+[FIXED] main_app\templates\proctor_template\absentee_list.html
+[FIXED] main_app\templates\proctor_template\absentee_results.html
+[FIXED] main_app\templates\proctor_template\home_content.html
+[FIXED] main_app\templates\proctor_template\messages.html
+[FIXED] main_app\templates\proctor_template\send_message.html
+[FIXED] main_app\templates\proctor_template\student_details.html
+[FIXED] main_app\templates\proctor_template\view_events.html
+[FIXED] main_app\templates\proctor_template\view_profile.html
+[FIXED] main_app\templates\proctor_template\view_students.html
+[FIXED] main_app\templates\registration\base.html
+[OK] main_app\templates\registration\parent_login.html
+[FIXED] main_app\templates\registration\password_reset_complete.html
+[FIXED] main_app\templates\registration\password_reset_confirm.html
+[FIXED] main_app\templates\registration\password_reset_done.html
+[OK] main_app\templates\registration\password_reset_email.html
+[FIXED] main_app\templates\registration\password_reset_form.html
+[FIXED] main_app\templates\staff_template\add_research.html
+[FIXED] main_app\templates\staff_template\announcements.html
+[FIXED] main_app\templates\staff_template\attendance_analytics.html
+[FIXED] main_app\templates\staff_template\attendance_qr.html
+[FIXED] main_app\templates\staff_template\bulk_attendance_import.html
+[FIXED] main_app\templates\staff_template\bulk_marks_import.html
+[OK] main_app\templates\staff_template\chat_interface.html
+[FIXED] main_app\templates\staff_template\create_assignment.html
+[FIXED] main_app\templates\staff_template\create_discussion.html
+[FIXED] main_app\templates\staff_template\create_event.html
+[FIXED] main_app\templates\staff_template\create_online_exam.html
+[FIXED] main_app\templates\staff_template\discussions.html
+[FIXED] main_app\templates\staff_template\edit_student_result.html
+[OK] main_app\templates\staff_template\enhanced_dashboard.html
+[FIXED] main_app\templates\staff_template\enter_marks.html
+[FIXED] main_app\templates\staff_template\gate_pass_approvals.html
+[FIXED] main_app\templates\staff_template\generate_qr.html
+[FIXED] main_app\templates\staff_template\home_content.html
+[FIXED] main_app\templates\staff_template\library_issue_return.html
+[OK] main_app\templates\staff_template\lms\dashboard.html
+[FIXED] main_app\templates\staff_template\manage_placements.html
+[FIXED] main_app\templates\staff_template\messages.html
+[FIXED] main_app\templates\staff_template\modern_dashboard.html
+[FIXED] main_app\templates\staff_template\my_assigned_grievances.html
+[FIXED] main_app\templates\staff_template\my_exam_duties.html
+[FIXED] main_app\templates\staff_template\my_online_exams.html
+[FIXED] main_app\templates\staff_template\my_research.html
+[FIXED] main_app\templates\staff_template\resolve_grievance.html
+[FIXED] main_app\templates\staff_template\send_message.html
+[FIXED] main_app\templates\staff_template\staff_add_result.html
+[FIXED] main_app\templates\staff_template\staff_apply_leave.html
+[FIXED] main_app\templates\staff_template\staff_attendance_history.html
+[FIXED] main_app\templates\staff_template\staff_feedback.html
+[FIXED] main_app\templates\staff_template\staff_take_attendance.html
+[FIXED] main_app\templates\staff_template\staff_update_attendance.html
+[FIXED] main_app\templates\staff_template\staff_view_notification.html
+[FIXED] main_app\templates\staff_template\staff_view_profile.html
+[OK] main_app\templates\staff_template\student_cgpa.html
+[FIXED] main_app\templates\staff_template\upload_answer_key.html
+[FIXED] main_app\templates\staff_template\upload_material.html
+[FIXED] main_app\templates\staff_template\upload_question_paper.html
+[FIXED] main_app\templates\staff_template\view_assignments.html
+[FIXED] main_app\templates\staff_template\view_discussion.html
+[FIXED] main_app\templates\staff_template\view_events.html
+[FIXED] main_app\templates\staff_template\view_materials.html
+[FIXED] main_app\templates\staff_template\view_message.html
+[FIXED] main_app\templates\staff_template\view_results.html
+[FIXED] main_app\templates\staff_template\view_students.html
+[FIXED] main_app\templates\staff_template\view_submissions.html
+[FIXED] main_app\templates\staff_template\view_timetable.html
+[FIXED] main_app\templates\student_template\add_internship.html
+[FIXED] main_app\templates\student_template\ai_chatbot.html
+[FIXED] main_app\templates\student_template\announcements.html
+[FIXED] main_app\templates\student_template\apply_placement.html
+[FIXED] main_app\templates\student_template\apply_scholarship.html
+[FIXED] main_app\templates\student_template\bookmarks.html
+[OK] main_app\templates\student_template\chat_interface.html
+[FIXED] main_app\templates\student_template\create_discussion.html
+[FIXED] main_app\templates\student_template\discussions.html
+[FIXED] main_app\templates\student_template\document_locker\category_view.html
+[FIXED] main_app\templates\student_template\document_locker\dashboard.html
+[FIXED] main_app\templates\student_template\document_locker\detail.html
+[FIXED] main_app\templates\student_template\document_locker\search.html
+[FIXED] main_app\templates\student_template\document_locker\upload.html
+[FIXED] main_app\templates\student_template\download_admit_card.html
+[FIXED] main_app\templates\student_template\enhanced_dashboard.html
+[FIXED] main_app\templates\student_template\exam_results.html
+[FIXED] main_app\templates\student_template\fee_receipts.html
+[FIXED] main_app\templates\student_template\gate_pass.html
+[FIXED] main_app\templates\student_template\home_content.html
+[OK] main_app\templates\student_template\lms\dashboard.html
+[FIXED] main_app\templates\student_template\medical_records.html
+[FIXED] main_app\templates\student_template\messages.html
+[FIXED] main_app\templates\student_template\modern_dashboard.html
+[FIXED] main_app\templates\student_template\my_activities.html
+[FIXED] main_app\templates\student_template\my_certificates.html
+[FIXED] main_app\templates\student_template\my_gate_passes.html
+[FIXED] main_app\templates\student_template\my_grievances.html
+[FIXED] main_app\templates\student_template\my_hostel_details.html
+[FIXED] main_app\templates\student_template\my_internships.html
+[FIXED] main_app\templates\student_template\my_library_issues.html
+[FIXED] main_app\templates\student_template\my_placement_applications.html
+[FIXED] main_app\templates\student_template\my_scholarship_applications.html
+[FIXED] main_app\templates\student_template\my_transport_details.html
+[FIXED] main_app\templates\student_template\online_exams.html
+[FIXED] main_app\templates\student_template\report_ragging.html
+[FIXED] main_app\templates\student_template\request_certificate.html
+[FIXED] main_app\templates\student_template\search_books.html
+[FIXED] main_app\templates\student_template\send_message.html
+[FIXED] main_app\templates\student_template\sports_activities.html
+[FIXED] main_app\templates\student_template\student_apply_leave.html
+[FIXED] main_app\templates\student_template\student_dashboard_enhanced.html
+[FIXED] main_app\templates\student_template\student_feedback.html
+[FIXED] main_app\templates\student_template\student_profile_complete.html
+[FIXED] main_app\templates\student_template\student_view_attendance.html
+[FIXED] main_app\templates\student_template\student_view_notification.html
+[FIXED] main_app\templates\student_template\student_view_profile.html
+[FIXED] main_app\templates\student_template\student_view_result.html
+[FIXED] main_app\templates\student_template\submit_assignment.html
+[FIXED] main_app\templates\student_template\submit_grievance.html
+[FIXED] main_app\templates\student_template\view_assignments.html
+[FIXED] main_app\templates\student_template\view_discussion.html
+[FIXED] main_app\templates\student_template\view_events.html
+[FIXED] main_app\templates\student_template\view_exam_schedule.html
+[FIXED] main_app\templates\student_template\view_fee_structure.html
+[OK] main_app\templates\student_template\view_materials.html
+[FIXED] main_app\templates\student_template\view_message.html
+[OK] main_app\templates\student_template\view_online_exam.html
+[FIXED] main_app\templates\student_template\view_placement_drives.html
+[FIXED] main_app\templates\student_template\view_resources.html
+[FIXED] main_app\templates\student_template\view_results.html
+[FIXED] main_app\templates\student_template\view_scholarships.html
+[FIXED] main_app\templates\student_template\view_semester_detail.html
+[OK] main_app\templates\student_template\view_submissions.html
+[FIXED] main_app\templates\student_template\view_timetable.html
+[OK] templates\admission\admission_dashboard.html
+[OK] templates\alumni\alumni_dashboard.html
+[OK] templates\alumni\alumni_directory.html
+[OK] templates\errors\403.html
+[OK] templates\errors\404.html
+[OK] templates\errors\500.html
+[OK] templates\payroll\email\payslip_email.html
+[OK] templates\payroll\payroll_dashboard.html
+[OK] templates\payroll\process_payroll.html
+
+================================================================================
+Summary
+================================================================================
+Files processed: 430
+Files modified: 300
+Files with errors: 3
+
+
+================================================================================
+Fixes Applied
+================================================================================
+
+[FILE] main_app\templates\admission\make_decision.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\admission\review_applications.html
+   - Removed orphaned endblock on line 91
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\admission\view_application.html
+   - Removed orphaned endblock on line 66
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\alumni\alumni_profile.html
+   - Removed orphaned endblock on line 52
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\analytics\attendance.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\analytics\dashboard.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\analytics\report_builder.html
+   - Removed orphaned endblock on line 87
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\chat_interface.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\common\notification_center.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\communication\communication_hub.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\components\enhanced_table.html
+   - Removed block names from 1 endblock tag(s)
+
+[FILE] main_app\templates\forms\academic_year_form.html
+   - Removed orphaned endblock on line 158
+   - Removed orphaned endblock on line 159
+   - Removed orphaned endblock on line 160
+   - Removed orphaned endblock on line 161
+   - Removed orphaned endblock on line 162
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\alumni_form.html
+   - Removed orphaned endblock on line 130
+   - Removed orphaned endblock on line 131
+   - Removed orphaned endblock on line 132
+   - Removed orphaned endblock on line 133
+   - Removed orphaned endblock on line 134
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\base_form.html
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\class_group_form.html
+   - Removed orphaned endblock on line 140
+   - Removed orphaned endblock on line 141
+   - Removed orphaned endblock on line 142
+   - Removed orphaned endblock on line 143
+   - Removed orphaned endblock on line 144
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\company_form.html
+   - Removed orphaned endblock on line 302
+   - Removed orphaned endblock on line 303
+   - Removed orphaned endblock on line 304
+   - Removed orphaned endblock on line 305
+   - Removed orphaned endblock on line 306
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\course_form.html
+   - Removed orphaned endblock on line 160
+   - Removed orphaned endblock on line 161
+   - Removed orphaned endblock on line 162
+   - Removed orphaned endblock on line 163
+   - Removed orphaned endblock on line 164
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\department_form.html
+   - Removed orphaned endblock on line 200
+   - Removed orphaned endblock on line 201
+   - Removed orphaned endblock on line 202
+   - Removed orphaned endblock on line 203
+   - Removed orphaned endblock on line 204
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\enhanced_form_template.html
+   - Removed orphaned endblock on line 544
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\management_form.html
+   - Removed orphaned endblock on line 135
+   - Removed orphaned endblock on line 136
+   - Removed orphaned endblock on line 137
+   - Removed orphaned endblock on line 138
+   - Removed orphaned endblock on line 139
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\section_form.html
+   - Removed orphaned endblock on line 157
+   - Removed orphaned endblock on line 158
+   - Removed orphaned endblock on line 159
+   - Removed orphaned endblock on line 160
+   - Removed orphaned endblock on line 161
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\session_form.html
+   - Removed orphaned endblock on line 373
+   - Removed orphaned endblock on line 374
+   - Removed orphaned endblock on line 375
+   - Removed orphaned endblock on line 376
+   - Removed orphaned endblock on line 377
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\simple_form.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\staff_form.html
+   - Removed orphaned endblock on line 382
+   - Removed orphaned endblock on line 383
+   - Removed orphaned endblock on line 384
+   - Removed orphaned endblock on line 385
+   - Removed orphaned endblock on line 386
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\student_form.html
+   - Removed orphaned endblock on line 583
+   - Removed orphaned endblock on line 584
+   - Removed orphaned endblock on line 585
+   - Removed orphaned endblock on line 586
+   - Removed orphaned endblock on line 587
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\student_form_simple.html
+   - Removed orphaned endblock on line 404
+   - Removed orphaned endblock on line 405
+   - Removed orphaned endblock on line 406
+   - Removed orphaned endblock on line 407
+   - Removed orphaned endblock on line 408
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\study_material_form.html
+   - Removed orphaned endblock on line 126
+   - Removed orphaned endblock on line 127
+   - Removed orphaned endblock on line 128
+   - Removed orphaned endblock on line 129
+   - Removed orphaned endblock on line 130
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\forms\subject_form.html
+   - Removed orphaned endblock on line 216
+   - Removed orphaned endblock on line 217
+   - Removed orphaned endblock on line 218
+   - Removed orphaned endblock on line 219
+   - Removed orphaned endblock on line 220
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\academic_operations.html
+   - Removed orphaned endblock on line 22
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_admin.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_council_member.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_course_template.html
+   - Removed orphaned endblock on line 65
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_department.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_disciplinary_action.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_exam.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_exam_questions.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_exam_schedule.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_fee_structure.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_hostel.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_library_book.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_placement_drive.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_program.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_scholarship.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_semester_result.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_session_template.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_staff_template.html
+   - Removed orphaned endblock on line 61
+   - Removed block names from 5 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_student_extended.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_student_fixed.html
+   - Removed orphaned endblock on line 404
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_student_template.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_subject_template.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_timetable.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\add_transport.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\admin_dashboard_fixed.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\admin_view_attendance.html
+   - Removed block names from 4 endblock tag(s)
+   - Fixed template tag spacing
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\admin_view_profile.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\ai_student_insights.html
+   - Removed orphaned endblock on line 324
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\allocate_hostel.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\allocate_transport.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\analytics_dashboard.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\announcements.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\approval_center.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\assign_grievance.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\assign_invigilators.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\assign_proctor.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\book_classroom.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\bulk_operations.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\bulk_student_upload.html
+   - Removed block names from 2 endblock tag(s)
+
+[FILE] main_app\templates\hod_template\check_timetable_conflicts.html
+   - Removed orphaned endblock on line 27
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\classroom_bookings.html
+   - Removed orphaned endblock on line 39
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\classroom_form.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\classroom_maintenance.html
+   - Removed orphaned endblock on line 30
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\create_activity.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\create_announcement.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\create_event.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\create_online_exam.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\custom_report_generator.html
+   - Removed orphaned endblock on line 412
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\delete_admin.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\department_analytics.html
+   - Removed orphaned endblock on line 48
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\department_management.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\disburse_scholarship.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\discussions.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_admin.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_company.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_course_template.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_department.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_fee_structure.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_library_book.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_program.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_session_template.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_staff_template.html
+   - Removed orphaned endblock on line 1012
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_student_template.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_subject_template.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\edit_transport.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\enhanced_dashboard.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\exam_analytics.html
+   - Removed orphaned endblock on line 88
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\faculty_performance.html
+   - Removed orphaned endblock on line 19
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\fee_defaulters.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\generate_admit_cards.html
+   - Removed orphaned endblock on line 37
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\home_content.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\hostel_visitor_logs.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\issue_certificate.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\issue_library_book.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\library_issues.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\lms\dashboard.html
+   - Removed orphaned endblock on line 42
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_academic_years.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_admins.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_alumni.html
+   - Removed orphaned endblock on line 73
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_certificates.html
+   - Removed orphaned endblock on line 41
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_class_groups.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_classrooms.html
+   - Removed orphaned endblock on line 556
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_course.html
+   - Removed orphaned endblock on line 418
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_departments.html
+   - Removed orphaned endblock on line 535
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_disciplinary_actions.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_exam_schedule.html
+   - Removed orphaned endblock on line 39
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_exams.html
+   - Removed orphaned endblock on line 80
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_fee_structure.html
+   - Removed orphaned endblock on line 52
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_gate_passes.html
+   - Removed orphaned endblock on line 17
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_hostels.html
+   - Removed orphaned endblock on line 23
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_internships.html
+   - Removed orphaned endblock on line 18
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_library.html
+   - Removed orphaned endblock on line 37
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_online_exams.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_placement_drives.html
+   - Removed orphaned endblock on line 35
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_proctors.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_programs.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_public_links.html
+   - Removed orphaned endblock on line 18
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_ragging_incidents.html
+   - Removed orphaned endblock on line 14
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_results.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_sections.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_session.html
+   - Removed orphaned endblock on line 382
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_sports_activities.html
+   - Removed orphaned endblock on line 23
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_staff.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_student.html
+   - Removed orphaned endblock on line 667
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_student_council.html
+   - Removed orphaned endblock on line 24
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_subject.html
+   - Removed orphaned endblock on line 394
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_timetable.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\manage_transport.html
+   - Removed orphaned endblock on line 23
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\messages.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\modern_dashboard.html
+   - Removed orphaned endblock on line 488
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\program_form.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\public_link_form.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\publish_result.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\record_fee_payment.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\reports_hub.html
+   - Removed orphaned endblock on line 41
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\resolve_grievance.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\resource_stats.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\return_library_book.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\review_scholarship_application.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\scholarship_applications.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\send_message.html
+   - Removed orphaned endblock on line 235
+   - Removed orphaned endblock on line 236
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\staff_detail.html
+   - Removed orphaned endblock on line 782
+   - Removed block names from 5 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\staff_feedback_template.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\staff_leave_view.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\staff_notification.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\student_detail.html
+   - Removed orphaned endblock on line 680
+   - Removed block names from 6 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\student_feedback_template.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\student_leave_view.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\student_notification.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\timetable_dashboard.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\timetable_edit.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\timetable_form.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\timetable_view.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\transport_allocations.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\update_application_status.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\user_management_hub.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_all_assignments.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_discussion.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_events.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_fee_payments.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_grievances.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_message.html
+   - Removed orphaned endblock on line 138
+   - Removed orphaned endblock on line 139
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+   - Removed 1 duplicate load tag(s)
+
+[FILE] main_app\templates\hod_template\view_placement_applications.html
+   - Removed orphaned endblock on line 41
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\hod_template\view_resources.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\main_app\login_single_page.html
+   - Removed 1 duplicate load tag(s)
+
+[FILE] main_app\templates\management_template\home_content.html
+   - Removed orphaned endblock on line 736
+   - Removed orphaned endblock on line 737
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\management_template\view_profile.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\parent_template\home.html
+   - Removed orphaned endblock on line 191
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\parent_template\parent_home.html
+   - Removed orphaned endblock on line 26
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\payroll\process_payroll.html
+   - Removed orphaned endblock on line 60
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\placement\company_management.html
+   - Removed orphaned endblock on line 60
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\placement\placement_dashboard.html
+   - Removed orphaned endblock on line 95
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\absentee_list.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\absentee_results.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\home_content.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\messages.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\send_message.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\student_details.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\view_events.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\view_profile.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\proctor_template\view_students.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\registration\base.html
+   - Removed block names from 1 endblock tag(s)
+
+[FILE] main_app\templates\registration\password_reset_complete.html
+   - Removed block names from 1 endblock tag(s)
+
+[FILE] main_app\templates\registration\password_reset_confirm.html
+   - Removed block names from 2 endblock tag(s)
+
+[FILE] main_app\templates\registration\password_reset_done.html
+   - Removed block names from 1 endblock tag(s)
+
+[FILE] main_app\templates\registration\password_reset_form.html
+   - Removed block names from 2 endblock tag(s)
+
+[FILE] main_app\templates\staff_template\add_research.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\announcements.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\attendance_analytics.html
+   - Removed orphaned endblock on line 409
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\attendance_qr.html
+   - Removed orphaned endblock on line 159
+   - Removed orphaned endblock on line 160
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\bulk_attendance_import.html
+   - Removed orphaned endblock on line 276
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\bulk_marks_import.html
+   - Removed orphaned endblock on line 263
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\create_assignment.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\create_discussion.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\create_event.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\create_online_exam.html
+   - Removed orphaned endblock on line 9
+   - Removed orphaned endblock on line 10
+   - Removed orphaned endblock on line 11
+   - Removed orphaned endblock on line 12
+   - Removed orphaned endblock on line 13
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\discussions.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\edit_student_result.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\enter_marks.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\gate_pass_approvals.html
+   - Removed orphaned endblock on line 35
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\generate_qr.html
+   - Removed orphaned endblock on line 112
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\home_content.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\library_issue_return.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\manage_placements.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\messages.html
+   - Removed orphaned endblock on line 373
+   - Removed orphaned endblock on line 374
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\modern_dashboard.html
+   - Removed orphaned endblock on line 187
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\my_assigned_grievances.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\my_exam_duties.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\my_online_exams.html
+   - Removed orphaned endblock on line 32
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\my_research.html
+   - Removed orphaned endblock on line 33
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\resolve_grievance.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\send_message.html
+   - Removed orphaned endblock on line 237
+   - Removed orphaned endblock on line 238
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_add_result.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_apply_leave.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_attendance_history.html
+   - Removed orphaned endblock on line 347
+   - Removed orphaned endblock on line 348
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_feedback.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_take_attendance.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_update_attendance.html
+   - Removed block names from 3 endblock tag(s)
+   - Fixed template tag spacing
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_view_notification.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\staff_view_profile.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\upload_answer_key.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\upload_material.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\upload_question_paper.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_assignments.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_discussion.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_events.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_materials.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_message.html
+   - Removed orphaned endblock on line 203
+   - Removed orphaned endblock on line 204
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+   - Removed 1 duplicate load tag(s)
+
+[FILE] main_app\templates\staff_template\view_results.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_students.html
+   - Removed orphaned endblock on line 371
+   - Removed orphaned endblock on line 372
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_submissions.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\staff_template\view_timetable.html
+   - Removed orphaned endblock on line 32
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\add_internship.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\ai_chatbot.html
+   - Removed orphaned endblock on line 413
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\announcements.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\apply_placement.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\apply_scholarship.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\bookmarks.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\create_discussion.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\discussions.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\document_locker\category_view.html
+   - Removed orphaned endblock on line 270
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\document_locker\dashboard.html
+   - Removed orphaned endblock on line 333
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\document_locker\detail.html
+   - Removed orphaned endblock on line 290
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\document_locker\search.html
+   - Removed orphaned endblock on line 262
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\document_locker\upload.html
+   - Removed orphaned endblock on line 421
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\download_admit_card.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\enhanced_dashboard.html
+   - Removed orphaned endblock on line 106
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\exam_results.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\fee_receipts.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\gate_pass.html
+   - Removed orphaned endblock on line 907
+   - Removed block names from 5 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\home_content.html
+   - Removed orphaned endblock on line 843
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\medical_records.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\messages.html
+   - Removed orphaned endblock on line 373
+   - Removed orphaned endblock on line 374
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\modern_dashboard.html
+   - Removed orphaned endblock on line 429
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_activities.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_certificates.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_gate_passes.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_grievances.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_hostel_details.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_internships.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_library_issues.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_placement_applications.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_scholarship_applications.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\my_transport_details.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\online_exams.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\report_ragging.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\request_certificate.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\search_books.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\send_message.html
+   - Removed orphaned endblock on line 236
+   - Removed orphaned endblock on line 237
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\sports_activities.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_apply_leave.html
+   - Removed orphaned endblock on line 600
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_dashboard_enhanced.html
+   - Removed orphaned endblock on line 468
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_feedback.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_profile_complete.html
+   - Removed orphaned endblock on line 203
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_view_attendance.html
+   - Removed orphaned endblock on line 437
+   - Removed block names from 6 endblock tag(s)
+   - Fixed template tag spacing
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_view_notification.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_view_profile.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\student_view_result.html
+   - Removed orphaned endblock on line 629
+   - Removed block names from 5 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\submit_assignment.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\submit_grievance.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_assignments.html
+   - Removed orphaned endblock on line 391
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_discussion.html
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_events.html
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_exam_schedule.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_fee_structure.html
+   - Removed orphaned endblock on line 251
+   - Removed orphaned endblock on line 252
+   - Removed block names from 2 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_message.html
+   - Removed orphaned endblock on line 140
+   - Removed orphaned endblock on line 141
+   - Removed orphaned endblock on line 171
+   - Removed block names from 3 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_placement_drives.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_resources.html
+   - Removed block names from 4 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_results.html
+   - Removed orphaned endblock on line 268
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_scholarships.html
+   - Removed orphaned endblock on line 32
+   - Removed orphaned endblock on line 33
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_semester_detail.html
+   - Removed orphaned endblock on line 318
+   - Removed block names from 1 endblock tag(s)
+   - Standardized extends tag quotes
+
+[FILE] main_app\templates\student_template\view_timetable.html
+   - Removed block names from 8 endblock tag(s)
+   - Standardized extends tag quotes
+
+================================================================================
+[WARNING] Errors Found (Manual Review Required)
+================================================================================
+
+[ERROR] main_app\templates\forms\academic_year_form.html
+   - Line 109: Orphaned endblock without matching block
+
+[ERROR] main_app\templates\forms\student_form_simple.html
+   - Line 174: Orphaned endblock without matching block
+
+[ERROR] main_app\templates\hod_template\edit_staff_template.html
+   - Line 1013: Unclosed block 'content'
+
+[WARNING] Some issues require manual review. Please check the errors above.

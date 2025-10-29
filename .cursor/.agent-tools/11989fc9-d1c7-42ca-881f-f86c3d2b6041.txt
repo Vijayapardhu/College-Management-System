@@ -1,0 +1,30 @@
+tes, 'student_certificates_dashboard'))"                                        
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from main_app import student_views_certificates; print(hasattr(student_views_certificates, 'student_certificates_dashboard'))                               
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\main_app\student_views_certificates.py", line 7, in <module>                                 
+    from .models import Student
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\main_app\models.py", line 2, in <module>                                                     
+    from django.contrib.auth.models import UserManager
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\models.py", line 3, in <module>                           
+    from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager 
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\contrib\auth\base_user.py", line 57, in <module>                       
+    class AbstractBaseUser(models.Model):
+    ...<109 lines>...
+            )
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\base.py", line 129, in __new__                               
+    app_config = apps.get_containing_app_config(module)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\apps\registry.py", line 260, in get_containing_app_config              
+    self.check_apps_ready()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\apps\registry.py", line 137, in check_apps_ready                       
+    settings.INSTALLED_APPS
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\conf\__init__.py", line 102, in __getattr__                            
+    self._setup(name)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\conf\__init__.py", line 82, in _setup                                  
+    raise ImproperlyConfigured(
+    ...<4 lines>...
+    )
+django.core.exceptions.ImproperlyConfigured: Requested setting INSTALLED_APPS, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.  

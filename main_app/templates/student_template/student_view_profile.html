@@ -1,186 +1,559 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block title %}My Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block custom_css %}
+<style>
+    .page-header-modern {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 20px;
+        padding: 3.5rem 3rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 40px rgba(30, 64, 175, 0.4);
+        position: relative;
+        overflow: hidden;
+        min-height: 280px;
+    }
+
+    .page-header-modern::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+    }
+
+    .page-header-modern::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 3rem;
+        position: relative;
+        z-index: 1;
+        align-items: center;
+    }
+
+    @media (max-width: 968px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+    }
+
+    .profile-avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        font-size: 5rem;
+        font-weight: 700;
+        color: white;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-name {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        line-height: 1.2;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-email {
+        opacity: 0.95;
+        font-size: 1.125rem;
+        margin-bottom: 1.5rem;
+        font-weight: 400;
+    }
+
+    .profile-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    @media (max-width: 968px) {
+        .profile-badges {
+            justify-content: center;
+        }
+    }
+
+    .profile-badge {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 0.75rem 1.25rem;
+        border-radius: 30px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .profile-badge:hover {
+        background: rgba(255, 255, 255, 0.35);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-badge i {
+        font-size: 1.125rem;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        border: none;
+        margin-bottom: 2rem;
+        color: white;
+    }
+
+    html.dark .info-card {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    .info-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    html.dark .info-card-title {
+        color: white;
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .info-card-title i {
+        color: white;
+        opacity: 0.9;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    html.dark .info-label {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: white;
+    }
+
+    html.dark .info-value {
+        color: white;
+    }
+
+    .password-form {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    html.dark .password-form {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.5rem;
+        font-size: 0.9375rem;
+    }
+
+    html.dark .form-label {
+        color: #cbd5e1;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        transition: all 0.2s;
+        background: white;
+        color: #0f172a;
+    }
+
+    html.dark .form-control {
+        background: #0f172a;
+        color: #f1f5f9;
+        border-color: #475569;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-help {
+        font-size: 0.8125rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+    }
+
+    html.dark .form-help {
+        color: #94a3b8;
+    }
+
+    .alert-info {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: start;
+        gap: 0.75rem;
+    }
+
+    html.dark .alert-info {
+        background: rgba(59, 130, 246, 0.1);
+        border-left-color: #60a5fa;
+    }
+
+    .alert-info i {
+        color: #3b82f6;
+        font-size: 1.25rem;
+    }
+
+    html.dark .alert-info i {
+        color: #60a5fa;
+    }
+
+    .alert-info-text {
+        color: #1e40af;
+        font-size: 0.9375rem;
+    }
+
+    html.dark .alert-info-text {
+        color: #93c5fd;
+    }
+
+    .btn-update {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.875rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-update:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-update:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #10b981;
+    }
+
+    html.dark .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: #6ee7b7;
+    }
+
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #ef4444;
+    }
+
+    html.dark .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #fca5a5;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<!-- Student Profile -->
-<div class="space-y-6">
-    <!-- Profile Header -->
-    <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl shadow-lg p-8 text-white">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-6">
-                <div class="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                    {% if user.profile_pic %}
-                        <img src="{{ user.profile_pic.url }}" alt="{{ user.first_name }}" class="w-24 h-24 rounded-full object-cover">
-                    {% else %}
-                        <span class="text-4xl font-bold">
-                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
-                        </span>
-                    {% endif %}
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">{{ user.first_name }} {{ user.last_name }}</h1>
-                    <p class="text-primary-100 mb-2">{{ user.email }}</p>
-                    <div class="flex items-center space-x-4 text-sm">
-                        <span class="flex items-center">
-                            <i class="fas fa-id-card mr-2"></i>
-                            Roll: {{ student.roll_number|default:"N/A" }}
-                        </span>
-                        <span class="flex items-center">
-                            <i class="fas fa-graduation-cap mr-2"></i>
-                            {{ student.course.name|default:"Not Assigned" }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <a href="{% url 'student_edit_profile' %}" class="btn bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30">
-                <i class="fas fa-edit mr-2"></i>
-                Edit Profile
-            </a>
-        </div>
-    </div>
-
-    <!-- Profile Form -->
-    <div class="form-container">
-        <div class="form-header">
-            <h2 class="form-title">
-                <i class="fas fa-user-circle mr-2"></i>
-                Profile Information
-            </h2>
-            <p class="form-subtitle">View and update your personal information</p>
-        </div>
-
-        <!-- Alert -->
-        <div class="alert alert-info">
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-info-circle text-blue-500"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm text-blue-800">
-                        <strong>Note:</strong> If you change your password, you will be logged out and need to login again.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Messages -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
-                    <div class="flex items-center">
-                        {% if message.tags == 'success' %}
-                            <i class="fas fa-check-circle mr-2"></i>
-                        {% else %}
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                        {% endif %}
-                        {{ message }}
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        <!-- Form -->
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.first_name.id_for_label }}" class="form-label form-label-required">
-                        First Name
-                    </label>
-                    {{ form.first_name }}
-                    {% if form.first_name.errors %}
-                        <div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.last_name.id_for_label }}" class="form-label form-label-required">
-                        Last Name
-                    </label>
-                    {{ form.last_name }}
-                    {% if form.last_name.errors %}
-                        <div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.email.id_for_label }}" class="form-label form-label-required">
-                    Email Address
-                </label>
-                <div class="input-group">
-                    {{ form.email }}
-                    <div class="input-group-prepend">
-                        <i class="fas fa-envelope input-group-text"></i>
-                    </div>
-                </div>
-                {% if form.email.errors %}
-                    <div class="invalid-feedback">{{ form.email.errors.0 }}</div>
+<!-- Profile Header -->
+<div class="page-header-modern">
+    <div class="profile-grid">
+        <div class="profile-avatar-section">
+            <div class="profile-avatar">
+                {% if student.admin.profile_pic %}
+                    <img src="{{ student.admin.profile_pic.url }}" alt="{{ student.admin.first_name }}">
+                {% else %}
+                    {{ student.admin.first_name|first|upper }}{{ student.admin.last_name|first|upper }}
                 {% endif %}
             </div>
-
-            <div class="form-group">
-                <label for="{{ form.password.id_for_label }}" class="form-label">
-                    New Password
-                </label>
-                <div class="input-group">
-                    {{ form.password }}
-                    <div class="input-group-prepend">
-                        <i class="fas fa-lock input-group-text"></i>
-                    </div>
-                </div>
-                <p class="form-help">Leave blank to keep current password</p>
-                {% if form.password.errors %}
-                    <div class="invalid-feedback">{{ form.password.errors.0 }}</div>
+        </div>
+        
+        <div>
+            <h1 class="profile-name">{{ student.admin.first_name }} {{ student.admin.last_name }}</h1>
+            <p class="profile-email">{{ student.admin.email }}</p>
+            <div class="profile-badges">
+                {% if student.roll_number %}
+                <span class="profile-badge">
+                    <i class="fas fa-id-card"></i>
+                    Roll: {{ student.roll_number }}
+                </span>
+                {% endif %}
+                {% if student.course %}
+                <span class="profile-badge">
+                    <i class="fas fa-graduation-cap"></i>
+                    {{ student.course.name }}
+                </span>
+                {% endif %}
+                {% if student.session %}
+                <span class="profile-badge">
+                    <i class="fas fa-calendar"></i>
+                    {{ student.session.session_start_year }}-{{ student.session.session_end_year }}
+                </span>
                 {% endif %}
             </div>
-
-            {% if form.profile_pic %}
-            <div class="form-group">
-                <label for="{{ form.profile_pic.id_for_label }}" class="form-label">
-                    Profile Picture
-                </label>
-                <div class="file-upload-wrapper">
-                    {{ form.profile_pic }}
-                    <label for="{{ form.profile_pic.id_for_label }}" class="file-upload-label">
-                        <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
-                        <p class="file-upload-text">Click to upload or drag and drop</p>
-                        <p class="file-upload-hint">JPG, PNG up to 2MB</p>
-                    </label>
-                </div>
-                {% if form.profile_pic.errors %}
-                    <div class="invalid-feedback">{{ form.profile_pic.errors.0 }}</div>
-                {% endif %}
-            </div>
-            {% endif %}
-
-            <div class="form-actions">
-                <a href="{% url 'student_home' %}" class="btn btn-outline">
-                    <i class="fas fa-times mr-2"></i>
-                    Cancel
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save mr-2"></i>
-                    Update Profile
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-{% endblock content %}
+<br><br>
+<!-- Profile Information Card -->
+<div class="info-card">
+    <h2 class="info-card-title">
+        <i class="fas fa-user-circle"></i>
+        Personal Information
+    </h2>
+    
+    <div class="info-grid">
+        <div class="info-item">
+            <span class="info-label">Full Name</span>
+            <span class="info-value">{{ student.admin.first_name }} {{ student.admin.last_name }}</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Email Address</span>
+            <span class="info-value">{{ student.admin.email }}</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Roll Number</span>
+            <span class="info-value">{{ student.roll_number|default:"Not Assigned" }}</span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">Course</span>
+            <span class="info-value">{{ student.course.name|default:"Not Assigned" }}</span>
+        </div>
+        
+        {% if student.address %}
+        <div class="info-item">
+            <span class="info-label">Address</span>
+            <span class="info-value">{{ student.address }}</span>
+        </div>
+        {% endif %}
+        
+        {% if student.gender %}
+        <div class="info-item">
+            <span class="info-label">Gender</span>
+            <span class="info-value">{{ student.gender }}</span>
+        </div>
+        {% endif %}
+        
+        <div class="info-item">
+            <span class="info-label">Session</span>
+            <span class="info-value">
+                {% if student.session %}
+                    {{ student.session.session_start_year }} - {{ student.session.session_end_year }}
+                {% else %}
+                    Not Assigned
+                {% endif %}
+            </span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">User Type</span>
+            <span class="info-value">Student</span>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Card -->
+<div class="password-form">
+    <h2 class="info-card-title">
+        <i class="fas fa-lock"></i>
+        Change Password
+    </h2>
+    
+    <div class="alert-info">
+        <i class="fas fa-info-circle"></i>
+        <div class="alert-info-text">
+            <strong>Note:</strong> After changing your password, you will be logged out automatically and need to login again with your new password.
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="new_password" class="form-label">New Password</label>
+            <input type="password" 
+                   id="new_password" 
+                   name="password" 
+                   class="form-control" 
+                   placeholder="Enter your new password"
+                   minlength="6"
+                   required>
+            <p class="form-help">Must be at least 6 characters long</p>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" 
+                   id="confirm_password" 
+                   name="confirm_password" 
+                   class="form-control" 
+                   placeholder="Confirm your new password"
+                   minlength="6"
+                   required>
+            <p class="form-help">Re-enter your password to confirm</p>
+        </div>
+
+        <button type="submit" class="btn-update">
+            <i class="fas fa-key"></i>
+            Update Password
+        </button>
+    </form>
+</div>
+{% endblock %}
 
 {% block custom_js %}
 <script>
 $(document).ready(function(){
-    var notified = false;
-    $("#id_password").on("change", function(){
-        if (!notified){
-            notified = true;
-            window.toast.warning("After updating your password, you will be logged out and need to login again");
+    // Password validation
+    $('form').on('submit', function(e) {
+        const password = $('#new_password').val();
+        const confirmPassword = $('#confirm_password').val();
+        
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match! Please make sure both passwords are identical.');
+            return false;
+        }
+        
+        if (password.length < 6) {
+            e.preventDefault();
+            alert('Password must be at least 6 characters long!');
+            return false;
+        }
+        
+        // Confirm before submitting
+        if (!confirm('Are you sure you want to change your password? You will be logged out.')) {
+            e.preventDefault();
+            return false;
         }
     });
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}

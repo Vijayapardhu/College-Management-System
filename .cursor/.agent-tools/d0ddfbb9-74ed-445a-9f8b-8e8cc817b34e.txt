@@ -1,0 +1,57 @@
+PS C:\Users\PARDHU\Desktop\projects\College-Management-System> python comprehensive_template_fixer.py 2>&1 | Select-Object -Last 50
+  Added missing endblock page_title in search_books.html
+  Added missing endblock page_title in send_message.html
+  Added missing endblock title in send_message.html
+  Added missing endblock content in sports_activities.html
+  Added missing endblock page_title in sports_activities.html
+  Added missing endblock title in student_apply_leave.html
+  Added missing endblock page_title in student_dashboard_enhanced.html
+  Added missing endblock page_title in student_profile_complete.html
+  Added missing endblock content in submit_grievance.html
+  Added missing endblock page_title in submit_grievance.html
+  Added missing endblock title in view_assignments.html
+  Added missing endblock content in view_exam_schedule.html
+  Added missing endblock page_title in view_exam_schedule.html
+  Added missing endblock page_title in view_fee_structure.html
+  Added missing endblock title in view_fee_structure.html
+  Added missing endblock page_title in view_message.html
+  Added missing endblock title in view_message.html
+  Added missing endblock content in view_placement_drives.html
+  Added missing endblock page_title in view_placement_drives.html
+  Added missing endblock page_title in view_results.html
+  Added missing endblock content in view_scholarships.html
+  Added missing endblock page_title in view_scholarships.html
+  Added missing endblock page_title in view_semester_detail.html
+  Added missing endblock page_title in view_timetable.html
+  Added missing endblock page_title in category_view.html
+  Added missing endblock page_title in dashboard.html
+  Added missing endblock page_title in detail.html
+  Added missing endblock page_title in search.html
+  Added missing endblock page_title in upload.html
+
+======================================================================
+SUMMARY
+======================================================================
+Files Processed: 156
+Errors Fixed:
+  ò missing_endblock: 324
+  ò unnamed_endblock: 102
+  ò unclosed_if: 2
+
+python : Traceback (most recent call last):
+At line:1 char:1
++ python comprehensive_template_fixer.py 2>&1 | Select-Object -Last 50
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\comprehensive_template_fixer.py", line 200, in <module>
+    fixer.fix_all_templates()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\comprehensive_template_fixer.py", line 195, in fix_all_templates     
+    print("\u2705 ALL TEMPLATE ERRORS FIXED!")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>

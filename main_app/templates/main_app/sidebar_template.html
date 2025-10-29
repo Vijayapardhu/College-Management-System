@@ -1457,8 +1457,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    {% url 'student_request_certificate' as student_request_certificate %}
-                    <a href="{{student_request_certificate}}" class="nav-link {% if student_request_certificate == request.path %} active {% endif %}">
+                    {% url 'my_certificates' as my_certificates_url %}
+                    <a href="{{my_certificates_url}}" class="nav-link {% if my_certificates_url == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>Request Certificate</p>
                     </a>

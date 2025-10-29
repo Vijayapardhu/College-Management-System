@@ -1,12 +1,14 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 
 {% block page_title %}{{ page_title }}{% endblock %}
 
 {% block custom_css %}
 <style>
+    body { background: #0a0a0a; }
+<style>
     .parent-header {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-left: 4px solid #003d82;
         border-radius: 4px;
@@ -16,7 +18,7 @@
     }
 
     .child-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-radius: 4px;
         padding: 25px;
@@ -87,7 +89,7 @@
 
         {% if no_students %}
         <!-- No Children Linked -->
-        <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 60px; text-align: center;">
+        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333; border: 1px solid #e5e5e5; border-radius: 4px; padding: 60px; text-align: center;">
             <i class="fas fa-user-plus" style="font-size: 64px; color: #d4d4d4; margin-bottom: 20px;"></i>
             <h4 style="color: #1a202c; margin-bottom: 15px;">No Students Linked</h4>
             <p style="color: #4a5568; margin-bottom: 25px;">
@@ -186,19 +188,4 @@
     </div>
 </section>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

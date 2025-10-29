@@ -1,4 +1,4 @@
-{% extends 'forms/base_form.html' %}
+{% extends "forms/base_form.html" %}
 {% load static %}
 
 {% block custom_css %}
@@ -106,7 +106,7 @@
 {% endblock %}
 
 {% block form_icon %}fas fa-layer-group{% endblock %}
-{% block form_title %}{% if year_id %}Edit Academic Year{% else %}Add Academic Year{% endblock %}{% endblock %}
+{% block form_title %}{% if year_id %}Edit Academic Year{% else %}Add Academic Year{% endif %}{% endblock %}
 {% block form_subtitle %}Configure year levels for student organization{% endblock %}
 
 {% block cancel_url %}{% url 'manage_academic_years' %}{% endblock %}
@@ -153,4 +153,14 @@ document.querySelector('form').addEventListener('submit', function(e) {
 });
 </script>
 
-{% endblock form_content %}
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+

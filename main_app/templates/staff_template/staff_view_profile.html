@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 
 {% block content %}
 <!-- Staff Profile -->
@@ -132,7 +132,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -146,4 +146,4 @@ $(document).ready(function(){
     });
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}

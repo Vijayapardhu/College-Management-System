@@ -1,4 +1,4 @@
-{% extends 'forms/base_form.html' %}
+{% extends "forms/base_form.html" %}
 {% load static %}
 
 {% block custom_css %}
@@ -77,4 +77,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     submitBtn.disabled = true;
 });
 </script>
-{% endblock form_content %}
+{% endblock %}
+
+
+

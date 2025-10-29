@@ -1,63 +1,170 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}Notifications{% endblock %}
+{% block title %}Notifications{% endblock %}
+
+{% block custom_css %}
+<style>
+    .page-header-modern {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 8px 32px rgba(30, 64, 175, 0.3);
+    }
+
+    .page-header-modern h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .notification-list {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    html.dark .notification-list {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .notification-item {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        transition: all 0.2s;
+        display: flex;
+        gap: 1rem;
+    }
+
+    html.dark .notification-item {
+        border-bottom-color: #475569;
+    }
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+    .notification-item:hover {
+        background: #f8fafc;
+    }
+
+    html.dark .notification-item:hover {
+        background: #0f172a;
+    }
+
+    .notification-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #eff6ff;
+        color: #1e40af;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    html.dark .notification-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #60a5fa;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-message {
+        color: #0f172a;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    html.dark .notification-message {
+        color: #f1f5f9;
+    }
+
+    .notification-date {
+        color: #64748b;
+        font-size: 0.8125rem;
+    }
+
+    html.dark .notification-date {
+        color: #94a3b8;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+    }
+
+    html.dark .empty-state {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 2rem;
+        background: #eff6ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #3b82f6;
+    }
+
+    html.dark .empty-state-icon {
+        background: rgba(59, 130, 246, 0.1);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
+<div class="page-header-modern">
+    <h1>
+        <i class="fas fa-bell"></i>
+        Notifications
+    </h1>
+    <p>Stay updated with important announcements and messages</p>
+</div>
 
-
-        <!-- Page Header -->
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-user-graduate me-2"></i>{{page_title}}
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                Manage and organize your data efficiently
-            </p>
+{% if notifications %}
+<div class="notification-list">
+    {% for notification in notifications %}
+    <div class="notification-item">
+        <div class="notification-icon">
+            <i class="fas fa-info-circle"></i>
         </div>
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card-professional">
-                    <div class="card-header-professional">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-
-
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body-professional">
-
-
-
-                       
-
-
-                        <div class="form-group table">
-              <table class="table table-bordered">
-                  <tr>
-                      <th>SN</th>
-                      <th>Date</th>
-                      <th>Message</th>
-                  </tr>
-                  {% for notification in  notifications %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>{{notification.created_at}}</td>
-                        <td>{{notification.message}}</td>
-                    </tr>
-                  {% endfor %}
-              </table>
-                        </div>
-                   
-                    </div>
-                    <!-- /.card-body -->
-
-                <!-- /.card -->
-
+        <div class="notification-content">
+            <div class="notification-message">{{ notification.message }}</div>
+            <div class="notification-date">
+                <i class="fas fa-clock"></i> {{ notification.created_at|date:"M d, Y - h:i A" }}
             </div>
         </div>
     </div>
-</section>
-{% endblock content %}
-
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">
+        <i class="fas fa-bell-slash"></i>
+    </div>
+    <h3 style="font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">No Notifications</h3>
+    <p style="color: #64748b; font-size: 1rem;">You're all caught up! New notifications will appear here.</p>
+</div>
+{% endif %}
+{% endblock %}

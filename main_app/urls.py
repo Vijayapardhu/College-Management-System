@@ -552,6 +552,7 @@ urlpatterns = [
     path("staff/assignments/create/", staff_views.create_assignment, name='create_assignment'),
     path("staff/assignments/", staff_views.view_assignments, name='staff_view_assignments_legacy'),
     path("staff/submissions/", staff_views.view_submissions, name='staff_view_submissions_legacy'),
+    path("staff/submission/<int:submission_id>/grade/", staff_views.grade_assignment, name='staff_grade_assignment'),
     path("staff/exams/create/", staff_views.create_online_exam, name='create_online_exam'),
     path("staff/exams/", staff_views.my_online_exams, name='my_online_exams'),
     
@@ -720,8 +721,8 @@ urlpatterns = [
     path('student/online_exams/results/', student_views.student_exam_results, name='student_exam_results'),
     
     # Certificates
-    path('student/certificates/', student_views.student_my_certificates, name='student_my_certificates'),
-    path('student/certificates/request/', student_views.student_request_certificate, name='student_request_certificate'),
+    path('student/my-certificates/', student_views.student_my_certificates, name='my_certificates'),
+    path('student/request-certificate/', student_views.student_request_certificate, name='student_request_certificate'),
     
     # Internships
     path('student/internships/', student_views.student_my_internships, name='student_my_internships'),

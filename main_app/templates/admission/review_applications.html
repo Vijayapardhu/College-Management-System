@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block page_title %}Review Applications{% endblock %}
 
@@ -65,7 +65,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -87,6 +87,4 @@ document.querySelectorAll('[data-count]').forEach(counter => {
     }, 16);
 });
 </script>
-{% endblock custom_js %}
-
-
+{% endblock %}

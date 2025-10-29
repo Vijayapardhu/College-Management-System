@@ -1,426 +1,637 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block title %}Attendance{% endblock title %}
+{% block title %}My Attendance{% endblock %}
+{% block page_title %}Attendance{% endblock %}
 
 {% block custom_css %}
 <style>
-    .attendance-summary {
+    :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    html.dark {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #475569;
+    }
+
+    body {
+        background: var(--bg-primary);
+    }
+
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-header p {
+        margin: 0;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 1.5rem;
         margin-bottom: 2rem;
     }
 
-    .summary-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        border-left: 4px solid;
-        text-align: center;
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
     }
 
-    .summary-card.present { border-left-color: #059669; }
-    .summary-card.absent { border-left-color: #dc2626; }
-    .summary-card.percentage { border-left-color: #1e40af; }
-
-    html.dark .summary-card {
-        background: #1e293b;
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
-    .summary-value {
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .stat-card.present::before {
+        background: linear-gradient(90deg, #059669, #10b981);
+    }
+
+    .stat-card.absent::before {
+        background: linear-gradient(90deg, #dc2626, #ef4444);
+    }
+
+    .stat-card.percentage::before {
+        background: linear-gradient(90deg, #1e40af, #3b82f6);
+    }
+
+    .stat-card.total::before {
+        background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .stat-card.present .stat-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    html.dark .stat-card.present .stat-icon {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+    }
+
+    .stat-card.absent .stat-icon {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+    html.dark .stat-card.absent .stat-icon {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+    }
+
+    .stat-card.percentage .stat-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    html.dark .stat-card.percentage .stat-icon {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
+
+    .stat-card.total .stat-icon {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+    }
+
+    html.dark .stat-card.total .stat-icon {
+        background: rgba(139, 92, 246, 0.2);
+        color: #c4b5fd;
+    }
+
+    .stat-value {
         font-size: 2.5rem;
         font-weight: 700;
+        color: var(--text-primary);
         margin-bottom: 0.5rem;
+        line-height: 1;
     }
 
-    .summary-card.present .summary-value { color: #059669; }
-    .summary-card.absent .summary-value { color: #dc2626; }
-    .summary-card.percentage .summary-value { color: #1e40af; }
-
-    .summary-label {
-        color: #64748b;
+    .stat-label {
         font-size: 0.875rem;
+        color: var(--text-secondary);
         font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: #3b82f6;
+    }
+
+    /* Subject Cards */
+    .subjects-section {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
     }
 
     .subject-card {
-        background: white;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        margin-bottom: 1.25rem;
+        transition: all 0.3s;
+        overflow: hidden;
     }
 
-    html.dark .subject-card {
-        background: #1e293b;
+    .subject-card:hover {
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
+        border-color: #3b82f6;
     }
 
     .subject-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.25rem;
+        padding: 1.5rem;
+        cursor: pointer;
+        gap: 1rem;
+    }
+
+    .subject-header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .subject-icon-badge {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #3b82f6;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    html.dark .subject-icon-badge {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
     }
 
     .subject-name {
         font-size: 1.125rem;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--text-primary);
     }
 
-    html.dark .subject-name {
-        color: #f1f5f9;
+    .subject-stats {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
     }
 
-    .attendance-percentage {
+    .subject-stat-item {
+        text-align: center;
+    }
+
+    .subject-stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .subject-stat-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .percentage-badge {
         padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-weight: 600;
+        border-radius: 8px;
         font-size: 1rem;
+        font-weight: 700;
     }
 
     .percentage-high {
-        background: #f0fdf4;
-        color: #166534;
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    html.dark .percentage-high {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
     }
 
     .percentage-medium {
-        background: #fffbeb;
+        background: #fef3c7;
         color: #92400e;
     }
 
+    html.dark .percentage-medium {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+
     .percentage-low {
-        background: #fef2f2;
+        background: #fee2e2;
         color: #991b1b;
     }
 
+    html.dark .percentage-low {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+    }
+
+    .collapse-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    html.dark .collapse-icon {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
+
+    .collapse-icon.collapsed {
+        transform: rotate(-90deg);
+    }
+
+    /* Subject Details */
+    .subject-details {
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-top: 1px solid var(--border-color);
+    }
+
     .progress-wrapper {
-        margin: 1rem 0;
+        margin-bottom: 1.25rem;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .progress-label-text {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .progress-label-value {
+        color: var(--text-secondary);
     }
 
     .progress-bar-container {
-        height: 10px;
-        background: #e2e8f0;
-        border-radius: 5px;
+        height: 12px;
+        background: var(--border-color);
+        border-radius: 6px;
         overflow: hidden;
     }
 
-    html.dark .progress-bar-container {
-        background: #334155;
-    }
-
-    .progress-bar {
+    .progress-bar-fill {
         height: 100%;
-        border-radius: 5px;
-        transition: width 0.6s ease;
+        border-radius: 6px;
+        transition: width 0.5s ease;
     }
 
-    .progress-high { background: #059669; }
-    .progress-medium { background: #d97706; }
-    .progress-low { background: #dc2626; }
+    .progress-bar-fill.present {
+        background: linear-gradient(90deg, #059669, #10b981);
+    }
+
+    .progress-bar-fill.absent {
+        background: linear-gradient(90deg, #dc2626, #ef4444);
+    }
 
     .attendance-stats {
-        display: flex;
-        justify-content: space-around;
-        padding-top: 1rem;
-        border-top: 1px solid #e2e8f0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 1.25rem;
     }
 
-    html.dark .attendance-stats {
-        border-top-color: #334155;
-    }
-
-    .stat-item {
+    .attendance-stat-box {
+        background: var(--bg-primary);
+        padding: 1rem;
+        border-radius: 8px;
         text-align: center;
     }
 
-    .stat-value {
+    .attendance-stat-value {
         font-size: 1.5rem;
         font-weight: 700;
-        margin-bottom: 0.25rem;
+        color: var(--text-primary);
     }
 
-    .stat-item.present .stat-value { color: #059669; }
-    .stat-item.absent .stat-value { color: #dc2626; }
-
-    .stat-label {
-        font-size: 0.8125rem;
-        color: #64748b;
+    .attendance-stat-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
     }
 
-    .attendance_div_red {
-        width: 80px;
-        min-height: 60px;
-        padding: 10px;
-        background: #f44336;
-        border: 3px solid white;
+    /* Empty State */
+    .empty-state {
         text-align: center;
-        color: #fff;
-        border-radius: 30px;
-        box-shadow: 1px 1px 1px grey;
-        margin: 5px;
-        display: inline-block;
+        padding: 5rem 2rem;
     }
 
-    .attendance_div_green {
-        width: 80px;
-        min-height: 60px;
-        padding: 10px;
-        background: #4CAF50;
-        border: 3px solid white;
-        text-align: center;
-        color: #fff;
-        border-radius: 30px;
-        box-shadow: 1px 1px 1px grey;
-        margin: 5px;
-        display: inline-block;
+    .empty-state-icon {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 2rem;
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    html.dark .empty-state-icon {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+    }
+
+    .empty-state-icon i {
+        font-size: 4rem;
+        color: #3b82f6;
+    }
+
+    html.dark .empty-state-icon i {
+        color: #93c5fd;
+    }
+
+    .empty-state h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.75rem 0;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    @media (max-width: 1024px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .attendance-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .subject-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .subject-stats {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .attendance-stats {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {% endblock custom_css %}
 
-{% block page_title %}Attendance{% endblock page_title %}
-
 {% block content %}
-<div class="mb-4">
-    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
-        <i class="fas fa-calendar-check"></i> My Attendance
-    </h2>
-    <p style="color: #64748b; margin: 0;">Track your attendance across all subjects</p>
-</div>
-
-<!-- Overall Summary -->
-<div class="attendance-summary">
-    <div class="summary-card present">
-        <div class="summary-value">{{ total_present }}</div>
-        <div class="summary-label">Classes Present</div>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-calendar-check"></i> My Attendance</h1>
+        <p>Track your class attendance and stay on top of your academic performance</p>
     </div>
-    <div class="summary-card absent">
-        <div class="summary-value">{{ total_absent }}</div>
-        <div class="summary-label">Classes Absent</div>
-    </div>
-    <div class="summary-card percentage">
-        <div class="summary-value">{{ percentage_present }}%</div>
-        <div class="summary-label">Overall Attendance</div>
-    </div>
-</div>
 
-<!-- Subject-wise Attendance -->
-<h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
-    Subject-wise Details
-</h3>
-
-{% if subjects %}
-    {% for subject in subjects %}
-    <div class="subject-card">
-        <div class="subject-header">
-            <h4 class="subject-name">
-                <i class="fas fa-book"></i> {{ subject.name }}
-            </h4>
-            <div class="attendance-percentage {% if forloop.counter0|add:0 < data_present|length %}{% with percent=data_present|slice:forloop.counter0|first %}{% if percent >= 75 %}percentage-high{% elif percent >= 60 %}percentage-medium{% else %}percentage-low{% endif %}{% endwith %}{% endif %}">
-                {% if forloop.counter0 < data_present|length %}
-                    {{ data_present|slice:forloop.counter0|first }}%
-                {% else %}
-                    0%
-                {% endif %}
+    <!-- Overall Statistics -->
+    <div class="stats-grid">
+        <div class="stat-card present">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
             </div>
+            <div class="stat-value">{{ total_present|default:"0" }}</div>
+            <div class="stat-label">Classes Present</div>
         </div>
 
-        <div class="progress-wrapper">
-            <div class="progress-bar-container">
-                {% if forloop.counter0 < data_present|length %}
-                    {% with percent=data_present|slice:forloop.counter0|first %}
-                    <div class="progress-bar {% if percent >= 75 %}progress-high{% elif percent >= 60 %}progress-medium{% else %}progress-low{% endif %}" 
-                         style="width: {{ percent }}%"></div>
-                    {% endwith %}
-                {% else %}
-                    <div class="progress-bar progress-low" style="width: 0%"></div>
-                {% endif %}
+        <div class="stat-card absent">
+            <div class="stat-icon">
+                <i class="fas fa-times-circle"></i>
             </div>
+            <div class="stat-value">{{ total_absent|default:"0" }}</div>
+            <div class="stat-label">Classes Absent</div>
         </div>
 
-        <div class="attendance-stats">
-            <div class="stat-item present">
-                <div class="stat-value">
-                    {% if forloop.counter0 < data_present|length %}
-                        {{ data_present|slice:forloop.counter0|first }}
-                    {% else %}
-                        0
-                    {% endif %}
-                </div>
-                <div class="stat-label">Present</div>
+        <div class="stat-card percentage">
+            <div class="stat-icon">
+                <i class="fas fa-percentage"></i>
             </div>
-            <div class="stat-item absent">
-                <div class="stat-value">
-                    {% if forloop.counter0 < data_absent|length %}
-                        {{ data_absent|slice:forloop.counter0|first }}
-                    {% else %}
-                        0
-                    {% endif %}
-                </div>
-                <div class="stat-label">Absent</div>
+            <div class="stat-value">{{ percentage_present|default:"0" }}%</div>
+            <div class="stat-label">Overall Attendance</div>
+        </div>
+
+        <div class="stat-card total">
+            <div class="stat-icon">
+                <i class="fas fa-calendar"></i>
             </div>
+            <div class="stat-value">{% widthratio total_present 1 1 as tp %}{% widthratio total_absent 1 1 as ta %}{{ tp|add:ta|default:"0" }}</div>
+            <div class="stat-label">Total Classes</div>
         </div>
     </div>
-    {% endfor %}
-{% else %}
-<div style="background: white; padding: 4rem 2rem; text-align: center; border-radius: 8px;">
-    <i class="fas fa-calendar-times" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
-    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">No Attendance Records</h3>
-    <p style="color: #64748b;">Attendance data will appear here once classes begin.</p>
-</div>
-{% endif %}
-{% endblock content %}
 
-{% block custom_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate progress bars
-    setTimeout(() => {
-        document.querySelectorAll('.progress-bar').forEach(bar => {
-            const width = bar.style.width;
-            bar.style.width = '0%';
-            setTimeout(() => {
-                bar.style.width = width;
-            }, 100);
-        });
-    }, 300);
-});
-</script>
-{% endblock custom_js %}
-.attendance_div_red{
-    padding: 10px;
-    background: #f44336;
-    border: 3px solid white;
-    text-align: center;
-    color: #fff;
-    border-radius: 30px;
-    box-shadow: 1px 1px 1px grey;
-    margin: 5px;
-}
-.attendance_div_green{
-    padding: 10px;
-    background: #4CAF50;
-    border: 3px solid white;
-    text-align: center;
-    color: #fff;
-    border-radius: 30px;
-    box-shadow: 1px 1px 1px grey;
-    margin: 5px;
-}
-</style>
-{% endblock custom_css %}
+    <!-- Subject-wise Attendance -->
+    <div class="subjects-section">
+        <h2 class="section-title">
+            <i class="fas fa-book-open"></i>
+            Subject-wise Attendance
+        </h2>
 
-{% block content %}
-
-<section class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- general form elements -->
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
-
-
-
-                        <div class="form-group">
-                            <label>Select Subject</label>
-                            <select  id="subject" class="form-control">
-                                <option value="">----</option>
-                                {% for subject in subjects  %}
-                                <option value="{{subject.id}}">{{subject.name}} </option>
-                                {% endfor %}
-                            </select>
+        {% if subject_attendance_data %}
+            {% for data in subject_attendance_data %}
+            <div class="subject-card">
+                <div class="subject-header" onclick="toggleSubject({{ forloop.counter }})">
+                    <div class="subject-header-left">
+                        <div class="subject-icon-badge">
+                            <i class="fas fa-book"></i>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label>Start Date</label>
-                                    <input type="date" class="form-control" placeholder="Start Date" name="start_date" required id="start_date">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label>End Date</label>
-                                    <input type="date" class="form-control" placeholder="End Date" name="end_date"  id="end_date">
-                                </div>
-                            </div>
-                            <button type="button" id="fetch_attendance" class="btn btn-primary btn-block">Fetch
-                                Attendance Data</button>
-               </div>
-
+                        <div class="subject-name">{{ data.subject.name }}</div>
                     </div>
-                    <!-- /.card-body -->
 
-                    <div class="card-footer">
-                            
-                        <div class="row" id="attendance_data"></div>
+                    <div class="subject-stats">
+                        <div class="subject-stat-item">
+                            <div class="subject-stat-value" style="color: #10b981;">{{ data.present }}</div>
+                            <div class="subject-stat-label">Present</div>
+                        </div>
+
+                        <div class="subject-stat-item">
+                            <div class="subject-stat-value" style="color: #ef4444;">{{ data.absent }}</div>
+                            <div class="subject-stat-label">Absent</div>
+                        </div>
+
+                        <div class="percentage-badge {% if data.percentage >= 75 %}percentage-high{% elif data.percentage >= 60 %}percentage-medium{% else %}percentage-low{% endif %}">
+                            {{ data.percentage }}%
+                        </div>
+
+                        <div class="collapse-icon" id="icon-{{ forloop.counter }}">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
                     </div>
                 </div>
-                <!-- /.card -->
 
+                <div class="subject-details" id="subject-{{ forloop.counter }}" style="display: none;">
+                    <div class="progress-wrapper">
+                        <div class="progress-label">
+                            <span class="progress-label-text">Present</span>
+                            <span class="progress-label-value">{{ data.present }} / {{ data.total }}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill present" style="width: {% if data.total > 0 %}{% widthratio data.present data.total 100 %}{% else %}0{% endif %}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-wrapper">
+                        <div class="progress-label">
+                            <span class="progress-label-text">Absent</span>
+                            <span class="progress-label-value">{{ data.absent }} / {{ data.total }}</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill absent" style="width: {% if data.total > 0 %}{% widthratio data.absent data.total 100 %}{% else %}0{% endif %}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="attendance-stats">
+                        <div class="attendance-stat-box">
+                            <div class="attendance-stat-value" style="color: #10b981;">{{ data.present }}</div>
+                            <div class="attendance-stat-label">Present</div>
+                        </div>
+
+                        <div class="attendance-stat-box">
+                            <div class="attendance-stat-value" style="color: #ef4444;">{{ data.absent }}</div>
+                            <div class="attendance-stat-label">Absent</div>
+                        </div>
+
+                        <div class="attendance-stat-box">
+                            <div class="attendance-stat-value" style="color: #3b82f6;">{{ data.total }}</div>
+                            <div class="attendance-stat-label">Total</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <h3>No Attendance Records</h3>
+            <p>Your attendance data will appear here once classes begin</p>
         </div>
+        {% endif %}
     </div>
-</section>
+</div>
 {% endblock content %}
-
 
 {% block custom_js %}
 <script>
-    $(document).ready(function () {
-
-       
-        $("#fetch_attendance").click(function () {
-            var subject = $("#subject").val()
-            var start_date = $("#start_date").val()
-            var end_date = $("#end_date").val()
-            if (subject.length  == 0 || end_date.length ==0 ||start_date.length == 0){
-                alert("Please Select Subject and Date Range");
-                return false;
-            }
-            $("#attendance_data").html(null)
-            $.ajax({
-                url: "{% url 'student_view_attendance' %}",
-                type: 'POST',
-                data: {
-                    subject: subject,
-                    start_date: start_date,
-                    end_date:end_date
-                }
-            }).done(function (response) {
-                var json_data = JSON.parse(response)
-                if (json_data.length < 1) {
-                    $("#attendance_data").html("<div class='col-md-12 alert alert-danger'>No Data For Specified Parameters</div>")
-
-                } else {
-                    var div_data = ""
-                         
-                    for (key in json_data) {
-                    if (json_data[key]['status']){
-                        div_data += "<div class='col-lg-3 attendance_div_green'><b>"+ json_data[key]['date'] + "</b><br/>Present</div>" 
-                    }else{
-
-                        div_data += "<div class='col-lg-3 attendance_div_red'><b>"+ json_data[key]['date'] + "</b><br/>Absent</div>"
-                    }
-                }
-                    div_data += ""
-                    $("#attendance_data").html(div_data)
-
-                }
-            }).fail(function (response) {
-                $("#attendance_data").html("Error While Fetching Records")
-            })
-
-
-          
-
-        })
-    })
+    function toggleSubject(id) {
+        var details = document.getElementById('subject-' + id);
+        var icon = document.getElementById('icon-' + id);
+        
+        if (details.style.display === 'none' || details.style.display === '') {
+            details.style.display = 'block';
+            icon.classList.remove('collapsed');
+        } else {
+            details.style.display = 'none';
+            icon.classList.add('collapsed');
+        }
+    }
 </script>
 {% endblock custom_js %}

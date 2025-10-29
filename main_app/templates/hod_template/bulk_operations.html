@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Bulk Operations{% endblock page_title %}
+{% block page_title %}Bulk Operations{% endblock %}
 
 {% block content %}
 <!-- Bulk Operations -->
@@ -177,7 +177,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -216,6 +216,6 @@ document.getElementById('bulkFile').addEventListener('change', function(e) {
     }
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}
 
 

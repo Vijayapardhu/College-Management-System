@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Attendance Analytics{% endblock page_title %}
+{% block page_title %}Attendance Analytics{% endblock %}
 
 {% block content %}
 <div class="space-y-6">
@@ -31,7 +31,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -60,6 +60,6 @@ new Chart(document.getElementById('subjectChart'), {
     }
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}
 
 

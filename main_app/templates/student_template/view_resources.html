@@ -1,18 +1,23 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}{{ page_title }}{% endblock %}
 
 {% block custom_css %}
 <style>
     .resource-card {
         background: white;
         border: 1px solid #e5e5e5;
-        border-radius: 4px;
+        border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         overflow: hidden;
         transition: all 0.2s ease;
         margin-bottom: 20px;
         height: 100%;
+    }
+
+    html.dark .resource-card {
+        background: #1e293b;
+        border-color: #334155;
     }
 
     .resource-card:hover {
@@ -24,12 +29,17 @@
     .resource-header {
         padding: 15px;
         border-bottom: 1px solid #e5e5e5;
-        background: #f5f5f5;
+        background: #f8fafc;
     }
 
-    .resource-header.document { border-left: 4px solid #b91c1c; }
-    .resource-header.video { border-left: 4px solid #b45309; }
-    .resource-header.link { border-left: 4px solid #0369a1; }
+    html.dark .resource-header {
+        background: #0f172a;
+        border-bottom-color: #334155;
+    }
+
+    .resource-header.document { border-left: 4px solid #dc2626; }
+    .resource-header.video { border-left: 4px solid #ea580c; }
+    .resource-header.link { border-left: 4px solid #0284c7; }
 
     .resource-icon {
         font-size: 32px;
@@ -41,7 +51,7 @@
         border: none;
         font-size: 20px;
         cursor: pointer;
-        color: #ffc107;
+        color: #f59e0b;
         transition: all 0.2s ease;
     }
 
@@ -49,17 +59,134 @@
         transform: scale(1.2);
     }
 
+    .bookmark-btn.bookmarked {
+        color: #f59e0b;
+    }
+
     .rating-stars i {
         cursor: pointer;
-        color: #ffc107;
+        color: #f59e0b;
         font-size: 16px;
+        transition: all 0.2s ease;
     }
 
     .rating-stars i.far {
-        color: #d4d4d4;
+        color: #cbd5e1;
+    }
+
+    .rating-stars i:hover {
+        transform: scale(1.1);
+    }
+
+    .page-header-professional {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    html.dark .page-header-professional {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .card-professional {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    html.dark .card-professional {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .card-body-professional {
+        padding: 20px;
+    }
+
+    .btn-professional-primary {
+        background: #1e40af;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-professional-primary:hover {
+        background: #1e3a8a;
+        color: white;
+    }
+
+    .btn-professional-danger {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-professional-danger:hover {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .btn-professional-success {
+        background: #059669;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .btn-professional-success:hover {
+        background: #047857;
+        color: white;
+    }
+
+    .empty-state-professional {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e5e5e5;
+    }
+
+    html.dark .empty-state-professional {
+        background: #1e293b;
+        border-color: #334155;
+    }
+
+    .empty-state-professional i {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-professional h4 {
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    html.dark .empty-state-professional h4 {
+        color: #f1f5f9;
+    }
+
+    .empty-state-professional p {
+        color: #64748b;
+    }
+
+    html.dark .empty-state-professional p {
+        color: #94a3b8;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
 <section class="content">
@@ -201,7 +328,7 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -265,4 +392,4 @@
         });
     });
 </script>
-{% endblock custom_js %}
+{% endblock %}

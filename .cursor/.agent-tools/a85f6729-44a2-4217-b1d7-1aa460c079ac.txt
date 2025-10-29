@@ -1,0 +1,46 @@
+============================================================
+Adding Sample Results for Student STU0001
+============================================================
+Found student: Pardhu Nandhu (STU0001)
+Found 16 subjects for course: Computer Science Engineering
+Deleted 1 existing results
+[OK] Created result for Computer Networks
+     Internal: 28/30, External: 65/70, Total: 93/100 (93.0%)
+[OK] Created result for VLSI Design
+     Internal: 26/30, External: 60/70, Total: 86/100 (86.0%)
+[OK] Created result for Signal Processing
+     Internal: 25/30, External: 58/70, Total: 83/100 (83.0%)
+[OK] Created result for Fluid Mechanics
+     Internal: 27/30, External: 62/70, Total: 89/100 (89.0%)
+[OK] Created result for Machine Design
+     Internal: 24/30, External: 56/70, Total: 80/100 (80.0%)
+[OK] Created result for Heat Transfer
+     Internal: 29/30, External: 67/70, Total: 96/100 (96.0%)
+[OK] Created result for Manufacturing Technology
+     Internal: 28/30, External: 65/70, Total: 93/100 (93.0%)
+[OK] Created result for Automobile Engineering
+     Internal: 26/30, External: 60/70, Total: 86/100 (86.0%)
+[OK] Created result for Programming in C
+     Internal: 25/30, External: 58/70, Total: 83/100 (83.0%)
+[OK] Created result for Data Structures
+     Internal: 27/30, External: 62/70, Total: 89/100 (89.0%)
+[OK] Created result for Database Management Systems
+     Internal: 24/30, External: 56/70, Total: 80/100 (80.0%)
+[OK] Created result for Operating Systems
+     Internal: 29/30, External: 67/70, Total: 96/100 (96.0%)
+[OK] Created result for Software Engineering
+     Internal: 28/30, External: 65/70, Total: 93/100 (93.0%)
+[OK] Created result for Machine Learning
+     Internal: 26/30, External: 60/70, Total: 86/100 (86.0%)
+[OK] Created result for Artificial Intelligence
+     Internal: 25/30, External: 58/70, Total: 83/100 (83.0%)
+[OK] Created result for Microprocessors
+     Internal: 27/30, External: 62/70, Total: 89/100 (89.0%)
+
+[SUCCESS] Created 16 results for student STU0001
+
+Overall Statistics:
+   Total Marks: 1405.0/1600
+   Average: 87.81%
+   CGPA: 8.78/10
+============================================================

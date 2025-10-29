@@ -1,0 +1,81 @@
+PS C:\Users\PARDHU\Desktop\projects\College-Management-System> python connect_staff_subjects_timetable.py
+======================================================================
+  CONNECTING STAFF → SUBJECTS → TIMETABLE
+======================================================================
+
+📊 Current Data:
+  • Staff: 30
+  • Subjects: 20
+  • Courses: 10
+  • Sessions: 6
+  • Students: 100
+
+📚 STEP 1: Assigning Subjects to Staff
+----------------------------------------------------------------------
+✓ Ananya Verma: Programming in C, Data Structures, Computer Networks
+✓ Aarav Shetty: Data Structures, Computer Networks, Database Management Systems
+✓ Deepika Verma: Computer Networks, Database Management Systems, Operating Systems
+✓ Mohan Rao: Database Management Systems, Operating Systems, Software Engineering
+✓ Geeta Pillai: Operating Systems, Software Engineering, Machine Learning
+✓ Rakesh Pillai: Software Engineering, Machine Learning, Artificial Intelligence
+✓ Priya Gupta: Machine Learning, Artificial Intelligence, Digital Electronics
+✓ Kiran Yadav: Artificial Intelligence, Digital Electronics, Analog Electronics
+✓ Ravi Mishra: Digital Electronics, Analog Electronics, Communication Systems
+✓ Manish Wadhwa: Analog Electronics, Communication Systems, Microprocessors
+✓ Indira Mehta: Communication Systems, Microprocessors, VLSI Design
+✓ Aditi Yadav: Microprocessors, VLSI Design, Signal Processing
+✓ Indira Choudhary: VLSI Design, Signal Processing, Thermodynamics
+✓ Amit Dua: Signal Processing, Thermodynamics, Fluid Mechanics
+✓ Kamala Trivedi: Thermodynamics, Fluid Mechanics, Machine Design
+✓ Sandeep Shukla: Fluid Mechanics, Machine Design, Heat Transfer
+✓ Naveen Joshi: Machine Design, Heat Transfer, Manufacturing Technology
+✓ Aditi Mehta: Heat Transfer, Manufacturing Technology, Automobile Engineering
+✓ Rakesh Bajaj: Manufacturing Technology, Automobile Engineering
+✓ Raj Shukla: Automobile Engineering
+✓ Kumar Iyer: Programming in C, Data Structures, Computer Networks
+✓ Kavita Sethi: Data Structures, Computer Networks, Database Management Systems
+✓ Kavya Jain: Computer Networks, Database Management Systems, Operating Systems
+✓ Deepika Yadav: Database Management Systems, Operating Systems, Software Engineering
+✓ Manish Saxena: Operating Systems, Software Engineering, Machine Learning
+✓ Usha Tiwari: Software Engineering, Machine Learning, Artificial Intelligence
+✓ Sneha Pillai: Machine Learning, Artificial Intelligence, Digital Electronics
+✓ Suman Verma: Artificial Intelligence, Digital Electronics, Analog Electronics
+✓ Lata Patel: Digital Electronics, Analog Electronics, Communication Systems
+✓ Kavita Sethi: Analog Electronics, Communication Systems, Microprocessors
+
+✓ All subjects assigned to staff!
+
+📅 STEP 2: Creating Timetable Entries
+----------------------------------------------------------------------
+✓ Created timetable for Indira Choudhary
+✓ Created timetable for Amit Dua
+✓ Created timetable for Kamala Trivedi
+✓ Created timetable for Sandeep Shukla
+✓ Created timetable for Naveen Joshi
+✓ Created timetable for Aditi Mehta
+✓ Created timetable for Rakesh Bajaj
+✓ Created timetable for Raj Shukla
+✓ Created timetable for Kumar Iyer
+✓ Created timetable for Kavita Sethi
+✓ Created timetable for Kavya Jain
+✓ Created timetable for Deepika Yadav
+✓ Created timetable for Manish Saxena
+✓ Created timetable for Usha Tiwari
+✓ Created timetable for Sneha Pillai
+✓ Created timetable for Suman Verma
+✓ Created timetable for Lata Patel
+✓ Created timetable for Kavita Sethi
+
+======================================================================
+  ✓ COMPLETE!
+======================================================================
+
+✅ Subjects connected to staff
+✅ Created 194 timetable entries
+
+🔄 Refresh pages:
+  • Staff List: http://127.0.0.1:8000/staff/manage/
+  • Staff Dashboard: http://127.0.0.1:8000/staff/home/
+  • (Login with any staff email, password: their current password)
+
+✨ All faculty now have subjects and timetables!

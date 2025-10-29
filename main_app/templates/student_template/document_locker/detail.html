@@ -1,12 +1,14 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 
 {% block page_title %}{{ page_title }}{% endblock %}
 
 {% block custom_css %}
 <style>
+    body { background: #0a0a0a; }
+<style>
     .detail-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-radius: 4px;
         padding: 30px;
@@ -69,7 +71,7 @@
     }
 
     .qr-code-box {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 2px solid #003d82;
         border-radius: 4px;
         padding: 20px;
@@ -213,7 +215,7 @@
                 </div>
 
                 <!-- QR Code -->
-                <div style="background: white; border: 1px solid #e5e5e5; border-radius: 4px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                <div style="background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333; border: 1px solid #e5e5e5; border-radius: 4px; padding: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
                     <h6 style="color: #1a202c; margin-bottom: 15px; font-weight: 600; text-align: center;">
                         <i class="fas fa-qrcode me-2"></i>Verification QR Code
                     </h6>
@@ -285,19 +287,4 @@ function printDocument() {
     }
 </style>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

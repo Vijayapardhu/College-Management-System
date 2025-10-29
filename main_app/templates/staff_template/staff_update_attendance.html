@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 {% block content %}
 
 
@@ -33,7 +33,7 @@
                             <label>Subject</label>
                             <select name="subject" class="form-control" id='subject'>
                                 <option value="">----</option>
-                                {% for subject in subjects  %}
+                                {% for subject in subjects %}
                                 <option value="{{subject.id}}">{{subject.name}}</option>
                                 {% endfor %}
                             </select>
@@ -42,7 +42,7 @@
                             <label>Session</label>
                             <select name="session" class="form-control" id='session'>
                                 <option value="">----</option>
-                                {% for session in sessions  %}
+                                {% for session in sessions %}
                                 <option value="{{session.id}}">{{session}}</option>
                                 {% endfor %}
                             </select>
@@ -83,7 +83,7 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
 
 
 {% block custom_js %}
@@ -213,4 +213,4 @@ if (attendance_date.length  == 0){
         })
     })
 </script>
-{% endblock custom_js %}
+{% endblock %}

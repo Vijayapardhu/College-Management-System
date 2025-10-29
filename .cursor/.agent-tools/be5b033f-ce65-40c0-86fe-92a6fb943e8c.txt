@@ -1,0 +1,55 @@
+h (Ctrl+F5)" ; echo "" ; echo " SERVER RUNNING ON: http://127.0.0.1:8000/"      
+
+     SERVER STARTED - CORE FILES RESTORED!
+
+
+ FILES RESTORED FROM GIT:
+   main_app/hod_views.py - All HOD functions restored
+   main_app/student_views.py - All student functions restored
+   main_app/academic_structure_views.py - Year/section management
+
+ CERTIFICATE FEATURE READY:
+
+ New Files Created:
+   certificate_views.py (186 lines, clean code)
+   certificates_dashboard.html (adaptive theme)
+   request_certificate.html (6 certificate types)
+
+ URLs Configured:
+   /student/my-certificates/  Dashboard
+   /student/certificates/new-request/  Request Form
+   /student/certificates/upload/  Upload Handler
+   /student/certificates/<id>/delete/  Delete
+
+ Navigation Dropdown (student_nav.html):
+  Certificates
+     My Certificates
+     Request New
+     Upload Certificate
+
+ TEST THESE URLS:
+
+1. DASHBOARD (NEW URL):
+   http://127.0.0.1:8000/student/my-certificates/
+    View all certificates
+    Stats cards
+    Upload/Request buttons
+
+2. REQUEST FORM (NEW URL):
+   http://127.0.0.1:8000/student/certificates/new-request/
+    6 certificate type cards
+    Request form
+    History table
+
+3. STUDENT HOME:
+   http://127.0.0.1:8000/student/home/
+    Click Certificates in navigation
+    Dropdown should expand!
+
+ IMPORTANT:
+   Old URL /student/certificates/request/ no longer exists
+   Use NEW URL: /student/certificates/new-request/
+   Clear browser cache (Ctrl+Shift+Delete)
+   Hard refresh (Ctrl+F5)
+
+ SERVER RUNNING ON: http://127.0.0.1:8000/

@@ -1,9 +1,11 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block title %}My Attendance{% endblock %}
 {% block page_title %}My Attendance History{% endblock %}
 
 {% block custom_css %}
+<style>
+    body { background: #0a0a0a; }
 <style>
     .attendance-stats {
         display: grid;
@@ -13,7 +15,7 @@
     }
 
     .stat-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -72,7 +74,7 @@
     }
 
     .attendance-table-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -88,7 +90,7 @@
     }
 
     .table-professional thead {
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
     }
 
     html.dark .table-professional thead {
@@ -136,7 +138,7 @@
     }
 
     .filter-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -173,7 +175,7 @@
     .form-control {
         width: 100%;
         padding: 0.625rem 0.875rem;
-        border: 2px solid #e2e8f0;
+        border: 2px solid #333;
         border-radius: 8px;
         transition: all 0.2s;
     }
@@ -342,8 +344,4 @@
     {% endif %}
 </div>
 {% endblock %}
-{% endblock %}
-
-
-
 

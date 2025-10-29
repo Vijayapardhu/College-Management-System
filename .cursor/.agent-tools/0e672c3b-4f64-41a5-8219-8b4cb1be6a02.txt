@@ -1,0 +1,51 @@
+ount 50                                                                                                                                 
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}Student Details{% endblock page_title %}
+
+{% block content %}
+<!-- Student Detail -->
+<div class="space-y-6">
+    <!-- Student Profile Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-8 text-white">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
+                    {% if student.admin.profile_pic %}
+                        <img src="{{ student.admin.profile_pic.url }}" alt="{{ student.admin.first_name }}" class="w-24 h-24 rounded-2xl object-cover">                                                                                                                         
+                    {% else %}
+                        <span class="text-4xl font-bold">
+                            {{ student.admin.first_name|first|default:"S"|upper }}{{ student.admin.last_name|first|default:"T"|upper }} 
+                        </span>
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">{{ student.admin.first_name|default:"Student" }} {{ student.admin.last_name|default:"Name" }}</h1>                                                                                                                      
+                    <p class="text-blue-100 mb-3">{{ student.admin.email|default:"student@example.com" }}</p>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-id-card mr-1"></i> Roll: {{ student.roll_number|default:"Not Assigned" }}
+                        </span>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-graduation-cap mr-1"></i> {{ student.course.name|default:"No Course" }}
+                        </span>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                            <i class="fas fa-calendar mr-1"></i> {{ student.session_year_id.session_start_year|default:"2024" }}-{{ student.session_year_id.session_end_year|default:"2025" }}                                                                                  
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <a href="{% url 'edit_student' student.id %}" class="btn bg-white text-blue-600 hover:bg-blue-50">
+                    <i class="fas fa-edit mr-2"></i>Edit Profile
+                </a>
+                <button onclick="exportStudentData()" class="btn bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30">                                                                                                                           
+                    <i class="fas fa-download mr-2"></i>Export Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic Performance -->
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="metric-card metric-card-success">

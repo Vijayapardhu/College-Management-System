@@ -1,0 +1,54 @@
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:517
++ ... ?�?�?" & echo. & echo "dY"s CORRECT ACADEMIC STRUCTURE:" & echo. & ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:525
++ ... " & echo. & echo "dY"s CORRECT ACADEMIC STRUCTURE:" & echo. & echo "� ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:1876
++ ... echo "   �o" 'External Exams' �+' 'External Exams (Final)'" & echo. & ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:1884
++ ...  �o" 'External Exams' �+' 'External Exams (Final)'" & echo. & echo "2 ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:1919
++ ...  Exams (Final)'" & echo. & echo "2. TABLE HEADERS UPDATED:" & echo "  ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:2107
++ ... echo "   �o" Complete View: Clear distinction between both" & echo. & ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:2115
++ ...  �o" Complete View: Clear distinction between both" & echo. & echo "3 ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:2146
++ ... nction between both" & echo. & echo "3. INFO BANNER ADDED:" & echo "  ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:2242
++ ... ox at top" & echo "   �o" Explains grading formula clearly" & echo "  ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+At C:\Users\PARDHU\AppData\Local\Temp\ps-script-d0ed9c49-aaea-415c-aed9-b5af7f6ebb1d.ps1:7 char:2328
++ ... nments are separate" & echo "   �o" Full dark mode support" & echo. & ...
++                                                                 ~
+The ampersand (&) character is not allowed. The & operator is reserved for future use; wrap an ampersand in double 
+quotation marks ("&") to pass it as part of a string.
+Not all parse errors were reported.  Correct the reported errors and try again.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : AmpersandNotAllowed
+ 

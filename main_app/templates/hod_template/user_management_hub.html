@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}User Management Hub{% endblock page_title %}
+{% block page_title %}User Management Hub{% endblock %}
 
 {% block content %}
 <!-- User Management Hub -->
@@ -252,7 +252,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -286,6 +286,6 @@ function showBulkActions() {
     window.location.href = '{% url "bulk_operations" %}';
 }
 </script>
-{% endblock custom_js %}
+{% endblock %}
 
 

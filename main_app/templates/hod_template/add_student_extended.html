@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Add New Student - Comprehensive Form{% endblock page_title %}
+{% block page_title %}Add New Student - Comprehensive Form{% endblock %}
 {% block custom_css %}
 <style>
 .compact-form .form-group {
@@ -31,7 +31,7 @@
     margin-bottom: 0 !important;
 }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 
 
@@ -647,7 +647,7 @@ document.getElementById('studentAdmissionForm').addEventListener('submit', funct
     // Add any custom validation here
 });
 </script>
-{% endblock content %}
+{% endblock %}
 
 
 

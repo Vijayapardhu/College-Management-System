@@ -1,0 +1,151 @@
+-Object -Skip 220 -First 150 | ForEach-Object -Begin { $i = 221 } -Process { "$($i): $_"; $i++ }                                        
+221:     .empty-state-text {
+222:         color: #94a3b8;
+223:         margin-bottom: 1.5rem;
+224:     }
+225: </style>
+226: {% endblock %}
+227:
+228: {% block content %}
+229: <!-- Modern Page Header -->
+230: <div class="page-header-modern">
+231:     <h1>
+232:         <i class="fas fa-graduation-cap"></i>
+233:         {{page_title}}
+234:     </h1>
+235:     <p>Manage all courses, programs, and degree offerings</p>
+236: </div>
+237:
+238: <!-- Action Bar -->
+239: <div class="action-bar">
+240:     <div class="search-section">
+241:         <div style="position: relative;">
+242:             <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>                                                                                                                                   
+243:             <input type="text"
+244:                    class="search-input"
+245:                    id="searchInput"
+246:                    placeholder="Search courses...">
+247:         </div>
+248:     </div>
+249:     
+250:     <div class="action-buttons">
+251:         <a href="{% url 'add_course' %}" class="btn-modern btn-primary-modern">
+252:             <i class="fas fa-plus"></i>
+253:             Add New Course
+254:         </a>
+255:     </div>
+256: </div>
+257:
+258: <!-- Table Card -->
+259: <div class="table-card">
+260:     <div class="table-card-header">
+261:         <h3 class="table-card-title">
+262:             <i class="fas fa-list"></i>
+263:             Course Records
+264:         </h3>
+265:         <span class="record-count" id="courseCount">{{ courses|length }}</span>
+266:     </div>
+267:
+268:     <div class="table-card-body">
+269:         {% if courses %}
+270:         <div style="overflow-x: auto;">
+271:             <table class="table-modern" id="courseTable">
+272:                 <thead>
+273:                     <tr>
+274:                         <th>#</th>
+275:                         <th>Course Name</th>
+276:                         <th>Course Code</th>
+277:                         <th>Enrolled Students</th>
+278:                         <th>Actions</th>
+279:                     </tr>
+280:                 </thead>
+281:                 <tbody>
+282:                     {% for course in courses %}
+283:                     <tr>
+284:                         <td>{{ forloop.counter }}</td>
+285:                         <td>
+286:                             <div class="course-name">
+287:                                 <i class="fas fa-graduation-cap" style="color: #059669; margin-right: 0.5rem;"></i>
+288:                                 {{course.name}}
+289:                             </div>
+290:                         </td>
+291:                         <td>
+292:                             <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px; color: #059669; font-weight: 600;">                                                                                                                             
+293:                                 {{course.course_code|default:"N/A"}}
+294:                             </code>
+295:                         </td>
+296:                         <td>
+297:                             <span class="badge-count">
+298:                                 <i class="fas fa-users"></i>
+299:                                 {{ course.student_set.count }} Students
+300:                             </span>
+301:                         </td>
+302:                         <td>
+303:                             <div style="display: flex; gap: 0.5rem;">
+304:                                 <a href="{% url 'edit_course' course.id %}"
+305:                                    class="btn-modern btn-icon btn-edit"
+306:                                    title="Edit Course">
+307:                                     <i class="fas fa-edit"></i>
+308:                                 </a>
+309:                                 <a href="{% url 'delete_course' course.id %}"
+310:                                    class="btn-modern btn-icon btn-delete"
+311:                                    onclick="return confirm('Are you sure you want to delete this course?')"
+312:                                    title="Delete Course">
+313:                                     <i class="fas fa-trash"></i>
+314:                                 </a>
+315:                             </div>
+316:                         </td>
+317:                     </tr>
+318:                     {% endfor %}
+319:                 </tbody>
+320:             </table>
+321:         </div>
+322:         {% else %}
+323:         <div class="empty-state">
+324:             <div class="empty-state-icon">
+325:                 <i class="fas fa-graduation-cap"></i>
+326:             </div>
+327:             <h3 class="empty-state-title">No Courses Found</h3>
+328:             <p class="empty-state-text">Get started by adding your first course to the system.</p>
+329:             <a href="{% url 'add_course' %}" class="btn-modern btn-primary-modern">
+330:                 <i class="fas fa-plus"></i>
+331:                 Add First Course
+332:             </a>
+333:         </div>
+334:         {% endif %}
+335:     </div>
+336: </div>
+337:
+338: {% endblock %}
+339:
+340: {% block custom_js %}
+341: <script>
+342: // Search functionality
+343: document.getElementById('searchInput').addEventListener('keyup', function() {
+344:     const searchValue = this.value.toLowerCase();
+345:     const table = document.getElementById('courseTable');
+346:     const rows = table.getElementsByTagName('tr');
+347:     let visibleCount = 0;
+348:
+349:     for (let i = 1; i < rows.length; i++) {
+350:         const row = rows[i];
+351:         const text = row.textContent.toLowerCase();
+352:
+353:         if (text.includes(searchValue)) {
+354:             row.style.display = '';
+355:             visibleCount++;
+356:         } else {
+357:             row.style.display = 'none';
+358:         }
+359:     }
+360:
+361:     document.getElementById('courseCount').textContent = visibleCount;
+362: });
+363: </script>
+364: {% endblock %}
+365:
+366: <section class="content">
+367:     <div class="container-fluid">
+368:         <div class="row">
+369:             <div class="col-md-12">
+370:                 <div class="card">

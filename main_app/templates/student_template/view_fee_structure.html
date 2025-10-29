@@ -1,253 +1,522 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block title %}Fee Structure{% endblock %}
+{% block page_title %}Fee Structure{% endblock %}
 
 {% block custom_css %}
 <style>
+    :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    html.dark {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #475569;
+    }
+
+    body {
+        background: var(--bg-primary);
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+
     .fee-summary {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 1.5rem;
         margin-bottom: 2rem;
     }
 
     .fee-card {
-        background: white;
-        border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        border-left: 4px solid;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
     }
 
-    .fee-card.total { border-left-color: #1e40af; }
-    .fee-card.paid { border-left-color: #059669; }
-    .fee-card.pending { border-left-color: #d97706; }
+    .fee-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+    }
 
-    html.dark .fee-card {
-        background: #1e293b;
+    .fee-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .fee-card.total::before {
+        background: linear-gradient(90deg, #1e40af, #3b82f6);
+    }
+
+    .fee-card.paid::before {
+        background: linear-gradient(90deg, #059669, #10b981);
+    }
+
+    .fee-card.pending::before {
+        background: linear-gradient(90deg, #d97706, #f59e0b);
+    }
+
+    .fee-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .fee-card.total .fee-icon {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+    html.dark .fee-card.total .fee-icon {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+    }
+
+    .fee-card.paid .fee-icon {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    html.dark .fee-card.paid .fee-icon {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+    }
+
+    .fee-card.pending .fee-icon {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    html.dark .fee-card.pending .fee-icon {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
     }
 
     .fee-value {
         font-size: 2rem;
         font-weight: 700;
+        color: var(--text-primary);
         margin-bottom: 0.5rem;
     }
 
-    .fee-card.total .fee-value { color: #1e40af; }
-    .fee-card.paid .fee-value { color: #059669; }
-    .fee-card.pending .fee-value { color: #d97706; }
-
     .fee-label {
-        color: #64748b;
+        color: var(--text-secondary);
         font-size: 0.875rem;
         font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    .fee-breakdown {
-        background: white;
-        border-radius: 8px;
+    .content-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         padding: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         margin-bottom: 2rem;
     }
 
-    html.dark .fee-breakdown {
-        background: #1e293b;
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
-    .breakdown-item {
+    .breakdown-table {
+        width: 100%;
+    }
+
+    .breakdown-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 1rem 0;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--border-color);
     }
 
-    .breakdown-item:last-child {
+    .breakdown-row:last-child {
         border-bottom: none;
+        padding-top: 1.5rem;
+        margin-top: 0.5rem;
+        border-top: 2px solid var(--border-color);
+    }
+
+    .breakdown-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .breakdown-value {
         font-weight: 600;
+        color: var(--text-primary);
         font-size: 1.125rem;
     }
 
-    html.dark .breakdown-item {
-        border-bottom-color: #334155;
+    .breakdown-row:last-child .breakdown-label {
+        color: var(--text-primary);
+        font-size: 1.125rem;
+        font-weight: 600;
     }
 
-    .payment-history {
-        background: white;
-        border-radius: 8px;
-        padding: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
-
-    html.dark .payment-history {
-        background: #1e293b;
+    .breakdown-row:last-child .breakdown-value {
+        color: #3b82f6;
+        font-size: 1.5rem;
     }
 
     .payment-item {
-        padding: 1.25rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1.5rem;
         margin-bottom: 1rem;
         transition: all 0.2s;
     }
 
     .payment-item:hover {
-        border-color: #1e40af;
-        box-shadow: 0 2px 8px rgba(30, 64, 175, 0.1);
-    }
-
-    html.dark .payment-item {
-        border-color: #334155;
+        border-color: #3b82f6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
     }
 
     .payment-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
     .payment-amount {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         font-weight: 700;
-        color: #059669;
+        color: #10b981;
     }
 
     .payment-status {
-        padding: 0.25rem 0.75rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        background: #f0fdf4;
-        color: #166534;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    html.dark .payment-status {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
     }
 
     .payment-details {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 0.75rem;
-        font-size: 0.875rem;
-        color: #64748b;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
     }
 
     .detail-item {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .detail-item i {
+        color: #3b82f6;
+        width: 20px;
+    }
+
+    .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.875rem;
+    }
+
+    .btn-download:hover {
+        background: var(--bg-primary);
+        border-color: #3b82f6;
+        color: #3b82f6;
+    }
+
+    .btn-pay-now {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 2rem;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-pay-now:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.4);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    @media print {
+        .page-header,
+        .btn-pay-now,
+        .btn-download {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .fee-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .payment-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .payment-details {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
-{% endblock %}
-
-{% block page_title %}Fee Structure{% endblock %}
+{% endblock custom_css %}
 
 {% block content %}
-<div class="mb-4">
-    <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
-        <i class="fas fa-dollar-sign"></i> Fee Structure
-    </h2>
-    <p style="color: #64748b; margin: 0;">View your fee details and payment history</p>
-</div>
+<div class="container-fluid">
+    <div class="page-header">
+        <h1><i class="fas fa-money-bill-wave"></i> Fee Structure</h1>
+        <p>View your fee details, payment history, and make payments</p>
+    </div>
 
-<!-- Fee Summary -->
-<div class="fee-summary">
-    <div class="fee-card total">
-        <div class="fee-value">₹45,000</div>
-        <div class="fee-label">Total Annual Fee</div>
-    </div>
-    <div class="fee-card paid">
-        <div class="fee-value">₹30,000</div>
-        <div class="fee-label">Amount Paid</div>
-    </div>
-    <div class="fee-card pending">
-        <div class="fee-value">₹15,000</div>
-        <div class="fee-label">Balance Due</div>
-    </div>
-</div>
-
-<!-- Fee Breakdown -->
-<div class="fee-breakdown">
-    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
-        Fee Breakdown
-    </h3>
-    
-    <div class="breakdown-item">
-        <span style="color: #64748b;">Tuition Fee</span>
-        <span style="font-weight: 500; color: #0f172a;">₹30,000</span>
-    </div>
-    <div class="breakdown-item">
-        <span style="color: #64748b;">Development Fee</span>
-        <span style="font-weight: 500; color: #0f172a;">₹5,000</span>
-    </div>
-    <div class="breakdown-item">
-        <span style="color: #64748b;">Library Fee</span>
-        <span style="font-weight: 500; color: #0f172a;">₹2,000</span>
-    </div>
-    <div class="breakdown-item">
-        <span style="color: #64748b;">Laboratory Fee</span>
-        <span style="font-weight: 500; color: #0f172a;">₹5,000</span>
-    </div>
-    <div class="breakdown-item">
-        <span style="color: #64748b;">Examination Fee</span>
-        <span style="font-weight: 500; color: #0f172a;">₹3,000</span>
-    </div>
-    <div class="breakdown-item">
-        <span style="color: #0f172a;">Total Amount</span>
-        <span style="color: #1e40af;">₹45,000</span>
-    </div>
-</div>
-
-<!-- Payment History -->
-<div class="payment-history">
-    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 1.5rem;">
-        Payment History
-    </h3>
-    
-    <div class="payment-item">
-        <div class="payment-header">
-            <div class="payment-amount">₹15,000</div>
-            <div class="payment-status"><i class="fas fa-check-circle"></i> Paid</div>
-        </div>
-        <div class="payment-details">
-            <div class="detail-item">
-                <i class="fas fa-calendar"></i>
-                <span>Sept 15, 2025</span>
-            </div>
-            <div class="detail-item">
-                <i class="fas fa-credit-card"></i>
-                <span>Online Payment</span>
-            </div>
-            <div class="detail-item">
+    <!-- Fee Summary Cards -->
+    <div class="fee-summary">
+        <div class="fee-card total">
+            <div class="fee-icon">
                 <i class="fas fa-receipt"></i>
-                <span>TXN123456</span>
             </div>
+            <div class="fee-value">₹{{ fee_structure.total_fee|default:"0"|floatformat:0 }}</div>
+            <div class="fee-label">Total Annual Fee</div>
+        </div>
+
+        <div class="fee-card paid">
+            <div class="fee-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="fee-value">₹{{ total_paid|default:"0"|floatformat:0 }}</div>
+            <div class="fee-label">Amount Paid</div>
+        </div>
+
+        <div class="fee-card pending">
+            <div class="fee-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="fee-value">₹{{ total_due|default:"0"|floatformat:0 }}</div>
+            <div class="fee-label">Balance Due</div>
         </div>
     </div>
 
-    <div class="payment-item">
-        <div class="payment-header">
-            <div class="payment-amount">₹15,000</div>
-            <div class="payment-status"><i class="fas fa-check-circle"></i> Paid</div>
-        </div>
-        <div class="payment-details">
-            <div class="detail-item">
-                <i class="fas fa-calendar"></i>
-                <span>July 10, 2025</span>
+    {% if fee_structure %}
+    <!-- Fee Breakdown -->
+    <div class="content-card">
+        <h2 class="card-title">
+            <i class="fas fa-list-ul"></i>
+            Fee Breakdown - {{ fee_structure.session.name }}
+        </h2>
+
+        <div class="breakdown-table">
+            <div class="breakdown-row">
+                <span class="breakdown-label">Tuition Fee</span>
+                <span class="breakdown-value">₹{{ fee_structure.tuition_fee|default:"0"|floatformat:0 }}</span>
             </div>
-            <div class="detail-item">
+
+            <div class="breakdown-row">
+                <span class="breakdown-label">Development Fee</span>
+                <span class="breakdown-value">₹{{ fee_structure.development_fee|default:"0"|floatformat:0 }}</span>
+            </div>
+
+            <div class="breakdown-row">
+                <span class="breakdown-label">Library Fee</span>
+                <span class="breakdown-value">₹{{ fee_structure.library_fee|default:"0"|floatformat:0 }}</span>
+            </div>
+
+            <div class="breakdown-row">
+                <span class="breakdown-label">Laboratory Fee</span>
+                <span class="breakdown-value">₹{{ fee_structure.laboratory_fee|default:"0"|floatformat:0 }}</span>
+            </div>
+
+            <div class="breakdown-row">
+                <span class="breakdown-label">Examination Fee</span>
+                <span class="breakdown-value">₹{{ fee_structure.examination_fee|default:"0"|floatformat:0 }}</span>
+            </div>
+
+            {% if fee_structure.other_fee %}
+            <div class="breakdown-row">
+                <span class="breakdown-label">Other Fees</span>
+                <span class="breakdown-value">₹{{ fee_structure.other_fee|floatformat:0 }}</span>
+            </div>
+            {% endif %}
+
+            <div class="breakdown-row">
+                <span class="breakdown-label">Total Amount</span>
+                <span class="breakdown-value">₹{{ fee_structure.total_fee|floatformat:0 }}</span>
+            </div>
+        </div>
+
+        {% if total_due > 0 %}
+        <div class="action-buttons">
+            <a href="#" class="btn-pay-now">
                 <i class="fas fa-credit-card"></i>
-                <span>Bank Transfer</span>
-            </div>
-            <div class="detail-item">
-                <i class="fas fa-receipt"></i>
-                <span>TXN123455</span>
-            </div>
+                Pay Now
+            </a>
+            <a href="{% url 'student_fee_receipts' %}" class="btn-download">
+                <i class="fas fa-file-invoice"></i>
+                View All Receipts
+            </a>
         </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="content-card">
+        <div class="empty-state">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <h3>No Fee Structure Available</h3>
+            <p>Fee structure for your course and semester has not been created yet.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Payment History -->
+    <div class="content-card">
+        <h2 class="card-title">
+            <i class="fas fa-history"></i>
+            Payment History
+        </h2>
+
+        {% if payments %}
+            {% for payment in payments %}
+            <div class="payment-item">
+                <div class="payment-header">
+                    <div class="payment-amount">₹{{ payment.amount_paid|floatformat:0 }}</div>
+                    <div class="payment-status">
+                        <i class="fas fa-check-circle"></i>
+                        Paid
+                    </div>
+                </div>
+
+                <div class="payment-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>{{ payment.payment_date|date:"M d, Y" }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class="fas fa-credit-card"></i>
+                        <span>{{ payment.payment_method|default:"Online Payment" }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class="fas fa-receipt"></i>
+                        <span>{{ payment.transaction_id|default:"—" }}</span>
+                    </div>
+
+                    {% if payment.receipt %}
+                    <div class="detail-item">
+                        <a href="{{ payment.receipt.url }}" class="btn-download" target="_blank">
+                            <i class="fas fa-download"></i>
+                            Download Receipt
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state" style="padding: 2rem;">
+            <i class="fas fa-inbox" style="font-size: 3rem;"></i>
+            <h3>No Payment History</h3>
+            <p>Your payment transactions will appear here once you make a payment.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
 
-
-
-
+{% block custom_js %}
+<script>
+    // Payment button click handler
+    document.querySelectorAll('.btn-pay-now').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Payment gateway integration coming soon!\n\nPlease contact the accounts office for payment.');
+        });
+    });
+</script>
+{% endblock custom_js %}
 

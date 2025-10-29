@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}{{ page_title }}{% endblock %}
 {% block custom_css %}
 <style>
 .compact-form .form-group {
@@ -31,7 +31,7 @@
     margin-bottom: 0 !important;
 }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 
 
@@ -140,4 +140,4 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}

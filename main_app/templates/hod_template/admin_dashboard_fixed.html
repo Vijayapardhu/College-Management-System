@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}HOD Dashboard{% endblock page_title %}
+{% block page_title %}HOD Dashboard{% endblock %}
 
 {% block custom_css %}
 <style>
@@ -128,7 +128,7 @@
         color: white;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
 
@@ -557,4 +557,4 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
     }
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}

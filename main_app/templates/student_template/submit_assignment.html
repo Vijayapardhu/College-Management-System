@@ -1,37 +1,166 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{ page_title }}{% endblock page_title %}
+{% block page_title %}{{ page_title }}{% endblock %}
 {% block custom_css %}
 <style>
-.compact-form .form-group {
-    margin-bottom: 8px !important;
+.submission-form .form-group {
+    margin-bottom: 1.25rem;
 }
-.compact-form label {
-    font-size: 12px !important;
-    margin-bottom: 2px !important;
+
+.submission-form label {
+    font-size: 0.9375rem;
+    margin-bottom: 0.5rem;
     font-weight: 500;
+    color: #334155;
+    display: block;
 }
-.compact-form input, .compact-form select, .compact-form textarea {
-    padding: 6px 10px !important;
-    font-size: 13px !important;
-    height: auto !important;
-    min-height: 32px !important;
+
+html.dark .submission-form label {
+    color: #cbd5e1;
 }
-.compact-form .form-control {
-    border-radius: 4px !important;
+
+.submission-form input, 
+.submission-form select, 
+.submission-form textarea {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    width: 100%;
+    transition: all 0.2s;
 }
-.compact-form .section-header {
-    font-size: 14px !important;
-    margin-bottom: 8px !important;
-    margin-top: 15px !important;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #e9ecef;
+
+html.dark .submission-form input,
+html.dark .submission-form select,
+html.dark .submission-form textarea {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: #475569;
 }
-.compact-form .row {
-    margin-bottom: 0 !important;
+
+.submission-form .form-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.section-header {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+html.dark .section-header {
+    border-bottom-color: #475569;
+    color: #f1f5f9;
+}
+
+.page-header-professional {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+html.dark .page-header-professional {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.card-professional {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+html.dark .card-professional {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.card-header-professional {
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 15px 20px;
+    font-weight: 600;
+}
+
+html.dark .card-header-professional {
+    background: #0f172a;
+    border-bottom-color: #334155;
+    color: #f1f5f9;
+}
+
+.card-body-professional {
+    padding: 20px;
+}
+
+.alert-professional-info {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+html.dark .alert-professional-info {
+    background: rgba(59, 130, 246, 0.1);
+    border-left-color: #60a5fa;
+}
+
+.alert-professional-warning {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+html.dark .alert-professional-warning {
+    background: rgba(251, 191, 36, 0.1);
+    border-left-color: #fbbf24;
+}
+
+.btn-professional-success {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-professional-success:hover {
+    background: #047857;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-professional-secondary {
+    background: #64748b;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-professional-secondary:hover {
+    background: #475569;
+    color: white;
 }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 
 
@@ -104,9 +233,9 @@
                             {% endif %}
                         </h3>
                     </div>
-                    <form method="post" enctype="multipart/form-data" class="compact-form">
+                    <form method="post" enctype="multipart/form-data" class="submission-form">
                         {% csrf_token %}
-                        <div class="card-body-professional" style="padding: 10px;">
+                        <div class="card-body-professional">
                             {% if existing_submission %}
                             <div class="alert-professional-warning">
                                 <i class="fas fa-info-circle"></i> <strong>Previous Submission:</strong><br>
@@ -121,20 +250,17 @@
                             </div>
                             {% endif %}
                             
-                            <div class="form-group" mb-2>
-                                <label for="submissionFile"> style="font-size: 12px; margin-bottom: 2px;">Upload Your Work *</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="submissionFile" name="submission_file" required>
-                                    <label class="custom-file-label" for="submissionFile"> style="font-size: 12px; margin-bottom: 2px;">Choose file...</label>
-                                </div>
-                                <small class="form-text text-muted" style="font-size: 11px;">
+                            <div class="form-group">
+                                <label for="submissionFile">Upload Your Work *</label>
+                                <input type="file" class="form-control" id="submissionFile" name="submission_file" required>
+                                <small class="form-text text-muted">
                                     Supported formats: PDF, DOC, DOCX, ZIP (Max 10MB)
                                 </small>
                             </div>
                             
-                            <div class="form-group" mb-2>
-                                <label for="remarks"> style="font-size: 12px; margin-bottom: 2px;">Remarks (Optional)</label>
-                                <textarea class="form-control" id="remarks" name="remarks" rows="3" 
+                            <div class="form-group">
+                                <label for="remarks">Remarks (Optional)</label>
+                                <textarea class="form-control" id="remarks" name="remarks" rows="4" 
                                           placeholder="Any notes or clarifications for your faculty...">{{ existing_submission.remarks|default:"" }}</textarea>
                             </div>
                             
@@ -147,11 +273,11 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer" style="padding: 15px 20px; background: #f8fafc; border-top: 1px solid #e5e5e5;">
                             <button type="submit" class="btn btn-professional-success">
                                 <i class="fas fa-check"></i> {% if existing_submission %}Resubmit{% else %}Submit{% endif %} Assignment
                             </button>
-                            <a href="{% url 'student_view_assignments' %}" class="btn btn-professional-secondary">
+                            <a href="{% url 'student_view_assignments' %}" class="btn btn-professional-secondary ml-2">
                                 <i class="fas fa-arrow-left"></i> Back to Assignments
                             </a>
                         </div>
@@ -161,21 +287,43 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
     // File input handling
-    $('.custom-file-input').on('change', function() {
-        const fileName = $(this).val().split('\\').pop();
-        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    $('#submissionFile').on('change', function() {
+        const fileName = this.files[0]?.name || 'No file chosen';
+        const fileSize = (this.files[0]?.size / (1024 * 1024)).toFixed(2);
+        console.log('Selected file:', fileName, '('+fileSize+' MB)');
+        
+        // Show file name next to the input
+        if (this.files[0]) {
+            $(this).next('.form-text').html(
+                '<i class="fas fa-file"></i> ' + fileName + ' (' + fileSize + ' MB)'
+            ).css('color', '#059669');
+        }
     });
     
     // Form submission
-    $('form').on('submit', function() {
+    $('form').on('submit', function(e) {
+        const fileInput = $('#submissionFile')[0];
+        if (!fileInput.files[0]) {
+            e.preventDefault();
+            alert('Please select a file to upload');
+            return false;
+        }
+        
+        const fileSize = fileInput.files[0].size / (1024 * 1024);
+        if (fileSize > 10) {
+            e.preventDefault();
+            alert('File size exceeds 10MB limit');
+            return false;
+        }
+        
         const btn = $(this).find('button[type="submit"]');
         btn.prop('disabled', true);
         btn.html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
     });
 </script>
-{% endblock custom_js %}
+{% endblock %}

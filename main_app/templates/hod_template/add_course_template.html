@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 
 {% block custom_css %}
 <style>
@@ -28,7 +28,7 @@
         margin: 0;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
 <div class="page-header-blue">
@@ -42,6 +42,24 @@
 <section class="content">
     <div class="container-fluid">
         {% include "main_app/form_template.html" with messages=messages form=form button_text="Add Course"%}
+    </div>
+</section>
+{% endblock %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card-professional">
+                    <div class="card-header-professional">
+                        <h3 class="card-title">{{page_title}}</h3>
+                    </div>
+
+                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Add Course"%}
+                </div>
+                <!-- /.card -->
+
+            </div>
+        </div>
     </div>
 </section>
 {% endblock content %}

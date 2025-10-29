@@ -1,25 +1,125 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block title %}Apply for Leave{% endblock %}
 
 {% block custom_css %}
 <style>
-    .form-container {
-        max-width: 800px;
-        margin: 0 auto;
+    /* Theme Variables */
+    :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #f1f5f9;
+        --text-primary: #0f172a;
+        --text-secondary: #334155;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        --shadow-hover: 0 8px 20px rgba(30, 64, 175, 0.3);
     }
 
-    .form-card {
-        background: white;
-        border-radius: 8px;
+    html.dark {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-tertiary: #334155;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #475569;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-hover: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    body {
+        background: var(--bg-primary);
+        transition: background 0.3s ease;
+    }
+
+    /* Page Header */
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
         padding: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.2);
     }
 
-    html.dark .form-card {
-        background: #1e293b;
+    html.dark .page-header {
+        box-shadow: 0 4px 16px rgba(30, 64, 175, 0.4);
     }
 
+    .page-header h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.9375rem;
+    }
+
+    /* Info Card */
+    .info-card {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 1rem 1.25rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    html.dark .info-card {
+        background: rgba(59, 130, 246, 0.1);
+        border-left-color: #60a5fa;
+    }
+
+    .info-card i {
+        color: #3b82f6;
+        font-size: 1.25rem;
+    }
+
+    html.dark .info-card i {
+        color: #60a5fa;
+    }
+
+    .info-card p {
+        margin: 0;
+        color: #1e40af;
+        font-size: 0.9375rem;
+    }
+
+    html.dark .info-card p {
+        color: #93c5fd;
+    }
+
+    /* Form Card */
+    .form-card {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .form-section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    /* Form Elements */
     .form-group {
         margin-bottom: 1.5rem;
     }
@@ -27,13 +127,9 @@
     .form-label {
         display: block;
         font-weight: 500;
-        color: #0f172a;
+        color: var(--text-secondary);
         margin-bottom: 0.5rem;
         font-size: 0.9375rem;
-    }
-
-    html.dark .form-label {
-        color: #f1f5f9;
     }
 
     .form-label.required::after {
@@ -44,46 +140,79 @@
     .form-control {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
         font-size: 0.9375rem;
         transition: all 0.2s;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #1e40af;
-        box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: var(--bg-secondary);
     }
 
-    html.dark .form-control {
-        background: #334155;
-        border-color: #475569;
-        color: #f1f5f9;
+    html.dark .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem;
+        padding-right: 2.5rem;
+    }
+
+    html.dark select.form-control {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23cbd5e1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
     }
 
     textarea.form-control {
         min-height: 120px;
         resize: vertical;
+        font-family: inherit;
     }
 
+    .file-input-wrapper {
+        position: relative;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        padding: 0.5rem;
+    }
+
+    small {
+        color: var(--text-muted);
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+    /* Submit Button */
     .btn-submit {
-        background: #1e40af;
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         color: white;
         padding: 0.875rem 2rem;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         font-size: 1rem;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
         width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
     .btn-submit:hover {
-        background: #1e3a8a;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
     }
 
     .btn-submit:disabled {
@@ -92,22 +221,149 @@
         transform: none;
     }
 
-    .info-box {
-        background: #eff6ff;
-        border-left: 4px solid #1e40af;
+    /* Leave History Table */
+    .history-card {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .history-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 1.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .leave-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .leave-table thead th {
+        background: var(--bg-tertiary);
         padding: 1rem;
-        border-radius: 6px;
-        margin-bottom: 2rem;
-    }
-
-    html.dark .info-box {
-        background: #1e293b;
-    }
-
-    .info-box p {
-        margin: 0;
-        color: #1e40af;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
         font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .leave-table tbody td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-secondary);
+    }
+
+    .leave-table tbody tr {
+        transition: background 0.2s;
+    }
+
+    .leave-table tbody tr:hover {
+        background: var(--bg-tertiary);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.375rem 0.875rem;
+        border-radius: 9999px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        gap: 0.375rem;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    html.dark .status-badge.pending {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+
+    .status-badge.accepted {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    html.dark .status-badge.accepted {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
+
+    .status-badge.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    html.dark .status-badge.rejected {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+
+    .status-badge i {
+        font-size: 0.625rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-muted);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--text-muted);
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .form-card, .history-card {
+            padding: 1.5rem;
+        }
+
+        .leave-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+
+    /* Smooth transitions for theme switching */
+    * {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    button, a {
+        transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
 </style>
 {% endblock %}
@@ -115,41 +371,53 @@
 {% block page_title %}Apply for Leave{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <div class="mb-4">
-        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
-            <i class="fas fa-file-alt"></i> Apply for Leave
-        </h2>
-        <p style="color: #64748b; margin: 0;">Submit your leave application</p>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-file-alt"></i>
+            Apply for Leave
+        </h1>
+        <p>Submit your leave application for review and approval</p>
     </div>
 
-    <div class="info-box">
-        <p><i class="fas fa-info-circle"></i> Please fill in all required fields. Your leave application will be reviewed by the administration.</p>
+    <!-- Info Card -->
+    <div class="info-card">
+        <i class="fas fa-info-circle"></i>
+        <p>Please fill in all required fields. Your leave application will be reviewed by the administration within 24-48 hours.</p>
     </div>
 
+    <!-- Leave Application Form -->
     <div class="form-card">
-        <form method="POST" data-custom-submit="true">
+        <h2 class="form-section-title">Leave Application Form</h2>
+        
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             
-            <div class="form-group">
-                <label class="form-label required">Leave Type</label>
-                <select name="leave_type" class="form-control" required>
-                    <option value="">Select Leave Type</option>
-                    <option value="sick">Sick Leave</option>
-                    <option value="casual">Casual Leave</option>
-                    <option value="emergency">Emergency Leave</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-
             <div class="row">
                 <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label required">Leave Type</label>
+                        <select name="leave_type" class="form-control" required>
+                            <option value="">Select Leave Type</option>
+                            <option value="sick">Sick Leave</option>
+                            <option value="casual">Casual Leave</option>
+                            <option value="emergency">Emergency Leave</option>
+                            <option value="family">Family Emergency</option>
+                            <option value="medical">Medical Leave</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label required">From Date</label>
                         <input type="date" name="from_date" class="form-control" required>
                     </div>
                 </div>
-                <div class="col-md-6">
+                
+                <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label required">To Date</label>
                         <input type="date" name="to_date" class="form-control" required>
@@ -159,141 +427,124 @@
 
             <div class="form-group">
                 <label class="form-label required">Reason for Leave</label>
-                <textarea name="reason" class="form-control" placeholder="Please provide detailed reason for your leave..." required></textarea>
+                <textarea 
+                    name="reason" 
+                    class="form-control" 
+                    placeholder="Please provide a detailed reason for your leave application..."
+                    required
+                ></textarea>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Supporting Document (Optional)</label>
-                <input type="file" name="document" class="form-control">
+                <div class="file-input-wrapper">
+                    <input type="file" name="document" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                </div>
+                <small>
+                    <i class="fas fa-paperclip"></i> Accepted formats: PDF, JPG, PNG, DOC, DOCX (Max 5MB)
+                </small>
             </div>
 
             <button type="submit" class="btn-submit">
-                <i class="fas fa-paper-plane"></i> Submit Leave Application
+                <i class="fas fa-paper-plane"></i>
+                Submit Leave Application
             </button>
         </form>
     </div>
-</div>
-{% endblock %}
 
-    html.dark .form-control {
-        background: #334155;
-        border-color: #475569;
-        color: #f1f5f9;
-    }
-
-    textarea.form-control {
-        min-height: 120px;
-        resize: vertical;
-    }
-
-    .btn-submit {
-        background: #1e40af;
-        color: white;
-        padding: 0.875rem 2rem;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-        width: 100%;
-    }
-
-    .btn-submit:hover {
-        background: #1e3a8a;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
-    }
-
-    .btn-submit:disabled {
-        background: #94a3b8;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .info-box {
-        background: #eff6ff;
-        border-left: 4px solid #1e40af;
-        padding: 1rem;
-        border-radius: 6px;
-        margin-bottom: 2rem;
-    }
-
-    html.dark .info-box {
-        background: #1e293b;
-    }
-
-    .info-box p {
-        margin: 0;
-        color: #1e40af;
-        font-size: 0.875rem;
-    }
-</style>
-{% endblock %}
-
-{% block page_title %}Apply for Leave{% endblock %}
-
-{% block content %}
-<div class="form-container">
-    <div class="mb-4">
-        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.5rem;">
-            <i class="fas fa-file-alt"></i> Apply for Leave
+    <!-- Leave History -->
+    <div class="history-card">
+        <h2 class="history-title">
+            <i class="fas fa-history"></i>
+            Leave Application History
         </h2>
-        <p style="color: #64748b; margin: 0;">Submit your leave application</p>
-    </div>
-
-    <div class="info-box">
-        <p><i class="fas fa-info-circle"></i> Please fill in all required fields. Your leave application will be reviewed by the administration.</p>
-    </div>
-
-    <div class="form-card">
-        <form method="POST" data-custom-submit="true">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label class="form-label required">Leave Type</label>
-                <select name="leave_type" class="form-control" required>
-                    <option value="">Select Leave Type</option>
-                    <option value="sick">Sick Leave</option>
-                    <option value="casual">Casual Leave</option>
-                    <option value="emergency">Emergency Leave</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label required">From Date</label>
-                        <input type="date" name="from_date" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label required">To Date</label>
-                        <input type="date" name="to_date" class="form-control" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Reason for Leave</label>
-                <textarea name="reason" class="form-control" placeholder="Please provide detailed reason for your leave..." required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Supporting Document (Optional)</label>
-                <input type="file" name="document" class="form-control">
-            </div>
-
-            <button type="submit" class="btn-submit">
-                <i class="fas fa-paper-plane"></i> Submit Leave Application
-            </button>
-        </form>
+        
+        {% if leave_history %}
+        <div style="overflow-x: auto;">
+            <table class="leave-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">#</th>
+                        <th>Date Applied</th>
+                        <th>Leave Type</th>
+                        <th>Duration</th>
+                        <th>Reason</th>
+                        <th style="width: 120px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leave_history %}
+                    <tr>
+                        <td><strong>{{ forloop.counter }}</strong></td>
+                        <td>{{ leave.date|date:"M d, Y" }}</td>
+                        <td style="text-transform: capitalize;">{{ leave.leave_type|default:"General" }}</td>
+                        <td>{{ leave.from_date|date:"M d" }} - {{ leave.to_date|date:"M d, Y" }}</td>
+                        <td>{{ leave.message|truncatewords:10 }}</td>
+                        <td>
+                            {% if leave.status == 0 %}
+                            <span class="status-badge pending">
+                                <i class="fas fa-circle"></i> Pending
+                            </span>
+                            {% elif leave.status == 1 %}
+                            <span class="status-badge accepted">
+                                <i class="fas fa-check-circle"></i> Approved
+                            </span>
+                            {% else %}
+                            <span class="status-badge rejected">
+                                <i class="fas fa-times-circle"></i> Rejected
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No leave applications found. Submit your first leave application above.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
+{% block custom_js %}
+<script>
+    // Date validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const fromDate = document.querySelector('input[name="from_date"]');
+        const toDate = document.querySelector('input[name="to_date"]');
+        
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        fromDate.setAttribute('min', today);
+        toDate.setAttribute('min', today);
+        
+        // Validate date range
+        fromDate.addEventListener('change', function() {
+            toDate.setAttribute('min', this.value);
+            if (toDate.value && toDate.value < this.value) {
+                toDate.value = this.value;
+            }
+        });
+        
+        // Form submission validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const from = new Date(fromDate.value);
+            const to = new Date(toDate.value);
+            
+            if (to < from) {
+                e.preventDefault();
+                alert('End date cannot be before start date');
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock %}
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -344,5 +595,4 @@
             </div>
         </div>
     </div>
-</section>
-{% endblock content %}
+</section>{% endblock content %}

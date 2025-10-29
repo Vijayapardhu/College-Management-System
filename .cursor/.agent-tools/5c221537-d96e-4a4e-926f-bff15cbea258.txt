@@ -1,0 +1,71 @@
+t"                                                                                                                                      
+t"                                                                                                                                      
+PS C:\Users\PARDHU\Desktop\projects\College-Management-System> python update_remaining_phases.py
+Ã¢Å“â€¦ analytics/attendance.html
+Ã¢Å“â€¦ analytics/dashboard.html
+Ã¢Å“â€¦ analytics/report_builder.html
+Ã¢Å“â€¦ analytics/attendance.html
+Ã¢Å“â€¦ analytics/dashboard.html
+Ã¢Å“â€¦ analytics/report_builder.html
+Ã¢Å“â€¦ performance/dashboard.html
+Ã¢Å“â€¦ performance/dashboard.html
+Ã¢Å“â€¦ parent_template/child_detail.html
+Ã¢Å“â€¦ parent_template/home.html
+Ã¢Å“â€¦ parent_template/link_student.html
+Ã¢Å“â€¦ parent_template/parent_home.html
+Ã¢Å“â€¦ parent_template/send_message.html
+Ã¢Å“â€¦ parent_template/view_assignments.html
+Ã¢Å“â€¦ parent_template/view_attendance.html
+Ã¢Å“â€¦ parent_template/view_fees.html
+Ã¢Å“â€¦ parent_template/view_profile.html
+Ã¢Å“â€¦ parent_template/view_results.html
+Ã¢Å“â€¦ parent_template/child_detail.html
+Ã¢Å“â€¦ parent_template/link_student.html
+Ã¢Å“â€¦ parent_template/parent_home.html
+Ã¢Å“â€¦ parent_template/send_message.html
+Ã¢Å“â€¦ parent_template/view_assignments.html
+Ã¢Å“â€¦ parent_template/view_attendance.html
+Ã¢Å“â€¦ parent_template/view_fees.html
+Ã¢Å“â€¦ parent_template/view_profile.html
+Ã¢Å“â€¦ parent_template/view_results.html
+Ã¢Å“â€¦ proctor_template/absentee_list.html
+Ã¢Å“â€¦ proctor_template/absentee_results.html
+Ã¢Å“â€¦ proctor_template/home_content.html
+Ã¢Å“â€¦ proctor_template/messages.html
+Ã¢Å“â€¦ proctor_template/send_message.html
+Ã¢Å“â€¦ proctor_template/student_details.html
+Ã¢Å“â€¦ proctor_template/view_events.html
+Ã¢Å“â€¦ proctor_template/view_profile.html
+Ã¢Å“â€¦ proctor_template/view_students.html
+Ã¢Å“â€¦ proctor_template/absentee_list.html
+Ã¢Å“â€¦ proctor_template/absentee_results.html
+Ã¢Å“â€¦ proctor_template/home_content.html
+Ã¢Å“â€¦ proctor_template/messages.html
+Ã¢Å“â€¦ proctor_template/send_message.html
+Ã¢Å“â€¦ proctor_template/student_details.html
+Ã¢Å“â€¦ proctor_template/view_events.html
+Ã¢Å“â€¦ proctor_template/view_profile.html
+Ã¢Å“â€¦ proctor_template/view_students.html
+Ã¢Å“â€¦ placement/company_management.html
+Ã¢Å“â€¦ placement/placement_dashboard.html
+Ã¢Å“â€¦ placement/company_management.html
+Ã¢Å“â€¦ placement/placement_dashboard.html
+Ã¢Å“â€¦ alumni/alumni_profile.html
+Ã¢Å“â€¦ alumni/alumni_profile.html
+Ã¢Å“â€¦ admission/make_decision.html
+Ã¢Å“â€¦ admission/review_applications.html
+Ã¢Å“â€¦ admission/view_application.html
+Ã¢Å“â€¦ admission/make_decision.html
+Ã¢Å“â€¦ admission/review_applications.html
+Ã¢Å“â€¦ admission/view_application.html
+Ã¢Å“â€¦ payroll/process_payroll.html
+Ã¢Å“â€¦ payroll/process_payroll.html
+Ã¢Å“â€¦ lms/lms_dashboard.html
+Ã¢Å“â€¦ lms/lms_dashboard.html
+Ã¢Å“â€¦ communication/chat_interface.html
+Ã¢Å“â€¦ communication/communication_hub.html
+Ã¢Å“â€¦ communication/chat_interface.html
+Ã¢Å“â€¦ communication/communication_hub.html
+
+Ã¢Å“â€¦ Updated 65 templates across 10 directories
+Ã¢Å“â€¦ Directories: admission, alumni, analytics, communication, lms, parent_template, payroll, performance, placement, proctor_template                                                                                                                                       

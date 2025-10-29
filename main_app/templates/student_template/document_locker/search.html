@@ -1,12 +1,14 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 
 {% block page_title %}{{ page_title }}{% endblock %}
 
 {% block custom_css %}
 <style>
+    body { background: #0a0a0a; }
+<style>
     .search-header {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-left: 4px solid #003d82;
         border-radius: 4px;
@@ -24,7 +26,7 @@
     }
 
     .results-summary {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-radius: 4px;
         padding: 15px 20px;
@@ -33,7 +35,7 @@
     }
 
     .document-list-item {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-radius: 4px;
         padding: 20px;
@@ -230,7 +232,7 @@
 
         {% else %}
         <!-- No Results -->
-        <div style="text-align: center; padding: 60px 20px; background: white; border: 1px solid #e5e5e5; border-radius: 4px;">
+        <div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333; border: 1px solid #e5e5e5; border-radius: 4px;">
             <i class="fas fa-search" style="font-size: 64px; color: #d4d4d4; margin-bottom: 20px;"></i>
             <h4 style="color: #1a202c; margin-bottom: 10px;">No Documents Found</h4>
             <p class="text-muted mb-4">
@@ -257,19 +259,4 @@ $('select[name="category"]').on('change', function() {
 });
 </script>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

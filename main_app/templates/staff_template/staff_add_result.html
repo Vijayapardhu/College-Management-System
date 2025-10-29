@@ -1,11 +1,13 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 
 {% block custom_css %}
 <style>
+    body { background: #0a0a0a; }
+<style>
     .page-header {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-left: 4px solid #003d82;
         border-radius: 4px;
@@ -15,7 +17,7 @@
     }
 
     .result-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 1px solid #e5e5e5;
         border-radius: 4px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -42,7 +44,7 @@
         display: block;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
 
@@ -162,7 +164,7 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -208,4 +210,4 @@
         });
     });
 </script>
-{% endblock custom_js %}
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block page_title %}{{ page_title }}{% endblock %}
 
@@ -328,30 +328,30 @@
         {{page_title}}
     </h1>
     <p>Manage classrooms, labs, and facilities</p>
-</div>
+    </div>
 
 <!-- Statistics Cards -->
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon stat-icon-blue">
-            <i class="fas fa-door-open"></i>
-        </div>
+                <i class="fas fa-door-open"></i>
+            </div>
         <div class="stat-content">
             <h3>{{ total_rooms }}</h3>
             <p>Total Rooms</p>
         </div>
-    </div>
-    
+        </div>
+
     <div class="stat-card">
         <div class="stat-icon stat-icon-green">
-            <i class="fas fa-check-circle"></i>
-        </div>
+                <i class="fas fa-check-circle"></i>
+            </div>
         <div class="stat-content">
             <h3>{{ available_rooms }}</h3>
             <p>Available</p>
         </div>
-    </div>
-    
+        </div>
+
     <div class="stat-card">
         <div class="stat-icon stat-icon-orange">
             <i class="fas fa-flask"></i>
@@ -359,13 +359,13 @@
         <div class="stat-content">
             <h3>{{ labs }}</h3>
             <p>Laboratories</p>
+            </div>
         </div>
-    </div>
-    
+
     <div class="stat-card">
         <div class="stat-icon stat-icon-red">
-            <i class="fas fa-tools"></i>
-        </div>
+                <i class="fas fa-tools"></i>
+            </div>
         <div class="stat-content">
             <h3>{{ classrooms|length|add:"-"|add:available_rooms|default:0 }}</h3>
             <p>Under Maintenance</p>
@@ -390,8 +390,8 @@
             <i class="fas fa-plus"></i>
             Add New Classroom
         </a>
+        </div>
     </div>
-</div>
 
 <!-- Table Card -->
 <div class="table-card">
@@ -401,7 +401,7 @@
             All Classrooms
         </h3>
         <span class="record-count" id="classroomCount">{{ classrooms|length }}</span>
-    </div>
+        </div>
     
     <div class="table-card-body">
         {% if classrooms %}

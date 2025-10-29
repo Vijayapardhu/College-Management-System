@@ -1,0 +1,32 @@
+PS C:\Users\PARDHU\Desktop\projects\College-Management-System> echo "" ; echo "     ADAPTIVE THEME IMPLEMENTED" ; echo "" ; echo "" ; echo " LIGHT THEME:" ; echo "   Clean white backgrounds" ; echo "   Subtle shadows" ; echo "   Blue accents (#3b82f6)" ; echo "   Dark text on light" ; echo "" ; echo " DARK THEME:" ; echo "   Dark navy backgrounds (#0f172a, #1e293b)" ; echo "   Elevated shadows" ; echo "   Bright blue accents (#60a5fa)" ; echo "   Light text on dark" ; echo "" ; echo " ADAPTIVE FEATURES:" ; echo "   CSS variables for theme colors" ; echo "   Smooth transitions between themes" ; echo "   Status badges adapt colors" ; echo "   Form inputs change backgrounds" ; echo "   Tables adjust contrast" ; echo "   All elements respond to theme" ; echo "" ; echo " THEME DETECTION:" ; echo "   Uses html.dark class selector" ; echo "   Integrates with your theme toggle" ; echo "   System preference support" ; echo "" ; echo "Visit: http://127.0.0.1:8000/student/apply/leave/"
+
+     ADAPTIVE THEME IMPLEMENTED
+
+
+ LIGHT THEME:
+   Clean white backgrounds
+   Subtle shadows
+   Blue accents (#3b82f6)
+   Dark text on light
+
+ DARK THEME:
+   Dark navy backgrounds (#0f172a, #1e293b)
+   Elevated shadows
+   Bright blue accents (#60a5fa)
+   Light text on dark
+
+ ADAPTIVE FEATURES:
+   CSS variables for theme colors
+   Smooth transitions between themes
+   Status badges adapt colors
+   Form inputs change backgrounds
+   Tables adjust contrast
+   All elements respond to theme
+
+ THEME DETECTION:
+   Uses html.dark class selector
+   Integrates with your theme toggle
+   System preference support
+
+Visit: http://127.0.0.1:8000/student/apply/leave/
+PS C:\Users\PARDHU\Desktop\projects\College-Management-System> 

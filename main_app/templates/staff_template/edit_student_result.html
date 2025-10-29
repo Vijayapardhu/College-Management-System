@@ -1,7 +1,9 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 {% block custom_css %}
+<style>
+    body { background: #0a0a0a; }
 <style>
 .compact-form .form-group {
     margin-bottom: 8px !important;
@@ -18,6 +20,9 @@
     min-height: 32px !important;
 }
 .compact-form .form-control {
+        background: #1a1a1a;
+        color: #e5e7eb;
+        border: 2px solid #333;
     border-radius: 4px !important;
 }
 .compact-form .section-header {
@@ -31,7 +36,7 @@
     margin-bottom: 0 !important;
 }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 
 {% block content %}
@@ -83,7 +88,7 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
 
 
 {% block custom_js %}
@@ -177,4 +182,4 @@
 
     })
 </script>
-{% endblock custom_js %}
+{% endblock %}

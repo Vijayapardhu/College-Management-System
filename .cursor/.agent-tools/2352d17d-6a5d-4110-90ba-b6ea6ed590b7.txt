@@ -1,0 +1,31 @@
+================================================================================
+Django Template Duplicate Block Fixer
+================================================================================
+
+[INFO] Found 430 template files
+[INFO] Scanning for duplicate blocks...
+
+[FIXED] main_app\templates\hod_template\add_staff_template.html - Removed 120 duplicate lines
+[FIXED] main_app\templates\hod_template\staff_detail.html - Removed 797 duplicate lines
+[FIXED] main_app\templates\hod_template\student_detail.html - Removed 904 duplicate lines
+[FIXED] main_app\templates\student_template\gate_pass.html - Removed 1074 duplicate lines
+[FIXED] main_app\templates\student_template\student_view_result.html - Removed 736 duplicate lines
+[FIXED] main_app\templates\student_template\view_timetable.html - Removed 448 duplicate lines
+
+================================================================================
+Summary
+================================================================================
+Files checked: 430
+Files fixed: 6
+
+Fixed Files:
+  - main_app\templates\hod_template\add_staff_template.html: 120 lines removed
+  - main_app\templates\hod_template\staff_detail.html: 797 lines removed
+  - main_app\templates\hod_template\student_detail.html: 904 lines removed
+  - main_app\templates\student_template\gate_pass.html: 1074 lines removed
+  - main_app\templates\student_template\student_view_result.html: 736 lines removed
+  - main_app\templates\student_template\view_timetable.html: 448 lines removed
+
+Total lines removed: 4079
+
+[SUCCESS] All duplicate blocks fixed!

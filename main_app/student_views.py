@@ -74,8 +74,69 @@ def student_view_attendance(request):
     student = get_object_or_404(Student, admin=request.user)
     if request.method != 'POST':
         course = get_object_or_404(Course, id=student.course.id)
+        # Calculate attendance statistics
+        from main_app.models import AttendanceReport
+        
+        total_present = 0
+        total_absent = 0
+        data_present = []
+        data_absent = []
+        subject_attendance_data = []
+        
+        subjects_list = Subject.objects.filter(course=course)
+        
+        for subject in subjects_list:
+            try:
+                attendance_reports = AttendanceReport.objects.filter(
+                    student_id=student,
+                    attendance_id__subject_id=subject
+                )
+                
+                present_count = attendance_reports.filter(status=True).count()
+                absent_count = attendance_reports.filter(status=False).count()
+                total_classes = attendance_reports.count()
+                
+                total_present += present_count
+                total_absent += absent_count
+                
+                if total_classes > 0:
+                    percentage = round((present_count / total_classes) * 100, 2)
+                else:
+                    percentage = 0
+                
+                data_present.append(percentage)
+                data_absent.append(absent_count)
+                
+                # Create structured data for each subject
+                subject_attendance_data.append({
+                    'subject': subject,
+                    'present': present_count,
+                    'absent': absent_count,
+                    'total': total_classes,
+                    'percentage': percentage
+                })
+            except:
+                data_present.append(0)
+                data_absent.append(0)
+                subject_attendance_data.append({
+                    'subject': subject,
+                    'present': 0,
+                    'absent': 0,
+                    'total': 0,
+                    'percentage': 0
+                })
+        
+        total_classes_overall = total_present + total_absent
+        percentage_present = round((total_present / total_classes_overall) * 100, 2) if total_classes_overall > 0 else 0
+        
         context = {
             'subjects': Subject.objects.filter(course=course),
+            'subject_attendance_data': subject_attendance_data,
+            'total_present': total_present,
+            'total_absent': total_absent,
+            'percentage_present': percentage_present,
+            'data_present': data_present,
+            'data_absent': data_absent,
             'page_title': 'View Attendance'
         }
         return render(request, 'student_template/student_view_attendance.html', context)
@@ -154,41 +215,42 @@ def student_feedback(request):
 
 def student_view_profile(request):
     student = get_object_or_404(Student, admin=request.user)
-    form = StudentEditForm(request.POST or None, request.FILES or None,
-                           instance=student)
-    context = {'form': form,
-               'page_title': 'View/Edit Profile'
-               }
+    
     if request.method == 'POST':
         try:
-            if form.is_valid():
-                first_name = form.cleaned_data.get('first_name')
-                last_name = form.cleaned_data.get('last_name')
-                password = form.cleaned_data.get('password') or None
-                address = form.cleaned_data.get('address')
-                gender = form.cleaned_data.get('gender')
-                passport = request.FILES.get('profile_pic') or None
-                admin = student.admin
-                if password != None:
-                    admin.set_password(password)
-                if passport != None:
-                    fs = FileSystemStorage()
-                    filename = fs.save(passport.name, passport)
-                    passport_url = fs.url(filename)
-                    admin.profile_pic = passport_url
-                admin.first_name = first_name
-                admin.last_name = last_name
-                admin.address = address
-                admin.gender = gender
-                admin.save()
-                student.save()
-                messages.success(request, "Profile Updated!")
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            
+            # Validate passwords match
+            if password != confirm_password:
+                messages.error(request, "Passwords do not match!")
                 return redirect(reverse('student_view_profile'))
-            else:
-                messages.error(request, "Invalid Data Provided")
+            
+            # Validate password length
+            if len(password) < 6:
+                messages.error(request, "Password must be at least 6 characters long!")
+                return redirect(reverse('student_view_profile'))
+            
+            # Update password
+            admin = student.admin
+            admin.set_password(password)
+            admin.save()
+            
+            messages.success(request, "Password updated successfully! Please login again with your new password.")
+            
+            # Logout user after password change
+            from django.contrib.auth import logout
+            logout(request)
+            return redirect('login_page')
+            
         except Exception as e:
-            messages.error(request, "Error Occured While Updating Profile " + str(e))
-
+            messages.error(request, "Error occurred while updating password: " + str(e))
+            return redirect(reverse('student_view_profile'))
+    
+    context = {
+        'student': student,
+        'page_title': 'My Profile'
+    }
     return render(request, "student_template/student_view_profile.html", context)
 
 
@@ -216,9 +278,37 @@ def student_view_notification(request):
 
 def student_view_result(request):
     student = get_object_or_404(Student, admin=request.user)
-    results = StudentResult.objects.filter(student=student)
+    results = StudentResult.objects.filter(student=student).select_related('subject')
+    
+    # Get assignment marks
+    assignment_submissions = AssignmentSubmission.objects.filter(
+        student=student,
+        status='graded'
+    ).select_related('assignment', 'assignment__subject', 'graded_by')
+    
+    # Calculate statistics
+    cgpa = 0
+    average_marks = 0
+    rank = "N/A"
+    
+    if results.exists():
+        total_marks = 0
+        total_subjects = results.count()
+        
+        for result in results:
+            subject_total = result.test + result.exam
+            total_marks += subject_total
+        
+        # Calculate average and CGPA
+        average_marks = round(total_marks / total_subjects, 2) if total_subjects > 0 else 0
+        cgpa = round(average_marks / 10, 2)  # Assuming 100 marks total, CGPA on 10 scale
+    
     context = {
         'results': results,
+        'assignment_submissions': assignment_submissions,
+        'cgpa': cgpa,
+        'average_marks': average_marks,
+        'rank': rank,
         'page_title': "View Results"
     }
     return render(request, "student_template/student_view_result.html", context)
@@ -230,22 +320,52 @@ def student_view_timetable(request):
     student = get_object_or_404(Student, admin=request.user)
     
     # Get timetable for student's course and semester
-    timetable = Timetable.objects.filter(
+    timetable_entries = Timetable.objects.filter(
         course=student.course,
         semester=student.current_semester,
         session=student.session
-    ).order_by('weekday', 'period')
+    ).select_related('subject', 'staff').order_by('weekday', 'period')
     
-    # Organize by weekday
-    weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-    organized_timetable = {}
+    # Organize by weekday and period - Create a simple list structure
+    weekdays = [
+        {'key': 'monday', 'name': 'Monday'},
+        {'key': 'tuesday', 'name': 'Tuesday'},
+        {'key': 'wednesday', 'name': 'Wednesday'},
+        {'key': 'thursday', 'name': 'Thursday'},
+        {'key': 'friday', 'name': 'Friday'},
+        {'key': 'saturday', 'name': 'Saturday'}
+    ]
     
+    periods = [
+        {'key': '1', 'type': 'class'},
+        {'key': '2', 'type': 'class'},
+        {'key': '3', 'type': 'class'},
+        {'key': '4', 'type': 'class'},
+        {'key': 'lunch', 'type': 'break', 'name': 'Lunch'},
+        {'key': '5', 'type': 'class'},
+        {'key': '6', 'type': 'class'},
+        {'key': '7', 'type': 'class'}
+    ]
+    
+    # Build timetable structure
     for day in weekdays:
-        organized_timetable[day] = timetable.filter(weekday=day)
+        day['periods'] = []
+        for period in periods:
+            if period['type'] == 'break':
+                day['periods'].append(period)
+            else:
+                # Find class for this day and period
+                entry = timetable_entries.filter(weekday=day['key'], period=period['key']).first()
+                day['periods'].append({
+                    'key': period['key'],
+                    'type': 'class',
+                    'class_data': entry
+                })
     
     context = {
         'page_title': 'My Timetable',
-        'timetable': organized_timetable,
+        'weekdays': weekdays,
+        'has_timetable': timetable_entries.exists(),
         'student': student
     }
     return render(request, 'student_template/view_timetable.html', context)
@@ -797,7 +917,7 @@ def student_request_certificate(request):
         else:
             messages.error(request, "Please fill all required fields and select a file.")
         
-        return redirect('student_request_certificate')
+        return redirect('my_certificates')
     
     # Get student's uploaded certificates
     from main_app.models import StudentCertificate
@@ -996,10 +1116,14 @@ def view_materials(request):
     student = get_object_or_404(Student, admin=request.user)
     materials = StudyMaterial.objects.filter(subject__course=student.course).order_by('-created_at')
     
+    # Get all subjects for filter dropdown
+    subjects = Subject.objects.filter(course=student.course)
+    
     context = {
         'page_title': 'Study Materials',
         'materials': materials,
-        'student': student
+        'student': student,
+        'subjects': subjects
     }
     return render(request, 'student_template/view_materials.html', context)
 

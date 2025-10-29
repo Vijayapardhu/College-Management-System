@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Approval Center{% endblock page_title %}
+{% block page_title %}Approval Center{% endblock %}
 
 {% block content %}
 <!-- Approval Center -->
@@ -158,7 +158,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -205,6 +205,6 @@ function filterApprovals(type) {
     }
 }
 </script>
-{% endblock custom_js %}
+{% endblock %}
 
 

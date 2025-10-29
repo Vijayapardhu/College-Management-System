@@ -1,0 +1,36 @@
+Starting template fix process...
+Found 26 templates to fix
+
+[SKIP] Skipped: main_app/templates/admission/make_decision.html (already has content block or doesn't extend base)
+[OK] Fixed: main_app/templates/hod_template/add_council_member.html
+[OK] Fixed: main_app/templates/hod_template/add_disciplinary_action.html
+[OK] Fixed: main_app/templates/hod_template/add_exam.html
+[OK] Fixed: main_app/templates/hod_template/add_exam_questions.html
+[OK] Fixed: main_app/templates/hod_template/add_exam_schedule.html
+[OK] Fixed: main_app/templates/hod_template/add_fee_structure.html
+[OK] Fixed: main_app/templates/hod_template/add_placement_drive.html
+[OK] Fixed: main_app/templates/hod_template/add_staff_template.html
+[OK] Fixed: main_app/templates/hod_template/add_transport.html
+[OK] Fixed: main_app/templates/hod_template/assign_invigilators.html
+[OK] Fixed: main_app/templates/hod_template/book_classroom.html
+[OK] Fixed: main_app/templates/hod_template/bulk_student_upload.html
+[OK] Fixed: main_app/templates/hod_template/classroom_form.html
+[OK] Fixed: main_app/templates/hod_template/create_activity.html
+[OK] Fixed: main_app/templates/hod_template/issue_certificate.html
+[OK] Fixed: main_app/templates/hod_template/program_form.html
+[OK] Fixed: main_app/templates/hod_template/public_link_form.html
+[OK] Fixed: main_app/templates/hod_template/staff_detail.html
+[OK] Fixed: main_app/templates/hod_template/student_detail.html
+[OK] Fixed: main_app/templates/hod_template/timetable_edit.html
+[OK] Fixed: main_app/templates/hod_template/timetable_form.html
+[OK] Fixed: main_app/templates/staff_template/add_research.html
+[OK] Fixed: main_app/templates/staff_template/create_online_exam.html
+[OK] Fixed: main_app/templates/student_template/gate_pass.html
+[OK] Fixed: main_app/templates/student_template/view_timetable.html
+
+============================================================
+Template Fix Summary:
+  [OK] Fixed: 25
+  [SKIP] Skipped: 1
+  [ERROR] Errors: 0
+============================================================

@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Chat & Messaging{% endblock page_title %}
+{% block page_title %}Chat & Messaging{% endblock %}
 
 {% block content %}
 <!-- Chat Interface -->
@@ -204,7 +204,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -336,6 +336,6 @@ document.getElementById('searchChats').addEventListener('input', function(e) {
     justify-content: center;
 }
 </style>
-{% endblock custom_js %}
+{% endblock %}
 
 

@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 
 {% block custom_css %}
@@ -35,11 +35,11 @@
         margin-bottom: 30px;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block page_title %}
 {{ page_title }}
-{% endblock page_title %}
+{% endblock %}
 
 {% block content %}
 <section class="content">
@@ -176,8 +176,8 @@
         </div>
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
-{% endblock custom_js %}
+{% endblock %}

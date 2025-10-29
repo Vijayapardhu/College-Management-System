@@ -1,0 +1,74 @@
+PS C:\Users\PARDHU\Desktop\projects\College-Management-System> python recreate_faculty_with_connections.py
+
+
+============================================================
+  FACULTY RECREATION WITH CONNECTIONS
+============================================================
+
+============================================================
+DELETING ALL EXISTING FACULTY
+============================================================
+Found 30 existing staff members
+Traceback (most recent call last):
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column main_app_loan.staff_id does not exist
+LINE 1: ...T "main_app_loan"."id" FROM "main_app_loan" WHERE "main_app_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\recreate_faculty_with_connections.py", line 314, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\recreate_faculty_with_connections.py", line 285, in main
+    delete_all_faculty()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\Desktop\projects\College-Management-System\recreate_faculty_with_connections.py", line 28, in delete_all_faculty
+    Staff.objects.all().delete()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1147, in delete      
+    collector.collect(del_query)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\deletion.py", line 348, in collect   
+    if getattr(on_delete, "lazy_sub_objs", False) or sub_objs:
+                                                     ^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 412, in __bool__     
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all  
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 91, in __iter__      
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql                                                                                                                                  
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 102, in execute    
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 67, in execute     
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers                                                                                                                              
+    return executor(sql, params, many, context)
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute    
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\PARDHU\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute    
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column main_app_loan.staff_id does not exist
+LINE 1: ...T "main_app_loan"."id" FROM "main_app_loan" WHERE "main_app_...
+                                                             ^

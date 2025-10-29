@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 
 {% block custom_css %}
 <style>
@@ -277,7 +277,7 @@
         margin-bottom: 1.5rem;
     }
 </style>
-{% endblock custom_css %}
+{% endblock %}
 
 {% block content %}
 <!-- Modern Page Header -->
@@ -428,7 +428,7 @@
     </div>
 </div>
 
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -460,7 +460,6 @@ function exportTableToExcel() {
     const wb = XLSX.utils.table_to_book(table, {sheet: "Staff"});
     XLSX.writeFile(wb, 'staff_' + new Date().getTime() + '.xlsx');
 }
-
 // Load XLSX library for export
 if (typeof XLSX === 'undefined') {
     const script = document.createElement('script');
@@ -468,4 +467,4 @@ if (typeof XLSX === 'undefined') {
     document.head.appendChild(script);
 }
 </script>
-{% endblock custom_js %}
+{% endblock %}

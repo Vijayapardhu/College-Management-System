@@ -1,12 +1,14 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 
 {% block title %}Student Dashboard - EduVision{% endblock %}
 
 {% block custom_css %}
 <style>
+    body { background: #0a0a0a; }
+<style>
     .dashboard-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         border: none;
         border-radius: 15px;
         color: white;
@@ -57,7 +59,7 @@
     }
 
     .chart-container {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 15px;
         padding: 20px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -65,7 +67,7 @@
     }
 
     .quick-action-btn {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border: 2px solid #e9ecef;
         border-radius: 10px;
         padding: 20px;
@@ -90,7 +92,7 @@
     }
 
     .recent-activity {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 15px;
         padding: 20px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -206,7 +208,7 @@
     <!-- Metrics Cards -->
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card dashboard-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
                 <div class="card-body-professional">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -220,7 +222,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card dashboard-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
                 <div class="card-body-professional">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -234,7 +236,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card dashboard-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
                 <div class="card-body-professional">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -248,7 +250,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card dashboard-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="card dashboard-card" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
                 <div class="card-body-professional">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -424,20 +426,4 @@ $(document).ready(function() {
 });
 </script>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}Analytics Dashboard{% endblock page_title %}
+{% block page_title %}Analytics Dashboard{% endblock %}
 
 {% block content %}
 <!-- Analytics Dashboard -->
@@ -134,7 +134,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block custom_js %}
 <script>
@@ -237,6 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock custom_js %}
+{% endblock %}
 
 

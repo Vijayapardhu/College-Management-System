@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block page_title %}AI Assistant Chatbot{% endblock %}
 
@@ -104,7 +104,7 @@
 }
 
 .chat-header {
-    background: linear-gradient(135deg, #003d82 0%, #0052a3 100%);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     color: white;
     padding: 20px;
 }
@@ -112,7 +112,7 @@
 .bot-avatar {
     width: 45px;
     height: 45px;
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -188,7 +188,7 @@
 }
 
 .bot-message .message-content {
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border: 1px solid #e5e5e5;
     color: #1a202c;
 }
@@ -205,7 +205,7 @@
 
 .chat-input-container {
     padding: 20px;
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border-top: 1px solid #e5e5e5;
 }
 
@@ -272,7 +272,7 @@
 }
 
 .quick-actions {
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
     padding: 15px;
@@ -409,20 +409,5 @@ $(document).ready(function() {
     scrollToBottom();
 });
 </script>
-{% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% endblock %}
 

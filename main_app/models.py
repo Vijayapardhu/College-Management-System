@@ -683,6 +683,266 @@ class Message(models.Model):
         return f"{self.sender} to {self.receiver}: {self.subject}"
 
 
+# ============= WhatsApp-Like Chat System Models =============
+
+class ChatGroup(models.Model):
+    """Group chat similar to WhatsApp groups"""
+    GROUP_TYPE_CHOICES = (
+        ('private', 'Private Group'),
+        ('public', 'Public Group'),
+        ('broadcast', 'Broadcast List'),
+    )
+    
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    group_type = models.CharField(max_length=20, choices=GROUP_TYPE_CHOICES, default='private')
+    group_icon = models.ImageField(upload_to='chat_groups/', blank=True, null=True)
+    
+    # Group creator and admins
+    creator = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='created_groups')
+    admins = models.ManyToManyField(CustomUser, related_name='admin_groups', blank=True)
+    
+    # Settings
+    only_admins_can_send = models.BooleanField(default=False)
+    allow_member_add = models.BooleanField(default=True, help_text="Allow members to add others")
+    allow_member_exit = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-updated_at']
+        verbose_name = "Chat Group"
+        verbose_name_plural = "Chat Groups"
+    
+    def __str__(self):
+        return self.name
+    
+    @property
+    def member_count(self):
+        return self.members.filter(is_active=True).count()
+    
+    @property
+    def last_message(self):
+        return self.group_messages.filter(is_deleted_for_everyone=False).first()
+
+
+class ChatGroupMember(models.Model):
+    """Group membership with roles"""
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('member', 'Member'),
+    )
+    
+    group = models.ForeignKey(ChatGroup, on_delete=models.CASCADE, related_name='members')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='group_memberships')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='member')
+    
+    # Member settings
+    is_active = models.BooleanField(default=True)
+    is_muted = models.BooleanField(default=False)
+    muted_until = models.DateTimeField(null=True, blank=True)
+    
+    # Tracking
+    joined_at = models.DateTimeField(auto_now_add=True)
+    left_at = models.DateTimeField(null=True, blank=True)
+    added_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='added_members')
+    
+    class Meta:
+        unique_together = ['group', 'user']
+        ordering = ['-joined_at']
+    
+    def __str__(self):
+        return f"{self.user.get_full_name()} in {self.group.name}"
+
+
+class ChatMessage(models.Model):
+    """Enhanced message model with media support"""
+    MESSAGE_TYPE_CHOICES = (
+        ('text', 'Text'),
+        ('image', 'Image'),
+        ('video', 'Video'),
+        ('audio', 'Audio'),
+        ('document', 'Document'),
+        ('location', 'Location'),
+        ('contact', 'Contact'),
+        ('system', 'System Message'),
+    )
+    
+    # Sender and recipient
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='chat_messages_sent')
+    
+    # Either group or personal chat
+    group = models.ForeignKey(ChatGroup, on_delete=models.CASCADE, null=True, blank=True, related_name='group_messages')
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='chat_messages_received')
+    
+    # Message content
+    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPE_CHOICES, default='text')
+    text_content = models.TextField(blank=True)
+    
+    # Reply functionality
+    reply_to = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='replies')
+    
+    # Forward functionality
+    forwarded_from = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='forwards')
+    forward_count = models.IntegerField(default=0)
+    
+    # Read status
+    is_read = models.BooleanField(default=False)
+    read_at = models.DateTimeField(null=True, blank=True)
+    delivered_at = models.DateTimeField(null=True, blank=True)
+    
+    # Deletion status
+    is_deleted_for_sender = models.BooleanField(default=False)
+    is_deleted_for_receiver = models.BooleanField(default=False)
+    is_deleted_for_everyone = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    
+    # Editing
+    is_edited = models.BooleanField(default=False)
+    edited_at = models.DateTimeField(null=True, blank=True)
+    
+    # Reactions (WhatsApp-style emoji reactions)
+    reactions = models.JSONField(default=dict, blank=True, help_text='{"user_id": "emoji"}')
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['group', '-created_at']),
+            models.Index(fields=['sender', 'receiver', '-created_at']),
+        ]
+    
+    def __str__(self):
+        if self.group:
+            return f"{self.sender.get_full_name()} in {self.group.name}: {self.text_content[:50]}"
+        return f"{self.sender.get_full_name()} to {self.receiver.get_full_name()}: {self.text_content[:50]}"
+    
+    @property
+    def is_group_message(self):
+        return self.group is not None
+    
+    def mark_as_read(self, user):
+        """Mark message as read by user"""
+        if self.receiver == user or (self.group and user in self.group.members.values_list('user', flat=True)):
+            self.is_read = True
+            from django.utils import timezone
+            self.read_at = timezone.now()
+            self.save()
+    
+    def add_reaction(self, user, emoji):
+        """Add emoji reaction to message"""
+        if not self.reactions:
+            self.reactions = {}
+        self.reactions[str(user.id)] = emoji
+        self.save()
+    
+    def remove_reaction(self, user):
+        """Remove user's reaction"""
+        if self.reactions and str(user.id) in self.reactions:
+            del self.reactions[str(user.id)]
+            self.save()
+
+
+class MessageAttachment(models.Model):
+    """File attachments for messages"""
+    ATTACHMENT_TYPE_CHOICES = (
+        ('image', 'Image'),
+        ('video', 'Video'),
+        ('audio', 'Audio'),
+        ('document', 'Document'),
+        ('other', 'Other'),
+    )
+    
+    message = models.ForeignKey(ChatMessage, on_delete=models.CASCADE, related_name='attachments')
+    attachment_type = models.CharField(max_length=20, choices=ATTACHMENT_TYPE_CHOICES)
+    file = models.FileField(upload_to='chat_attachments/%Y/%m/%d/')
+    
+    # File metadata
+    file_name = models.CharField(max_length=255)
+    file_size = models.BigIntegerField(help_text="Size in bytes")
+    mime_type = models.CharField(max_length=100, blank=True)
+    
+    # Media-specific fields
+    thumbnail = models.ImageField(upload_to='chat_thumbnails/', blank=True, null=True)
+    duration = models.IntegerField(null=True, blank=True, help_text="Duration in seconds for audio/video")
+    width = models.IntegerField(null=True, blank=True, help_text="Image/video width")
+    height = models.IntegerField(null=True, blank=True, help_text="Image/video height")
+    
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['uploaded_at']
+    
+    def __str__(self):
+        return f"{self.attachment_type}: {self.file_name}"
+    
+    @property
+    def file_size_formatted(self):
+        """Return human-readable file size"""
+        size = self.file_size
+        for unit in ['B', 'KB', 'MB', 'GB']:
+            if size < 1024:
+                return f"{size:.1f} {unit}"
+            size /= 1024
+        return f"{size:.1f} TB"
+
+
+class MessageReadReceipt(models.Model):
+    """Track who read which message in groups"""
+    message = models.ForeignKey(ChatMessage, on_delete=models.CASCADE, related_name='read_receipts')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    read_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['message', 'user']
+        ordering = ['read_at']
+    
+    def __str__(self):
+        return f"{self.user.get_full_name()} read message at {self.read_at}"
+
+
+class ChatConversation(models.Model):
+    """Track personal conversations for quick access"""
+    user1 = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='conversations_as_user1')
+    user2 = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='conversations_as_user2')
+    
+    # Settings
+    user1_archived = models.BooleanField(default=False)
+    user2_archived = models.BooleanField(default=False)
+    user1_muted = models.BooleanField(default=False)
+    user2_muted = models.BooleanField(default=False)
+    
+    # Tracking
+    last_message_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['user1', 'user2']
+        ordering = ['-last_message_at']
+    
+    def __str__(self):
+        return f"{self.user1.get_full_name()} - {self.user2.get_full_name()}"
+    
+    @classmethod
+    def get_or_create_conversation(cls, user1, user2):
+        """Get or create a conversation between two users"""
+        # Ensure user1 has lower ID for consistency
+        if user1.id > user2.id:
+            user1, user2 = user2, user1
+        
+        conversation, created = cls.objects.get_or_create(
+            user1=user1,
+            user2=user2
+        )
+        return conversation
+
+
 class StudyMaterial(models.Model):
     MATERIAL_TYPE = (
         ('document', 'Document'),

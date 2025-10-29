@@ -1,16 +1,22 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 
 {% block custom_css %}
 <style>
+    /* Black Theme for Course Management */
+    body {
+        background: #0a0a0a;
+    }
+
     .page-header-modern {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-        border-radius: 12px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 16px;
         padding: 2rem;
         margin-bottom: 2rem;
         color: white;
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        border: 1px solid #333;
     }
 
     .page-header-modern h1 {
@@ -20,11 +26,16 @@
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        color: #ffffff;
+    }
+
+    .page-header-modern h1 i {
+        color: #3b82f6;
     }
 
     .page-header-modern p {
         font-size: 1rem;
-        opacity: 0.95;
+        color: #9ca3af;
         margin: 0;
     }
 
@@ -44,16 +55,20 @@
     }
 
     .search-section {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
         border-radius: 12px;
         padding: 1.5rem;
         flex: 1;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+        border: 1px solid #333;
     }
 
     .search-input {
         width: 100%;
         max-width: 100%;
+        background: #0a0a0a;
+        border: 2px solid #333;
+        color: #e5e7eb;
         padding: 0.75rem 1rem 0.75rem 2.5rem;
         border: 2px solid #e2e8f0;
         border-radius: 8px;
@@ -63,19 +78,20 @@
 
     .search-input:focus {
         outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .table-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.8);
         overflow: hidden;
+        border: 1px solid #333;
     }
 
     .table-card-header {
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
         padding: 1.25rem 1.5rem;
         border-bottom: 1px solid #e2e8f0;
         display: flex;
@@ -86,7 +102,7 @@
     .table-card-title {
         font-size: 1.125rem;
         font-weight: 600;
-        color: #1f2937;
+        color: #ffffff;
         margin: 0;
         display: flex;
         align-items: center;
@@ -94,7 +110,7 @@
     }
 
     .record-count {
-        background: #059669;
+        background: #1e40af;
         color: white;
         padding: 0.25rem 0.75rem;
         border-radius: 20px;
@@ -108,7 +124,7 @@
     }
 
     .table-modern thead th {
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.75rem;
@@ -122,7 +138,7 @@
     .table-modern tbody td {
         padding: 1rem 1.5rem;
         vertical-align: middle;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid #333;
     }
 
     .table-modern tbody tr {
@@ -130,12 +146,12 @@
     }
 
     .table-modern tbody tr:hover {
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
     }
 
     .course-name {
         font-weight: 600;
-        color: #1f2937;
+        color: #ffffff;
         font-size: 1rem;
     }
 
@@ -162,14 +178,14 @@
     }
 
     .btn-primary-modern {
-        background: linear-gradient(135deg, #059669, #10b981);
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
         color: white;
-        box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);
+        box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
     }
 
     .btn-primary-modern:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
     }
 
     .btn-icon {
@@ -185,7 +201,7 @@
     }
 
     .btn-edit:hover {
-        background: #059669;
+        background: #1e40af;
         color: white;
     }
 
@@ -284,12 +300,12 @@
                         <td>{{ forloop.counter }}</td>
                         <td>
                             <div class="course-name">
-                                <i class="fas fa-graduation-cap" style="color: #059669; margin-right: 0.5rem;"></i>
+                                <i class="fas fa-graduation-cap" style="color: #1e40af; margin-right: 0.5rem;"></i>
                                 {{course.name}}
                             </div>
                         </td>
                         <td>
-                            <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px; color: #059669; font-weight: 600;">
+                            <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px; color: #1e40af; font-weight: 600;">
                                 {{course.course_code|default:"N/A"}}
                             </code>
                         </td>
@@ -334,7 +350,6 @@
         {% endif %}
     </div>
 </div>
-
 {% endblock %}
 
 {% block custom_js %}

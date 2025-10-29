@@ -1,6 +1,6 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block page_title %}{{page_title}}{% endblock %}
 
 {% block content %}
 
@@ -100,7 +100,7 @@
    </div><!-- /.modal-dialog -->
   
 </div><!-- /.modal -->
-{% endblock content %}
+{% endblock %}
 {% block custom_js %}
   <script>
       $(document).ready(function(){
@@ -137,4 +137,4 @@
           })
       })
   </script>
-{% endblock custom_js %}
+{% endblock %}

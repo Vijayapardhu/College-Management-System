@@ -1,9 +1,11 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block title %}Send Message{% endblock %}
 {% block page_title %}Send Message{% endblock %}
 
 {% block custom_css %}
+<style>
+    body { background: #0a0a0a; }
 <style>
     .compose-container {
         max-width: 900px;
@@ -11,7 +13,7 @@
     }
 
     .compose-card {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -39,7 +41,7 @@
     .form-control {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 2px solid #e2e8f0;
+        border: 2px solid #333;
         border-radius: 8px;
         font-size: 1rem;
         transition: all 0.2s;
@@ -84,9 +86,9 @@
 
     .btn-cancel {
         padding: 0.875rem 2rem;
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         color: #64748b;
-        border: 2px solid #e2e8f0;
+        border: 2px solid #333;
         border-radius: 8px;
         font-weight: 600;
         cursor: pointer;
@@ -97,7 +99,7 @@
     }
 
     .btn-cancel:hover {
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
         border-color: #cbd5e1;
     }
 

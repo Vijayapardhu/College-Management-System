@@ -1,0 +1,46 @@
+def staff_home(request):
+def staff_take_attendance(request):
+def bulk_attendance_import(request):
+def generate_attendance_qr(request):
+def attendance_analytics(request):
+def get_students(request):
+def save_attendance(request):
+def staff_update_attendance(request):
+def get_student_attendance(request):
+def update_attendance(request):
+def staff_apply_leave(request):
+def staff_feedback(request):
+def staff_view_profile(request):
+def staff_fcmtoken(request):
+def staff_view_notification(request):
+def staff_add_result(request):
+def bulk_marks_import(request):
+def fetch_student_result(request):
+def calculate_grade(marks):
+def calculate_grade_point(marks):
+def calculate_student_cgpa(request, student_id):
+def generate_marksheet_pdf(request, student_id):
+def staff_view_timetable(request):
+def staff_my_exam_duties(request):
+def staff_upload_question_paper(request, schedule_id):
+def staff_upload_answer_key(request, schedule_id):
+def staff_enter_marks(request):
+def staff_view_results(request):
+def staff_library_issue_return(request):
+def staff_manage_placements(request):
+def staff_my_assigned_grievances(request):
+def staff_resolve_grievance(request, grievance_id):
+def staff_my_online_exams(request):
+def staff_create_online_exam(request):
+def staff_my_research(request):
+def staff_add_research(request):
+def staff_gate_pass_approvals(request):
+def upload_material(request):
+def view_materials(request):
+def create_assignment(request):
+def view_assignments(request):
+def view_submissions(request):
+def create_online_exam(request):
+def my_online_exams(request):
+def view_students(request):
+def staff_attendance_history(request):

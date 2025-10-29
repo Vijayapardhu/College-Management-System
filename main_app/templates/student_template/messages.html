@@ -1,8 +1,10 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block title %}Messages{% endblock %}
 
 {% block custom_css %}
+<style>
+    body { background: #0a0a0a; }
 <style>
     .messages-container {
         display: grid;
@@ -20,7 +22,7 @@
 
     /* Inbox List */
     .inbox-panel {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         display: flex;
@@ -50,7 +52,7 @@
     .tab {
         flex: 1;
         padding: 0.625rem 1rem;
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
         border: none;
         border-radius: 6px;
         cursor: pointer;
@@ -81,7 +83,7 @@
     }
 
     .message-item:hover {
-        background: #f8fafc;
+        background: #1a1a1a; color: #e5e7eb;
     }
 
     .message-item.unread {
@@ -130,7 +132,7 @@
 
     /* Message Detail */
     .message-panel {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         display: flex;
@@ -219,7 +221,7 @@
     }
 
     .btn-secondary {
-        background: white;
+        background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
         color: #1e40af;
         border: 2px solid #1e40af;
     }

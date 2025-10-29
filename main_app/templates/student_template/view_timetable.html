@@ -1,47 +1,325 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
-{% block page_title %}My Class Timetable{% endblock %}
+{% block title %}My Timetable{% endblock %}
+{% block page_title %}My Timetable{% endblock %}
+
+{% block custom_css %}
+<style>
+    :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    html.dark {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #475569;
+    }
+
+    body {
+        background: var(--bg-primary);
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .timetable-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        overflow-x: auto;
+    }
+
+    .timetable-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+    }
+
+    .timetable-table thead th {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        font-weight: 600;
+        border: 2px solid #1e40af;
+    }
+
+    .timetable-table thead th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    .timetable-table thead th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+    .timetable-table tbody th {
+        background: #dbeafe;
+        color: #1e40af;
+        padding: 1rem;
+        text-align: center;
+        font-weight: 600;
+        border: 1px solid var(--border-color);
+    }
+
+    html.dark .timetable-table tbody th {
+        background: #1e293b;
+        color: #93c5fd;
+    }
+
+    .timetable-table tbody td {
+        padding: 0.75rem;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+
+    .class-cell {
+        background: #eff6ff;
+        border-radius: 8px;
+        padding: 0.75rem;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    html.dark .class-cell {
+        background: #1e293b;
+    }
+
+    .class-cell:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .class-subject {
+        font-weight: 600;
+        color: #1e40af;
+        margin-bottom: 0.25rem;
+    }
+
+    html.dark .class-subject {
+        color: #93c5fd;
+    }
+
+    .class-time {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .class-faculty {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .class-room {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+        font-style: italic;
+    }
+
+    .break-cell {
+        background: #fef3c7;
+        color: #92400e;
+        font-weight: 600;
+        border-radius: 8px;
+    }
+
+    html.dark .break-cell {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+    }
+
+    .empty-cell {
+        color: var(--text-secondary);
+        font-style: italic;
+        opacity: 0.5;
+    }
+
+    .legend {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .legend-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+    }
+
+    .legend-box.class {
+        background: #eff6ff;
+        border: 1px solid #3b82f6;
+    }
+
+    html.dark .legend-box.class {
+        background: #1e293b;
+    }
+
+    .legend-box.break {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+    }
+
+    html.dark .legend-box.break {
+        background: rgba(251, 191, 36, 0.1);
+    }
+
+    @media print {
+        body {
+            background: white;
+        }
+
+        .page-header,
+        .legend {
+            display: none;
+        }
+
+        .timetable-card {
+            border: none;
+            box-shadow: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .timetable-card {
+            padding: 1rem;
+        }
+
+        .timetable-table {
+            font-size: 0.875rem;
+        }
+
+        .timetable-table thead th,
+        .timetable-table tbody th,
+        .timetable-table tbody td {
+            padding: 0.5rem;
+        }
+
+        .class-cell {
+            padding: 0.5rem;
+            min-height: 60px;
+        }
+    }
+</style>
+{% endblock custom_css %}
 
 {% block content %}
-<section class="content">
-    <div class="container-fluid">
-        <div class="page-header-professional">
-            <h2 style="font-size: 24px; font-weight: 600; color: #003d82; margin: 0 0 5px 0;">
-                <i class="fas fa-calendar-alt me-2"></i>My Class Timetable
-            </h2>
-            <p style="font-size: 14px; color: #4a5568; margin: 0;">
-                View your weekly class schedule
-            </p>
-        </div>
-
-        <div class="card-professional">
-            <div class="card-header-professional">
-                <h3 style="font-size: 18px;">Weekly Schedule</h3>
-            </div>
-            <div class="card-body-professional">
-                <div class="empty-state-professional">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h4>Timetable Not Available</h4>
-                    <p>Your class timetable will be displayed here once published by administration</p>
-                </div>
-            </div>
-        </div>
+<div class="container-fluid">
+    <div class="page-header">
+        <h1><i class="fas fa-calendar-alt"></i> My Weekly Timetable</h1>
+        <p>View your class schedule • 7 periods of 50 minutes each • 9:30 AM - 4:10 PM</p>
     </div>
-</section>
-{% endblock %}
 
+    <div class="timetable-card">
+        {% if has_timetable %}
+        <table class="timetable-table">
+            <thead>
+                <tr>
+                    <th style="min-width: 100px;">Day / Period</th>
+                    <th>Period 1<br><small>9:30 - 10:20</small></th>
+                    <th>Period 2<br><small>10:20 - 11:10</small></th>
+                    <th>Period 3<br><small>11:10 - 12:00</small></th>
+                    <th>Period 4<br><small>12:00 - 12:50</small></th>
+                    <th>Lunch<br><small>12:50 - 1:40</small></th>
+                    <th>Period 5<br><small>1:40 - 2:30</small></th>
+                    <th>Period 6<br><small>2:30 - 3:20</small></th>
+                    <th>Period 7<br><small>3:20 - 4:10</small></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in weekdays %}
+                <tr>
+                    <th>{{ day.name }}</th>
+                    {% for period in day.periods %}
+                        {% if period.type == 'break' %}
+                            <td>
+                                <div class="break-cell">{{ period.name }}</div>
+                            </td>
+                        {% else %}
+                            <td>
+                                {% if period.class_data %}
+                                    <div class="class-cell">
+                                        <div class="class-subject">{{ period.class_data.subject.name }}</div>
+                                        <div class="class-time">{{ period.class_data.start_time|default:"—" }} - {{ period.class_data.end_time|default:"—" }}</div>
+                                        {% if period.class_data.staff %}
+                                        <div class="class-faculty">{{ period.class_data.staff.admin.first_name }} {{ period.class_data.staff.admin.last_name }}</div>
+                                        {% endif %}
+                                        {% if period.class_data.room %}
+                                        <div class="class-room">Room: {{ period.class_data.room }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <div class="empty-cell">—</div>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box class"></div>
+                <span>Class Period</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box break"></div>
+                <span>Break / Lunch</span>
+            </div>
+            <div class="legend-item">
+                <i class="fas fa-print" style="color: #3b82f6;"></i>
+                <span>Use Ctrl+P to print</span>
+            </div>
+        </div>
 
+        {% else %}
+        <div style="text-align: center; padding: 4rem 2rem;">
+            <i class="fas fa-calendar-times" style="font-size: 4rem; opacity: 0.3; color: var(--text-secondary);"></i>
+            <h3 style="color: var(--text-primary); margin-top: 1rem;">No Timetable Available</h3>
+            <p style="color: var(--text-secondary);">Your weekly timetable will appear here once it's been created.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
 
-
-
-
-
-
-
-
-
-
-
+{% block custom_js %}
+<script>
+    // Helper template filter for getting nested dictionary values
+    // This would normally be done with a custom template filter in Django
+</script>
+{% endblock custom_js %}
 
 

@@ -1,4 +1,4 @@
-{% extends 'main_app/base.html' %}
+{% extends "main_app/base.html" %}
 {% load static %}
 {% block page_title %}Academic Results{% endblock %}
 
@@ -171,7 +171,7 @@
 
 <style>
 .metric-card {
-    background: white;
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); border: 1px solid #333;
     border: 1px solid #e5e5e5;
     border-left: 4px solid;
     border-radius: 4px;
@@ -264,19 +264,5 @@
     color: white;
 }
 </style>
-{% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% endblock %}
 
