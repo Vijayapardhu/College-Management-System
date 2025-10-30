@@ -141,7 +141,7 @@ def handle_verify_otp(request, data):
             request.session.pop('otp_id', None)
             
             # Login user
-            login(request, user, backend='main_app.EmailBackend')
+            login(request, user, backend='main_app.EmailBackend.EmailBackend')
             
             # Get dashboard URL
             dashboard_url = get_dashboard_url(user)

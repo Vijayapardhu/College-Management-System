@@ -178,7 +178,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'main_app.CustomUser'
 AUTHENTICATION_BACKENDS = [
-    'main_app.EmailBackend',  # Main email/roll number backend
+    'main_app.EmailBackend.EmailBackend',  # Main email/roll number backend
     'main_app.auth_backends.RollNumberOrEmailBackend',  # Allows login with roll number or email
     'django.contrib.auth.backends.ModelBackend',  # Default Django backend
 ]

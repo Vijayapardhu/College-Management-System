@@ -77,15 +77,14 @@ This is an automated email. Please do not reply.
     recipient_list = [user.email]
     
     try:
-        # Use a short timeout and fail silently in production-like environments
-        # to avoid blocking the worker if SMTP is unavailable
+        # Use fail_silently=True to avoid blocking the worker if SMTP is unavailable
+        # EMAIL_TIMEOUT is configured in settings.py and will be used automatically
         send_mail(
             subject,
             message,
             from_email,
             recipient_list,
             fail_silently=True,
-            timeout=10,
         )
         return True
     except Exception as e:
